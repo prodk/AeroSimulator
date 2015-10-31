@@ -9,13 +9,15 @@
 
 //namespace AeroSimulatorEngine
 //{
+// TODO: make it a singleton
    class CApp
    {
    public:
       CApp();
       ~CApp();
 
-      bool init();
+      // TODO: later add passing app parameters read from a file here
+      bool init(const char* name, unsigned int width, unsigned int height);
       void run();
 
    private:

@@ -3,6 +3,7 @@
 #include "CApp.h"
 #include "CWin32Window.h"
 
+// TODO: make CApp a singleton
 CApp::CApp()
    : mAppWindow(createAppWindow())
 {
@@ -11,15 +12,25 @@ CApp::CApp()
 
 CApp::~CApp()
 {
+   std::cout << "CApp destroyed" << std::endl;
 }
 
-bool CApp::init()
+bool CApp::init(const char* name, unsigned int width, unsigned int height)
 {
-   return true;
+   bool result = false;
+   if (mAppWindow && mAppWindow->create(name, width, height))
+   {
+      result = true;
+   }
+
+   return result;
 }
 
 void CApp::run()
 {
+   mAppWindow->show();
+
+   mAppWindow->run();
 }
 
 std::shared_ptr<CAppWindow> CApp::createAppWindow()
