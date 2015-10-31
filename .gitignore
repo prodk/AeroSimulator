@@ -1,0 +1,13 @@
+.vs
+Debug
+libs
+obj
+Release
+*ipch*
+*sdf
+*.ncb
+*.suo
+*.user
+*.pdb
+*.exe
+*.o
