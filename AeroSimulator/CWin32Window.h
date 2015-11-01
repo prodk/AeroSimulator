@@ -26,10 +26,10 @@ namespace AeroSimulatorEngine
       virtual bool stop();
 
       HDC getDC() const { return mDC; }
+      bool isFullScreen() const { return (mWidth == 0u || mHeight == 0u) ? true : false; }
 
    private:
       void show(bool toShow);
-      bool isFullscreen() { return (mWidth == 0u || mHeight == 0u) ? true : false; }
 
    private:
       HINSTANCE mInstance;

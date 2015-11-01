@@ -25,6 +25,7 @@ namespace AeroSimulatorEngine
       ///@todo: later add passing app parameters read from a file here
       bool init(const char* name, unsigned int width, unsigned int height);
       void run();
+      int exit();
 
    private:
       CApp();

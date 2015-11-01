@@ -2,6 +2,7 @@
 
 #include "CApp.h"
 #include "CWin32Window.h"
+#include <conio.h>
 using namespace AeroSimulatorEngine;
 
 CApp::CApp()
@@ -33,6 +34,15 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
 void CApp::run()
 {
    mTaskManager.execute();
+}
+
+int CApp::exit()
+{
+   mAppWindowTask = nullptr;
+
+   std::cout << std::endl << "Press any key . . . " << std::endl;
+   while (!_kbhit());
+   return 0;
 }
 
 std::shared_ptr<CAppWindow> CApp::createAppWindow()

@@ -11,8 +11,6 @@
 
 #include <stdio.h>
 #include <tchar.h>
-#include <conio.h>
-
 
 
 // TODO: reference additional headers your program requires here

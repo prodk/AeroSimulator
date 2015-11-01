@@ -89,7 +89,7 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    DWORD dwExStyle;
    DWORD dwStyle;
 
-   if (!isFullscreen())
+   if (!isFullScreen())
    {
       dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
       dwStyle = WS_OVERLAPPEDWINDOW;
@@ -222,7 +222,7 @@ bool CWin32Window::stop()
    }
 
    // Back to the mode that existed before the app started
-   if (isFullscreen())
+   if (isFullScreen())
    {
       ChangeDisplaySettings(NULL, 0);
    }
