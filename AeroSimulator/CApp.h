@@ -12,10 +12,15 @@
 //namespace AeroSimulatorEngine
 //{
 // TODO: make it a singleton
-   class CApp
+   class CApp // Singleton
    {
    public:
-      CApp();
+      static CApp& getInstance()
+      {
+         static CApp instance;
+         return instance;
+      }
+
       ~CApp();
 
       // TODO: later add passing app parameters read from a file here
@@ -23,6 +28,10 @@
       void run();
 
    private:
+      CApp();
+      CApp(const CApp&) = delete;
+      void operator=(const CApp&) = delete;
+
       // A factory method, returns a window suitable for the current platform
       std::shared_ptr<CAppWindow> createAppWindow();
 

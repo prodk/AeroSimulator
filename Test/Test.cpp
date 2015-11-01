@@ -8,11 +8,10 @@
 int main()
 {
    ///@todo: add non-default CApp constructor which initializes the app from some state.
-   CApp myApp;
 
-   if (myApp.init("AeroSimulator", 800, 600))
+   if (CApp::getInstance().init("AeroSimulator", 800, 600))
    {
-      myApp.run();
+      CApp::getInstance().run();
    }
 
    // TODO: destroy the AppWindow and show the messages before the "Press any key" message.
