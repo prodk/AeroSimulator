@@ -27,13 +27,15 @@ public:
    CTaskManager();
    ~CTaskManager();
 
-   void execute();
    bool addTask(CTask* pTask);
    bool removeTask(CTask* pTask);
+   void killAllTasks();
+   void execute();
+
    bool hasTasks() const { return !mTasks.empty(); }
 
    typedef std::set<CTask*, CCompareTasks> TTaskSet;
-   typedef std::set<CTask*, CCompareTasks>::iterator TTaskSetIter;
+  // typedef std::set<CTask*, CCompareTasks>::iterator TTaskSetIter; // TODO: change later for the C++ 11 auto
 
 private:
    TTaskSet mTasks;
