@@ -5,40 +5,44 @@
 
 // TODO: make CApp a singleton
 CApp::CApp()
-   : mAppWindow(createAppWindow())
+   : mTaskManager()
+   , mAppWindowTask(createAppWindow())
 {
    std::cout << "CApp created!" << std::endl;
 }
 
 CApp::~CApp()
 {
-   mAppWindow = 0;
+   mAppWindowTask = 0;
    std::cout << "CApp destroyed" << std::endl;
 }
 
 bool CApp::init(const char* name, unsigned int width, unsigned int height)
 {
    bool result = false;
-   if (mAppWindow && mAppWindow->create(name, width, height))
+   if (mAppWindowTask && mAppWindowTask->create(name, width, height))
    {
       result = true;
    }
+
+   mTaskManager.addTask(mAppWindowTask.get());
 
    return result;
 }
 
 void CApp::run()
 {
-   mAppWindow->show();
-
-   mAppWindow->run();
-
+   // TODO: this part works
+   /*mAppWindowTask->show(true);
+   mAppWindowTask->run();
    ///@todo temporary
-   mAppWindow = 0;
+   mAppWindowTask = 0;*/
+   // TODO: end
+   mTaskManager.execute();
 }
 
 std::shared_ptr<CAppWindow> CApp::createAppWindow()
 {
    ///@todo: check for the platform here and return the proper window type.
-   return std::shared_ptr<CAppWindow>(new CWin32Window());
+   return std::shared_ptr<CAppWindow>(new CWin32Window(CTask::HIGHEST_PRIO));
 }

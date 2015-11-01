@@ -44,6 +44,16 @@ CWin32Window::CWin32Window()
 {
 }
 
+CWin32Window::CWin32Window(ePriority prio)
+   : CAppWindow(prio)
+   //, CTask(prio)
+   , mInstance(0)
+   , mWnd(0)
+   , mDC(0)
+   , mScreenSettings()
+{
+}
+
 CWin32Window::~CWin32Window()
 {
    if (mWnd)
@@ -67,11 +77,10 @@ CWin32Window::~CWin32Window()
          std::cout << "* ERROR: window wasn't destroyed" << std::endl;
       mWnd = NULL;
 
-      // освобождаем класс окна
       UnregisterClass(L"AERO_SIMULATOR_WINDOW", mInstance);
    }
 
-   // возвращаемся в режим до запуска приложения
+   // Back to the mode that existed before the app started
    if (isFullscreen())
    {
       ChangeDisplaySettings(NULL, 0);
@@ -85,7 +94,7 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    mHeight = height;
    HICON hIcon = LoadIcon(NULL, IDI_APPLICATION);
 
-   // регистрируем класс окна
+   // Register the window class
    WNDCLASSEX winClass;
    winClass.lpszClassName = L"AERO_SIMULATOR_WINDOW";
    winClass.cbSize = sizeof(WNDCLASSEX);
@@ -101,13 +110,12 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    winClass.lpszMenuName = NULL;
    RegisterClassEx(&winClass);
 
-   // стили отображения окна
+   // Window styles
    DWORD dwExStyle;
    DWORD dwStyle;
 
    if (!isFullscreen())
    {
-      // задаем стили отображения окна
       dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
       dwStyle = WS_OVERLAPPEDWINDOW;
       dwStyle &= ~WS_MAXIMIZEBOX;
@@ -115,7 +123,7 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    }
    else
    {
-      // настройки режима для полноэкранного приложения
+      // Full screen settings
       memset(&mScreenSettings, 0, sizeof(DEVMODE));
       mScreenSettings.dmSize = sizeof(DEVMODE);
       mScreenSettings.dmPelsWidth = width;
@@ -135,19 +143,18 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
 
       mScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY;
 
-      // задаем стили отображения окна
+      // Set window styles
       dwExStyle = WS_EX_APPWINDOW;
       dwStyle = WS_POPUP;
    }
 
-   // задаем клиентскую часть окна (с учетом стилей отображения)
+   // Set the client part of the window (taking into account the window styles)
    RECT rectWindow;
    rectWindow.left = (long)0;
    rectWindow.right = (long)width;
    rectWindow.top = (long)0;
    rectWindow.bottom = (long)height;
 
-   // пересчитываем размеры окна с учетом указаных стилей отображения
    AdjustWindowRectEx(&rectWindow, dwStyle, FALSE, dwExStyle);
 
    // Convert to wide characters.
@@ -157,7 +164,7 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
 
    MultiByteToWideChar(CP_ACP, 0, title.c_str(), -1, (LPWSTR)pwcTitle, nChars);
 
-   // создание окна
+   // Window creation
    if ((mWnd = CreateWindowEx(dwExStyle,
       winClass.lpszClassName,
       pwcTitle,
@@ -182,7 +189,6 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
 
    delete pwcTitle;
 
-   // получаем контекст устройства для окна
    if ((mDC = GetDC(mWnd)))
    {
       //Log::instance() << "* device context for window was got" << endl;
@@ -198,11 +204,14 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    return true;
 }
 
-void CWin32Window::show()
+void CWin32Window::show(bool toShow)
 {
    // Set the highest priority
    ::SetForegroundWindow(mWnd);
-   ::ShowWindow(mWnd, SW_SHOW);
+   if (toShow)
+      ::ShowWindow(mWnd, SW_SHOW);
+   else
+      ::ShowWindow(mWnd, SW_HIDE);
 }
 
 void CWin32Window::run()
@@ -223,5 +232,62 @@ void CWin32Window::run()
 
       }
    }
+}
+
+bool CWin32Window::start()
+{
+   show(true);
+
+   return true;
+}
+
+bool CWin32Window::update()
+{
+   MSG msg;
+   ZeroMemory(&msg, sizeof(MSG));
+
+   if (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
+   {
+      ::TranslateMessage(&msg);
+      ::DispatchMessage(&msg);
+   }
+
+   if ((WM_QUIT == msg.message) || (WM_CLOSE == msg.message))
+   {
+      mIsClosing = true;
+   }
+
+   return true; // TODO: probably make it void
+}
+
+bool CWin32Window::stop()
+{
+   if (mWnd)
+   {
+      if (mDC)
+      {
+         if (ReleaseDC(mWnd, mDC))
+            std::cout << "* device context was destroyed" << std::endl;
+         else
+            std::cout << "* ERROR: device context wasn't destroyed" << std::endl;
+         mDC = NULL;
+      }
+
+      if (DestroyWindow(mWnd))
+         std::cout << "* window was destroyed" << std::endl;
+      else
+         std::cout << "* ERROR: window wasn't destroyed" << std::endl;
+      mWnd = NULL;
+
+      UnregisterClass(L"AERO_SIMULATOR_WINDOW", mInstance);
+   }
+
+   // Back to the mode that existed before the app started
+   if (isFullscreen())
+   {
+      ChangeDisplaySettings(NULL, 0);
+   }
+
+   return true; // TODO: probably make it void
 }
 

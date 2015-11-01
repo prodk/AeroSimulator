@@ -9,6 +9,14 @@ CAppWindow::CAppWindow()
 {
 }
 
+CAppWindow::CAppWindow(ePriority prio)
+   : CTask(prio)
+   , mTitle()
+   , mWidth(0u)
+   , mHeight(0u)
+{
+}
+
 CAppWindow::~CAppWindow()
 {
 }

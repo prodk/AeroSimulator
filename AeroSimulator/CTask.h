@@ -6,7 +6,10 @@
 class CTask
 {
 public:
+   enum ePriority { HIGHEST_PRIO };
+
    CTask();
+   explicit CTask(ePriority prio) : mCanKill(false), mPriority(prio) {}
    virtual ~CTask();
 
    virtual bool start() = 0;
@@ -15,11 +18,11 @@ public:
 
    void setCanKill(bool canKill);
    bool getCanKill() const { return mCanKill; }
-   unsigned int getPriority() const { return mPriority; }
+   ePriority getPriority() const { return mPriority; }
 
 protected:
    bool mCanKill;
-   unsigned int mPriority;
+   enum ePriority mPriority;
 };
 
 #endif

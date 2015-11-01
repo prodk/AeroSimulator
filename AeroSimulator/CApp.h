@@ -3,9 +3,11 @@
 #ifndef AERO_SIMULATOR_CAPP_H
 #define AERO_SIMULATOR_CAPP_H
 
+#include "CAppWindow.h"
+#include "CTaskManager.h"
+
 #include <iostream>
 #include <memory>
-#include "CAppWindow.h"
 
 //namespace AeroSimulatorEngine
 //{
@@ -21,10 +23,12 @@
       void run();
 
    private:
+      // A factory method, returns a window suitable for the current platform
       std::shared_ptr<CAppWindow> createAppWindow();
 
    private:
-      std::shared_ptr<CAppWindow> mAppWindow;
+      CTaskManager mTaskManager;
+      std::shared_ptr<CAppWindow> mAppWindowTask;
    };
 
 //}
