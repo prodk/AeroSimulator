@@ -12,6 +12,7 @@ CApp::CApp()
 
 CApp::~CApp()
 {
+   mAppWindow = 0;
    std::cout << "CApp destroyed" << std::endl;
 }
 
@@ -31,6 +32,9 @@ void CApp::run()
    mAppWindow->show();
 
    mAppWindow->run();
+
+   ///@todo temporary
+   mAppWindow = 0;
 }
 
 std::shared_ptr<CAppWindow> CApp::createAppWindow()
