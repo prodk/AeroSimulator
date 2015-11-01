@@ -1,4 +1,5 @@
 #include "CTask.h"
+using namespace AeroSimulatorEngine;
 
 CTask::CTask()
 {

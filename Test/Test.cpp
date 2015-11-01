@@ -2,8 +2,8 @@
 //
 
 #include "stdafx.h"
-
 #include "CApp.h"
+using namespace AeroSimulatorEngine;
 
 int main()
 {

@@ -1,5 +1,9 @@
-#include "CAppWindow.h"
+// CAppWindow.cpp - implementation of the abstract Window
 
+#include "CAppWindow.h"
+using namespace AeroSimulatorEngine;
+
+// Init the static member
 bool CAppWindow::mIsClosing = false;
 
 CAppWindow::CAppWindow()

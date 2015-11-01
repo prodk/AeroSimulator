@@ -1,32 +1,33 @@
-//
+// CAppWindow.h - declaration of the abstract class for a window on all platforms
 
-//#pragma once
 #ifndef AERO_SIMULATOR_CAPPWINDOW_H
 #define AERO_SIMULATOR_CAPPWINDOW_H
+#include "CTask.h"
 #include <string>
 
-#include "CTask.h"
-
-class CAppWindow : public CTask
+namespace AeroSimulatorEngine
 {
-public:
-   CAppWindow();
-   explicit CAppWindow(ePriority prio);
-   virtual ~CAppWindow();
+   // Every window IS A CTask
+   class CAppWindow : public CTask
+   {
+   public:
+      CAppWindow();
+      explicit CAppWindow(ePriority prio);
+      virtual ~CAppWindow();
 
-   virtual bool create(const std::string& title, std::size_t width, std::size_t height) = 0;
-   virtual void show(bool toShow) = 0;
-   virtual void run() = 0; // TODO: remove this when CWin32 is inherited from the task.
+      static bool isClosing() { return mIsClosing; }
+      static void resetIsClosing() { mIsClosing = false; }
 
-   static bool isClosing() { return mIsClosing; }
-   static void resetIsClosing() { mIsClosing = false; }
+      virtual bool create(const std::string& title, std::size_t width, std::size_t height) = 0;
 
-protected:
-   std::string mTitle;
-   std::size_t mWidth;
-   std::size_t mHeight;
+   protected:
+      std::string mTitle;
+      std::size_t mWidth;
+      std::size_t mHeight;
 
-   static bool mIsClosing;
-};
+      static bool mIsClosing;
+   };
+
+} // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CAPPWINDOW_H

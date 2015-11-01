@@ -1,5 +1,9 @@
+// CWin32Window.cpp - implementation of the class for the Win32 window
+
 #include "CWin32Window.h"
 #include <memory>
+
+using namespace AeroSimulatorEngine;
 
 // Windows procedure
 LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
@@ -46,7 +50,6 @@ CWin32Window::CWin32Window()
 
 CWin32Window::CWin32Window(ePriority prio)
    : CAppWindow(prio)
-   //, CTask(prio)
    , mInstance(0)
    , mWnd(0)
    , mDC(0)
@@ -56,35 +59,7 @@ CWin32Window::CWin32Window(ePriority prio)
 
 CWin32Window::~CWin32Window()
 {
-   if (mWnd)
-   {
-      if (mDC)
-      {
-         if (ReleaseDC(mWnd, mDC))
-            //Log::instance() << "* device context was destroyed" << endl;
-            std::cout << "* device context was destroyed" << std::endl;
-         else
-            //Log::instance() << "* ERROR: device context wasn't destroyed" << endl;
-            std::cout << "* ERROR: device context wasn't destroyed" << std::endl;
-         mDC = NULL;
-      }
-
-      if (DestroyWindow(mWnd))
-         //Log::instance() << "* window was destroyed" << endl;
-         std::cout << "* window was destroyed" << std::endl;
-      else
-         //Log::instance() << "* ERROR: window wasn't destroyed" << endl;
-         std::cout << "* ERROR: window wasn't destroyed" << std::endl;
-      mWnd = NULL;
-
-      UnregisterClass(L"AERO_SIMULATOR_WINDOW", mInstance);
-   }
-
-   // Back to the mode that existed before the app started
-   if (isFullscreen())
-   {
-      ChangeDisplaySettings(NULL, 0);
-   }
+   stop();
 }
 
 bool CWin32Window::create(const std::string& title, std::size_t width, std::size_t height)
@@ -129,18 +104,6 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
       mScreenSettings.dmPelsWidth = width;
       mScreenSettings.dmPelsHeight = height;
       mScreenSettings.dmBitsPerPel = 32;
-
-      //@todo: remove this one
-     /* if (!GetMaxFrequency(m_dmScreenSettings))
-      {
-         Log::instance() << "* Error: screen resolution isn't supported (" << width << "x" << height << "x32b)" << endl;
-         return false;
-      }
-      else
-      {
-         Log::instance() << "* Screen resolution is supported: " << width << "x" << height << "x32b@" << m_dmScreenSettings.dmDisplayFrequency << "Hz" << endl;
-      }*/
-
       mScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT | DM_DISPLAYFREQUENCY;
 
       // Set window styles
@@ -157,11 +120,10 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
 
    AdjustWindowRectEx(&rectWindow, dwStyle, FALSE, dwExStyle);
 
+   //@todo: check if UNICODE
    // Convert to wide characters.
    int nChars = MultiByteToWideChar(CP_ACP, 0, title.c_str(), -1, NULL, 0);
    wchar_t* pwcTitle = NULL;
-   // required size
-
    MultiByteToWideChar(CP_ACP, 0, title.c_str(), -1, (LPWSTR)pwcTitle, nChars);
 
    // Window creation
@@ -177,26 +139,23 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
       mInstance,
       this)))
    {
-      //Log::instance() << "* window was created" << endl;
       std::cout << "* window was created" << std::endl;
    }
    else
    {
-      //Log::instance() << "* Error: window wasn't created" << endl;
       std::cout << "* Error: window wasn't created" << std::endl;
       return false;
    }
 
+   /// Do not forget to cleanup the wide character string.
    delete pwcTitle;
 
    if ((mDC = GetDC(mWnd)))
    {
-      //Log::instance() << "* device context for window was got" << endl;
       std::cout << "* device context for window was obtained" << std::endl;
    }
    else
    {
-      //Log::instance() << "* Error: device context for window wasn't got" << endl;
       std::cout << "* Error: device context for window wasn't obtained" << std::endl;
       return false;
    }
@@ -212,26 +171,6 @@ void CWin32Window::show(bool toShow)
       ::ShowWindow(mWnd, SW_SHOW);
    else
       ::ShowWindow(mWnd, SW_HIDE);
-}
-
-void CWin32Window::run()
-{
-   MSG msg;
-   ZeroMemory(&msg, sizeof(MSG));
-
-   while ((WM_QUIT != msg.message) && (WM_CLOSE != msg.message)) // TODO: check the event handler here when it is available.
-   {
-      //if (::PeekMessage(&msg, mWnd, 0, 0, PM_REMOVE))
-      if (::PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
-      {
-         ::TranslateMessage(&msg);
-         ::DispatchMessage(&msg);
-      }
-      else
-      {
-
-      }
-   }
 }
 
 bool CWin32Window::start()

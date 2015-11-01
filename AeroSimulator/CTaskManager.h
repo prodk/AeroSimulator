@@ -1,4 +1,4 @@
-//#pragma once
+//CTaskManager.h - declaration of a task manager class
 
 #ifndef AERO_SIMULATOR_CTASK_MANAGER_H
 #define AERO_SIMULATOR_CTASK_MANAGER_H
@@ -6,39 +6,41 @@
 #include "CTask.h"
 #include <set>
 
-// A comparator for the queue of tasks
-struct CCompareTasks
+namespace AeroSimulatorEngine
 {
-   bool operator()(const CTask* lhs, const CTask* rhs)
+   // A comparator for the queue of tasks
+   struct CCompareTasks
    {
-      bool result = false;
-      if (lhs && rhs)
+      bool operator()(const CTask* lhs, const CTask* rhs)
       {
-         result = lhs->getPriority() > rhs->getPriority();
+         bool result = false;
+         if (lhs && rhs)
+         {
+            result = lhs->getPriority() > rhs->getPriority();
+         }
+
+         return result;
       }
+   };
 
-      return result;
-   }
-};
+   class CTaskManager
+   {
+   public:
+      CTaskManager();
+      ~CTaskManager();
 
-class CTaskManager
-{
-public:
-   CTaskManager();
-   ~CTaskManager();
+      bool addTask(CTask* pTask);
+      bool removeTask(CTask* pTask);
+      void killAllTasks();
+      void execute();
 
-   bool addTask(CTask* pTask);
-   bool removeTask(CTask* pTask);
-   void killAllTasks();
-   void execute();
+      bool hasTasks() const { return !mTasks.empty(); }
 
-   bool hasTasks() const { return !mTasks.empty(); }
+      typedef std::set<CTask*, CCompareTasks> TTaskSet;
 
-   typedef std::set<CTask*, CCompareTasks> TTaskSet;
-  // typedef std::set<CTask*, CCompareTasks>::iterator TTaskSetIter; // TODO: change later for the C++ 11 auto
+   private:
+      TTaskSet mTasks;
+   };
 
-private:
-   TTaskSet mTasks;
-};
-
+} // namespace AeroSimulatorEngine
 #endif

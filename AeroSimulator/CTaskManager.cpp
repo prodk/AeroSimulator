@@ -1,5 +1,8 @@
+// CTaskManager.cpp - implementation of a task manager
+
 #include "CTaskManager.h"
 #include "CAppWindow.h"
+using namespace AeroSimulatorEngine;
 
 CTaskManager::CTaskManager()
    : mTasks()
