@@ -5,9 +5,34 @@
 
 #include "CAppWindow.h"
 #include "CTaskManager.h"
+#include "CWin32Renderer.h"
 
 #include <iostream>
 #include <memory>
+
+//#include "glew.h"
+//#include "wglew.h"
+//#include <gl/GL.h>
+//#include "../AeroSimulator/include/glext.h"
+
+// OpenGL extensions to load manually
+//extern PFNGLATTACHSHADERPROC glAttachShader;
+//extern PFNGLBINDBUFFERPROC glBindBuffer;
+//extern PFNGLBUFFERDATAPROC glBufferData;
+//extern PFNGLCREATEPROGRAMPROC glCreateProgram;
+//extern PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
+//extern PFNGLGENBUFFERSPROC glGenBuffers;
+//extern PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
+//extern PFNGLLINKPROGRAMPROC glLinkProgram;
+//extern PFNGLUSEPROGRAMPROC glUseProgram;
+//extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
+//
+//extern PFNGLCOMPILESHADERPROC glCompileShader;
+//extern PFNGLCREATESHADERPROC glCreateShader;
+//extern PFNGLGETSHADERIVPROC glGetShaderiv;
+//extern PFNGLSHADERSOURCEPROC glShaderSource;
+//extern PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
+//extern PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
 
 namespace AeroSimulatorEngine
 {
@@ -32,12 +57,13 @@ namespace AeroSimulatorEngine
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 
-      // A factory method, returns a window suitable for the current platform
-      std::shared_ptr<CAppWindow> createAppWindow();
+      std::shared_ptr<CWin32Window> createAppWindow();
+      std::shared_ptr<CWin32Renderer> createRenderer();
 
    private:
       CTaskManager mTaskManager;
-      std::shared_ptr<CAppWindow> mAppWindowTask;
+      std::shared_ptr<CWin32Window> mAppWindowTask;
+      std::shared_ptr<CWin32Renderer> mRendererTask;
    };
 
 } // namespace AeroSimulatorEngine

@@ -80,12 +80,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)AeroSimulator\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <Lib>
+      <AdditionalLibraryDirectories>$(SolutionDir)AeroSimulator\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -140,7 +144,10 @@
   <ItemGroup>
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
+    <ClInclude Include="CGeometry.h" />
+    <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
+    <ClInclude Include="CShader.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CWin32Renderer.h" />
@@ -149,7 +156,10 @@
   <ItemGroup>
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
+    <ClCompile Include="CGeometry.cpp" />
+    <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
+    <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />

@@ -7,7 +7,8 @@ using namespace AeroSimulatorEngine;
 
 CApp::CApp()
    : mTaskManager()
-   , mAppWindowTask(createAppWindow())
+   , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
+   , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
 {
    std::cout << "CApp created!" << std::endl;
 }
@@ -24,9 +25,12 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
    if (mAppWindowTask && mAppWindowTask->create(name, width, height))
    {
       result = true;
+
+      mRendererTask->init(*mAppWindowTask);
    }
 
    mTaskManager.addTask(mAppWindowTask.get());
+   mTaskManager.addTask(mRendererTask.get());
 
    return result;
 }
@@ -39,15 +43,9 @@ void CApp::run()
 int CApp::exit()
 {
    mAppWindowTask = nullptr;
+   mRendererTask = nullptr;
 
    std::cout << std::endl << "Press any key . . . " << std::endl;
    while (!_kbhit());
    return 0;
-}
-
-std::shared_ptr<CAppWindow> CApp::createAppWindow()
-{
-   ///@todo: check for the platform here and return the proper window type.
-   ///@todo: i.e. for Windows return CWin32Window, for Android - CAndroidWindow.
-   return std::shared_ptr<CAppWindow>(new CWin32Window(CTask::HIGHEST_PRIO));
 }
