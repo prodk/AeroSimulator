@@ -1,4 +1,5 @@
 #include "CWin32Renderer.h"
+#include "CRenderable.h"
 #include "CShader.h"
 #include "CGeometry.h"
 #include <cassert>
@@ -90,7 +91,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
 
       assert(pShader && pGeometry);
 
-      pShader->setup(/**pRenderable*/);
+      pShader->setup(*pRenderable);
      /* glDrawElements(
          GL_TRIANGLES,
          pGeometry->GetNumIndices(),

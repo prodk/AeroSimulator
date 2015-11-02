@@ -1,6 +1,6 @@
 // CRenderable.h - renderable class declaration
 
-#pragma once
+//#pragma once
 
 #ifndef AERO_SIMULATOR_CRENDERABLE_H
 #define AERO_SIMULATOR_CRENDERABLE_H

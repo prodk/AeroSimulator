@@ -1,5 +1,5 @@
 // CRenderer.h - declaration of an abstract CRenderer class
-#pragma once
+//#pragma once
 
 #ifndef AERO_SIMULATOR_CRENDERER_H
 #define AERO_SIMULATOR_CRENDERER_H
@@ -13,10 +13,10 @@
 
 #include <vector>
 
-#include "CRenderable.h"
-
 namespace AeroSimulatorEngine
 {
+   class CRenderable;
+
    // TODO: make it a singleton, only one CRenderer can exist
    class CRenderer : public CTask
    {

@@ -10,10 +10,10 @@
 
 #include <string>
 
-//class CRenderable;
-
 namespace AeroSimulatorEngine
 {
+   class CRenderable;
+
    class CShader
    {
    public:
@@ -21,7 +21,7 @@ namespace AeroSimulatorEngine
       virtual ~CShader();
 
       virtual void link();
-      virtual void setup(/*CRenderable& renderable*/);
+      virtual void setup(CRenderable& renderable);
       bool isLinked() const { return mIsLinked; }
 
    protected:
@@ -32,7 +32,7 @@ namespace AeroSimulatorEngine
       std::string mFragmentShaderCode;
       bool mIsLinked;
 
-      GLint mPositionAttributeId; // TODO: move to derived class
+      //GLint mPositionAttributeId; // TODO: move to derived class
 
       bool loadShader(GLuint id, const std::string& shaderCode);
    };

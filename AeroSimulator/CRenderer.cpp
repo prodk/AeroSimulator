@@ -1,5 +1,6 @@
 
 #include "CRenderer.h"
+#include "CRenderable.h"
 
 using namespace AeroSimulatorEngine;
 
