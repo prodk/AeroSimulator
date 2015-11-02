@@ -148,6 +148,7 @@
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CShader.h" />
+    <ClInclude Include="CSimpleShader.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CWin32Renderer.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CShader.cpp" />
+    <ClCompile Include="CSimpleShader.cpp" />
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />

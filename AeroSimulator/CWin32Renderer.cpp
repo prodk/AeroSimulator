@@ -143,7 +143,7 @@ bool CWin32Renderer::createRenderContext()
       return false;
    }
 
-   // устанавливаем формат пиксела
+   // Set pixel format
    if (::SetPixelFormat(mDC, uiPixelFormat, &pfd))
    {
       std::cout << "* pixel format was set" << std::endl;
@@ -163,7 +163,6 @@ bool CWin32Renderer::createRenderContext()
    GLenum err = glewInit();
    if (GLEW_OK != err)
    {
-      /*Log::instance() << "GLEW is not initialized!" << endl;*/
       std::cout << "GLEW is not initialized!" << std::endl;
    }
 
@@ -180,7 +179,6 @@ bool CWin32Renderer::createRenderContext()
       mRenderContext = wglCreateContextAttribsARB(mDC, 0, attribs);
       wglMakeCurrent(NULL, NULL);
       wglDeleteContext(tempContext);
-      //wglMakeCurrent(m_hDC, m_hRC); // Making the context current is done in setRC
    }
    else
    {  //It's not possible to make a GL 3.x context. Use the old style context (GL 2.1 and before)

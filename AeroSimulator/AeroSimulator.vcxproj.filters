@@ -48,6 +48,9 @@
     <ClInclude Include="CRenderable.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CSimpleShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -78,6 +81,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CRenderable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CSimpleShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

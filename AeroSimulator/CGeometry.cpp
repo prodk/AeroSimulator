@@ -8,6 +8,8 @@ CGeometry::CGeometry()
    , mNumIndices(0)
    , mVertices(nullptr)
    , mIndices(nullptr)
+   , mNumOfVertexPositions(0)
+   , mVertexStride(0)
 {
 }
 

@@ -32,8 +32,6 @@ namespace AeroSimulatorEngine
       std::string mFragmentShaderCode;
       bool mIsLinked;
 
-      //GLint mPositionAttributeId; // TODO: move to derived class
-
       bool loadShader(GLuint id, const std::string& shaderCode);
    };
 

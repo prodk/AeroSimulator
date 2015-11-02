@@ -21,6 +21,7 @@ bool CTaskManager::addTask(CTask * pTask)
    {
       result = true;
       mTasks.insert(pTask);
+      ///@todo: add log here
    }
 
    return result;

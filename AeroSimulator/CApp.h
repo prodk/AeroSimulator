@@ -57,9 +57,6 @@ namespace AeroSimulatorEngine
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 
-      std::shared_ptr<CWin32Window> createAppWindow();
-      std::shared_ptr<CWin32Renderer> createRenderer();
-
    private:
       CTaskManager mTaskManager;
       std::shared_ptr<CWin32Window> mAppWindowTask;
