@@ -9,19 +9,20 @@ CSimpleShader::CSimpleShader()
    : mPositionAttributeId(0)
 {
    mVertexShaderCode =
-      "#version 150\n"
+      //"#version 150\n"
       "attribute vec3 position;\n"
-      "uniform mat4 MVP;\n"
+      //"uniform mat4 MVP;\n"
       "varying vec4 color;\n"
       "void main(){\n"
       //"    color = vec4(position, 1.0);\n"
       //"    color = vec4(1.0, 0.0, 0.0, 1.0);\n"
-      "    gl_Position = MVP * vec4(position, 1.0);\n"
+      //"    gl_Position = MVP * vec4(position, 1.0);\n"
+      "    gl_Position = vec4(position, 1.0);\n"
       "    color = gl_Position;\n"
       "}\n";
 
    mFragmentShaderCode =
-      "#version 150\n"
+      //"#version 150\n"
       "varying vec4 color;\n"
       "void main(){\n"
       "    gl_FragColor = color;\n"
@@ -46,13 +47,20 @@ void CSimpleShader::setup(CRenderable & renderable)
    CGeometry* pGeometry = renderable.getGeometry();
    assert(pGeometry);
 
-   glVertexAttribPointer(
+   /*glVertexAttribPointer(
       mPositionAttributeId,
-      pGeometry->getNumOfVertexPositions(),
+      pGeometry->getNumOfElementsPerVertex(),
       GL_FLOAT,
       GL_FALSE,
       pGeometry->getVertexStride(),
-      pGeometry->getVertexBuffer());
+      pGeometry->getVertexBuffer());*/
+   glVertexAttribPointer(
+      mPositionAttributeId,
+      3,
+      GL_FLOAT,
+      GL_FALSE,
+      pGeometry->getVertexStride(),
+      0);
 
    glEnableVertexAttribArray(mPositionAttributeId);
 }

@@ -23,6 +23,8 @@ namespace AeroSimulatorEngine
 
       void init(const CWin32Window& window);
 
+      bool generateVBOs();
+
    private:
       // Override CRenderer part
       virtual void init();
@@ -42,6 +44,9 @@ namespace AeroSimulatorEngine
       HGLRC mRenderContext;
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
+
+      GLuint mVboId;
+      GLuint mIboId;
    };
 
 } // namespace AeroSimulatorEngine

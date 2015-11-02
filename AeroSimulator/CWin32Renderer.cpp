@@ -5,6 +5,21 @@
 #include <cassert>
 using namespace AeroSimulatorEngine;
 
+namespace
+{
+   float data[] = {
+      -0.5f,  0.5f, 0.0f, // Top-left
+      0.5f,  0.5f, 0.0f, // Top-right
+      0.5f, -0.5f, 0.0f, // Bottom-right
+      -0.5f, -0.5f, 0.0f, // Bottom-left
+   };
+
+   GLuint indices[] = {
+      0, 3, 1,
+      3, 1, 2
+   };
+}
+
 CWin32Renderer::CWin32Renderer(ePriority prio)
    : CRenderer(prio)
    , mDC(0)
@@ -12,6 +27,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mRenderContext(0)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
+   , mVboId(0)
+   , mIboId(0)
 {
 }
 
@@ -31,7 +48,7 @@ bool CWin32Renderer::update()
    {
       setRenderContext();
 
-      glClearColor(0.95f, 0.0f, 0.0f, 1);
+      glClearColor(0.95f, 0.95f, 0.0f, 1);
       glClear(GL_COLOR_BUFFER_BIT);
       for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
       {
@@ -92,12 +109,10 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       assert(pShader && pGeometry);
 
       pShader->setup(*pRenderable);
-     /* glDrawElements(
-         GL_TRIANGLES,
-         pGeometry->GetNumIndices(),
-         GL_UNSIGNED_SHORT,
-         pGeometry->GetIndexBuffer());*/
-      glDrawElements(GL_TRIANGLE_STRIP, 10, GL_UNSIGNED_INT, 0);
+      //glDrawElements(GL_TRIANGLES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, pGeometry->getIndexBuffer());
+      //glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, pGeometry->getIndexBuffer());
+      //glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+      glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_INT, 0);
    }
 }
 
@@ -243,4 +258,49 @@ bool CWin32Renderer::loadOpenGLExtensions()
    //std::cout << "  OpenGL Extensions loaded manually. Stupid, but we have to do it this way.\n" << std::endl;
 
    return result;
+}
+
+bool CWin32Renderer::generateVBOs()
+{
+   setRenderContext();
+
+   // VBO
+   glGenBuffers(1, &mVboId);
+   glBindBuffer(GL_ARRAY_BUFFER, mVboId);
+   //Log::instance().logStatus("* glBindBuffer() VBO: ");
+
+   ///@todo: place to a method
+   char str[256];
+   GLenum err = glGetError();
+   sprintf_s(str, "%s\n", glewGetErrorString(err));
+   std::cout << "* glBindBuffer() VBO: " << str << std::endl;
+
+   CGeometry* pGeometry = mRenderables[0]->getGeometry();
+
+   assert(pGeometry);
+
+   /*void* data = pGeometry->getVertexBuffer();
+   glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);*/
+   glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+
+   // Index buffer
+   glGenBuffers(1, &mIboId);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
+   //Log::instance().logStatus("* glBindBuffer() Index buffer: ");
+   err = glGetError();
+   sprintf_s(str, "%s\n", glewGetErrorString(err));
+   std::cout << "* glBindBuffer() index buffer: " << str << std::endl;
+
+   /*void* indices = pGeometry->getIndexBuffer();*/
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+   ///@todo: move to another method
+   // Shader setup
+   CShader* pShader = mRenderables[0]->getShader();
+   pShader->link();
+   pShader->setup(*mRenderables[0]);
+
+   resetRenderContext();
+
+   return true;
 }

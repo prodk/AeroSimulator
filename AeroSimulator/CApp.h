@@ -3,17 +3,10 @@
 #ifndef AERO_SIMULATOR_CAPP_H
 #define AERO_SIMULATOR_CAPP_H
 
-#include "CAppWindow.h"
 #include "CTaskManager.h"
-#include "CWin32Renderer.h"
 
 #include <iostream>
 #include <memory>
-
-//#include "glew.h"
-//#include "wglew.h"
-//#include <gl/GL.h>
-//#include "../AeroSimulator/include/glext.h"
 
 // OpenGL extensions to load manually
 //extern PFNGLATTACHSHADERPROC glAttachShader;
@@ -36,6 +29,13 @@
 
 namespace AeroSimulatorEngine
 {
+   class CWin32Window;
+   class CWin32Renderer;
+
+   class CSimpleShader;
+   class CGeometry;
+   class CRenderable;
+
    class CApp
    {
    public:
@@ -57,10 +57,17 @@ namespace AeroSimulatorEngine
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 
+      void setupRenderer();
+
    private:
       CTaskManager mTaskManager;
       std::shared_ptr<CWin32Window> mAppWindowTask;
       std::shared_ptr<CWin32Renderer> mRendererTask;
+
+      ///@todo: think about how to organize these members, probably the mGeometry and mShader are redundant.
+      std::shared_ptr<CRenderable> mRenderable;
+      std::shared_ptr<CGeometry> mGeometry;
+      std::shared_ptr<CSimpleShader> mShader;
    };
 
 } // namespace AeroSimulatorEngine
