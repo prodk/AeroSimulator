@@ -5,21 +5,6 @@
 #include <cassert>
 using namespace AeroSimulatorEngine;
 
-namespace
-{
-   float data[] = {
-      -0.5f,  0.5f, 0.0f, // Top-left
-      0.5f,  0.5f, 0.0f, // Top-right
-      0.5f, -0.5f, 0.0f, // Bottom-right
-      -0.5f, -0.5f, 0.0f, // Bottom-left
-   };
-
-   GLuint indices[] = {
-      0, 3, 1,
-      3, 1, 2
-   };
-}
-
 CWin32Renderer::CWin32Renderer(ePriority prio)
    : CRenderer(prio)
    , mDC(0)
@@ -109,10 +94,9 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       assert(pShader && pGeometry);
 
       pShader->setup(*pRenderable);
-      //glDrawElements(GL_TRIANGLES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, pGeometry->getIndexBuffer());
-      //glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, pGeometry->getIndexBuffer());
-      //glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
-      glDrawElements(GL_TRIANGLE_STRIP, 6, GL_UNSIGNED_INT, 0);
+
+      ///@todo: think about the last argument
+      glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, /*pGeometry->getIndexBuffer()*/0);
    }
 }
 
@@ -225,7 +209,7 @@ void CWin32Renderer::resetRenderContext()
 bool CWin32Renderer::loadOpenGLExtensions()
 {
    bool result = true;
-   // получаем строку с информацией о videocard
+   // Get the GPU information and the OpenGL extensions
    std::cout << "* Video-system information:" << std::endl;
    std::cout << "  Videocard: " << (const char*)glGetString(GL_RENDERER) << std::endl;
    std::cout << "  Vendor: " << (const char*)glGetString(GL_VENDOR) << std::endl;
@@ -264,10 +248,15 @@ bool CWin32Renderer::generateVBOs()
 {
    setRenderContext();
 
+   ///@todo: move to another method
+   // Shader setup
+   CShader* pShader = mRenderables[0]->getShader();
+   pShader->link();
+   pShader->setup(*mRenderables[0]);
+
    // VBO
    glGenBuffers(1, &mVboId);
    glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-   //Log::instance().logStatus("* glBindBuffer() VBO: ");
 
    ///@todo: place to a method
    char str[256];
@@ -279,26 +268,19 @@ bool CWin32Renderer::generateVBOs()
 
    assert(pGeometry);
 
-   /*void* data = pGeometry->getVertexBuffer();
-   glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);*/
-   glBufferData(GL_ARRAY_BUFFER, sizeof(data), data, GL_STATIC_DRAW);
+   GLuint* data = static_cast<GLuint*>(pGeometry->getVertexBuffer());
+   glBufferData(GL_ARRAY_BUFFER, pGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
 
    // Index buffer
    glGenBuffers(1, &mIboId);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-   //Log::instance().logStatus("* glBindBuffer() Index buffer: ");
+
    err = glGetError();
    sprintf_s(str, "%s\n", glewGetErrorString(err));
    std::cout << "* glBindBuffer() index buffer: " << str << std::endl;
 
-   /*void* indices = pGeometry->getIndexBuffer();*/
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-   ///@todo: move to another method
-   // Shader setup
-   CShader* pShader = mRenderables[0]->getShader();
-   pShader->link();
-   pShader->setup(*mRenderables[0]);
+   GLuint* indices = (GLuint*)pGeometry->getIndexBuffer();
+   glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
 
    resetRenderContext();
 

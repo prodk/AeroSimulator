@@ -12,7 +12,6 @@ CSimpleShader::CSimpleShader()
    : mPositionAttributeId(0)
 {
    mVertexShaderCode =
-      //"#version 150\n"
       "attribute vec3 position;\n"
       "uniform mat4 MVP;\n"
       "varying vec4 color;\n"
@@ -25,7 +24,6 @@ CSimpleShader::CSimpleShader()
       "}\n";
 
    mFragmentShaderCode =
-      //"#version 150\n"
       "varying vec4 color;\n"
       "void main(){\n"
       "    gl_FragColor = color;\n"
@@ -61,7 +59,11 @@ void CSimpleShader::setup(CRenderable & renderable)
 
    glEnableVertexAttribArray(mPositionAttributeId);
 
-   ///@todo: later place it to a separate class/method
+   rotateCamera();
+}
+
+void CSimpleShader::rotateCamera()
+{
    // Rotation stuff
    glm::mat4 View = glm::mat4(1.0f);
    glm::vec3 cameraPos = glm::vec3(0, 0, -3);

@@ -12,35 +12,23 @@ using namespace AeroSimulatorEngine;
 
 namespace
 {
-   //float cubeData[] = {
-   //   // Bottom plane
-   //   -0.5f, -0.5f, 0.5f,  //0
-   //   -0.5f, -0.5f, -0.5f, //1
-   //   0.5f, -0.5f, -0.5f,  //2
-   //   0.5f, -0.5f, 0.5f,   //3
-
-   //   // Top plane
-   //   -0.5f, 0.5f, -0.5f,  //4
-   //   0.5f, 0.5f, -0.5f,   //5
-   //   0.5f, 0.5f, 0.5f,    //6
-   //   -0.5f, 0.5f, 0.5f,   //7
-   //};
-
-   //// 10 indices
-   //GLuint indices[] = {
-   //   6, 7, 3, 0, 2, 1, 5, 4, 6, 7
-   //};
-
    float cubeData[] = {
-      -0.5f,  0.5f, 0.0f, // Top-left
-      0.5f,  0.5f, 0.0f, // Top-right
-      0.5f, -0.5f, 0.0f, // Bottom-right
-      -0.5f, -0.5f, 0.0f, // Bottom-left
+      // Bottom plane
+      -0.5f, -0.5f, 0.5f,  //0
+      -0.5f, -0.5f, -0.5f, //1
+      0.5f, -0.5f, -0.5f,  //2
+      0.5f, -0.5f, 0.5f,   //3
+
+      // Top plane
+      -0.5f, 0.5f, -0.5f,  //4
+      0.5f, 0.5f, -0.5f,   //5
+      0.5f, 0.5f, 0.5f,    //6
+      -0.5f, 0.5f, 0.5f,   //7
    };
 
+   // 10 indices
    GLuint indices[] = {
-   0, 3, 1,
-   3, 1, 2
+      6, 7, 3, 0, 2, 1, 5, 4, 6, 7
    };
 }
 
@@ -120,7 +108,7 @@ void CApp::setupRenderer()
    const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
    pGeometry->setNumOfIndices(numOfIndices);
 
-   pGeometry->setNumOfElementsPerVertex(3); // 3 coordinates per vertex
+   pGeometry->setNumOfElementsPerVertex(3); // 3 coordinates per vertex, @todo: place to some variable to avoid magic numbers
    pGeometry->setVertexStride(0);
 
    mRendererTask->addRenderable(mRenderable.get());

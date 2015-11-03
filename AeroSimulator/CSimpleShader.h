@@ -17,6 +17,9 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
 
    private:
+      void rotateCamera();
+
+   private:
       GLint mPositionAttributeId;
    };
 
