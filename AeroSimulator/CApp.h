@@ -60,6 +60,7 @@ namespace AeroSimulatorEngine
       void setupRenderer();
 
    private:
+      ///@todo: introduce a Bridge pattern and place Win32-specific code there
       CTaskManager mTaskManager;
       std::shared_ptr<CWin32Window> mAppWindowTask;
       std::shared_ptr<CWin32Renderer> mRendererTask;

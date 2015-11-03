@@ -26,9 +26,15 @@ namespace
       -0.5f, 0.5f, 0.5f,   //7
    };
 
-   // 10 indices
-   GLuint indices[] = {
+   // 10 indices - a cube without 2 faces
+   /*GLuint indices[] = {
       6, 7, 3, 0, 2, 1, 5, 4, 6, 7
+   };*/
+
+   // 27 indices - full cube
+   GLuint indices[] = {
+      6, 7, 3, 0, 2, 1, 5, 4, 6, 7, // 10
+      4, 1, 7, 0, 0, 1, 2, 2, 0, 3, 3, 2, 5, 3, 3, 6, 5 //17
    };
 }
 
@@ -53,8 +59,8 @@ CApp::~CApp()
 
    mRenderable.reset();
 
-   mAppWindowTask.reset();
    mRendererTask.reset();
+   mAppWindowTask.reset();
 
    std::cout << "CApp destroyed" << std::endl;
 }

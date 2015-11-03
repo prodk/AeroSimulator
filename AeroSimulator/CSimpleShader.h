@@ -17,6 +17,7 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
 
    private:
+      void rotateCameraGlm();
       void rotateCamera();
 
    private:

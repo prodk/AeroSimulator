@@ -5,6 +5,8 @@
 #include <cassert>
 using namespace AeroSimulatorEngine;
 
+///@todo: move non-Win32 code to the base class
+
 CWin32Renderer::CWin32Renderer(ePriority prio)
    : CRenderer(prio)
    , mDC(0)
