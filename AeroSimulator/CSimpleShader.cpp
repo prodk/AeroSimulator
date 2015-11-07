@@ -5,25 +5,28 @@
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include <cassert>
+#include <iostream>
 
 using namespace AeroSimulatorEngine;
 
 CSimpleShader::CSimpleShader()
    : mPositionAttributeId(0)
+   , mColorAttributeId(0)
 {
    mVertexShaderCode =
-      "attribute vec3 position;\n"
+      "attribute vec3 aPosition;\n"
+      "attribute vec3 aColor;\n"
       "uniform mat4 MVP;\n"
-      "varying vec4 color;\n"
+      "varying vec4 vColor;\n"
       "void main(){\n"
-      "    gl_Position = MVP * vec4(position, 1.0);\n"
-      "    color = gl_Position;\n"
+      "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
+      "    vColor = vec4(aColor, 1.0f);\n"
       "}\n";
 
    mFragmentShaderCode =
-      "varying vec4 color;\n"
+      "varying vec4 vColor;\n"
       "void main(){\n"
-      "    gl_FragColor = color;\n"
+      "    gl_FragColor = vColor;\n"
       "}\n";
 }
 
@@ -35,7 +38,16 @@ void CSimpleShader::link()
 {
    CShader::link();
 
-   mPositionAttributeId = glGetAttribLocation(mProgramId, "position");
+   mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
+   char str[256];
+   GLenum err = glGetError();
+   sprintf_s(str, "%s\n", glewGetErrorString(err));
+   std::cout << "* glGetAttribLocation(mProgramId, aPosition): " << str << std::endl;
+
+   mColorAttributeId = glGetAttribLocation(mProgramId, "aColor");
+   err = glGetError();
+   sprintf_s(str, "%s\n", glewGetErrorString(err));
+   std::cout << "* glGetAttribLocation(mProgramId, aColor): " << str << std::endl;
 }
 
 void CSimpleShader::setup(CRenderable & renderable)
@@ -50,11 +62,28 @@ void CSimpleShader::setup(CRenderable & renderable)
       pGeometry->getNumOfElementsPerVertex(),
       GL_FLOAT,
       GL_FALSE,
-      pGeometry->getVertexStride(),
+      sizeof(float) * 6, //pGeometry->getVertexStride(),
       0
       /*pGeometry->getVertexBuffer()*/);
 
    glEnableVertexAttribArray(mPositionAttributeId);
+  /* char str[256];
+   GLenum err = glGetError();
+   sprintf_s(str, "%s\n", glewGetErrorString(err));
+   std::cout << "* glEnableVertexAttribArray(mPositionAttributeId): " << str << std::endl;*/
+
+   glVertexAttribPointer(
+      mColorAttributeId,
+      pGeometry->getNumOfElementsPerVertex(),
+      GL_FLOAT,
+      GL_FALSE,
+      sizeof(float)*6,
+      0/*pGeometry->getVertexBuffer()*/);
+
+   glEnableVertexAttribArray(mColorAttributeId);
+  /* err = glGetError();
+   sprintf_s(str, "%s\n", glewGetErrorString(err));
+   std::cout << "* glEnableVertexAttribArray(mColorAttributeId): " << str << std::endl;*/
 
    rotateCamera();
 }
@@ -63,14 +92,17 @@ void CSimpleShader::rotateCameraGlm()
 {
    // Init the View matrix
    glm::mat4 View = glm::mat4(1.0f);
-   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -3.0f);
+   //glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -5.0f);
+   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -5.0f);
    View = glm::translate(View, cameraPos);
 
    // Rotate the View matrix
    static float angle;
    glm::mat4 rotateCamera = glm::mat4(1.0f);
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   View = glm::rotate(View, angle, yAxis);
+   /*glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+   View = glm::rotate(View, angle, yAxis);*/
+   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   View = glm::rotate(View, angle, xAxis);
 
    const float delta = 0.01f;
    angle += delta;

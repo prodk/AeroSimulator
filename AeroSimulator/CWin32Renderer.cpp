@@ -35,8 +35,8 @@ bool CWin32Renderer::update()
    {
       setRenderContext();
 
-      glClearColor(0.95f, 0.95f, 0.0f, 1);
-      glClear(GL_COLOR_BUFFER_BIT);
+      glClearColor(0.95f, 0.95f, 0.95f, 1);
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
       {
          CRenderable* pRenderable = *iter;
@@ -249,6 +249,7 @@ bool CWin32Renderer::loadOpenGLExtensions()
 bool CWin32Renderer::generateVBOs()
 {
    setRenderContext();
+   glEnable(GL_DEPTH_TEST);
 
    ///@todo: move to another method
    // Shader setup
@@ -284,7 +285,9 @@ bool CWin32Renderer::generateVBOs()
    GLuint* indices = (GLuint*)pGeometry->getIndexBuffer();
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
 
+   ///@todo: add resetting glBindBUffer here!
    resetRenderContext();
+
 
    return true;
 }

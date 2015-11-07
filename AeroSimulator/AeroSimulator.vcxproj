@@ -145,7 +145,6 @@
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CGeometry.h" />
-    <ClInclude Include="CMatrix4x4.h" />
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CShader.h" />
@@ -154,13 +153,11 @@
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
-    <ClInclude Include="CVector3.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CGeometry.cpp" />
-    <ClCompile Include="CMatrix4x4.cpp" />
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CShader.cpp" />
@@ -169,7 +166,6 @@
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
-    <ClCompile Include="CVector3.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

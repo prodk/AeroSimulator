@@ -22,6 +22,7 @@ namespace AeroSimulatorEngine
 
    private:
       GLint mPositionAttributeId;
+      GLint mColorAttributeId;
    };
 
 } // namespace AeroSimulatorEngine
