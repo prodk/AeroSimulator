@@ -10,6 +10,8 @@
 #include "../AeroSimulator/include/glext.h"
 #include <cassert>
 
+#include "glm/gtc/matrix_transform.hpp"
+
 using namespace AeroSimulatorEngine;
 
 namespace
@@ -36,7 +38,6 @@ namespace
       0.2f, 0.6f, 0.0f //7 color
    };
 
-   ///@todo: optimize the inidices
    ///@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
    GLuint indices[] = {
       6, 5, 7, 4, // back
@@ -69,12 +70,12 @@ namespace
    //};
 }
 
+const int CCube::mNumOfElementsPerVertex = 3; // 3 coordinates/color components per vertex
+const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates and 3 colors
+
 CCube::CCube()
-   /*mGeometry(new CGeometry())
-   , mShader(new CSimpleShader())*/
+   : CGameObject()
 {
-   /*setGeometry(mGeometry.get());
-   setShader(mShader.get());*/
    mGeometry.reset(new CGeometry());
    mShader.reset(new CSimpleShader());
 
@@ -84,6 +85,41 @@ CCube::CCube()
 
 CCube::~CCube()
 {
+}
+
+CCube::CCube(const glm::mat4 & parentModelMatrix,
+             const glm::vec3 & scale,
+             const glm::vec3 & rotate,
+             const glm::vec3 & translate)
+   : CGameObject(parentModelMatrix, scale, rotate, translate)
+{
+   mGeometry.reset(new CGeometry());
+   mShader.reset(new CSimpleShader());
+
+   assert(mGeometry.get());
+   assert(mShader.get());
+
+   // Set transforms
+   glm::mat4 myModel = glm::mat4(1.0f);
+
+   // TRS
+   // scale
+   myModel = glm::scale(myModel, scale);
+
+   // rotate
+   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   myModel = glm::rotate(myModel, rotate.x, xAxis);
+
+   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+   myModel = glm::rotate(myModel, rotate.y, yAxis);
+
+   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+   myModel = glm::rotate(myModel, rotate.z, zAxis);
+
+   myModel = glm::translate(myModel, translate);
+
+   ///@todo: probably myltiply by the parent matrix
+   setModelMatrix(myModel);
 }
 
 void CCube::setupGeometry()
@@ -96,10 +132,8 @@ void CCube::setupGeometry()
    const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
    mGeometry->setNumOfIndices(numOfIndices);
 
-
-   ///@todo: make these magic number static consts
-   mGeometry->setNumOfElementsPerVertex(3); // 3 coordinates/color components per vertex
-   mGeometry->setVertexStride(6); // stride of 6 for 3 coordinates and 3 colors
+   mGeometry->setNumOfElementsPerVertex(mNumOfElementsPerVertex);
+   mGeometry->setVertexStride(mStride);
 }
 
 void CCube::setupVBO()
@@ -108,7 +142,6 @@ void CCube::setupVBO()
    mShader->link();
    mShader->setup(*this);
 
-   ///@todo: these too, move inside CRenderable, just call setupVBO(); vbo/ibo ids also must be inside CRenderable
    // VBO
    glGenBuffers(1, &mVboId);
    glBindBuffer(GL_ARRAY_BUFFER, mVboId);
@@ -120,12 +153,12 @@ void CCube::setupVBO()
    // Index buffer
    glGenBuffers(1, &mIboId);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-   CLog::getInstance().log("* glBindBuffer() index buffer: ");
+   CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
 
    GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
 
-   ///@todo: add resetting glBindBUffer here!
+   // Reset VBOs
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }

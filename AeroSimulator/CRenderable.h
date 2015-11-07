@@ -33,9 +33,10 @@ namespace AeroSimulatorEngine
       GLuint getVboId() const { return mVboId; }
       GLuint getIboId() const { return mIboId; }
 
+      void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
+      glm::mat4 getModelMatrix() const { return mModelMatrix; }
+
    protected:
-      /*CGeometry* mGeometry;
-      CShader* mShader;*/
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
       glm::mat4 mModelMatrix;

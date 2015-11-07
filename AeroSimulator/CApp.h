@@ -67,11 +67,9 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CWin32Window> mAppWindowTask;
       std::shared_ptr<CWin32Renderer> mRendererTask;
 
-      ///@todo: think about how to organize these members, probably the mGeometry and mShader are redundant.
+      ///@todo: use the Composite pattern for game objects
       std::shared_ptr<CGameObject> mCube;
-      /*std::shared_ptr<CRenderable> mRenderable;
-      std::shared_ptr<CGeometry> mGeometry;
-      std::shared_ptr<CSimpleShader> mShader;*/
+      std::shared_ptr<CGameObject> mBodyCube;
    };
 
 } // namespace AeroSimulatorEngine

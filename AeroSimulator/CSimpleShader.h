@@ -17,12 +17,13 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
 
    private:
-      void rotateCameraGlm();
-      void rotateCamera();
+      void rotateCameraGlm(CRenderable & renderable);
+      void rotateCamera(CRenderable & renderable);
 
    private:
       GLint mPositionAttributeId;
       GLint mColorAttributeId;
+      GLint mMvpAttributeId;
    };
 
 } // namespace AeroSimulatorEngine

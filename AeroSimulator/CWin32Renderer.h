@@ -23,8 +23,6 @@ namespace AeroSimulatorEngine
 
       void init(const CWin32Window& window);
 
-      bool generateVBOs();
-
       bool setRenderContext();
       void resetRenderContext();
 
@@ -37,8 +35,6 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
-      /*bool setRenderContext();*/
-      /*void resetRenderContext();*/
       bool loadOpenGLExtensions(); // TODO: may be redundant when GLEW is used
 
    private:
@@ -47,9 +43,6 @@ namespace AeroSimulatorEngine
       HGLRC mRenderContext;
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
-
-      /*GLuint mVboId;
-      GLuint mIboId;*/
    };
 
 } // namespace AeroSimulatorEngine

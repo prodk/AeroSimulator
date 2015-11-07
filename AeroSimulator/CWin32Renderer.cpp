@@ -16,8 +16,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mRenderContext(0)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
-   /*, mVboId(0)
-   , mIboId(0)*/
 {
 }
 
@@ -37,10 +35,6 @@ bool CWin32Renderer::update()
    {
       setRenderContext();
 
-      ///@todo: vbo/ibo ids should be inside CRenderable, and binding unbinding is inside draw();
-      /*glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);*/
-
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
@@ -53,9 +47,6 @@ bool CWin32Renderer::update()
       }
 
       swapBuffers();
-
-      /*glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 
       resetRenderContext();
    }
@@ -76,8 +67,9 @@ void CWin32Renderer::init()
       {
          mIsInitialized = true;
 
-         // Enable here what is needed by the app
+         // Enable OpenGL stuff needed by the app
          glEnable(GL_DEPTH_TEST);
+
          // Go back to the window rendering context
          resetRenderContext();
       }
@@ -112,7 +104,6 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
 
       pShader->setup(*pRenderable);
 
-      ///@todo: think about the last argument
       glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
 
       // Unbind the buffers
@@ -243,43 +234,3 @@ bool CWin32Renderer::loadOpenGLExtensions()
    return result;
 }
 
-bool CWin32Renderer::generateVBOs()
-{
-   ///@todo: move this to setupRenderer
-   //setRenderContext();
-   //glEnable(GL_DEPTH_TEST);
-
-   /////@todo: move inside CRenderable, to some public method setupShader;
-   //// Shader setup
-   //CShader* pShader = mRenderables[0]->getShader();
-   //pShader->link();
-   //pShader->setup(*mRenderables[0]);
-
-   /////@todo: these too, move inside CRenderable, just call setupVBO(); vbo/ibo ids also must be inside CRenderable
-   //// VBO
-   //glGenBuffers(1, &mVboId);
-   //glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-   //CLog::getInstance().logGL("* glBindBuffer() VBO: ");
-
-   //CGeometry* pGeometry = mRenderables[0]->getGeometry();
-   //assert(pGeometry);
-
-   //GLuint* data = static_cast<GLuint*>(pGeometry->getVertexBuffer());
-   //glBufferData(GL_ARRAY_BUFFER, pGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
-
-   //// Index buffer
-   //glGenBuffers(1, &mIboId);
-   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-   //CLog::getInstance().log("* glBindBuffer() index buffer: ");
-
-   //GLuint* indices = (GLuint*)pGeometry->getIndexBuffer();
-   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
-
-   /////@todo: add resetting glBindBUffer here!
-   //glBindBuffer(GL_ARRAY_BUFFER, 0);
-   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-   //resetRenderContext();
-
-   return true;
-}
