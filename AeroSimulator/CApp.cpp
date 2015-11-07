@@ -13,37 +13,81 @@ using namespace AeroSimulatorEngine;
 
 namespace
 {
+   ///@todo: remove this
+   //GLfloat cubeData[] = {
+   //    //front
+   //   -1.0f, -1.0f,  1.0f,
+   //   1.0f, 0.0f, 0.0f, //0 color
+   //   1.0f, -1.0f,  1.0f,
+   //   0.0f, 1.0f, 0.0f, //1 color
+   //   1.0f,  1.0f,  1.0f,
+   //   0.0f, 0.0f, 1.0f, //2 color
+   //   -1.0f,  1.0f,  1.0f,
+   //   0.0f, 0.0f, 0.0f, //3 color
+   //   // back
+   //   -1.0f, -1.0f, -1.0f,
+   //   1.0f, 0.0f, 0.0f,//4 color
+   //   1.0f, -1.0f, -1.0f,
+   //   0.0f, 1.0f, 0.0f, //5 color
+   //   1.0f,  1.0f, -1.0f,
+   //   0.0f, 0.0f, 1.0f,//6 color
+   //   -1.0f,  1.0f, -1.0f,
+   //   1.0f, 0.0f, 1.0f //7 color
+   //};
+
+   // Unit cube
    GLfloat cubeData[] = {
-       //front
-      -1.0f, -1.0f,  1.0f,
+      //front
+      -0.5f, -0.5f,  0.5f,
       1.0f, 0.0f, 0.0f, //0 color
-      1.0f, -1.0f,  1.0f,
+      0.5f, -0.5f,  0.5f,
       0.0f, 1.0f, 0.0f, //1 color
-      1.0f,  1.0f,  1.0f,
+      0.5f,  0.5f,  0.5f,
       0.0f, 0.0f, 1.0f, //2 color
-      -1.0f,  1.0f,  1.0f,
-      0.0f, 0.0f, 0.0f, //3 color
+      -0.5f,  0.5f,  0.5f,
+      0.2f, 0.0f, 0.5f, //3 color
       // back
-      -1.0f, -1.0f, -1.0f,
+      -0.5f, -0.5f, -0.5f,
       1.0f, 0.0f, 0.0f,//4 color
-      1.0f, -1.0f, -1.0f,
+      0.5f, -0.5f, -0.5f,
       0.0f, 1.0f, 0.0f, //5 color
-      1.0f,  1.0f, -1.0f,
+      0.5f,  0.5f, -0.5f,
       0.0f, 0.0f, 1.0f,//6 color
-      -1.0f,  1.0f, -1.0f,
-      1.0f, 0.0f, 1.0f //7 color
+      -0.5f,  0.5f, -0.5f,
+      0.2f, 0.6f, 0.0f //7 color
    };
 
    ///@todo: optimize the inidices
    ///@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
    GLuint indices[] = {
-      6, 5, 7, 4, // backd
-      7, 4, 3, 0, // left
-      3, 0, 2, 1, // front
-      2, 1, 6, 5, // right
+      6, 5, 7, 4, // back
+      3, 0, // left
+      2, 1, // front
+      6, 5, // right
+
       5, 4, 1, 0, // bottom
       2, 3, 6, 7  // top
    };
+
+   //GLuint indices[] = {
+   //   // Stripe 1
+   //   6, 5, 7, 4, // back
+   //    3, 0, // left
+   //    2, 1, // front
+   //    6, 5, // right
+
+   //   // Stripe 2
+   //   // bottom
+   //   5, 1, 4, 0,
+
+   //   // front
+   //   0, 1, 2,
+   //   2, 0, 3,
+
+   //   // top
+   //   3, 2, 6,
+   //   6, 3, 7
+   //};
 }
 
 CApp::CApp()

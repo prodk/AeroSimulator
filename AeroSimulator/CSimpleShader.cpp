@@ -73,7 +73,7 @@ void CSimpleShader::setup(CRenderable & renderable)
       GL_FLOAT,
       GL_FALSE,
       sizeof(float)*pGeometry->getVertexStride(),
-      0);
+      (const void*)(3*sizeof(float))); // Important!! Shift relative to the first array element
 
    glEnableVertexAttribArray(mColorAttributeId);
 
@@ -88,11 +88,11 @@ void CSimpleShader::rotateCameraGlm()
    View = glm::translate(View, cameraPos);
 
    // Rotate the View matrix
-   static float angle;
+   static float angle = 30;
    glm::mat4 rotateCamera = glm::mat4(1.0f);
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
    View = glm::rotate(View, angle, yAxis);
-  /* glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   /*glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    View = glm::rotate(View, angle, xAxis);*/
 
    const float delta = 0.01f;
