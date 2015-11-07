@@ -10,6 +10,17 @@
 #include <cassert>
 #include <iostream>
 
+///@todo: remove
+//#define _USE_MATH_DEFINES // for C++
+//#include <cmath>
+
+namespace AeroSimulatorEngine
+{
+   ///@todo: make these static constants
+#define M_PI           3.14159265358979323846  /* pi */
+#define DEG_TO_RAD M_PI / 180
+}
+
 using namespace AeroSimulatorEngine;
 
 CSimpleShader::CSimpleShader()
@@ -88,19 +99,21 @@ void CSimpleShader::rotateCameraGlm()
    View = glm::translate(View, cameraPos);
 
    // Rotate the View matrix
-   static float angle = 30;
+   static float angle = 30 * DEG_TO_RAD;
    glm::mat4 rotateCamera = glm::mat4(1.0f);
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   View = glm::rotate(View, angle, yAxis);
-   /*glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   View = glm::rotate(View, angle, xAxis);*/
+   /*glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+   View = glm::rotate(View, angle, yAxis);*/
+   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   View = glm::rotate(View, angle, xAxis);
 
    const float delta = 0.01f;
-   angle += delta;
+   //angle += delta;
 
+   ///@todo: move projection to construction
    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
    glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
 
+   ///@todo: take the model matrix from the CRenderable object.
    // Model matrix : an identity matrix (model will be at the origin)
    glm::mat4 Model = glm::mat4(1.0f);
    glm::mat4 MVP = Projection * View * Model;
@@ -112,7 +125,7 @@ void CSimpleShader::rotateCameraGlm()
    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 }
 
-void AeroSimulatorEngine::CSimpleShader::rotateCamera()
+void CSimpleShader::rotateCamera()
 {
    rotateCameraGlm();
 }

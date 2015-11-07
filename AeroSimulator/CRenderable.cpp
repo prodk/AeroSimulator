@@ -6,11 +6,16 @@
 using namespace AeroSimulatorEngine;
 
 CRenderable::CRenderable()
-   : mGeometry(nullptr)
-   , mShader(nullptr)
+   : mGeometry()
+   , mShader()
+   , mModelMatrix()
+   , mVboId(0)
+   , mIboId(0)
 {
 }
 
 CRenderable::~CRenderable()
 {
+   mGeometry.reset();
+   mShader.reset();
 }

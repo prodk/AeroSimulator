@@ -16,8 +16,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mRenderContext(0)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
-   , mVboId(0)
-   , mIboId(0)
+   /*, mVboId(0)
+   , mIboId(0)*/
 {
 }
 
@@ -37,8 +37,9 @@ bool CWin32Renderer::update()
    {
       setRenderContext();
 
-      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
+      ///@todo: vbo/ibo ids should be inside CRenderable, and binding unbinding is inside draw();
+      /*glBindBuffer(GL_ARRAY_BUFFER, mVboId);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);*/
 
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -53,8 +54,8 @@ bool CWin32Renderer::update()
 
       swapBuffers();
 
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      /*glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);*/
 
       resetRenderContext();
    }
@@ -74,6 +75,9 @@ void CWin32Renderer::init()
       if (setRenderContext() && loadOpenGLExtensions())
       {
          mIsInitialized = true;
+
+         // Enable here what is needed by the app
+         glEnable(GL_DEPTH_TEST);
          // Go back to the window rendering context
          resetRenderContext();
       }
@@ -98,6 +102,9 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
 {
    if (pRenderable)
    {
+      glBindBuffer(GL_ARRAY_BUFFER, pRenderable->getVboId());
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pRenderable->getIboId());
+
       CGeometry* pGeometry = pRenderable->getGeometry();
       CShader* pShader = pRenderable->getShader();
 
@@ -107,6 +114,10 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
 
       ///@todo: think about the last argument
       glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+
+      // Unbind the buffers
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
    }
 }
 
@@ -234,39 +245,41 @@ bool CWin32Renderer::loadOpenGLExtensions()
 
 bool CWin32Renderer::generateVBOs()
 {
-   setRenderContext();
-   glEnable(GL_DEPTH_TEST);
+   ///@todo: move this to setupRenderer
+   //setRenderContext();
+   //glEnable(GL_DEPTH_TEST);
 
-   ///@todo: move to another method
-   // Shader setup
-   CShader* pShader = mRenderables[0]->getShader();
-   pShader->link();
-   pShader->setup(*mRenderables[0]);
+   /////@todo: move inside CRenderable, to some public method setupShader;
+   //// Shader setup
+   //CShader* pShader = mRenderables[0]->getShader();
+   //pShader->link();
+   //pShader->setup(*mRenderables[0]);
 
-   // VBO
-   glGenBuffers(1, &mVboId);
-   glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-   CLog::getInstance().logGL("* glBindBuffer() VBO: ");
+   /////@todo: these too, move inside CRenderable, just call setupVBO(); vbo/ibo ids also must be inside CRenderable
+   //// VBO
+   //glGenBuffers(1, &mVboId);
+   //glBindBuffer(GL_ARRAY_BUFFER, mVboId);
+   //CLog::getInstance().logGL("* glBindBuffer() VBO: ");
 
-   CGeometry* pGeometry = mRenderables[0]->getGeometry();
-   assert(pGeometry);
+   //CGeometry* pGeometry = mRenderables[0]->getGeometry();
+   //assert(pGeometry);
 
-   GLuint* data = static_cast<GLuint*>(pGeometry->getVertexBuffer());
-   glBufferData(GL_ARRAY_BUFFER, pGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
+   //GLuint* data = static_cast<GLuint*>(pGeometry->getVertexBuffer());
+   //glBufferData(GL_ARRAY_BUFFER, pGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
 
-   // Index buffer
-   glGenBuffers(1, &mIboId);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-   CLog::getInstance().log("* glBindBuffer() index buffer: ");
+   //// Index buffer
+   //glGenBuffers(1, &mIboId);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
+   //CLog::getInstance().log("* glBindBuffer() index buffer: ");
 
-   GLuint* indices = (GLuint*)pGeometry->getIndexBuffer();
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
+   //GLuint* indices = (GLuint*)pGeometry->getIndexBuffer();
+   //glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
 
-   ///@todo: add resetting glBindBUffer here!
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   /////@todo: add resetting glBindBUffer here!
+   //glBindBuffer(GL_ARRAY_BUFFER, 0);
+   //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
-   resetRenderContext();
+   //resetRenderContext();
 
    return true;
 }

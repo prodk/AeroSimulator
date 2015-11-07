@@ -25,6 +25,9 @@ namespace AeroSimulatorEngine
 
       bool generateVBOs();
 
+      bool setRenderContext();
+      void resetRenderContext();
+
    private:
       // Override CRenderer part
       virtual void init();
@@ -34,8 +37,8 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
-      bool setRenderContext();
-      void resetRenderContext();
+      /*bool setRenderContext();*/
+      /*void resetRenderContext();*/
       bool loadOpenGLExtensions(); // TODO: may be redundant when GLEW is used
 
    private:
@@ -45,8 +48,8 @@ namespace AeroSimulatorEngine
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
 
-      GLuint mVboId;
-      GLuint mIboId;
+      /*GLuint mVboId;
+      GLuint mIboId;*/
    };
 
 } // namespace AeroSimulatorEngine

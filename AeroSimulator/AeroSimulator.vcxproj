@@ -144,6 +144,8 @@
   <ItemGroup>
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
+    <ClInclude Include="CCube.h" />
+    <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CRenderable.h" />
@@ -158,6 +160,8 @@
   <ItemGroup>
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
+    <ClCompile Include="CCube.cpp" />
+    <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CRenderable.cpp" />

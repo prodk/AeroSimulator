@@ -7,6 +7,7 @@
 #include "CGeometry.h"
 #include "CSimpleShader.h"
 #include "CLog.h"
+#include "CCube.h"
 
 #include <conio.h>
 using namespace AeroSimulatorEngine;
@@ -36,38 +37,38 @@ namespace
    //};
 
    // Unit cube
-   GLfloat cubeData[] = {
-      //front
-      -0.5f, -0.5f,  0.5f,
-      1.0f, 0.0f, 0.0f, //0 color
-      0.5f, -0.5f,  0.5f,
-      0.0f, 1.0f, 0.0f, //1 color
-      0.5f,  0.5f,  0.5f,
-      0.0f, 0.0f, 1.0f, //2 color
-      -0.5f,  0.5f,  0.5f,
-      0.2f, 0.0f, 0.5f, //3 color
-      // back
-      -0.5f, -0.5f, -0.5f,
-      1.0f, 0.0f, 0.0f,//4 color
-      0.5f, -0.5f, -0.5f,
-      0.0f, 1.0f, 0.0f, //5 color
-      0.5f,  0.5f, -0.5f,
-      0.0f, 0.0f, 1.0f,//6 color
-      -0.5f,  0.5f, -0.5f,
-      0.2f, 0.6f, 0.0f //7 color
-   };
+   //GLfloat cubeData[] = {
+   //   //front
+   //   -0.5f, -0.5f,  0.5f,
+   //   1.0f, 0.0f, 0.0f, //0 color
+   //   0.5f, -0.5f,  0.5f,
+   //   0.0f, 1.0f, 0.0f, //1 color
+   //   0.5f,  0.5f,  0.5f,
+   //   0.0f, 0.0f, 1.0f, //2 color
+   //   -0.5f,  0.5f,  0.5f,
+   //   0.2f, 0.0f, 0.5f, //3 color
+   //   // back
+   //   -0.5f, -0.5f, -0.5f,
+   //   1.0f, 0.0f, 0.0f,//4 color
+   //   0.5f, -0.5f, -0.5f,
+   //   0.0f, 1.0f, 0.0f, //5 color
+   //   0.5f,  0.5f, -0.5f,
+   //   0.0f, 0.0f, 1.0f,//6 color
+   //   -0.5f,  0.5f, -0.5f,
+   //   0.2f, 0.6f, 0.0f //7 color
+   //};
 
-   ///@todo: optimize the inidices
-   ///@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
-   GLuint indices[] = {
-      6, 5, 7, 4, // back
-      3, 0, // left
-      2, 1, // front
-      6, 5, // right
+   /////@todo: optimize the inidices
+   /////@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
+   //GLuint indices[] = {
+   //   6, 5, 7, 4, // back
+   //   3, 0, // left
+   //   2, 1, // front
+   //   6, 5, // right
 
-      5, 4, 1, 0, // bottom
-      2, 3, 6, 7  // top
-   };
+   //   5, 4, 1, 0, // bottom
+   //   2, 3, 6, 7  // top
+   //};
 
    //GLuint indices[] = {
    //   // Stripe 1
@@ -94,22 +95,24 @@ CApp::CApp()
    : mTaskManager()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
-   , mRenderable(new CRenderable())
+   , mCube(new CCube())
+   /*, mRenderable(new CRenderable())
    , mGeometry(new CGeometry())
-   , mShader(new CSimpleShader())
+   , mShader(new CSimpleShader())*/
 {
-   mRenderable->setGeometry(mGeometry.get());
-   mRenderable->setShader(mShader.get());
+   /*mRenderable->setGeometry(mGeometry.get());
+   mRenderable->setShader(mShader.get());*/
 
    CLog::getInstance().log("* CApp created!");
 }
 
 CApp::~CApp()
 {
-   mGeometry.reset();
-   mShader.reset();
+   /*mGeometry.reset();
+   mShader.reset();*/
 
-   mRenderable.reset();
+   //mRenderable.reset();
+   mCube.reset();
 
    mRendererTask.reset();
    mAppWindowTask.reset();
@@ -155,21 +158,33 @@ int CApp::exit()
 
 void CApp::setupRenderer()
 {
+   /// We need a valid RC to setup VBOs and shaders
+   mRendererTask->setRenderContext();
+   ///@todo: move the geometry setup to the object
    // Geometry setup
-   CGeometry* pGeometry = mRenderable->getGeometry();
+   //CGeometry* pGeometry = mRenderable->getGeometry();
 
-   pGeometry->setVertexBuffer(cubeData);
-   const int numOfVertices = sizeof(cubeData) / sizeof(cubeData[0]);
-   pGeometry->setNumOfVertices(numOfVertices);
+   //pGeometry->setVertexBuffer(cubeData);
+   //const int numOfVertices = sizeof(cubeData) / sizeof(cubeData[0]);
+   //pGeometry->setNumOfVertices(numOfVertices);
 
-   pGeometry->setIndexBuffer(indices);
-   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-   pGeometry->setNumOfIndices(numOfIndices);
+   //pGeometry->setIndexBuffer(indices);
+   //const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+   //pGeometry->setNumOfIndices(numOfIndices);
 
-   pGeometry->setNumOfElementsPerVertex(3); // 3 coordinates/color components per vertex
-   pGeometry->setVertexStride(6); // stride of 6 for 3 coordinates and 3 colors
+   //pGeometry->setNumOfElementsPerVertex(3); // 3 coordinates/color components per vertex
+   //pGeometry->setVertexStride(6); // stride of 6 for 3 coordinates and 3 colors
 
-   mRendererTask->addRenderable(mRenderable.get());
+   //mRendererTask->addRenderable(mRenderable.get());
 
-   mRendererTask->generateVBOs();
+   ///@todo: here setup game objects
+   ///@todo: probably unite these into one method
+   mCube->setupGeometry();
+   mCube->setupVBO();
+
+   mRendererTask->addRenderable(mCube.get());
+
+   //mRendererTask->generateVBOs();
+
+   mRendererTask->setRenderContext();
 }

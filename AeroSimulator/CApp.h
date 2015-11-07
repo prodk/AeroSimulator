@@ -34,7 +34,8 @@ namespace AeroSimulatorEngine
 
    class CSimpleShader;
    class CGeometry;
-   class CRenderable;
+   //class CRenderable;
+   class CGameObject;
 
    class CApp
    {
@@ -67,9 +68,10 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CWin32Renderer> mRendererTask;
 
       ///@todo: think about how to organize these members, probably the mGeometry and mShader are redundant.
-      std::shared_ptr<CRenderable> mRenderable;
+      std::shared_ptr<CGameObject> mCube;
+      /*std::shared_ptr<CRenderable> mRenderable;
       std::shared_ptr<CGeometry> mGeometry;
-      std::shared_ptr<CSimpleShader> mShader;
+      std::shared_ptr<CSimpleShader> mShader;*/
    };
 
 } // namespace AeroSimulatorEngine
