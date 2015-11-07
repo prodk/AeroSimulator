@@ -54,6 +54,7 @@ namespace AeroSimulatorEngine
 
    private:
       CApp();
+      // Disable the copy constructor and copy assignment operator
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 

@@ -145,6 +145,7 @@
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CGeometry.h" />
+    <ClInclude Include="CLog.h" />
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CShader.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CGeometry.cpp" />
+    <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CShader.cpp" />

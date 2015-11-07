@@ -2,6 +2,8 @@
 #include "CRenderable.h"
 #include "CShader.h"
 #include "CGeometry.h"
+#include "CLog.h"
+
 #include <cassert>
 using namespace AeroSimulatorEngine;
 
@@ -35,6 +37,9 @@ bool CWin32Renderer::update()
    {
       setRenderContext();
 
+      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
+
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
@@ -47,6 +52,9 @@ bool CWin32Renderer::update()
       }
 
       swapBuffers();
+
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
       resetRenderContext();
    }
@@ -79,9 +87,9 @@ void CWin32Renderer::destroy()
    if (mRenderContext)
    {
       if (wglDeleteContext(mRenderContext))
-         std::cout << "* render context was destroyed" << std::endl;
+         CLog::getInstance().log("* render context was destroyed");
       else
-         std::cout << "* ERROR: render context wasn't destroyed" << std::endl;
+         CLog::getInstance().log("* ERROR: render context wasn't destroyed");
       mRenderContext = NULL;
    }
 }
@@ -98,7 +106,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       pShader->setup(*pRenderable);
 
       ///@todo: think about the last argument
-      glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, /*pGeometry->getIndexBuffer()*/0);
+      glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
    }
 }
 
@@ -136,35 +144,34 @@ bool CWin32Renderer::createRenderContext()
    UINT uiPixelFormat = ::ChoosePixelFormat(mDC, &pfd);
    if (uiPixelFormat)
    {
-      std::cout << "* pixel format was found: " << uiPixelFormat << std::endl;
+      CLog::getInstance().log("* pixel format was found: ", uiPixelFormat);
    }
    else
    {
-      std::cout << "* Error: pixel format wasn't found" << std::endl;
+      CLog::getInstance().log("* Error: pixel format wasn't found");
       return false;
    }
 
    // Set pixel format
    if (::SetPixelFormat(mDC, uiPixelFormat, &pfd))
    {
-      std::cout << "* pixel format was set" << std::endl;
+      CLog::getInstance().log("* pixel format was set");
    }
    else
    {
-      std::cout << "* Error: pixel format wasn't set" << std::endl;
+      CLog::getInstance().log("* Error: pixel format wasn't set");
       return false;
    }
 
    // Init GLEW
    HGLRC tempContext = wglCreateContext(mDC);
 
-   // TODO: uncomment when using GLEW and not a manual exteinsion loading
    wglMakeCurrent(mDC, tempContext);
 
    GLenum err = glewInit();
    if (GLEW_OK != err)
    {
-      std::cout << "GLEW is not initialized!" << std::endl;
+      CLog::getInstance().log("GLEW is not initialized!");
    }
 
    int attribs[] =
@@ -212,36 +219,15 @@ bool CWin32Renderer::loadOpenGLExtensions()
 {
    bool result = true;
    // Get the GPU information and the OpenGL extensions
-   std::cout << "* Video-system information:" << std::endl;
-   std::cout << "  Videocard: " << (const char*)glGetString(GL_RENDERER) << std::endl;
-   std::cout << "  Vendor: " << (const char*)glGetString(GL_VENDOR) << std::endl;
-   std::cout << "  OpenGL Version: " << (const char*)glGetString(GL_VERSION) << std::endl << std::endl;
+   CLog::getInstance().log("* Video-system information:");
+   CLog::getInstance().log("  Videocard: ", (const char*)glGetString(GL_RENDERER));
+   CLog::getInstance().log("  Vendor: ", (const char*)glGetString(GL_VENDOR));
+   CLog::getInstance().log("  OpenGL Version: ", (const char*)glGetString(GL_VERSION));
+   CLog::getInstance().log("\n");
+
    //std::string strExtension = (const char*)glGetString(GL_EXTENSIONS);
    //ReplaceChar(strExtension, ' ', '\n');
    //Log::instance() << "  OpenGL Extensions:\n" << strExtension.c_str() << endl;
-
-   //// Load shader manually.
-   //// TODO: check pointers for 0
-   //glAttachShader = (PFNGLATTACHSHADERPROC)wglGetProcAddress("glAttachShader");
-   //glBindBuffer = (PFNGLBINDBUFFERPROC)wglGetProcAddress("glBindBuffer");
-   //glBufferData = (PFNGLBUFFERDATAPROC)wglGetProcAddress("glBufferData");
-   //glCreateProgram = (PFNGLCREATEPROGRAMPROC)wglGetProcAddress("glCreateProgram");
-   //glEnableVertexAttribArray = (PFNGLENABLEVERTEXATTRIBARRAYPROC)wglGetProcAddress("glEnableVertexAttribArray");
-   //glGenBuffers = (PFNGLGENBUFFERSPROC)wglGetProcAddress("glGenBuffers");
-   //glGetAttribLocation = (PFNGLGETATTRIBLOCATIONPROC)wglGetProcAddress("glGetAttribLocation");
-   //glLinkProgram = (PFNGLLINKPROGRAMPROC)wglGetProcAddress("glLinkProgram");
-   //glUseProgram = (PFNGLUSEPROGRAMPROC)wglGetProcAddress("glUseProgram");
-   //glVertexAttribPointer = (PFNGLVERTEXATTRIBPOINTERPROC)wglGetProcAddress("glVertexAttribPointer");
-
-   //glCompileShader = (PFNGLCOMPILESHADERPROC)wglGetProcAddress("glCompileShader");
-   //glCreateShader = (PFNGLCREATESHADERPROC)wglGetProcAddress("glCreateShader");
-   //glGetShaderiv = (PFNGLGETSHADERIVPROC)wglGetProcAddress("glGetShaderiv");
-   //glShaderSource = (PFNGLSHADERSOURCEPROC)wglGetProcAddress("glShaderSource");
-
-   //glGetUniformLocation = (PFNGLGETUNIFORMLOCATIONPROC)wglGetProcAddress("glGetUniformLocation");
-   //glUniformMatrix4fv = (PFNGLUNIFORMMATRIX4FVPROC)wglGetProcAddress("glUniformMatrix4fv");
-
-   //std::cout << "  OpenGL Extensions loaded manually. Stupid, but we have to do it this way.\n" << std::endl;
 
    return result;
 }
@@ -260,15 +246,9 @@ bool CWin32Renderer::generateVBOs()
    // VBO
    glGenBuffers(1, &mVboId);
    glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-
-   ///@todo: place to a method
-   char str[256];
-   GLenum err = glGetError();
-   sprintf_s(str, "%s\n", glewGetErrorString(err));
-   std::cout << "* glBindBuffer() VBO: " << str << std::endl;
+   CLog::getInstance().logGL("* glBindBuffer() VBO: ");
 
    CGeometry* pGeometry = mRenderables[0]->getGeometry();
-
    assert(pGeometry);
 
    GLuint* data = static_cast<GLuint*>(pGeometry->getVertexBuffer());
@@ -277,17 +257,16 @@ bool CWin32Renderer::generateVBOs()
    // Index buffer
    glGenBuffers(1, &mIboId);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-
-   err = glGetError();
-   sprintf_s(str, "%s\n", glewGetErrorString(err));
-   std::cout << "* glBindBuffer() index buffer: " << str << std::endl;
+   CLog::getInstance().log("* glBindBuffer() index buffer: ");
 
    GLuint* indices = (GLuint*)pGeometry->getIndexBuffer();
    glBufferData(GL_ELEMENT_ARRAY_BUFFER, pGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
 
    ///@todo: add resetting glBindBUffer here!
-   resetRenderContext();
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
+   resetRenderContext();
 
    return true;
 }

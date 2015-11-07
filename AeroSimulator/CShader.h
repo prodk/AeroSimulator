@@ -32,7 +32,7 @@ namespace AeroSimulatorEngine
       std::string mFragmentShaderCode;
       bool mIsLinked;
 
-      bool loadShader(GLuint id, const std::string& shaderCode);
+      GLint loadShader(GLuint id, const std::string& shaderCode);
    };
 
 } // namespace AeroSimulatorEngine
