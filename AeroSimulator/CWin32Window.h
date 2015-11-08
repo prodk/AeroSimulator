@@ -10,6 +10,8 @@
 
 namespace AeroSimulatorEngine
 {
+   class CWin32Renderer;
+
    class CWin32Window : public CAppWindow
    {
    public:
@@ -18,7 +20,7 @@ namespace AeroSimulatorEngine
       virtual ~CWin32Window();
 
       // Override CAppWindow part
-      virtual bool create(const std::string& title, std::size_t width, std::size_t height);
+      virtual bool create(const std::string& title, std::size_t width, std::size_t height, CWin32Renderer* renderer);
 
       // Override CTask part
       virtual bool start();
@@ -28,8 +30,10 @@ namespace AeroSimulatorEngine
       HDC getDC() const { return mDC; }
       bool isFullScreen() const { return (mWidth == 0u || mHeight == 0u) ? true : false; }
 
+      ///@todo: think how to decouple the window from the renderer. Probably use events and the task manager.
+      ///@todo: remove this method
       // Windows message handler
-      bool windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam);
+      //bool windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam);
 
    private:
       void show(bool toShow);

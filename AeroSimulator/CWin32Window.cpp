@@ -2,6 +2,7 @@
 
 #include "CWin32Window.h"
 #include "CLog.h"
+#include "CWin32Renderer.h"
 #include <memory>
 
 using namespace AeroSimulatorEngine;
@@ -9,16 +10,19 @@ using namespace AeroSimulatorEngine;
 // Windows procedure
 LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
-   CWin32Window* window = NULL;
+   //CWin32Window* window = NULL;
+   CWin32Renderer* renderer = NULL;
    switch (uMessage)
    {
    case WM_CREATE:
    {
       // Get the data that was saved in the CreateWindowEx as its last parameter
       LPCREATESTRUCT lpcs = (LPCREATESTRUCT)lParam;
-      window = (CWin32Window*)(lpcs->lpCreateParams);
+      //window = (CWin32Window*)(lpcs->lpCreateParams);
+      renderer = (CWin32Renderer*)(lpcs->lpCreateParams);
       // place the pointer to the window "user data"
-      SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)window);
+      //SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)window);
+      SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)renderer);
    }
    break;
 
@@ -29,12 +33,14 @@ LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM l
    default:
    {
       // Extract the window pointer from the "user data"
-      window = (CWin32Window*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+      //window = (CWin32Window*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+      renderer = (CWin32Renderer*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
    }
    }
 
    ///@todo: uncomment when relevant (i.e. the UI input is processed): invoke the message handler for the existing window
-   if (window && !window->windowProc(uMessage, wParam, lParam))
+   //if (window && !window->windowProc(uMessage, wParam, lParam))
+   if (renderer && !renderer->windowProc(uMessage, wParam, lParam))
    return 0;
 
    // Invoke the standard message handler for unprocessed messages
@@ -64,7 +70,7 @@ CWin32Window::~CWin32Window()
    stop();
 }
 
-bool CWin32Window::create(const std::string& title, std::size_t width, std::size_t height)
+bool CWin32Window::create(const std::string& title, std::size_t width, std::size_t height, CWin32Renderer* renderer)
 {
    mInstance = GetModuleHandle(NULL);
    mWidth = width;
@@ -139,7 +145,8 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
       NULL,
       NULL,
       mInstance,
-      this)))
+      renderer)))
+      //this)))
    {
       std::cout << "* window was created" << std::endl;
    }
@@ -165,143 +172,97 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    return true;
 }
 
-bool CWin32Window::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
-{
-   switch (uMessage)
-   {
-      // Stubs for system commands
-   case WM_SYSCOMMAND:
-   {
-      switch (wParam)
-      {
-         // Screensaver is trying to start
-      case SC_SCREENSAVE:
-         // The display is trying to switch off
-      case SC_MONITORPOWER:
-         return false;
-      }
-      break;
-   }
-   return false;
-
-   // System keystrokes stubs
-   case WM_SYSKEYDOWN:
-   case WM_SYSKEYUP:
-   {}
-   return false;
-
-   // Finishing
-   case WM_CLOSE:
-   case WM_QUIT:
-   {
-      // Exit flag
-      mIsClosing = true;
-   }
-   return false;
-
-   // Keyboard is pressed
-   case WM_KEYDOWN:
-   {
-      if (wParam == VK_LEFT)
-      {
-         int pressed = 1;
-         CLog::getInstance().log("Left pressed");
-      }
-      if (wParam == VK_RIGHT)
-      {
-         int pressed = 0;
-         CLog::getInstance().log("Right pressed");
-      }
-      if (wParam == VK_UP)
-      {
-         int pressed = 1;
-         CLog::getInstance().log("Up pressed");
-      }
-      if (wParam == VK_DOWN)
-      {
-         int pressed = 0;
-         CLog::getInstance().log("Down pressed");
-      }
-   }
-   return false;
-
-   // Keyboard is depressed
-   case WM_KEYUP:
-   {
-      if (wParam == VK_LEFT)
-      {
-         int pressed = 1;
-         CLog::getInstance().log("Left DEpressed");
-      }
-      if (wParam == VK_RIGHT)
-      {
-         int pressed = 0;
-         CLog::getInstance().log("Right DEpressed");
-      }
-      if (wParam == VK_UP)
-      {
-         int pressed = 1;
-         CLog::getInstance().log("Up DEpressed");
-      }
-      if (wParam == VK_DOWN)
-      {
-         int pressed = 0;
-         CLog::getInstance().log("Down DEpressed");
-      }
-   }
-   return false;
-
-
-   /*
-   
-
-   // отжата клавиша
-   case WM_KEYUP:
-   {
-   
-   if( wParam>=VK_F1 && wParam<=VK_F12 )
-   {
-   m_FuncKeysPressed[wParam-VK_F1] = FALSE;
-   m_FuncKeysDown[wParam-VK_F1] = FALSE;
-   }
-   }
-   break;
-
-   // нажата клавиша
-   case WM_KEYDOWN:
-   {
-   // если нажата системная клавиша, то устанавливаем флаг
-   if( wParam>=VK_F1 && wParam<=VK_F12 )
-   {
-   m_FuncKeysPressed[wParam-VK_F1] = TRUE;
-   m_FuncKeysDown[wParam-VK_F1] = TRUE;
-   }
-
-   
-
-   // восстанавливаем прошлую команду
-   if( wParam==VK_UP )			Console::RestoreCommandUp();
-   if( wParam==VK_DOWN )		Console::RestoreCommandDown();
-
-   // пролистываем выполненные команды
-   if( wParam==VK_PRIOR )		Console::PageUp();
-   if( wParam==VK_NEXT )		Console::PageDown();
-
-   // не обрабатываем дальше сообщения
-   return FALSE;
-   }
-   
-   }
-   }
-   }
-   break;
-
-   */
-   }
-
-   // разрешаем обрабатывать другие сообщения приложения
-   return true;
-}
+///@todo: remove this method
+//bool CWin32Window::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
+//{
+//   switch (uMessage)
+//   {
+//      // Stubs for system commands
+//   case WM_SYSCOMMAND:
+//   {
+//      switch (wParam)
+//      {
+//         // Screensaver is trying to start
+//      case SC_SCREENSAVE:
+//         // The display is trying to switch off
+//      case SC_MONITORPOWER:
+//         return false;
+//      }
+//      break;
+//   }
+//   return false;
+//
+//   // System keystrokes stubs
+//   case WM_SYSKEYDOWN:
+//   case WM_SYSKEYUP:
+//   {}
+//   return false;
+//
+//   // Finishing
+//   case WM_CLOSE:
+//   case WM_QUIT:
+//   {
+//      // Exit flag
+//      mIsClosing = true;
+//   }
+//   return false;
+//
+//   // Keyboard is pressed
+//   case WM_KEYDOWN:
+//   {
+//      if (wParam == VK_LEFT)
+//      {
+//         int pressed = 1;
+//         CLog::getInstance().log("Left pressed");
+//      }
+//      if (wParam == VK_RIGHT)
+//      {
+//         int pressed = 0;
+//         CLog::getInstance().log("Right pressed");
+//      }
+//      if (wParam == VK_UP)
+//      {
+//         int pressed = 1;
+//         CLog::getInstance().log("Up pressed");
+//      }
+//      if (wParam == VK_DOWN)
+//      {
+//         int pressed = 0;
+//         CLog::getInstance().log("Down pressed");
+//      }
+//   }
+//   return false;
+//
+//   // Keyboard is depressed
+//   case WM_KEYUP:
+//   {
+//      if (wParam == VK_LEFT)
+//      {
+//         int pressed = 1;
+//         CLog::getInstance().log("Left DEpressed");
+//      }
+//      if (wParam == VK_RIGHT)
+//      {
+//         int pressed = 0;
+//         CLog::getInstance().log("Right DEpressed");
+//      }
+//      if (wParam == VK_UP)
+//      {
+//         int pressed = 1;
+//         CLog::getInstance().log("Up DEpressed");
+//      }
+//      if (wParam == VK_DOWN)
+//      {
+//         int pressed = 0;
+//         CLog::getInstance().log("Down DEpressed");
+//      }
+//   }
+//   return false;
+//   } // end switch
+//
+//   // Process other messages
+//   return true;
+//}
 
 void CWin32Window::show(bool toShow)
 {

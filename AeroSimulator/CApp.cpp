@@ -41,7 +41,7 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
 {
    // Create and init the app window and window's renderer
    bool result = false;
-   if (mAppWindowTask && mAppWindowTask->create(name, width, height))
+   if (mAppWindowTask && mAppWindowTask->create(name, width, height, mRendererTask.get()))
    {
       result = true;
 

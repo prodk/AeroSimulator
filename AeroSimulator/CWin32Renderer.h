@@ -28,6 +28,8 @@ namespace AeroSimulatorEngine
       bool setRenderContext();
       void resetRenderContext();
 
+      bool windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam);
+
    private:
       // Override CRenderer part
       virtual void init();
@@ -39,6 +41,7 @@ namespace AeroSimulatorEngine
       bool createRenderContext();
       bool loadOpenGLExtensions(); // TODO: may be redundant when GLEW is used
       void setupViewMatrix();
+      void calculateAirplaneMatrix(glm::mat4& matrix) const;
 
    private:
       HDC mDC;
@@ -48,6 +51,9 @@ namespace AeroSimulatorEngine
       bool mIsFullScreen;
       glm::mat4 mViewMatrix;
       glm::mat4 mProjectionMatrix;
+
+      float mAngleZ; // Angle of rotating around the z-axis of the air plane
+      float mAngleX;
    };
 
 } // namespace AeroSimulatorEngine

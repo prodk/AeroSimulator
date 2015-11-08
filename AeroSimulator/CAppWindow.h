@@ -13,12 +13,12 @@ namespace AeroSimulatorEngine
    public:
       CAppWindow();
       explicit CAppWindow(ePriority prio);
-      virtual ~CAppWindow();
+      virtual ~CAppWindow() = 0;
 
       static bool isClosing() { return mIsClosing; }
       static void resetIsClosing() { mIsClosing = false; }
 
-      virtual bool create(const std::string& title, std::size_t width, std::size_t height) = 0;
+      //virtual bool create(const std::string& title, std::size_t width, std::size_t height) = 0;
 
    protected:
       std::string mTitle;

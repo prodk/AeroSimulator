@@ -28,6 +28,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mViewMatrix()
    , mProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)) // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+   , mAngleZ(0.0f)
+   , mAngleX(0.0f)
 {
 }
 
@@ -49,19 +51,10 @@ void CWin32Renderer::update()
    {
       setRenderContext();
 
-      ///@todo: place matrix manipulation here from CSimpleShader::rotateCamera()! then set the modified general matrix to the shader.
       setupViewMatrix();
 
-      ///@todo: place to a separate method
-      // Rotate the object
-      static float angle = 0.f * DEG_TO_RAD;
-      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-      const float delta = 0.005f;
-      angle += delta;
-
-      glm::mat4 modelObject = glm::mat4(1.0f);
-      modelObject = glm::rotate(modelObject, angle, yAxis);
-      ///@todo: end place to method
+      glm::mat4 modelObjectMatrix;
+      calculateAirplaneMatrix(modelObjectMatrix);
 
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -71,7 +64,7 @@ void CWin32Renderer::update()
          CRenderable* pRenderable = *iter;
          if (pRenderable)
          {
-            pRenderable->setParentModelMatrix(modelObject);
+            pRenderable->setParentModelMatrix(modelObjectMatrix);
             draw(pRenderable);
          }
       }
@@ -278,7 +271,7 @@ void CWin32Renderer::setupViewMatrix()
 {
    // Init the View matrix
    mViewMatrix = glm::mat4(1.0f);
-   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -9.0f);
+   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
    mViewMatrix = glm::translate(mViewMatrix, cameraPos);
 
    // Rotate the View matrix
@@ -294,3 +287,116 @@ void CWin32Renderer::setupViewMatrix()
    angle += delta;
 }
 
+void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix) const
+{
+   glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
+   
+   // Rotate around z-axis
+   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+   const float angleZradians = mAngleZ * DEG_TO_RAD;
+
+   modelObjectMatrix = glm::rotate(modelObjectMatrix, angleZradians, zAxis);
+
+   // Rotate around x-axis
+   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   const float angleXradians = mAngleX * DEG_TO_RAD;
+   modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
+
+   matrix = modelObjectMatrix;
+}
+
+bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
+{
+   switch (uMessage)
+   {
+      // Stubs for system commands
+   case WM_SYSCOMMAND:
+   {
+      switch (wParam)
+      {
+         // Screensaver is trying to start
+      case SC_SCREENSAVE:
+         // The display is trying to switch off
+      case SC_MONITORPOWER:
+         return false;
+      }
+      break;
+   }
+   return false;
+
+   // System keystrokes stubs
+   case WM_SYSKEYDOWN:
+   case WM_SYSKEYUP:
+   {}
+   return false;
+
+   // Finishing
+   case WM_CLOSE:
+   case WM_QUIT:
+   {
+      // Exit flag
+      //mIsClosing = true;
+   }
+   return false;
+
+   // Keyboard is pressed
+   case WM_KEYDOWN:
+   {
+      if (wParam == VK_LEFT)
+      {
+         if (mAngleZ < 45)
+            mAngleZ += 1.0f;
+         //CLog::getInstance().log("Left pressed");
+      }
+      if (wParam == VK_RIGHT)
+      {
+         if (mAngleZ > -45)
+            mAngleZ -= 1.0f;
+
+         //CLog::getInstance().log("Right pressed");
+      }
+      if (wParam == VK_UP)
+      {
+         if (mAngleX > -45)
+            mAngleX -= 1.0f;
+         //CLog::getInstance().log("Up pressed");
+      }
+      if (wParam == VK_DOWN)
+      {
+         if (mAngleX < 45)
+            mAngleX += 1.0f;
+         //CLog::getInstance().log("Down pressed");
+      }
+   }
+   return false;
+
+   // Keyboard is depressed
+   case WM_KEYUP:
+   {
+      if (wParam == VK_LEFT)
+      {
+         int pressed = 1;
+         CLog::getInstance().log("Left DEpressed");
+      }
+      if (wParam == VK_RIGHT)
+      {
+         int pressed = 0;
+         CLog::getInstance().log("Right DEpressed");
+      }
+      if (wParam == VK_UP)
+      {
+         int pressed = 1;
+         CLog::getInstance().log("Up DEpressed");
+      }
+      if (wParam == VK_DOWN)
+      {
+         int pressed = 0;
+         CLog::getInstance().log("Down DEpressed");
+      }
+   }
+   return false;
+   } // end switch
+
+     // Process other messages
+   return true;
+}
