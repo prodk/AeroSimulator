@@ -3,23 +3,13 @@
 #include "CRenderable.h"
 #include "CLog.h"
 
+///@todo: probably remove some glm headers from here
 #include "glm/vec3.hpp"
 #include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <cassert>
 #include <iostream>
-
-///@todo: remove
-//#define _USE_MATH_DEFINES // for C++
-//#include <cmath>
-
-namespace AeroSimulatorEngine
-{
-   ///@todo: make these static constants
-//#define M_PI           3.14159265358979323846f  /* pi */
-//#define DEG_TO_RAD M_PI / 180.f
-}
 
 using namespace AeroSimulatorEngine;
 
@@ -42,7 +32,6 @@ CSimpleShader::CSimpleShader()
       "varying vec4 vColor;\n"
       "void main(){\n"
       "    gl_FragColor = vColor;\n"
-      //"    gl_FragColor = vec4(0.0f, 0.8f, 0.2f, 1.0);\n"
       "}\n";
 
    CLog::getInstance().log("* CSimpleShader::CSimpleShader(): created");
@@ -93,47 +82,53 @@ void CSimpleShader::setup(CRenderable & renderable)
 
    glEnableVertexAttribArray(mColorAttributeId);
 
-   rotateCamera(renderable);
-}
-
-void CSimpleShader::rotateCameraGlm(CRenderable & renderable)
-{
-   // Init the View matrix
-   glm::mat4 View = glm::mat4(1.0f);
-   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -9.0f);
-   View = glm::translate(View, cameraPos);
-
-   // Rotate the View matrix
-   static float angle = 0.f * DEG_TO_RAD;
-   static float angleX = 0.f * DEG_TO_RAD;
-
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   //View = glm::rotate(View, angle, yAxis);
-   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   View = glm::rotate(View, angleX, xAxis);
-
-   const float delta = 0.005f;
-   angle += delta;
-
-   ///@todo: move projection to construction
-   // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-   glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
-   ///@todo: take the model matrix from the CRenderable object.
-   ///@todo: move this to the CSimpleShader::setup()
-   // Model matrix : an identity matrix (model will be at the origin)
-   //glm::mat4 Model = glm::mat4(1.0f);
-   glm::mat4 Model = renderable.getModelMatrix();
-   glm::mat4 modelObject = glm::mat4(1.0f);
-   modelObject = glm::rotate(modelObject, angle, yAxis);
-
-   glm::mat4 MVP = Projection * View * modelObject * Model;
-
    // Send the transformation to the currently bound shader in the "MVP" uniform
+   glm::mat4 MVP = renderable.getMvpMatrix();
    glUniformMatrix4fv(mMvpAttributeId, 1, GL_FALSE, &MVP[0][0]);
+
+   ///@todo: remove this
+   //rotateCamera(renderable);
 }
 
-void CSimpleShader::rotateCamera(CRenderable & renderable)
-{
-   rotateCameraGlm(renderable);
-}
+///@todo: remove this
+//void CSimpleShader::rotateCameraGlm(CRenderable & renderable)
+//{
+//   // Init the View matrix
+//   glm::mat4 View = glm::mat4(1.0f);
+//   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -9.0f);
+//   View = glm::translate(View, cameraPos);
+//
+//   // Rotate the View matrix
+//   static float angle = 0.f * DEG_TO_RAD;
+//   static float angleX = 30.0f * DEG_TO_RAD;
+//
+//   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+//   //View = glm::rotate(View, angle, yAxis);
+//   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+//   View = glm::rotate(View, angleX, xAxis);
+//
+//   const float delta = 0.005f;
+//   angle += delta;
+//
+//   ///@todo: move projection to construction
+//   // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+//   glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+//
+//   ///@todo: take the model matrix from the CRenderable object.
+//   ///@todo: move this to the CSimpleShader::setup()
+//   // Model matrix : an identity matrix (model will be at the origin)
+//   //glm::mat4 Model = glm::mat4(1.0f);
+//   glm::mat4 Model = renderable.getModelMatrix();
+//   glm::mat4 modelObject = glm::mat4(1.0f);
+//   //modelObject = glm::rotate(modelObject, angle, yAxis);
+//
+//   glm::mat4 MVP = Projection * View * modelObject * Model;
+//
+//   // Send the transformation to the currently bound shader in the "MVP" uniform
+//   glUniformMatrix4fv(mMvpAttributeId, 1, GL_FALSE, &MVP[0][0]);
+//}
+//
+//void CSimpleShader::rotateCamera(CRenderable & renderable)
+//{
+//   rotateCameraGlm(renderable);
+//}

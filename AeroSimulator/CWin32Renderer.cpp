@@ -4,10 +4,22 @@
 #include "CGeometry.h"
 #include "CLog.h"
 
+#include "glm/vec3.hpp"
+#include "glm/mat4x4.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+
 #include <cassert>
 using namespace AeroSimulatorEngine;
 
 ///@todo: move non-Win32 code to the base class
+
+///@todo: remove these defines (put them to one place)
+namespace AeroSimulatorEngine
+{
+   ///@todo: make these static constants
+   #define M_PI           3.14159265358979323846f  /* pi */
+   #define DEG_TO_RAD M_PI / 180.f
+}
 
 CWin32Renderer::CWin32Renderer(ePriority prio)
    : CRenderer(prio)
@@ -37,8 +49,11 @@ void CWin32Renderer::update()
    {
       setRenderContext();
 
+      ///@todo: place matrix manipulation here from CSimpleShader::rotateCamera()! then set the modified general matrix to the shader.
+
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
       for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
       {
          CRenderable* pRenderable = *iter;
@@ -101,6 +116,40 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       CShader* pShader = pRenderable->getShader();
 
       assert(pShader && pGeometry);
+
+      ///@todo: place matrix manipulation to update! then set the modified general matrix to the shader.
+      ///@todo: move to separate method
+
+      ///@todo: move setting up View and Projection to update(); introduce these matrices as well as modelObject to Renderer.
+      // Init the View matrix
+      glm::mat4 View = glm::mat4(1.0f);
+      glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -9.0f);
+      View = glm::translate(View, cameraPos);
+
+      // Rotate the View matrix
+      static float angle = 0.f * DEG_TO_RAD;
+      static float angleX = 30.0f * DEG_TO_RAD;
+
+      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+      //View = glm::rotate(View, angle, yAxis);
+      glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+      View = glm::rotate(View, angleX, xAxis);
+
+      const float delta = 0.005f;
+      angle += delta;
+
+      ///@todo: move projection to construction
+      // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+      glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+      glm::mat4 Model = pRenderable->getModelMatrix();
+      glm::mat4 modelObject = glm::mat4(1.0f);
+      modelObject = glm::rotate(modelObject, angle, yAxis);
+
+      glm::mat4 MVP = Projection * View * modelObject * Model;
+      pRenderable->setMvpMatrix(MVP);
+
+      ///@todo: end move to separate method
 
       pShader->setup(*pRenderable);
 

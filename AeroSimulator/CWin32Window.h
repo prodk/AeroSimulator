@@ -28,6 +28,9 @@ namespace AeroSimulatorEngine
       HDC getDC() const { return mDC; }
       bool isFullScreen() const { return (mWidth == 0u || mHeight == 0u) ? true : false; }
 
+      // Windows message handler
+      bool windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam);
+
    private:
       void show(bool toShow);
 

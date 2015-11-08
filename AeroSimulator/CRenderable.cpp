@@ -11,6 +11,8 @@ CRenderable::CRenderable()
    , mModelMatrix()
    , mVboId(0)
    , mIboId(0)
+   , mParentModelMatrix()
+   , mMvpMatrix()
 {
 }
 

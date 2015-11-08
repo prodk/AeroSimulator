@@ -6,7 +6,7 @@
 
 using namespace AeroSimulatorEngine;
 
-const std::size_t C3DModel::numOfCubes = 12;
+const std::size_t C3DModel::numOfCubes = 10;
 
 C3DModel::C3DModel()
    : mObjectTree(new CParentGameObject())
@@ -79,12 +79,8 @@ bool C3DModel::buildModel()
    mPropeller->resetTRMatrix(mBody->getTRMatrix());
    mCubes[9].resetTRMatrix(mTail->getTRMatrix());
    mCubes[9].translate(glm::vec3(0.0f, -0.75f, -0.61275f));
-   //mCubes[9].rotate(glm::vec3(45.0f, 0.0f, 0.0f));
    mCubes[9].scale(glm::vec3(0.25f, 1.5f, 0.25f));
    mBody->add(&mCubes[9]);
-
-
-   // Cube 1 propeller
 
    // Fans are children of the Tail
 

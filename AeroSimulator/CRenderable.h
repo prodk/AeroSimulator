@@ -36,12 +36,20 @@ namespace AeroSimulatorEngine
       void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
       glm::mat4 getModelMatrix() const { return mModelMatrix; }
 
+      void setParentModelMatrix(const glm::mat4& m) { mParentModelMatrix = m; }
+      glm::mat4 getParentModelMatrix() const { return mParentModelMatrix; }
+
+      void setMvpMatrix(const glm::mat4& m) { mMvpMatrix = m; }
+      glm::mat4 getMvpMatrix() const { return mMvpMatrix; }
+
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
       glm::mat4 mModelMatrix;
       GLuint mVboId;
       GLuint mIboId;
+      glm::mat4 mParentModelMatrix; // Matrix of the root object in the tree
+      glm::mat4 mMvpMatrix;
    };
 
 } // namespace AeroSimulatorEngine
