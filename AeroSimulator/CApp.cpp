@@ -6,9 +6,8 @@
 #include "CRenderable.h"
 #include "CGeometry.h"
 #include "CSimpleShader.h"
+#include "CGameObject.h"
 #include "CLog.h"
-#include "CCube.h" //@todo: remove
-
 #include "C3DModel.h"
 
 #include <conio.h>
@@ -19,29 +18,19 @@ CApp::CApp()
    : mTaskManager()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
-   //, mCube(new CCube(0,
-   //   glm::vec3(1.0f, 1.0f, 1.0f), // scale
-   //   glm::vec3(0.0f, -30.0f, 0.0f), // rotate
-   //   glm::vec3(0.0f, -2.0f, 0.0f))) ///@todo: replace
-   , mCube(new CCube()) ///@todo: replace
-   , mBodyCube(new CCube(mCube.get(), // parent  ///@todo: replace
-                         glm::vec3(3.0f, 1.0f, 1.0f), // scale
-                         glm::vec3(0.0f, 0.0f, 0.0f), // rotate
-                         glm::vec3(0.0f, 1.0f, 0.0f)))// translate
    , mAirPlane(new C3DModel())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
-   ///@todo:asserts for game objects
+
+   ///asserts for game objects
+   assert(mAirPlane);
 
    CLog::getInstance().log("* CApp created!");
 }
 
 CApp::~CApp()
 {
-   mCube.reset(); ///@todo: replace
-   mBodyCube.reset();  ///@todo: replace
-
    mRendererTask.reset();
    mAppWindowTask.reset();
 
@@ -89,19 +78,7 @@ void CApp::setupRenderer()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   ///@todo: here setup game objects
-   ///@todo: probably unite these into one method
-   /*mCube->setupGeometry(); ///@todo: replace
-   mCube->setupVBO(); ///@todo: replace
-
-   mBodyCube->setupGeometry(); ///@todo: replace
-   mBodyCube->setupVBO(); ///@todo: replace*/
-
    mAirPlane->buildModel();
-
-   //mRendererTask->addRenderable(mCube.get()); ///@todo: replace
-   //mRendererTask->addRenderable(mBodyCube.get()); ///@todo: replace
-
 
    //Add cubes from the air plane
    std::vector<CGameObject*> tree;

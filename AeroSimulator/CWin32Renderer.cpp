@@ -4,8 +4,6 @@
 #include "CGeometry.h"
 #include "CLog.h"
 
-#include "glm/vec3.hpp"
-#include "glm/mat4x4.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <cassert>
@@ -28,6 +26,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mRenderContext(0)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
+   , mViewMatrix()
+   , mProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)) // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 {
 }
 
@@ -50,6 +50,18 @@ void CWin32Renderer::update()
       setRenderContext();
 
       ///@todo: place matrix manipulation here from CSimpleShader::rotateCamera()! then set the modified general matrix to the shader.
+      setupViewMatrix();
+
+      ///@todo: place to a separate method
+      // Rotate the object
+      static float angle = 0.f * DEG_TO_RAD;
+      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+      const float delta = 0.005f;
+      angle += delta;
+
+      glm::mat4 modelObject = glm::mat4(1.0f);
+      modelObject = glm::rotate(modelObject, angle, yAxis);
+      ///@todo: end place to method
 
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -59,6 +71,7 @@ void CWin32Renderer::update()
          CRenderable* pRenderable = *iter;
          if (pRenderable)
          {
+            pRenderable->setParentModelMatrix(modelObject);
             draw(pRenderable);
          }
       }
@@ -117,39 +130,15 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
 
       assert(pShader && pGeometry);
 
-      ///@todo: place matrix manipulation to update! then set the modified general matrix to the shader.
-      ///@todo: move to separate method
+      // Get Renderable's static model matrix
+      glm::mat4 modelMatrix = pRenderable->getModelMatrix();
 
-      ///@todo: move setting up View and Projection to update(); introduce these matrices as well as modelObject to Renderer.
-      // Init the View matrix
-      glm::mat4 View = glm::mat4(1.0f);
-      glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -9.0f);
-      View = glm::translate(View, cameraPos);
+      // Get Renderable's dynamic library of the root object
+      glm::mat4 modelObjectMatrix = pRenderable->getParentModelMatrix();
 
-      // Rotate the View matrix
-      static float angle = 0.f * DEG_TO_RAD;
-      static float angleX = 30.0f * DEG_TO_RAD;
-
-      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-      //View = glm::rotate(View, angle, yAxis);
-      glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-      View = glm::rotate(View, angleX, xAxis);
-
-      const float delta = 0.005f;
-      angle += delta;
-
-      ///@todo: move projection to construction
-      // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-      glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
-
-      glm::mat4 Model = pRenderable->getModelMatrix();
-      glm::mat4 modelObject = glm::mat4(1.0f);
-      modelObject = glm::rotate(modelObject, angle, yAxis);
-
-      glm::mat4 MVP = Projection * View * modelObject * Model;
+      // Calculate and set the final MVP matrix used in the shader
+      glm::mat4 MVP = mProjectionMatrix * mViewMatrix * modelObjectMatrix * modelMatrix;
       pRenderable->setMvpMatrix(MVP);
-
-      ///@todo: end move to separate method
 
       pShader->setup(*pRenderable);
 
@@ -283,5 +272,25 @@ bool CWin32Renderer::loadOpenGLExtensions()
    //Log::instance() << "  OpenGL Extensions:\n" << strExtension.c_str() << endl;
 
    return result;
+}
+
+void CWin32Renderer::setupViewMatrix()
+{
+   // Init the View matrix
+   mViewMatrix = glm::mat4(1.0f);
+   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -9.0f);
+   mViewMatrix = glm::translate(mViewMatrix, cameraPos);
+
+   // Rotate the View matrix
+   static float angle = 0.f * DEG_TO_RAD;
+   static float angleX = 30.0f * DEG_TO_RAD;
+
+   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+   //View = glm::rotate(View, angle, yAxis);
+   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   mViewMatrix = glm::rotate(mViewMatrix, angleX, xAxis);
+
+   const float delta = 0.005f;
+   angle += delta;
 }
 

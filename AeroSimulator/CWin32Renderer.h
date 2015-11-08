@@ -5,6 +5,8 @@
 
 #include "CRenderer.h"
 #include "CWin32Window.h"
+#include "glm/vec3.hpp"
+#include "glm/mat4x4.hpp"
 
 namespace AeroSimulatorEngine
 {
@@ -36,6 +38,7 @@ namespace AeroSimulatorEngine
    private:
       bool createRenderContext();
       bool loadOpenGLExtensions(); // TODO: may be redundant when GLEW is used
+      void setupViewMatrix();
 
    private:
       HDC mDC;
@@ -43,6 +46,8 @@ namespace AeroSimulatorEngine
       HGLRC mRenderContext;
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
+      glm::mat4 mViewMatrix;
+      glm::mat4 mProjectionMatrix;
    };
 
 } // namespace AeroSimulatorEngine
