@@ -36,6 +36,9 @@ namespace AeroSimulatorEngine
 
       // Transforms
       void resetModelMatrix(const glm::mat4& matrix);
+      void resetTRMatrix(const glm::mat4& matrix);
+      glm::mat4 getTRMatrix() const;
+
       void scale(const glm::vec3& scale);
       void rotate(const glm::vec3& rotate);
       void translate(const glm::vec3& translate);
@@ -48,6 +51,8 @@ namespace AeroSimulatorEngine
       glm::vec3 mScale;   // Scale factors along the parent object axes
       glm::vec3 mRotate;  // Rotation angles in degrees around the parent axes
       glm::vec3 mTranslate;   // Translate along the parent axes
+
+      glm::mat4 mTRMatrix; // Translate+rotate matrix
 
       bool mIsLeaf;
    };

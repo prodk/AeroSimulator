@@ -104,15 +104,15 @@ void CSimpleShader::rotateCameraGlm(CRenderable & renderable)
    View = glm::translate(View, cameraPos);
 
    // Rotate the View matrix
-   static float angle = 30.f * DEG_TO_RAD;
-   static float angleX = 30.f * DEG_TO_RAD;
+   static float angle = 0.f * DEG_TO_RAD;
+   static float angleX = 0.f * DEG_TO_RAD;
 
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   View = glm::rotate(View, angle, yAxis);
+   //View = glm::rotate(View, angle, yAxis);
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    View = glm::rotate(View, angleX, xAxis);
 
-   const float delta = 0.0001f;
+   const float delta = 0.005f;
    angle += delta;
 
    ///@todo: move projection to construction
@@ -124,8 +124,10 @@ void CSimpleShader::rotateCameraGlm(CRenderable & renderable)
    // Model matrix : an identity matrix (model will be at the origin)
    //glm::mat4 Model = glm::mat4(1.0f);
    glm::mat4 Model = renderable.getModelMatrix();
+   glm::mat4 modelObject = glm::mat4(1.0f);
+   modelObject = glm::rotate(modelObject, angle, yAxis);
 
-   glm::mat4 MVP = Projection * View * Model;
+   glm::mat4 MVP = Projection * View * modelObject * Model;
 
    // Send the transformation to the currently bound shader in the "MVP" uniform
    glUniformMatrix4fv(mMvpAttributeId, 1, GL_FALSE, &MVP[0][0]);

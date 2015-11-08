@@ -10,6 +10,7 @@ CGameObject::CGameObject()
    , mScale()
    , mRotate()
    , mTranslate()
+   , mTRMatrix()
    , mIsLeaf(false)
 {
 }
@@ -23,7 +24,6 @@ CGameObject::CGameObject(const CGameObject* parent,
                          const glm::vec3 & rotate,
                          const glm::vec3 & translate)
    : CRenderable()
-   //, mModelMatrix()
    , mScale(scale)
    , mRotate(rotate)
    , mTranslate(translate)
@@ -34,6 +34,17 @@ CGameObject::CGameObject(const CGameObject* parent,
 void CGameObject::resetModelMatrix(const glm::mat4& matrix)
 {
    mModelMatrix = matrix;
+}
+
+void CGameObject::resetTRMatrix(const glm::mat4 & matrix)
+{
+   mTRMatrix = matrix;
+   mModelMatrix = mTRMatrix;
+}
+
+glm::mat4 CGameObject::getTRMatrix() const
+{
+   return mTRMatrix;
 }
 
 void CGameObject::scale(const glm::vec3& scale)
@@ -48,20 +59,27 @@ void CGameObject::rotate(const glm::vec3& rotate)
 
    const float angleX = DEG_TO_RAD * rotate.x;
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   mModelMatrix = glm::rotate(mModelMatrix, angleX, xAxis);
+   //mModelMatrix = glm::rotate(mModelMatrix, angleX, xAxis);
+   mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
 
    const float angleY = DEG_TO_RAD * rotate.y;
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   mModelMatrix = glm::rotate(mModelMatrix, angleY, yAxis);
+   //mModelMatrix = glm::rotate(mModelMatrix, angleY, yAxis);
+   mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
 
    const float angleZ = DEG_TO_RAD * rotate.z;
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   mModelMatrix = glm::rotate(mModelMatrix, angleZ, zAxis);
+   //mModelMatrix = glm::rotate(mModelMatrix, angleZ, zAxis);
+   mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
+
+   mModelMatrix = mTRMatrix;
 }
 
 void CGameObject::translate(const glm::vec3& translate)
 {
    mTranslate = translate;
 
-   mModelMatrix = glm::translate(mModelMatrix, translate);
+   glm::mat4 translation = glm::mat4(1.0f);
+   mTRMatrix = glm::translate(mTRMatrix, translate);
+   mModelMatrix = mTRMatrix;
 }
