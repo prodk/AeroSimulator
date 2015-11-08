@@ -7,7 +7,9 @@
 #include "CGeometry.h"
 #include "CSimpleShader.h"
 #include "CLog.h"
-#include "CCube.h"
+#include "CCube.h" //@todo: remove
+
+#include "C3DModel.h"
 
 #include <conio.h>
 #include <cassert>
@@ -17,11 +19,16 @@ CApp::CApp()
    : mTaskManager()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
-   , mCube(new CCube())
-   , mBodyCube(new CCube(glm::mat4(1.0f), // parent
-      glm::vec3(3.0f, 1.0f, 1.0f), // scale
-      glm::vec3(0.0f, 0.0f, 0.0f), // rotate
-      glm::vec3(0.0f, 1.0f, 0.0f)))// translate
+   //, mCube(new CCube(0,
+   //   glm::vec3(1.0f, 1.0f, 1.0f), // scale
+   //   glm::vec3(0.0f, -30.0f, 0.0f), // rotate
+   //   glm::vec3(0.0f, -2.0f, 0.0f))) ///@todo: replace
+   , mCube(new CCube()) ///@todo: replace
+   , mBodyCube(new CCube(mCube.get(), // parent  ///@todo: replace
+                         glm::vec3(3.0f, 1.0f, 1.0f), // scale
+                         glm::vec3(0.0f, 0.0f, 0.0f), // rotate
+                         glm::vec3(0.0f, 1.0f, 0.0f)))// translate
+   , mAirPlane(new C3DModel())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -32,8 +39,8 @@ CApp::CApp()
 
 CApp::~CApp()
 {
-   mCube.reset();
-   mBodyCube.reset();
+   mCube.reset(); ///@todo: replace
+   mBodyCube.reset();  ///@todo: replace
 
    mRendererTask.reset();
    mAppWindowTask.reset();
@@ -84,14 +91,30 @@ void CApp::setupRenderer()
 
    ///@todo: here setup game objects
    ///@todo: probably unite these into one method
-   mCube->setupGeometry();
-   mCube->setupVBO();
+   /*mCube->setupGeometry(); ///@todo: replace
+   mCube->setupVBO(); ///@todo: replace
 
-   mBodyCube->setupGeometry();
-   mBodyCube->setupVBO();
+   mBodyCube->setupGeometry(); ///@todo: replace
+   mBodyCube->setupVBO(); ///@todo: replace*/
 
-   mRendererTask->addRenderable(mCube.get());
-   mRendererTask->addRenderable(mBodyCube.get());
+   mAirPlane->buildModel();
+
+   //mRendererTask->addRenderable(mCube.get()); ///@todo: replace
+   //mRendererTask->addRenderable(mBodyCube.get()); ///@todo: replace
+
+
+   //Add cubes from the air plane
+   std::vector<CGameObject*> tree;
+   mAirPlane->getTree(tree);
+
+   const std::size_t numOfCubes = tree.size();
+   for (std::size_t count = 0; count < numOfCubes; ++count)
+   {
+      tree[count]->setupGeometry();
+      tree[count]->setupVBO();
+      mRendererTask->addRenderable(tree[count]);
+   }
 
    mRendererTask->setRenderContext();
 }
+

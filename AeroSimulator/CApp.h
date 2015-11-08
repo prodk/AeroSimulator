@@ -34,7 +34,8 @@ namespace AeroSimulatorEngine
 
    class CSimpleShader;
    class CGeometry;
-   class CGameObject;
+   class CGameObject;///@todo:remove
+   class C3DModel;
 
    class CApp
    {
@@ -67,8 +68,10 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CWin32Renderer> mRendererTask;
 
       ///@todo: use the Composite pattern for game objects
-      std::shared_ptr<CGameObject> mCube;
-      std::shared_ptr<CGameObject> mBodyCube;
+      std::shared_ptr<CGameObject> mCube; ///@todo: replace by the Composite
+      std::shared_ptr<CGameObject> mBodyCube; ///@todo: replace
+
+      std::shared_ptr<C3DModel> mAirPlane;
    };
 
 } // namespace AeroSimulatorEngine

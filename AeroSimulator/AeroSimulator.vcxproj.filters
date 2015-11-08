@@ -60,6 +60,12 @@
     <ClInclude Include="CCube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="C3DModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CParentGameObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -102,6 +108,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CCube.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C3DModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CParentGameObject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

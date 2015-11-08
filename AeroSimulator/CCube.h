@@ -10,13 +10,15 @@ namespace AeroSimulatorEngine
 {
    class CSimpleShader;
 
+   ///@todo: probably in the future introduce CLeafGameObject,
+   ///but at the moment CCube is the only possible leaf
    class CCube : public CGameObject
    {
    public:
       CCube();
       virtual ~CCube();
 
-      CCube(const glm::mat4& parentModelMatrix,
+      CCube(const CGameObject* parent,
             const glm::vec3& scale,
             const glm::vec3& rotate,
             const glm::vec3& translate);
@@ -24,6 +26,10 @@ namespace AeroSimulatorEngine
       /// These methods require a valid render context
       virtual void setupGeometry();
       virtual void setupVBO();
+
+      /// Composite-related methods
+      virtual void add(CGameObject* child);
+      virtual void traverse(std::vector<CGameObject*>& tree);
 
    public:
       static const int mNumOfElementsPerVertex;

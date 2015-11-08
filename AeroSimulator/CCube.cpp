@@ -76,11 +76,14 @@ const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates a
 CCube::CCube()
    : CGameObject()
 {
+   mIsLeaf = true;
    mGeometry.reset(new CGeometry());
    mShader.reset(new CSimpleShader());
 
    assert(mGeometry.get());
    assert(mShader.get());
+
+   mScale = glm::vec3(1.0f, 1.0f, 1.0f);
 
    CLog::getInstance().log("\n* CCube::CCube() default: success. \n");
 }
@@ -91,12 +94,14 @@ CCube::~CCube()
    mShader.reset();
 }
 
-CCube::CCube(const glm::mat4 & parentModelMatrix,
+CCube::CCube(const CGameObject* parent,
              const glm::vec3 & scale,
              const glm::vec3 & rotate,
              const glm::vec3 & translate)
-   : CGameObject(parentModelMatrix, scale, rotate, translate)
+   : CGameObject(parent, scale, rotate, translate)
 {
+   mIsLeaf = true;
+
    mGeometry.reset(new CGeometry());
    mShader.reset(new CSimpleShader());
 
@@ -111,19 +116,30 @@ CCube::CCube(const glm::mat4 & parentModelMatrix,
    myModel = glm::scale(myModel, scale);
 
    // rotate
+   const float angleX = DEG_TO_RAD * rotate.x;
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   myModel = glm::rotate(myModel, rotate.x, xAxis);
+   myModel = glm::rotate(myModel, angleX, xAxis);
 
+   const float angleY = DEG_TO_RAD * rotate.y;
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   myModel = glm::rotate(myModel, rotate.y, yAxis);
+   myModel = glm::rotate(myModel, angleY, yAxis);
 
+   const float angleZ = DEG_TO_RAD * rotate.z;
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   myModel = glm::rotate(myModel, rotate.z, zAxis);
+   myModel = glm::rotate(myModel, angleZ, zAxis);
 
+   // translate
    myModel = glm::translate(myModel, translate);
 
    ///@todo: probably myltiply by the parent matrix
-   setModelMatrix(myModel);
+   glm::mat4 parentModelMatrix = glm::mat4(1.0f);
+   if (parent)
+   {
+      parentModelMatrix = parent->getModelMatrix();
+   }
+   
+   mModelMatrix = parentModelMatrix * myModel;
+   //setModelMatrix(parentModelMatrix * myModel);
 
    CLog::getInstance().log("\n* CCube::CCube() non-default: success. \n");
 }
@@ -169,4 +185,13 @@ void CCube::setupVBO()
    // Reset VBOs
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void CCube::add(CGameObject * child)
+{
+   CLog::getInstance().log("\n!!! Cannot add a child to CCube because it is a leaf!!! \n");
+}
+
+void CCube::traverse(std::vector<CGameObject*>& tree)
+{
 }

@@ -142,12 +142,14 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="C3DModel.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CCube.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
     <ClInclude Include="CLog.h" />
+    <ClInclude Include="CParentGameObject.h" />
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CShader.h" />
@@ -158,12 +160,14 @@
     <ClInclude Include="CWin32Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="C3DModel.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CCube.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />
     <ClCompile Include="CLog.cpp" />
+    <ClCompile Include="CParentGameObject.cpp" />
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CShader.cpp" />
