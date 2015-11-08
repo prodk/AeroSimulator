@@ -17,6 +17,7 @@ namespace AeroSimulatorEngine
                   const glm::vec3& rotate,
                   const glm::vec3& translate);
 
+      ///@todo: probably introduce one pure method setup() and call these 2 methods from it
       virtual void setupGeometry() = 0;
       virtual void setupVBO() = 0;
 

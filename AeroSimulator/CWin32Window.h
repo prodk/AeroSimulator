@@ -22,8 +22,8 @@ namespace AeroSimulatorEngine
 
       // Override CTask part
       virtual bool start();
-      virtual bool update();
-      virtual bool stop();
+      virtual void update();
+      virtual void stop();
 
       HDC getDC() const { return mDC; }
       bool isFullScreen() const { return (mWidth == 0u || mHeight == 0u) ? true : false; }

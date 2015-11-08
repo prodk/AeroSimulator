@@ -180,7 +180,7 @@ bool CWin32Window::start()
    return true;
 }
 
-bool CWin32Window::update()
+void CWin32Window::update()
 {
    MSG msg;
    ZeroMemory(&msg, sizeof(MSG));
@@ -195,11 +195,9 @@ bool CWin32Window::update()
    {
       mIsClosing = true;
    }
-
-   return true; // TODO: probably make it void
 }
 
-bool CWin32Window::stop()
+void CWin32Window::stop()
 {
    if (mWnd)
    {
@@ -226,7 +224,5 @@ bool CWin32Window::stop()
    {
       ChangeDisplaySettings(NULL, 0);
    }
-
-   return true; // TODO: probably make it void
 }
 

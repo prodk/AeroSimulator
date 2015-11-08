@@ -24,12 +24,14 @@ CWin32Renderer::~CWin32Renderer()
    destroy();
 }
 
+///@todo: probably move to the base class
 bool CWin32Renderer::start()
 {
    return isInitialized();
 }
 
-bool CWin32Renderer::update()
+///@todo: probably move to the base class
+void CWin32Renderer::update()
 {
    if (mIsInitialized)
    {
@@ -50,13 +52,10 @@ bool CWin32Renderer::update()
 
       resetRenderContext();
    }
-
-   return true;
 }
 
-bool CWin32Renderer::stop()
+void CWin32Renderer::stop()
 {
-   return false;
 }
 
 void CWin32Renderer::init()
@@ -90,6 +89,7 @@ void CWin32Renderer::destroy()
    }
 }
 
+///@todo: probably move to the base class
 void CWin32Renderer::draw(CRenderable* pRenderable)
 {
    if (pRenderable)
@@ -217,6 +217,8 @@ void CWin32Renderer::resetRenderContext()
       wglMakeCurrent(NULL, NULL);
 }
 
+
+///@todo: probably move to the base class
 bool CWin32Renderer::loadOpenGLExtensions()
 {
    bool result = true;

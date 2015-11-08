@@ -81,10 +81,14 @@ CCube::CCube()
 
    assert(mGeometry.get());
    assert(mShader.get());
+
+   CLog::getInstance().log("\n* CCube::CCube() default: success. \n");
 }
 
 CCube::~CCube()
 {
+   mGeometry.reset();
+   mShader.reset();
 }
 
 CCube::CCube(const glm::mat4 & parentModelMatrix,
@@ -120,6 +124,8 @@ CCube::CCube(const glm::mat4 & parentModelMatrix,
 
    ///@todo: probably myltiply by the parent matrix
    setModelMatrix(myModel);
+
+   CLog::getInstance().log("\n* CCube::CCube() non-default: success. \n");
 }
 
 void CCube::setupGeometry()
@@ -138,6 +144,8 @@ void CCube::setupGeometry()
 
 void CCube::setupVBO()
 {
+   CLog::getInstance().logGL("\n** CCube::setupVBO() **");
+
    // Shader setup
    mShader->link();
    mShader->setup(*this);

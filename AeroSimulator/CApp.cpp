@@ -10,6 +10,7 @@
 #include "CCube.h"
 
 #include <conio.h>
+#include <cassert>
 using namespace AeroSimulatorEngine;
 
 CApp::CApp()
@@ -22,8 +23,11 @@ CApp::CApp()
       glm::vec3(0.0f, 0.0f, 0.0f), // rotate
       glm::vec3(0.0f, 1.0f, 0.0f)))// translate
 {
+   assert(mAppWindowTask);
+   assert(mRendererTask);
+   ///@todo:asserts for game objects
+
    CLog::getInstance().log("* CApp created!");
-   ///@todo: check that pointers are valid here
 }
 
 CApp::~CApp()

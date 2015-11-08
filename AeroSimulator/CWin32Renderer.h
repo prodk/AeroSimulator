@@ -16,8 +16,8 @@ namespace AeroSimulatorEngine
 
       // Override CTask part
       virtual bool start();
-      virtual bool update(); // TODO: probably make it void
-      virtual bool stop(); // TODO: probably make it void
+      virtual void update();
+      virtual void stop();
 
       bool isInitialized() const { return mIsInitialized; }
 

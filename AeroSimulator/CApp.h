@@ -34,7 +34,6 @@ namespace AeroSimulatorEngine
 
    class CSimpleShader;
    class CGeometry;
-   //class CRenderable;
    class CGameObject;
 
    class CApp

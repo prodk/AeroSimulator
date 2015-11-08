@@ -15,8 +15,8 @@ namespace AeroSimulatorEngine
       virtual ~CTask();
 
       virtual bool start() = 0;
-      virtual bool update() = 0; // TODO: probably make it void
-      virtual bool stop() = 0; // TODO: probably make it void
+      virtual void update() = 0;
+      virtual void stop() = 0;
 
       void setCanKill(bool canKill);
       bool getCanKill() const { return mCanKill; }
