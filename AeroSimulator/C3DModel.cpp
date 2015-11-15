@@ -1,6 +1,7 @@
 #include "C3DModel.h"
 #include "CParentGameObject.h"
 #include "CCube.h"
+#include "CGeometry.h"
 
 #include <cassert>
 
@@ -8,8 +9,65 @@ using namespace AeroSimulatorEngine;
 
 const std::size_t C3DModel::numOfCubes = 10;
 
+namespace
+{
+   // Unit cube
+   GLfloat cubeData[] = {
+      //front
+      -0.5f, -0.5f,  0.5f,
+      1.0f, 0.0f, 0.0f, //0 color
+      0.5f, -0.5f,  0.5f,
+      0.0f, 1.0f, 0.0f, //1 color
+      0.5f,  0.5f,  0.5f,
+      0.0f, 0.0f, 1.0f, //2 color
+      -0.5f,  0.5f,  0.5f,
+      0.2f, 0.0f, 0.5f, //3 color
+                        // back
+      -0.5f, -0.5f, -0.5f,
+      1.0f, 0.0f, 0.0f,//4 color
+      0.5f, -0.5f, -0.5f,
+      0.0f, 1.0f, 0.0f, //5 color
+      0.5f,  0.5f, -0.5f,
+      0.0f, 0.0f, 1.0f,//6 color
+      -0.5f,  0.5f, -0.5f,
+      0.2f, 0.6f, 0.0f //7 color
+   };
+
+   ///@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
+   GLuint indices[] = {
+      6, 5, 7, 4, // back
+      3, 0, // left
+      2, 1, // front
+      6, 5, // right
+
+      5, 4, 1, 0, // bottom
+      2, 3, 6, 7  // top
+   };
+
+   //GLuint indices[] = {
+   //   // Stripe 1
+   //   6, 5, 7, 4, // back
+   //    3, 0, // left
+   //    2, 1, // front
+   //    6, 5, // right
+
+   //   // Stripe 2
+   //   // bottom
+   //   5, 1, 4, 0,
+
+   //   // front
+   //   0, 1, 2,
+   //   2, 0, 3,
+
+   //   // top
+   //   3, 2, 6,
+   //   6, 3, 7
+   //};
+}
+
 C3DModel::C3DModel()
-   : mObjectTree(new CParentGameObject())
+   : mCubeGeometry(new CGeometry())
+   , mObjectTree(new CParentGameObject())
    , mBody(new CParentGameObject())
    , mLeftWing(new CParentGameObject())
    , mRightWing(new CParentGameObject())
@@ -17,6 +75,7 @@ C3DModel::C3DModel()
    , mPropeller(new CParentGameObject())
    , mCubes(numOfCubes)
 {
+   assert(mCubeGeometry);
    assert(mObjectTree);
 }
 
@@ -24,9 +83,36 @@ C3DModel::~C3DModel()
 {
 }
 
+void  C3DModel::setupCubeGeometry()
+{
+   if (mCubeGeometry)
+   {
+      mCubeGeometry->setVertexBuffer(cubeData);
+      const int numOfVertices = sizeof(cubeData) / sizeof(cubeData[0]);
+      mCubeGeometry->setNumOfVertices(numOfVertices);
+
+      mCubeGeometry->setIndexBuffer(indices);
+      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+      mCubeGeometry->setNumOfIndices(numOfIndices);
+
+      ///@todo: get rid of the magic numbers
+      mCubeGeometry->setNumOfElementsPerVertex(CCube::mNumOfElementsPerVertex);
+      mCubeGeometry->setVertexStride(CCube::mStride);
+   }
+}
+
 bool C3DModel::buildModel()
 {
    bool result = false;
+
+   /// Use only one cube geometry!
+   setupCubeGeometry();
+
+   // Force all the cubes to use one geometry.
+   for (std::size_t count = 0u; count < mCubes.size(); ++count)
+   {
+      mCubes[count].setupGeometry(mCubeGeometry);
+   }
 
    // Build an airplane
    mCubes[0].resetTRMatrix(mObjectTree->getTRMatrix());

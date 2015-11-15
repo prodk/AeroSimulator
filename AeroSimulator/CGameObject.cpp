@@ -1,5 +1,5 @@
 #include "CGameObject.h"
-#include "CSimpleShader.h" ///@todo: use another header when DEG_TO_RAD is moved to other place
+#include "CCommonMath.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -57,17 +57,17 @@ void CGameObject::rotate(const glm::vec3& rotate)
 {
    mRotate = rotate;
 
-   const float angleX = DEG_TO_RAD * rotate.x;
+   const float angleX = CCommonMath::degToRad(rotate.x);
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    //mModelMatrix = glm::rotate(mModelMatrix, angleX, xAxis);
    mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
 
-   const float angleY = DEG_TO_RAD * rotate.y;
+   const float angleY = CCommonMath::degToRad(rotate.y);
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
    //mModelMatrix = glm::rotate(mModelMatrix, angleY, yAxis);
    mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
 
-   const float angleZ = DEG_TO_RAD * rotate.z;
+   const float angleZ = CCommonMath::degToRad(rotate.z);
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    //mModelMatrix = glm::rotate(mModelMatrix, angleZ, zAxis);
    mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);

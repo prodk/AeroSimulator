@@ -18,8 +18,6 @@ namespace AeroSimulatorEngine
       static bool isClosing() { return mIsClosing; }
       static void resetIsClosing() { mIsClosing = false; }
 
-      //virtual bool create(const std::string& title, std::size_t width, std::size_t height) = 0;
-
    protected:
       std::string mTitle;
       std::size_t mWidth;

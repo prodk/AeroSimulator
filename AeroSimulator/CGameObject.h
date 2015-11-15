@@ -23,12 +23,11 @@ namespace AeroSimulatorEngine
 
       ///@todo: probably introduce one pure method setup() and call these 2 methods from it
       ///Rendering-related methods
-      virtual void setupGeometry() = 0;
-      virtual void setupVBO() = 0;
+      ///@todo: rename to setGeometry()
+      virtual void setupGeometry(std::shared_ptr<CGeometry>& pGeometry) = 0;
+      virtual void setupShadersAndBuffers() = 0;
 
       ///Composite-related methods to be overridden by children
-      //getChildren() = 0;
-      //remove() = 0;
       virtual void add(CGameObject* child) = 0;
       ///Saves elements to the provided array
       virtual void traverse(std::vector<CGameObject*>& tree) = 0;

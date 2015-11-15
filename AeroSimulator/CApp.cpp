@@ -73,6 +73,7 @@ int CApp::exit()
    return 0;
 }
 
+///@todo: rename this method
 void CApp::setupRenderer()
 {
    /// We need a valid RC to setup VBOs and shaders
@@ -87,8 +88,8 @@ void CApp::setupRenderer()
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)
    {
-      tree[count]->setupGeometry();
-      tree[count]->setupVBO();
+      ///@todo: remove setting geometry and shaders from here
+      tree[count]->setupShadersAndBuffers();
       mRendererTask->addRenderable(tree[count]);
    }
 

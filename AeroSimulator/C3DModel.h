@@ -8,6 +8,7 @@ namespace AeroSimulatorEngine
 {
    class CGameObject;
    class CCube;
+   class CGeometry;
 
    ///This is a bridge for the CGameObject Composite (tree structure)
    class C3DModel
@@ -22,9 +23,12 @@ namespace AeroSimulatorEngine
       static const std::size_t numOfCubes;
 
    private:
+      void setupCubeGeometry();
       void buildBody();
 
    private:
+      std::shared_ptr<CGeometry> mCubeGeometry;
+
       std::shared_ptr<CGameObject> mObjectTree;
 
       // Parts of the plane

@@ -39,7 +39,7 @@ namespace AeroSimulatorEngine
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 
-      void setupRenderer();
+      void setupRenderer();///@todo: rename this method as we also build the tree here, setup scene or smth like that
 
    private:
       ///@todo: introduce a Bridge pattern and place Win32-specific code there

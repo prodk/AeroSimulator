@@ -7,9 +7,6 @@
 
 namespace AeroSimulatorEngine
 {
-#define M_PI           3.14159265358979323846f  /* pi */
-#define DEG_TO_RAD M_PI / 180.f
-
    class CSimpleShader : public CShader
    {
    public:

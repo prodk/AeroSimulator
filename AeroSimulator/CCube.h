@@ -24,8 +24,8 @@ namespace AeroSimulatorEngine
             const glm::vec3& translate);
 
       /// These methods require a valid render context
-      virtual void setupGeometry();
-      virtual void setupVBO();
+      virtual void setupGeometry(std::shared_ptr<CGeometry>& pGeometry);
+      virtual void setupShadersAndBuffers();
 
       /// Composite-related methods
       virtual void add(CGameObject* child);

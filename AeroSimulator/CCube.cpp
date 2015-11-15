@@ -2,6 +2,7 @@
 #include "CGeometry.h"
 #include "CSimpleShader.h"
 #include "CLog.h"
+#include "CCommonMath.h"
 
 ///@todo: think which headers are necessary
 #include "../AeroSimulator/include/glew.h"
@@ -14,62 +15,6 @@
 
 using namespace AeroSimulatorEngine;
 
-namespace
-{
-   // Unit cube
-   GLfloat cubeData[] = {
-      //front
-      -0.5f, -0.5f,  0.5f,
-      1.0f, 0.0f, 0.0f, //0 color
-      0.5f, -0.5f,  0.5f,
-      0.0f, 1.0f, 0.0f, //1 color
-      0.5f,  0.5f,  0.5f,
-      0.0f, 0.0f, 1.0f, //2 color
-      -0.5f,  0.5f,  0.5f,
-      0.2f, 0.0f, 0.5f, //3 color
-       // back
-      -0.5f, -0.5f, -0.5f,
-      1.0f, 0.0f, 0.0f,//4 color
-      0.5f, -0.5f, -0.5f,
-      0.0f, 1.0f, 0.0f, //5 color
-      0.5f,  0.5f, -0.5f,
-      0.0f, 0.0f, 1.0f,//6 color
-      -0.5f,  0.5f, -0.5f,
-      0.2f, 0.6f, 0.0f //7 color
-   };
-
-   ///@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
-   GLuint indices[] = {
-      6, 5, 7, 4, // back
-      3, 0, // left
-      2, 1, // front
-      6, 5, // right
-
-      5, 4, 1, 0, // bottom
-      2, 3, 6, 7  // top
-   };
-
-   //GLuint indices[] = {
-   //   // Stripe 1
-   //   6, 5, 7, 4, // back
-   //    3, 0, // left
-   //    2, 1, // front
-   //    6, 5, // right
-
-   //   // Stripe 2
-   //   // bottom
-   //   5, 1, 4, 0,
-
-   //   // front
-   //   0, 1, 2,
-   //   2, 0, 3,
-
-   //   // top
-   //   3, 2, 6,
-   //   6, 3, 7
-   //};
-}
-
 const int CCube::mNumOfElementsPerVertex = 3; // 3 coordinates/color components per vertex
 const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates and 3 colors
 
@@ -77,10 +22,11 @@ CCube::CCube()
    : CGameObject()
 {
    mIsLeaf = true;
-   mGeometry.reset(new CGeometry());
+
+   ///@todo: remove this incorrect code
    mShader.reset(new CSimpleShader());
 
-   assert(mGeometry.get());
+   //assert(mGeometry.get());
    assert(mShader.get());
 
    mScale = glm::vec3(1.0f, 1.0f, 1.0f);
@@ -102,10 +48,10 @@ CCube::CCube(const CGameObject* parent,
 {
    mIsLeaf = true;
 
-   mGeometry.reset(new CGeometry());
+   ///@todo: this is incorrect! We must keep only a reference to the Geometry and shader!
    mShader.reset(new CSimpleShader());
 
-   assert(mGeometry.get());
+   //assert(mGeometry.get());
    assert(mShader.get());
 
    // Set transforms
@@ -116,15 +62,15 @@ CCube::CCube(const CGameObject* parent,
    myModel = glm::scale(myModel, scale);
 
    // rotate
-   const float angleX = DEG_TO_RAD * rotate.x;
+   const float angleX = CCommonMath::degToRad(rotate.x);
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    myModel = glm::rotate(myModel, angleX, xAxis);
 
-   const float angleY = DEG_TO_RAD * rotate.y;
+   const float angleY = CCommonMath::degToRad(rotate.y);
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
    myModel = glm::rotate(myModel, angleY, yAxis);
 
-   const float angleZ = DEG_TO_RAD * rotate.z;
+   const float angleZ = CCommonMath::degToRad(rotate.z);
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    myModel = glm::rotate(myModel, angleZ, zAxis);
 
@@ -137,28 +83,18 @@ CCube::CCube(const CGameObject* parent,
    {
       parentModelMatrix = parent->getModelMatrix();
    }
-   
+
    mModelMatrix = parentModelMatrix * myModel;
-   //setModelMatrix(parentModelMatrix * myModel);
 
    CLog::getInstance().log("\n* CCube::CCube() non-default: success. \n");
 }
 
-void CCube::setupGeometry()
+void CCube::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
 {
-   mGeometry->setVertexBuffer(cubeData);
-   const int numOfVertices = sizeof(cubeData) / sizeof(cubeData[0]);
-   mGeometry->setNumOfVertices(numOfVertices);
-
-   mGeometry->setIndexBuffer(indices);
-   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-   mGeometry->setNumOfIndices(numOfIndices);
-
-   mGeometry->setNumOfElementsPerVertex(mNumOfElementsPerVertex);
-   mGeometry->setVertexStride(mStride);
+   mGeometry = pGeometry;
 }
 
-void CCube::setupVBO()
+void CCube::setupShadersAndBuffers()
 {
    CLog::getInstance().logGL("\n** CCube::setupVBO() **");
 

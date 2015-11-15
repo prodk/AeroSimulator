@@ -23,11 +23,11 @@ CParentGameObject::CParentGameObject(const CGameObject* parent,
 {
 }
 
-void CParentGameObject::setupGeometry()
+void CParentGameObject::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
 {
 }
 
-void CParentGameObject::setupVBO()
+void CParentGameObject::setupShadersAndBuffers()
 {
 }
 
