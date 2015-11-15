@@ -25,7 +25,10 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
    , mProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)) 
    , mAngleZ(0.0f)
+   , mOldAngleZ(0.0f)
    , mAngleX(0.0f)
+   , mHorizontalPressed(0)
+   , mVerticalPressed(0)
 {
 }
 
@@ -46,7 +49,7 @@ void CWin32Renderer::update()
    {
       setRenderContext();
 
-      setupViewMatrix();
+      setupViewMatrix(); ///@todo: move to the CCamera.
 
       glm::mat4 modelObjectMatrix;
       calculateAirplaneMatrix(modelObjectMatrix);
@@ -286,8 +289,41 @@ void CWin32Renderer::setupViewMatrix()
    angle += delta;
 }
 
-void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix) const
+void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
+   ///@todo: place to a separate method
+   ++mHorizontalPressed;
+   ++mVerticalPressed;
+
+   // "Spring" buttons
+
+   //if ( (mAngleZ > 0.f) )
+
+   // If the button has not been pressed for longer than 5 frames, return the plane to the previous position
+   if (mHorizontalPressed > 5)
+   {
+      if (mAngleZ > 0.0f)
+      {
+         mAngleZ -= 1.f;
+         mAngleZ = std::max<float>(0.0f, mAngleZ);
+      }
+
+      if (mAngleZ < -0.0f)
+      {
+         mAngleZ += 1.f;
+         mAngleZ = std::min<float>(0.0f, mAngleZ);
+      }
+   }
+
+   if (mVerticalPressed > 3)
+   {
+      if (mAngleX > 0.f)
+         mAngleX -= 0.4f;
+
+      if (mAngleX < 0.f)
+         mAngleX += 0.4f;
+   }
+
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
    
    // Rotate around z-axis
@@ -346,21 +382,25 @@ bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
       {
          if (mAngleZ < 45)
             mAngleZ += 1.0f;
+         mHorizontalPressed = 0;
       }
       if (wParam == VK_RIGHT)
       {
          if (mAngleZ > -45)
             mAngleZ -= 1.0f;
+         mHorizontalPressed = 0;
       }
       if (wParam == VK_UP)
       {
          if (mAngleX > -45)
             mAngleX -= 1.0f;
+         mVerticalPressed = 0;
       }
       if (wParam == VK_DOWN)
       {
          if (mAngleX < 45)
             mAngleX += 1.0f;
+         mVerticalPressed = 0;
       }
    }
    return false;

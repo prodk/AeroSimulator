@@ -41,7 +41,7 @@ namespace AeroSimulatorEngine
       bool createRenderContext();
       bool loadOpenGLExtensions();
       void setupViewMatrix();
-      void calculateAirplaneMatrix(glm::mat4& matrix) const;
+      void calculateAirplaneMatrix(glm::mat4& matrix);
 
    private:
       HDC mDC;
@@ -54,7 +54,10 @@ namespace AeroSimulatorEngine
       glm::mat4 mProjectionMatrix;
 
       float mAngleZ; // Angle of rotating around the z-axis of the air plane
+      float mOldAngleZ;
       float mAngleX;
+      std::size_t mHorizontalPressed;
+      std::size_t mVerticalPressed;
    };
 
 } // namespace AeroSimulatorEngine
