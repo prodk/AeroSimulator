@@ -27,7 +27,7 @@ void CParentGameObject::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
 {
 }
 
-void CParentGameObject::setupShadersAndBuffers()
+void CParentGameObject::setupShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
 }
 

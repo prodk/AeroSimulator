@@ -25,7 +25,7 @@ namespace AeroSimulatorEngine
 
       /// These methods require a valid render context
       virtual void setupGeometry(std::shared_ptr<CGeometry>& pGeometry);
-      virtual void setupShadersAndBuffers();
+      virtual void setupShadersAndBuffers(std::shared_ptr<CShader>& pShader);
 
       /// Composite-related methods
       virtual void add(CGameObject* child);

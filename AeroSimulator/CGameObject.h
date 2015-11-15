@@ -25,7 +25,7 @@ namespace AeroSimulatorEngine
       ///Rendering-related methods
       ///@todo: rename to setGeometry()
       virtual void setupGeometry(std::shared_ptr<CGeometry>& pGeometry) = 0;
-      virtual void setupShadersAndBuffers() = 0;
+      virtual void setupShadersAndBuffers(std::shared_ptr<CShader>& pShader) = 0;
 
       ///Composite-related methods to be overridden by children
       virtual void add(CGameObject* child) = 0;

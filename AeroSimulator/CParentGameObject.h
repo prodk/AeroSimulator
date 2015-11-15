@@ -23,7 +23,7 @@ namespace AeroSimulatorEngine
 
       ///Render-related, do nothing
       virtual void setupGeometry(std::shared_ptr<CGeometry>& pGeometry);
-      virtual void setupShadersAndBuffers();
+      virtual void setupShadersAndBuffers(std::shared_ptr<CShader>& pShader);
 
       ///Composite-related
       virtual void add(CGameObject* child);

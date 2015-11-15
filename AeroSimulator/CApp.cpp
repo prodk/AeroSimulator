@@ -19,12 +19,12 @@ CApp::CApp()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
    , mAirPlane(new C3DModel())
+   , mSimpleShader (new CSimpleShader())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
-
-   ///asserts for game objects
    assert(mAirPlane);
+   assert(mSimpleShader);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -79,18 +79,24 @@ void CApp::setupRenderer()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
+   ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();
-
-   //Add cubes from the air plane
-   std::vector<CGameObject*> tree;
+   std::vector<CGameObject*> tree; //Add cubes from the air plane
    mAirPlane->getTree(tree);
+
+   ///@todo: add to a separate method setupShaders()
+   // Create all the shaders in mRendererTask and then add them to the model
+   mSimpleShader->link();
+   mSimpleShader->setup(*tree[0]);
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)
    {
-      ///@todo: remove setting geometry and shaders from here
-      tree[count]->setupShadersAndBuffers();
-      mRendererTask->addRenderable(tree[count]);
+      if (tree[count])
+      {
+         tree[count]->setupShadersAndBuffers(mSimpleShader);
+         mRendererTask->addRenderable(tree[count]);
+      }
    }
 
    mRendererTask->setRenderContext();

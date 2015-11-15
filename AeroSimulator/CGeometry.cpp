@@ -1,6 +1,7 @@
 // CGeometry.cpp - geometry class implementation
 
 #include "CGeometry.h"
+#include "CLog.h"
 using namespace AeroSimulatorEngine;
 
 CGeometry::CGeometry()
@@ -11,6 +12,7 @@ CGeometry::CGeometry()
    , mNumOfElementsPerVertex(1)
    , mVertexStride(0)
 {
+   CLog::getInstance().log("CGeometry created");
 }
 
 CGeometry::~CGeometry()

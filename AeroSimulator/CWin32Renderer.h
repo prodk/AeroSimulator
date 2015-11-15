@@ -49,6 +49,7 @@ namespace AeroSimulatorEngine
       HGLRC mRenderContext;
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
+      ///@todo: add View and Projection matrices to CCamera.
       glm::mat4 mViewMatrix;
       glm::mat4 mProjectionMatrix;
 

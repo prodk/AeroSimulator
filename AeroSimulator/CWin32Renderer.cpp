@@ -251,7 +251,7 @@ bool CWin32Renderer::loadOpenGLExtensions()
 
    CLog::getInstance().log("* Loading OpenGL extensions");
    std::string strExtension = (const char*)glGetString(GL_EXTENSIONS);
-   std::replace(strExtension.begin(), strExtension.end(), ' ', '\n');
+   std::replace(strExtension.begin(), strExtension.end(), ' ', ';');
 
    CLog::getInstance().log("  OpenGL Extensions:");
    CLog::getInstance().log(strExtension.c_str());

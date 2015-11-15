@@ -12,6 +12,7 @@ CShader::CShader()
    , mFragmentShaderCode()
    , mIsLinked(false)
 {
+   CLog::getInstance().log("CShader::CShader()");
 }
 
 CShader::~CShader()

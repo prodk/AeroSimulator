@@ -4,11 +4,6 @@
 #include "CLog.h"
 #include "CCommonMath.h"
 
-///@todo: think which headers are necessary
-#include "../AeroSimulator/include/glew.h"
-#include "../AeroSimulator/include/wglew.h"
-#include <gl/GL.h>
-#include "../AeroSimulator/include/glext.h"
 #include <cassert>
 
 #include "glm/gtc/matrix_transform.hpp"
@@ -23,15 +18,9 @@ CCube::CCube()
 {
    mIsLeaf = true;
 
-   ///@todo: remove this incorrect code
-   mShader.reset(new CSimpleShader());
-
-   //assert(mGeometry.get());
-   assert(mShader.get());
-
    mScale = glm::vec3(1.0f, 1.0f, 1.0f);
 
-   CLog::getInstance().log("\n* CCube::CCube() default: success. \n");
+   CLog::getInstance().log("* CCube::CCube() default: success.");
 }
 
 CCube::~CCube()
@@ -47,12 +36,6 @@ CCube::CCube(const CGameObject* parent,
    : CGameObject(parent, scale, rotate, translate)
 {
    mIsLeaf = true;
-
-   ///@todo: this is incorrect! We must keep only a reference to the Geometry and shader!
-   mShader.reset(new CSimpleShader());
-
-   //assert(mGeometry.get());
-   assert(mShader.get());
 
    // Set transforms
    glm::mat4 myModel = glm::mat4(1.0f);
@@ -86,7 +69,7 @@ CCube::CCube(const CGameObject* parent,
 
    mModelMatrix = parentModelMatrix * myModel;
 
-   CLog::getInstance().log("\n* CCube::CCube() non-default: success. \n");
+   CLog::getInstance().log("* CCube::CCube() non-default: success.");
 }
 
 void CCube::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
@@ -94,33 +77,36 @@ void CCube::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
    mGeometry = pGeometry;
 }
 
-void CCube::setupShadersAndBuffers()
+void CCube::setupShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
    CLog::getInstance().logGL("\n** CCube::setupVBO() **");
 
    // Shader setup
-   mShader->link();
-   mShader->setup(*this);
+   assert(pShader);
+   mShader = pShader;
 
-   // VBO
-   glGenBuffers(1, &mVboId);
-   glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-   CLog::getInstance().logGL("* glBindBuffer() VBO: ");
+   if (mGeometry)
+   {
+      // VBO
+      glGenBuffers(1, &mVboId);
+      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
+      CLog::getInstance().logGL("* glBindBuffer() VBO: ");
 
-   GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
-   glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
+      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
+      glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
 
-   // Index buffer
-   glGenBuffers(1, &mIboId);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-   CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
+      // Index buffer
+      glGenBuffers(1, &mIboId);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
+      CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
 
-   GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
-   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
+      GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
 
-   // Reset VBOs
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      // Reset VBOs
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
 }
 
 void CCube::add(CGameObject * child)

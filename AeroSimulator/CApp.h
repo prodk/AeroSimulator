@@ -13,7 +13,7 @@ namespace AeroSimulatorEngine
    class CWin32Window;
    class CWin32Renderer;
 
-   class CSimpleShader;
+   class CShader;
    class CGeometry;
    class C3DModel;
 
@@ -48,6 +48,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CWin32Renderer> mRendererTask;
 
       std::shared_ptr<C3DModel> mAirPlane;
+      std::shared_ptr<CShader> mSimpleShader;
    };
 
 } // namespace AeroSimulatorEngine
