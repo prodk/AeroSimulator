@@ -10,7 +10,6 @@ using namespace AeroSimulatorEngine;
 // Windows procedure
 LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
-   //CWin32Window* window = NULL;
    CWin32Renderer* renderer = NULL;
    switch (uMessage)
    {
@@ -18,10 +17,8 @@ LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM l
    {
       // Get the data that was saved in the CreateWindowEx as its last parameter
       LPCREATESTRUCT lpcs = (LPCREATESTRUCT)lParam;
-      //window = (CWin32Window*)(lpcs->lpCreateParams);
       renderer = (CWin32Renderer*)(lpcs->lpCreateParams);
       // place the pointer to the window "user data"
-      //SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)window);
       SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)renderer);
    }
    break;
@@ -33,15 +30,13 @@ LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM l
    default:
    {
       // Extract the window pointer from the "user data"
-      //window = (CWin32Window*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
       renderer = (CWin32Renderer*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
    }
    }
 
-   ///@todo: uncomment when relevant (i.e. the UI input is processed): invoke the message handler for the existing window
-   //if (window && !window->windowProc(uMessage, wParam, lParam))
+   // Invoke the message handler for the existing window
    if (renderer && !renderer->windowProc(uMessage, wParam, lParam))
-   return 0;
+      return 0;
 
    // Invoke the standard message handler for unprocessed messages
    return ::DefWindowProc(hWnd, uMessage, wParam, lParam);
@@ -146,13 +141,14 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
       NULL,
       mInstance,
       renderer)))
-      //this)))
    {
-      std::cout << "* window was created" << std::endl;
+      CLog::getInstance().log("* window was created");
    }
    else
    {
-      std::cout << "* Error: window wasn't created" << std::endl;
+      CLog::getInstance().log("* Error: window wasn't created");
+
+
       return false;
    }
 
@@ -161,108 +157,17 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
 
    if ((mDC = GetDC(mWnd)))
    {
-      std::cout << "* device context for window was obtained" << std::endl;
+      CLog::getInstance().log("* device context for window was obtained");
    }
    else
    {
-      std::cout << "* Error: device context for window wasn't obtained" << std::endl;
+      CLog::getInstance().log("* Error: device context for window wasn't obtained");
+
       return false;
    }
 
    return true;
 }
-
-///@todo: remove this method
-//bool CWin32Window::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
-//{
-//   switch (uMessage)
-//   {
-//      // Stubs for system commands
-//   case WM_SYSCOMMAND:
-//   {
-//      switch (wParam)
-//      {
-//         // Screensaver is trying to start
-//      case SC_SCREENSAVE:
-//         // The display is trying to switch off
-//      case SC_MONITORPOWER:
-//         return false;
-//      }
-//      break;
-//   }
-//   return false;
-//
-//   // System keystrokes stubs
-//   case WM_SYSKEYDOWN:
-//   case WM_SYSKEYUP:
-//   {}
-//   return false;
-//
-//   // Finishing
-//   case WM_CLOSE:
-//   case WM_QUIT:
-//   {
-//      // Exit flag
-//      mIsClosing = true;
-//   }
-//   return false;
-//
-//   // Keyboard is pressed
-//   case WM_KEYDOWN:
-//   {
-//      if (wParam == VK_LEFT)
-//      {
-//         int pressed = 1;
-//         CLog::getInstance().log("Left pressed");
-//      }
-//      if (wParam == VK_RIGHT)
-//      {
-//         int pressed = 0;
-//         CLog::getInstance().log("Right pressed");
-//      }
-//      if (wParam == VK_UP)
-//      {
-//         int pressed = 1;
-//         CLog::getInstance().log("Up pressed");
-//      }
-//      if (wParam == VK_DOWN)
-//      {
-//         int pressed = 0;
-//         CLog::getInstance().log("Down pressed");
-//      }
-//   }
-//   return false;
-//
-//   // Keyboard is depressed
-//   case WM_KEYUP:
-//   {
-//      if (wParam == VK_LEFT)
-//      {
-//         int pressed = 1;
-//         CLog::getInstance().log("Left DEpressed");
-//      }
-//      if (wParam == VK_RIGHT)
-//      {
-//         int pressed = 0;
-//         CLog::getInstance().log("Right DEpressed");
-//      }
-//      if (wParam == VK_UP)
-//      {
-//         int pressed = 1;
-//         CLog::getInstance().log("Up DEpressed");
-//      }
-//      if (wParam == VK_DOWN)
-//      {
-//         int pressed = 0;
-//         CLog::getInstance().log("Down DEpressed");
-//      }
-//   }
-//   return false;
-//   } // end switch
-//
-//   // Process other messages
-//   return true;
-//}
 
 void CWin32Window::show(bool toShow)
 {
@@ -305,16 +210,16 @@ void CWin32Window::stop()
       if (mDC)
       {
          if (ReleaseDC(mWnd, mDC))
-            std::cout << "* device context was destroyed" << std::endl;
+            CLog::getInstance().log("* device context was destroyed");
          else
-            std::cout << "* ERROR: device context wasn't destroyed" << std::endl;
+            CLog::getInstance().log("* ERROR: device context wasn't destroyed");
          mDC = NULL;
       }
 
       if (DestroyWindow(mWnd))
-         std::cout << "* window was destroyed" << std::endl;
+         CLog::getInstance().log("* window was destroyed");
       else
-         std::cout << "* ERROR: window wasn't destroyed" << std::endl;
+         CLog::getInstance().log("* ERROR: window wasn't destroyed");
       mWnd = NULL;
 
       UnregisterClass(L"AERO_SIMULATOR_WINDOW", mInstance);

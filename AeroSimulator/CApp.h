@@ -8,25 +8,6 @@
 #include <iostream>
 #include <memory>
 
-// OpenGL extensions to load manually
-//extern PFNGLATTACHSHADERPROC glAttachShader;
-//extern PFNGLBINDBUFFERPROC glBindBuffer;
-//extern PFNGLBUFFERDATAPROC glBufferData;
-//extern PFNGLCREATEPROGRAMPROC glCreateProgram;
-//extern PFNGLENABLEVERTEXATTRIBARRAYPROC glEnableVertexAttribArray;
-//extern PFNGLGENBUFFERSPROC glGenBuffers;
-//extern PFNGLGETATTRIBLOCATIONPROC glGetAttribLocation;
-//extern PFNGLLINKPROGRAMPROC glLinkProgram;
-//extern PFNGLUSEPROGRAMPROC glUseProgram;
-//extern PFNGLVERTEXATTRIBPOINTERPROC glVertexAttribPointer;
-//
-//extern PFNGLCOMPILESHADERPROC glCompileShader;
-//extern PFNGLCREATESHADERPROC glCreateShader;
-//extern PFNGLGETSHADERIVPROC glGetShaderiv;
-//extern PFNGLSHADERSOURCEPROC glShaderSource;
-//extern PFNGLGETUNIFORMLOCATIONPROC glGetUniformLocation;
-//extern PFNGLUNIFORMMATRIX4FVPROC glUniformMatrix4fv;
-
 namespace AeroSimulatorEngine
 {
    class CWin32Window;
@@ -47,7 +28,7 @@ namespace AeroSimulatorEngine
 
       ~CApp();
 
-      ///@todo: later add passing app parameters read from a file here
+      ///@todo: later add passing app parameters read from a config file here
       bool init(const char* name, unsigned int width, unsigned int height);
       void run();
       int exit();

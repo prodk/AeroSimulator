@@ -17,7 +17,6 @@ namespace AeroSimulatorEngine
 {
    class CRenderable; // Forward declarations should be inside the same namespace
 
-   // TODO: make it a singleton, only one CRenderer can exist
    class CRenderer : public CTask
    {
    public:

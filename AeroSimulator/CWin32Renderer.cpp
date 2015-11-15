@@ -3,21 +3,15 @@
 #include "CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
+#include "CCommonMath.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
 #include <cassert>
+#include <algorithm>
 using namespace AeroSimulatorEngine;
 
 ///@todo: move non-Win32 code to the base class
-
-///@todo: remove these defines (put them to one place)
-namespace AeroSimulatorEngine
-{
-   ///@todo: make these static constants
-   #define M_PI           3.14159265358979323846f  /* pi */
-   #define DEG_TO_RAD M_PI / 180.f
-}
 
 CWin32Renderer::CWin32Renderer(ePriority prio)
    : CRenderer(prio)
@@ -27,7 +21,9 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
    , mViewMatrix()
-   , mProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)) // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+   ///@todo: move this to CCamera
+   // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+   , mProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)) 
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
 {
@@ -44,7 +40,6 @@ bool CWin32Renderer::start()
    return isInitialized();
 }
 
-///@todo: probably move to the base class
 void CWin32Renderer::update()
 {
    if (mIsInitialized)
@@ -110,7 +105,6 @@ void CWin32Renderer::destroy()
    }
 }
 
-///@todo: probably move to the base class
 void CWin32Renderer::draw(CRenderable* pRenderable)
 {
    if (pRenderable)
@@ -126,6 +120,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       // Get Renderable's static model matrix
       glm::mat4 modelMatrix = pRenderable->getModelMatrix();
 
+      ///@todo: do not multiply on the parent matrix each frame!!! Do this only if it has changed.
       // Get Renderable's dynamic library of the root object
       glm::mat4 modelObjectMatrix = pRenderable->getParentModelMatrix();
 
@@ -138,6 +133,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
 
       // Unbind the buffers
+      ///@todo: probably place to a separate method
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
    }
@@ -248,21 +244,24 @@ void CWin32Renderer::resetRenderContext()
       wglMakeCurrent(NULL, NULL);
 }
 
-
 ///@todo: probably move to the base class
 bool CWin32Renderer::loadOpenGLExtensions()
 {
    bool result = true;
+
+   CLog::getInstance().log("* Loading OpenGL extensions");
+   std::string strExtension = (const char*)glGetString(GL_EXTENSIONS);
+   std::replace(strExtension.begin(), strExtension.end(), ' ', '\n');
+
+   CLog::getInstance().log("  OpenGL Extensions:");
+   CLog::getInstance().log(strExtension.c_str());
+
    // Get the GPU information and the OpenGL extensions
    CLog::getInstance().log("* Video-system information:");
    CLog::getInstance().log("  Videocard: ", (const char*)glGetString(GL_RENDERER));
    CLog::getInstance().log("  Vendor: ", (const char*)glGetString(GL_VENDOR));
    CLog::getInstance().log("  OpenGL Version: ", (const char*)glGetString(GL_VERSION));
    CLog::getInstance().log("\n");
-
-   //std::string strExtension = (const char*)glGetString(GL_EXTENSIONS);
-   //ReplaceChar(strExtension, ' ', '\n');
-   //Log::instance() << "  OpenGL Extensions:\n" << strExtension.c_str() << endl;
 
    return result;
 }
@@ -275,8 +274,8 @@ void CWin32Renderer::setupViewMatrix()
    mViewMatrix = glm::translate(mViewMatrix, cameraPos);
 
    // Rotate the View matrix
-   static float angle = 0.f * DEG_TO_RAD;
-   static float angleX = 30.0f * DEG_TO_RAD;
+   static float angle = CCommonMath::degToRad(0.f);;
+   static float angleX = CCommonMath::degToRad(30.0f);
 
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
    //View = glm::rotate(View, angle, yAxis);
@@ -293,13 +292,13 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix) const
    
    // Rotate around z-axis
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   const float angleZradians = mAngleZ * DEG_TO_RAD;
+   const float angleZradians = CCommonMath::degToRad(mAngleZ);
 
    modelObjectMatrix = glm::rotate(modelObjectMatrix, angleZradians, zAxis);
 
    // Rotate around x-axis
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   const float angleXradians = mAngleX * DEG_TO_RAD;
+   const float angleXradians = CCommonMath::degToRad(mAngleX);
    modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
 
    matrix = modelObjectMatrix;
@@ -330,6 +329,7 @@ bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
    {}
    return false;
 
+   ///@todo: probably unnecessary as it is present in CWin32Window
    // Finishing
    case WM_CLOSE:
    case WM_QUIT:
@@ -346,26 +346,21 @@ bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
       {
          if (mAngleZ < 45)
             mAngleZ += 1.0f;
-         //CLog::getInstance().log("Left pressed");
       }
       if (wParam == VK_RIGHT)
       {
          if (mAngleZ > -45)
             mAngleZ -= 1.0f;
-
-         //CLog::getInstance().log("Right pressed");
       }
       if (wParam == VK_UP)
       {
          if (mAngleX > -45)
             mAngleX -= 1.0f;
-         //CLog::getInstance().log("Up pressed");
       }
       if (wParam == VK_DOWN)
       {
          if (mAngleX < 45)
             mAngleX += 1.0f;
-         //CLog::getInstance().log("Down pressed");
       }
    }
    return false;
@@ -376,22 +371,18 @@ bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
       if (wParam == VK_LEFT)
       {
          int pressed = 1;
-         CLog::getInstance().log("Left DEpressed");
       }
       if (wParam == VK_RIGHT)
       {
          int pressed = 0;
-         CLog::getInstance().log("Right DEpressed");
       }
       if (wParam == VK_UP)
       {
          int pressed = 1;
-         CLog::getInstance().log("Up DEpressed");
       }
       if (wParam == VK_DOWN)
       {
          int pressed = 0;
-         CLog::getInstance().log("Down DEpressed");
       }
    }
    return false;

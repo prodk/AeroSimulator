@@ -39,7 +39,7 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
-      bool loadOpenGLExtensions(); // TODO: may be redundant when GLEW is used
+      bool loadOpenGLExtensions();
       void setupViewMatrix();
       void calculateAirplaneMatrix(glm::mat4& matrix) const;
 
