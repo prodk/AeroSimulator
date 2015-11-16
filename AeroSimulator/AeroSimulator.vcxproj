@@ -145,6 +145,7 @@
     <ClInclude Include="C3DModel.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
+    <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCube.h" />
     <ClInclude Include="CGameObject.h" />
@@ -157,6 +158,8 @@
     <ClInclude Include="CSimpleShader.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
+    <ClInclude Include="CTexture.h" />
+    <ClInclude Include="CTextureShader.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
   </ItemGroup>
@@ -164,6 +167,7 @@
     <ClCompile Include="C3DModel.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
+    <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCube.cpp" />
     <ClCompile Include="CGameObject.cpp" />
@@ -176,6 +180,8 @@
     <ClCompile Include="CSimpleShader.cpp" />
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
+    <ClCompile Include="CTexture.cpp" />
+    <ClCompile Include="CTextureShader.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
   </ItemGroup>

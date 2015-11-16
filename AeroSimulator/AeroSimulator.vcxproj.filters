@@ -69,6 +69,15 @@
     <ClInclude Include="CCommonMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CTexture.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTextureShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -120,6 +129,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CCommonMath.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTextureShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

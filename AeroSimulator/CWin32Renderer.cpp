@@ -304,18 +304,18 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    {
       if (mAngleZ > 0.0f)
       {
-         mAngleZ -= 1.f;
+         mAngleZ -= 0.8f;
          mAngleZ = std::max<float>(0.0f, mAngleZ);
       }
 
       if (mAngleZ < -0.0f)
       {
-         mAngleZ += 1.f;
+         mAngleZ += 0.8f;
          mAngleZ = std::min<float>(0.0f, mAngleZ);
       }
    }
 
-   if (mVerticalPressed > 3)
+   if (mVerticalPressed > 5)
    {
       if (mAngleX > 0.f)
          mAngleX -= 0.4f;

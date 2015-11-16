@@ -9,6 +9,7 @@
 #include "CGameObject.h"
 #include "CLog.h"
 #include "C3DModel.h"
+#include "CTexture.h"
 
 #include <conio.h>
 #include <cassert>
@@ -20,6 +21,7 @@ CApp::CApp()
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
    , mAirPlane(new C3DModel())
    , mSimpleShader (new CSimpleShader())
+   , mBmpTexture(new CTexture())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -78,6 +80,9 @@ void CApp::setupRenderer()
 {
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
+
+   ///@todo: add to a separate method.
+   mBmpTexture->loadBmpTexture("../AeroSimulator/res/sky_1024.bmp");
 
    ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();
