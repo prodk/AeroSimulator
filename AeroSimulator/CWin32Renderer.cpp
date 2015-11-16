@@ -144,11 +144,15 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       pShader->setup(*pRenderable);
 
       glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+      //glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, pGeometry->getIndexBuffer());
 
       // Unbind the buffers
       ///@todo: probably place to a separate method
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+      // Unbind the texture
+      glBindTexture(GL_TEXTURE_2D, 0);
    }
 }
 

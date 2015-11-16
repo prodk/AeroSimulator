@@ -46,13 +46,13 @@ void CSimpleShader::link()
    CShader::link();
 
    mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-   CLog::getInstance().logGL("* glGetAttribLocation(mProgramId, aPosition): ");
+   CLog::getInstance().logGL("* CSimpleShader: glGetAttribLocation(mProgramId, aPosition): ");
 
    mColorAttributeId = glGetAttribLocation(mProgramId, "aColor");
-   CLog::getInstance().logGL("* glGetAttribLocation(mProgramId, aColor): ");
+   CLog::getInstance().logGL("* CSimpleShader: glGetAttribLocation(mProgramId, aColor): ");
 
    mMvpAttributeId = glGetUniformLocation(mProgramId, "MVP");
-   CLog::getInstance().logGL("* glGetUniformLocation(mProgramId, MVP): ");
+   CLog::getInstance().logGL("* CSimpleShader: glGetUniformLocation(mProgramId, MVP): ");
 }
 
 void CSimpleShader::setup(CRenderable & renderable)

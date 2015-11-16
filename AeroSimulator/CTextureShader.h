@@ -25,6 +25,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CTexture> mTexture;
       GLint mPositionAttributeId;
       GLint mTexCoordAttributeId;
+      GLint mMvpAttributeId;
       GLint mSamplerUniformId;
 
       void setTexture(std::shared_ptr<CTexture>& pTexture) { mTexture = pTexture; }

@@ -150,6 +150,7 @@
     <ClInclude Include="CCube.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
+    <ClInclude Include="CLand.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CParentGameObject.h" />
     <ClInclude Include="CRenderable.h" />
@@ -173,6 +174,7 @@
     <ClCompile Include="CCube.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />
+    <ClCompile Include="CLand.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CParentGameObject.cpp" />
     <ClCompile Include="CRenderable.cpp" />

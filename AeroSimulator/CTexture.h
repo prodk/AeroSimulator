@@ -14,6 +14,8 @@ namespace AeroSimulatorEngine
 
       GLuint loadBmpTexture(const char * filePath);
 
+      GLint getId() const { return mId; }
+
    private:
       GLuint mId;
       GLuint mWidth;

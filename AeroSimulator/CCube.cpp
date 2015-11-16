@@ -79,7 +79,7 @@ void CCube::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
 
 void CCube::setupShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   CLog::getInstance().logGL("\n** CCube::setupVBO() **");
+   CLog::getInstance().logGL("\n** CCube::setupShadersAndBuffers() **");
 
    // Shader setup
    assert(pShader);

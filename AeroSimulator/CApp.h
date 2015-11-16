@@ -52,8 +52,9 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<C3DModel> mAirPlane;
       std::shared_ptr<CShader> mSimpleShader;
-      std::shared_ptr<CTextureShader> mTextureShader;
+      std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CGameObject> mSkyBox;
+      std::shared_ptr<CGameObject> mLand;
    };
 
 } // namespace AeroSimulatorEngine
