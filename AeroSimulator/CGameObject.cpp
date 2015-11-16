@@ -59,17 +59,14 @@ void CGameObject::rotate(const glm::vec3& rotate)
 
    const float angleX = CCommonMath::degToRad(rotate.x);
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   //mModelMatrix = glm::rotate(mModelMatrix, angleX, xAxis);
    mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
 
    const float angleY = CCommonMath::degToRad(rotate.y);
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   //mModelMatrix = glm::rotate(mModelMatrix, angleY, yAxis);
    mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
 
    const float angleZ = CCommonMath::degToRad(rotate.z);
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   //mModelMatrix = glm::rotate(mModelMatrix, angleZ, zAxis);
    mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
 
    mModelMatrix = mTRMatrix;

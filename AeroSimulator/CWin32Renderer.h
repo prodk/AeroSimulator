@@ -8,8 +8,12 @@
 #include "glm/vec3.hpp"
 #include "glm/mat4x4.hpp"
 
+#include <memory>
+
 namespace AeroSimulatorEngine
 {
+   class CCamera;
+
    class CWin32Renderer : public CRenderer
    {
    public:
@@ -40,7 +44,6 @@ namespace AeroSimulatorEngine
    private:
       bool createRenderContext();
       bool loadOpenGLExtensions();
-      void setupViewMatrix();
       void calculateAirplaneMatrix(glm::mat4& matrix);
 
    private:
@@ -49,15 +52,15 @@ namespace AeroSimulatorEngine
       HGLRC mRenderContext;
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
-      ///@todo: add View and Projection matrices to CCamera.
-      glm::mat4 mViewMatrix;
-      glm::mat4 mProjectionMatrix;
 
       float mAngleZ; // Angle of rotating around the z-axis of the air plane
       float mOldAngleZ;
       float mAngleX;
       std::size_t mHorizontalPressed;
       std::size_t mVerticalPressed;
+
+      ///@todo: probably create an array of cameras later
+      std::shared_ptr<CCamera> mCamera;
    };
 
 } // namespace AeroSimulatorEngine

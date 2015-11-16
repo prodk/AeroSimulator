@@ -3,7 +3,8 @@
 #include "CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
-#include "CCommonMath.h"
+#include "CCommonMath.h" ///@todo: remove this
+#include "CCamera.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -20,16 +21,20 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mRenderContext(0)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
-   , mViewMatrix()
-   ///@todo: move this to CCamera
-   // Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-   , mProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f)) 
    , mAngleZ(0.0f)
    , mOldAngleZ(0.0f)
    , mAngleX(0.0f)
    , mHorizontalPressed(0)
    , mVerticalPressed(0)
+   , mCamera(new CCamera())
 {
+   assert(mCamera);
+
+   mCamera->setProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f));
+
+   // View matrix.
+   mCamera->translate(glm::vec3(0.0f, 0.0f, -10.0f));
+   mCamera->rotate(glm::vec3(30.0f, 0.0f, 0.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -49,7 +54,8 @@ void CWin32Renderer::update()
    {
       setRenderContext();
 
-      setupViewMatrix(); ///@todo: move to the CCamera.
+      ///@todo: rotate camera here if needed
+      //mCamera->rotate(glm::vec3(0.f, angle, 0.f));
 
       glm::mat4 modelObjectMatrix;
       calculateAirplaneMatrix(modelObjectMatrix);
@@ -123,12 +129,12 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       // Get Renderable's static model matrix
       glm::mat4 modelMatrix = pRenderable->getModelMatrix();
 
-      ///@todo: do not multiply on the parent matrix each frame!!! Do this only if it has changed.
+      ///@todo: do not multiply by the parent matrix each frame!!! Do this only if it has changed.
       // Get Renderable's dynamic library of the root object
       glm::mat4 modelObjectMatrix = pRenderable->getParentModelMatrix();
 
       // Calculate and set the final MVP matrix used in the shader
-      glm::mat4 MVP = mProjectionMatrix * mViewMatrix * modelObjectMatrix * modelMatrix;
+      glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelObjectMatrix * modelMatrix;
       pRenderable->setMvpMatrix(MVP);
 
       pShader->setup(*pRenderable);
@@ -269,26 +275,6 @@ bool CWin32Renderer::loadOpenGLExtensions()
    return result;
 }
 
-void CWin32Renderer::setupViewMatrix()
-{
-   // Init the View matrix
-   mViewMatrix = glm::mat4(1.0f);
-   glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, -10.0f);
-   mViewMatrix = glm::translate(mViewMatrix, cameraPos);
-
-   // Rotate the View matrix
-   static float angle = CCommonMath::degToRad(0.f);;
-   static float angleX = CCommonMath::degToRad(30.0f);
-
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   //View = glm::rotate(View, angle, yAxis);
-   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   mViewMatrix = glm::rotate(mViewMatrix, angleX, xAxis);
-
-   const float delta = 0.005f;
-   angle += delta;
-}
-
 void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
    ///@todo: place to a separate method
@@ -296,9 +282,6 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    ++mVerticalPressed;
 
    // "Spring" buttons
-
-   //if ( (mAngleZ > 0.f) )
-
    // If the button has not been pressed for longer than 5 frames, return the plane to the previous position
    if (mHorizontalPressed > 5)
    {
