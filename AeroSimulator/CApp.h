@@ -16,7 +16,9 @@ namespace AeroSimulatorEngine
    class CShader;
    class CGeometry;
    class C3DModel;
-   class CTexture;
+   class CTextureShader;
+   class CGameObject;
+  // class CSkyBox;
 
    class CApp
    {
@@ -50,7 +52,8 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<C3DModel> mAirPlane;
       std::shared_ptr<CShader> mSimpleShader;
-      std::shared_ptr<CTexture> mBmpTexture;
+      std::shared_ptr<CTextureShader> mTextureShader;
+      std::shared_ptr<CGameObject> mSkyBox;
    };
 
 } // namespace AeroSimulatorEngine

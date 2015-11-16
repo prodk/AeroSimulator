@@ -93,6 +93,10 @@ void CWin32Renderer::init()
 
          // Enable OpenGL stuff needed by the app
          glEnable(GL_DEPTH_TEST);
+         CLog::getInstance().logGL("Depth test enabled: ");
+
+         glEnable(GL_TEXTURE_2D);
+         CLog::getInstance().logGL("Textures enabled: ");
 
          // Go back to the window rendering context
          resetRenderContext();

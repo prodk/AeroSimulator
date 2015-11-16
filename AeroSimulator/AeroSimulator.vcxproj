@@ -156,6 +156,7 @@
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CSimpleShader.h" />
+    <ClInclude Include="CSkyBox.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CTexture.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CSimpleShader.cpp" />
+    <ClCompile Include="CSkyBox.cpp" />
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CTexture.cpp" />

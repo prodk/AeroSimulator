@@ -9,7 +9,8 @@
 #include "CGameObject.h"
 #include "CLog.h"
 #include "C3DModel.h"
-#include "CTexture.h"
+#include "CTextureShader.h"
+#include "CSkyBox.h"
 
 #include <conio.h>
 #include <cassert>
@@ -21,12 +22,15 @@ CApp::CApp()
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
    , mAirPlane(new C3DModel())
    , mSimpleShader (new CSimpleShader())
-   , mBmpTexture(new CTexture())
+   , mTextureShader(new CTextureShader())
+   , mSkyBox(new CSkyBox())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
    assert(mAirPlane);
    assert(mSimpleShader);
+   assert(mTextureShader);
+   assert(mSkyBox);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -82,7 +86,7 @@ void CApp::setupRenderer()
    mRendererTask->setRenderContext();
 
    ///@todo: add to a separate method.
-   mBmpTexture->loadBmpTexture("../AeroSimulator/res/sky_1024.bmp");
+   //mBmpTexture->loadBmpTexture("../AeroSimulator/res/sky_1024.bmp");
 
    ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();
@@ -92,7 +96,11 @@ void CApp::setupRenderer()
    ///@todo: add to a separate method setupShaders()
    // Create all the shaders in mRendererTask and then add them to the model
    mSimpleShader->link();
-   mSimpleShader->setup(*tree[0]);
+   mSimpleShader->setup(*tree[0]); // Use the first node in the tree as a renderable.
+
+   mSkyBox->scale(glm::vec3(2.f, 2.f, 2.f));
+   mSkyBox->setupShadersAndBuffers(mSimpleShader);
+   mRendererTask->addRenderable(mSkyBox.get());
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)

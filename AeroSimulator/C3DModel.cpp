@@ -33,36 +33,25 @@ namespace
       0.2f, 0.6f, 0.0f //7 color
    };
 
-   ///@todo: this strip is not correct: it should be bottom->front->top, 2nd front is missing
    GLuint indices[] = {
+      // Stripe 1
       6, 5, 7, 4, // back
-      3, 0, // left
-      2, 1, // front
-      6, 5, // right
+       3, 0, // left
+       2, 1, // front
+       6, 5, // right
 
-      5, 4, 1, 0, // bottom
-      2, 3, 6, 7  // top
+      // Stripe 2
+      // bottom
+      5, 1, 4, 0,
+
+      // front
+      0, 1, 2,
+      2, 0, 3,
+
+      // top
+      3, 2, 6,
+      6, 3, 7
    };
-
-   //GLuint indices[] = {
-   //   // Stripe 1
-   //   6, 5, 7, 4, // back
-   //    3, 0, // left
-   //    2, 1, // front
-   //    6, 5, // right
-
-   //   // Stripe 2
-   //   // bottom
-   //   5, 1, 4, 0,
-
-   //   // front
-   //   0, 1, 2,
-   //   2, 0, 3,
-
-   //   // top
-   //   3, 2, 6,
-   //   6, 3, 7
-   //};
 }
 
 C3DModel::C3DModel()
