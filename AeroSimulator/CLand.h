@@ -21,6 +21,8 @@ namespace AeroSimulatorEngine
       /// Composite-related methods
       virtual void add(CGameObject* child);
       virtual void traverse(std::vector<CGameObject*>& tree);
+
+      bool loadTexture(const char * fileName);
    };
 
 } //namespace AeroSimulatorEngine

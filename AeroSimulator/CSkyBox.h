@@ -17,6 +17,9 @@ namespace AeroSimulatorEngine
    public:
       CSkyBox();
       virtual ~CSkyBox();
+
+      // Requires RC
+      bool loadTexture(const char * fileName);
    };
 
 } // namespace AeroSimulatorEngine

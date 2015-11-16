@@ -45,11 +45,10 @@ CTextureShader::~CTextureShader()
 void CTextureShader::link()
 {
    ///@todo: probably move file loading outside the CTexture class
-   if (mTexture->loadBmpTexture("../AeroSimulator/res/sky_1024.bmp"))
-   //if (mTexture->loadBmpTexture("../AeroSimulator/res/ground.bmp"))
+   /*if (mTexture->loadBmpTexture("../AeroSimulator/res/sky_1024.bmp"))
    {
       CLog::getInstance().log("* CTexture loaded ../AeroSimulator/res/sky_1024.bmp");
-   }
+   }*/
 
    CShader::link();
 
@@ -76,7 +75,8 @@ void CTextureShader::setup(CRenderable & renderable)
 
    // Texture-specific part
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, mTexture->getId());
+   //glBindTexture(GL_TEXTURE_2D, mTexture->getId());
+   glBindTexture(GL_TEXTURE_2D, renderable.getTexture()->getId());
    glUniform1i(mSamplerUniformId, 0);
 
    // TODO: use mip maps later

@@ -13,6 +13,7 @@ CRenderable::CRenderable()
    , mIboId(0)
    , mParentModelMatrix()
    , mMvpMatrix()
+   , mTexture()
 {
 }
 
@@ -20,4 +21,9 @@ CRenderable::~CRenderable()
 {
    mGeometry.reset();
    mShader.reset();
+}
+
+bool CRenderable::loadTexture(const char * filePath)
+{
+   return false;
 }

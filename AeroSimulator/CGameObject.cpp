@@ -51,6 +51,7 @@ void CGameObject::scale(const glm::vec3& scale)
 {
    mScale = scale;
    mModelMatrix = glm::scale(mModelMatrix, scale);
+   mTRMatrix = mModelMatrix;
 }
 
 void CGameObject::rotate(const glm::vec3& rotate)

@@ -88,18 +88,33 @@ void CApp::setupRenderer()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   ///@todo: add to a separate method.
+   ///@todo: add to a separate method. Add skybox
+   if (mSkyBox->loadTexture("../AeroSimulator/res/sky_1024.bmp"))
+   {
+      CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.bmp");
+   }
+
    mSkyBox->scale(glm::vec3(100.f, 100.f, 100.0f));
    mTextureShader->link();
-   mTextureShader->setup(*mSkyBox);
-   //mTextureShader->setup(*mLand);
-
-   //mLand->translate(glm::vec3(0.f, 3.f, 0.f));
-   //mLand->setupShadersAndBuffers(mTextureShader);
-  // mRendererTask->addRenderable(mLand.get());
-
+   //mTextureShader->setup(*mSkyBox);
    mSkyBox->setupShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mSkyBox.get());
+
+   ///@todo: reconsider this system such that we should not keep in memory all this loading stuff
+   // Add land
+   if (mLand->loadTexture("../AeroSimulator/res/ground.bmp"))
+   {
+      CLog::getInstance().log("* Land loaded ../AeroSimulator/res/ground.bmp");
+   }
+   //mLand->scale(glm::vec3(2.f, 0.f, 2.0f));
+   mLand->translate(glm::vec3(0.f, -20.f, 0.f));
+   mLand->scale(glm::vec3(50.f, 0.f, 50.0f));
+   mLand->setupShadersAndBuffers(mTextureShader);
+   mRendererTask->addRenderable(mLand.get());
+
+   
+
+   
 
    ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();

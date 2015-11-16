@@ -1,6 +1,7 @@
 #include "CLand.h"
 #include "CGeometry.h"
 #include "CLog.h"
+#include "CTexture.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -23,8 +24,10 @@ namespace
 
 CLand::CLand()
 {
+   mTexture.reset(new CTexture());
    mGeometry.reset(new CGeometry());
 
+   ///@todo: add asserts
    mGeometry->setVertexBuffer(vertices);
    const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
    mGeometry->setNumOfVertices(numOfVertices);
@@ -84,4 +87,9 @@ void CLand::add(CGameObject * child)
 
 void CLand::traverse(std::vector<CGameObject*>& tree)
 {
+}
+
+bool CLand::loadTexture(const char * fileName)
+{
+   return (0 != mTexture->loadBmpTexture(fileName));
 }

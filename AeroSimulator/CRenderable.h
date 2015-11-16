@@ -16,13 +16,14 @@ namespace AeroSimulatorEngine
    // Fwd declarations should be in the same namespace
    class CShader;
    class CGeometry;
+   class CTexture;
 
    // CRenderable groups the geometry and its appearance in one entity
    class CRenderable
    {
    public:
       CRenderable();
-      ~CRenderable();
+      virtual ~CRenderable();
 
       void setGeometry(CGeometry* pGeometry) { mGeometry.reset(pGeometry); }
       CGeometry* getGeometry() const { return mGeometry.get(); }
@@ -42,9 +43,14 @@ namespace AeroSimulatorEngine
       void setMvpMatrix(const glm::mat4& m) { mMvpMatrix = m; }
       glm::mat4 getMvpMatrix() const { return mMvpMatrix; }
 
+      CTexture* getTexture() const { return mTexture.get(); }
+
+      virtual bool loadTexture(const char* filePath);
+
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
+      std::shared_ptr<CTexture> mTexture;
       glm::mat4 mModelMatrix;
       GLuint mVboId;
       GLuint mIboId;
