@@ -70,6 +70,7 @@ namespace AeroSimulatorEngine
       std::size_t mCameraHorizontalPressed;
 
       CGameObject* mRoot;
+      glm::mat4 mDynamicMatrix;
    };
 
 } // namespace AeroSimulatorEngine

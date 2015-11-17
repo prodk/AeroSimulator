@@ -32,7 +32,10 @@ namespace AeroSimulatorEngine
       ///Saves elements to the provided array
       virtual void traverse(std::vector<CGameObject*>& tree) = 0;
 
-      virtual void updateMatrix(const glm::mat4& parentMatrix);
+      virtual void updateMatrix(const glm::mat4& parentMatrix, const glm::mat4& dynamicMatrix);
+      virtual void setDynamic() { mIsDynamic = true; }
+      virtual bool isDynamic() { return mIsDynamic; }
+      virtual glm::mat4 getChildTRMatrix(std::size_t childId) const;
       bool isLeaf() const { return mIsLeaf; }
 
       // Transforms
@@ -56,6 +59,7 @@ namespace AeroSimulatorEngine
       glm::mat4 mTRMatrix; // Translate+rotate matrix
 
       bool mIsLeaf;
+      bool mIsDynamic;
    };
 
 } // namespace AeroSimulatorEngine

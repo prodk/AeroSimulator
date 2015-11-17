@@ -31,13 +31,15 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCamera(new CCamera())
    , mCameraVerticalPressed(0)
    , mCameraHorizontalPressed(0)
+   , mRoot(nullptr)
+   , mDynamicMatrix()
 {
    assert(mCamera);
 
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f));
 
    // View matrix.
-   mCamera->translate(glm::vec3(0.0f, 0.0f, -10.0f));
+   mCamera->translate(glm::vec3(0.0f, 0.0f, -15.0f));
    mCamera->rotate(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
@@ -292,6 +294,7 @@ bool CWin32Renderer::loadOpenGLExtensions()
 
 void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
+   ///@todo: place to a separate method
    // Rotate camera
    // up/down
    if (mCameraVerticalPressed)
@@ -310,8 +313,14 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    {
       if (mCameraAngleY > 0.0f)
       {
-         mCameraAngleY -= 0.5f;
+         mCameraAngleY -= 0.8f;
          mCameraAngleY = std::max<float>(0.0f, mCameraAngleY);
+      }
+
+      if (mCameraAngleY < 0.0f)
+      {
+         mCameraAngleY += 0.8f;
+         mCameraAngleY = std::min<float>(0.0f, mCameraAngleY);
       }
    }
 
@@ -345,7 +354,7 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    }
 
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
-   
+
    // Rotate around z-axis
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    const float angleZradians = CCommonMath::degToRad(mAngleZ);
@@ -359,8 +368,15 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 
    matrix = modelObjectMatrix;
 
+   ///Rotate the dynamic part (propeller)
+   static float angle;
+   const float delta = 0.1f;
+   mDynamicMatrix = glm::mat4(1.0f);
+   mDynamicMatrix = glm::rotate(mDynamicMatrix, angle, zAxis);
+   angle += delta;
+
    // Update the root and all its children.
-   mRoot->updateMatrix(modelObjectMatrix);
+   mRoot->updateMatrix(modelObjectMatrix, mDynamicMatrix);
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
@@ -430,14 +446,21 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       if (wParam == 0x57) // w, up
       {
          mCameraAngleX += 1.f;
-         mCameraAngleX = std::min<float>(mCameraAngleX, 45.f);
+         mCameraAngleX = std::min<float>(mCameraAngleX, 245.f);
          mCameraVerticalPressed = 0;
       }
 
       if (wParam == 0x41) // a, left
       {
          mCameraAngleY += 1.f;
-         mCameraAngleY = std::min<float>(mCameraAngleY, 45.f);
+         mCameraAngleY = std::min<float>(mCameraAngleY, 245.f);
+         mCameraHorizontalPressed = 0;
+      }
+
+      if (wParam == 0x44) // d, right
+      {
+         mCameraAngleY -= 1.f;
+         mCameraAngleY = std::max<float>(mCameraAngleY, -245.f);
          mCameraHorizontalPressed = 0;
       }
    }
@@ -468,6 +491,9 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       }
 
       if (wParam == 0x41)
+         ++mCameraHorizontalPressed;
+
+      if (wParam == 0x44)
          ++mCameraHorizontalPressed;
    }
    return false;

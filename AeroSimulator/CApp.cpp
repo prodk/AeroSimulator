@@ -94,7 +94,7 @@ void CApp::setupRenderer()
       CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.bmp");
    }
 
-   mSkyBox->scale(glm::vec3(100.f, 100.f, 100.0f));
+   mSkyBox->scale(glm::vec3(120.f, 120.f, 120.0f));
    mTextureShader->link();
    //mTextureShader->setup(*mSkyBox);
    mSkyBox->setupShadersAndBuffers(mTextureShader);
@@ -106,9 +106,8 @@ void CApp::setupRenderer()
    {
       CLog::getInstance().log("* Land loaded ../AeroSimulator/res/ground.bmp");
    }
-   //mLand->scale(glm::vec3(2.f, 0.f, 2.0f));
-   mLand->translate(glm::vec3(0.f, -20.f, 0.f));
-   mLand->scale(glm::vec3(50.f, 0.f, 50.0f));
+   mLand->translate(glm::vec3(0.f, -10.f, 0.f));
+   mLand->scale(glm::vec3(120.f, 0.f, 120.0f));
    mLand->setupShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mLand.get());
 

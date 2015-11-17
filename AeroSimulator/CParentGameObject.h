@@ -29,7 +29,12 @@ namespace AeroSimulatorEngine
       virtual void add(CGameObject* child);
       virtual void traverse(std::vector<CGameObject*>& tree);
 
-      virtual void updateMatrix(const glm::mat4& parentMatrix);
+      virtual void updateMatrix(const glm::mat4& parentMatrix, const glm::mat4& dynamicMatrix);
+
+      void setDynamic();
+      //bool isDynamic() const { return mIsDynamic; }
+
+      virtual glm::mat4 getChildTRMatrix(std::size_t childId) const;
 
    private:
       std::vector<CGameObject*> mChildren;

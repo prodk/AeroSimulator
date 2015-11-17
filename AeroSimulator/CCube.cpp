@@ -118,7 +118,14 @@ void CCube::traverse(std::vector<CGameObject*>& tree)
 {
 }
 
-void CCube::updateMatrix(const glm::mat4 & parentMatrix)
+void CCube::updateMatrix(const glm::mat4 & parentMatrix, const glm::mat4& dynamicMatrix)
 {
-   mModelMatrix = parentMatrix * mTRMatrix;
+   glm::mat4 scaledTRm = glm::scale(mTRMatrix, mScale);
+   if (isDynamic())
+   {
+      mModelMatrix = parentMatrix * mParentModelMatrix * dynamicMatrix * scaledTRm;
+   }
+   else
+      mModelMatrix = parentMatrix * mParentModelMatrix * scaledTRm;
+   //mModelMatrix = parentMatrix * scaledTRm;
 }

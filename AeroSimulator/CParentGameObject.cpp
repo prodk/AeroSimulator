@@ -19,7 +19,6 @@ CParentGameObject::CParentGameObject(const CGameObject* parent,
                                      const glm::vec3 & translate)
    : CGameObject(parent, scale, rotate, translate)
    , mChildren()
-
 {
 }
 
@@ -45,19 +44,6 @@ void CParentGameObject::add(CGameObject * child)
 
 void CParentGameObject::traverse(std::vector<CGameObject*>& tree)
 {
-   /*const std::size_t numOfChildren = mChildren.size();
-   for (std::size_t count = 0; count < numOfChildren; ++count)
-   {
-      if (mChildren[count]->isLeaf())
-      {
-         tree.push_back(mChildren[count]);
-      }
-      else
-      {
-         mChildren[count]->traverse(tree);
-      }
-   }*/
-
    const std::size_t numOfChildren = mChildren.size();
    for (std::size_t count = 0; count < numOfChildren; ++count)
    {
@@ -69,15 +55,30 @@ void CParentGameObject::traverse(std::vector<CGameObject*>& tree)
    }
 }
 
-void CParentGameObject::updateMatrix(const glm::mat4 & parentMatrix)
+void CParentGameObject::updateMatrix(const glm::mat4 & parentMatrix, const glm::mat4& dynamicMatrix)
 {
-   // Update current matrix
-   //if (isLeaf())
-      //mModelMatrix = parentMatrix * mTRMatrix;
-   //mModelMatrix = mTRMatrix;
    const std::size_t numOfChildren = mChildren.size();
    for (std::size_t count = 0; count < numOfChildren; ++count)
    {
-      mChildren[count]->updateMatrix(parentMatrix);
+      mChildren[count]->updateMatrix(parentMatrix, dynamicMatrix);
    }
+}
+
+void CParentGameObject::setDynamic()
+{
+   const std::size_t numOfChildren = mChildren.size();
+   for (std::size_t count = 0; count < numOfChildren; ++count)
+   {
+      mChildren[count]->setDynamic();
+   }
+}
+
+glm::mat4 CParentGameObject::getChildTRMatrix(std::size_t childId) const
+{
+   glm::mat4 result = glm::mat4(1);
+
+   if (childId < mChildren.size())
+      return result = mChildren[childId]->getTRMatrix();
+
+   return result;
 }

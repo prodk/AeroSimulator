@@ -12,6 +12,7 @@ CGameObject::CGameObject()
    , mTranslate()
    , mTRMatrix()
    , mIsLeaf(false)
+   , mIsDynamic(false)
 {
 }
 
@@ -31,8 +32,13 @@ CGameObject::CGameObject(const CGameObject* parent,
 {
 }
 
-void CGameObject::updateMatrix(const glm::mat4 & parentMatrix)
+void CGameObject::updateMatrix(const glm::mat4 & parentMatrix, const glm::mat4& dynamicMatrix)
 {
+}
+
+glm::mat4 CGameObject::getChildTRMatrix(std::size_t childId) const
+{
+   return glm::mat4();
 }
 
 void CGameObject::resetModelMatrix(const glm::mat4& matrix)
@@ -55,7 +61,6 @@ void CGameObject::scale(const glm::vec3& scale)
 {
    mScale = scale;
    mModelMatrix = glm::scale(mModelMatrix, scale);
-   mTRMatrix = mModelMatrix;
 }
 
 void CGameObject::rotate(const glm::vec3& rotate)
@@ -81,7 +86,6 @@ void CGameObject::translate(const glm::vec3& translate)
 {
    mTranslate = translate;
 
-   glm::mat4 translation = glm::mat4(1.0f);
    mTRMatrix = glm::translate(mTRMatrix, translate);
    mModelMatrix = mTRMatrix;
 }
