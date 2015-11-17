@@ -22,11 +22,14 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
-   , mOldAngleZ(0.0f)
    , mAngleX(0.0f)
    , mHorizontalPressed(0)
    , mVerticalPressed(0)
+   , mCameraAngleX(0.f) // up 'w', down 's'
+   , mCameraAngleY(0.f)
    , mCamera(new CCamera())
+   , mCameraVerticalPressed(0)
+   , mCameraHorizontalPressed(0)
 {
    assert(mCamera);
 
@@ -34,7 +37,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
 
    // View matrix.
    mCamera->translate(glm::vec3(0.0f, 0.0f, -10.0f));
-   mCamera->rotate(glm::vec3(30.0f, 0.0f, 0.0f));
+   mCamera->rotate(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -285,13 +288,37 @@ bool CWin32Renderer::loadOpenGLExtensions()
 
 void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
-   ///@todo: place to a separate method
-   ++mHorizontalPressed;
-   ++mVerticalPressed;
+   // Rotate camera
+   // up/down
+   if (mCameraVerticalPressed)
+   {
+      if (mCameraAngleX > 0.0f)
+      {
+         mCameraAngleX -= 0.5f;
+         mCameraAngleX = std::max<float>(0.0f, mCameraAngleX);
+      }
+   }
+
+   mCamera->resetView();
+   //mCamera->rotate(glm::vec3(mCameraAngleX, 0.f, 0.f));
+   //mCamera->translate(glm::vec3(0.f, 0.f, -10.f));
+
+   // left/right
+   if (mCameraHorizontalPressed)
+   {
+      if (mCameraAngleY > 0.0f)
+      {
+         mCameraAngleY -= 0.5f;
+         mCameraAngleY = std::max<float>(0.0f, mCameraAngleY);
+      }
+   }
+
+   mCamera->rotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
+   mCamera->translate(glm::vec3(0.f, 0.f, -10.f));
 
    // "Spring" buttons
-   // If the button has not been pressed for longer than 5 frames, return the plane to the previous position
-   if (mHorizontalPressed > 5)
+   // If the button been depressed, return the plane to the previous position
+   if (mHorizontalPressed)
    {
       if (mAngleZ > 0.0f)
       {
@@ -306,7 +333,7 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
       }
    }
 
-   if (mVerticalPressed > 5)
+   if (mVerticalPressed)
    {
       if (mAngleX > 0.f)
          mAngleX -= 0.4f;
@@ -331,7 +358,7 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    matrix = modelObjectMatrix;
 }
 
-bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
+bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
    switch (uMessage)
    {
@@ -371,27 +398,42 @@ bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
    {
       if (wParam == VK_LEFT)
       {
-         if (mAngleZ < 45)
-            mAngleZ += 1.0f;
+         mAngleZ += 1.0f;
+         mAngleZ = std::min<float>(mAngleZ, 45.f);
          mHorizontalPressed = 0;
       }
       if (wParam == VK_RIGHT)
       {
-         if (mAngleZ > -45)
-            mAngleZ -= 1.0f;
+         mAngleZ -= 1.0f;
+         mAngleZ = std::max<float>(mAngleZ, -45.f);
          mHorizontalPressed = 0;
       }
       if (wParam == VK_UP)
       {
-         if (mAngleX > -45)
-            mAngleX -= 1.0f;
+         mAngleX -= 1.0f;
+         mAngleX = std::max<float>(mAngleX, -45.f);
          mVerticalPressed = 0;
       }
       if (wParam == VK_DOWN)
       {
-         if (mAngleX < 45)
-            mAngleX += 1.0f;
+         mAngleX += 1.0f;
+         mAngleX = std::min<float>(mAngleX, 45.f);
          mVerticalPressed = 0;
+      }
+
+      // Camera rotations
+      if (wParam == 0x57) // w, up
+      {
+         mCameraAngleX += 1.f;
+         mCameraAngleX = std::min<float>(mCameraAngleX, 45.f);
+         mCameraVerticalPressed = 0;
+      }
+
+      if (wParam == 0x41) // a, left
+      {
+         mCameraAngleY += 1.f;
+         mCameraAngleY = std::min<float>(mCameraAngleY, 45.f);
+         mCameraHorizontalPressed = 0;
       }
    }
    return false;
@@ -401,24 +443,31 @@ bool CWin32Renderer::windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam)
    {
       if (wParam == VK_LEFT)
       {
-         int pressed = 1;
+         ++mHorizontalPressed;
       }
       if (wParam == VK_RIGHT)
       {
-         int pressed = 0;
+         ++mHorizontalPressed;
       }
       if (wParam == VK_UP)
       {
-         int pressed = 1;
+         ++mVerticalPressed;
       }
       if (wParam == VK_DOWN)
       {
-         int pressed = 0;
+         ++mVerticalPressed;
       }
+      if (wParam == 0x57) // w, up
+      {
+         ++mCameraVerticalPressed;
+      }
+
+      if (wParam == 0x41)
+         ++mCameraHorizontalPressed;
    }
    return false;
    } // end switch
 
-     // Process other messages
+   // Process other messages
    return true;
 }

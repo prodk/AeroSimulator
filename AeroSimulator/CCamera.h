@@ -23,6 +23,8 @@ namespace AeroSimulatorEngine
       glm::mat4 getViewMatrix() const { return mViewMatrix; }
 
    private:
+      glm::mat4 mRotate;
+      glm::mat4 mTranslate;
       glm::mat4 mViewMatrix;
       glm::mat4 mProjectionMatrix;
    };

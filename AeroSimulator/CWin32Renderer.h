@@ -32,7 +32,7 @@ namespace AeroSimulatorEngine
       bool setRenderContext();
       void resetRenderContext();
 
-      bool windowProc(UINT uMessage, WPARAM wParam, LPARAM lParam);
+      bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
    private:
       // Override CRenderer part
@@ -54,13 +54,17 @@ namespace AeroSimulatorEngine
       bool mIsFullScreen;
 
       float mAngleZ; // Angle of rotating around the z-axis of the air plane
-      float mOldAngleZ;
       float mAngleX;
       std::size_t mHorizontalPressed;
       std::size_t mVerticalPressed;
 
+      float mCameraAngleX; // up 'w', down 's'
+      float mCameraAngleY; // left 'a', right 'd'
+
       ///@todo: probably create an array of cameras later
       std::shared_ptr<CCamera> mCamera;
+      std::size_t mCameraVerticalPressed;
+      std::size_t mCameraHorizontalPressed;
    };
 
 } // namespace AeroSimulatorEngine

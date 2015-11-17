@@ -35,7 +35,7 @@ LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM l
    }
 
    // Invoke the message handler for the existing window
-   if (renderer && !renderer->windowProc(uMessage, wParam, lParam))
+   if (renderer && !renderer->windowProc(hWnd, uMessage, wParam, lParam))
       return 0;
 
    // Invoke the standard message handler for unprocessed messages
