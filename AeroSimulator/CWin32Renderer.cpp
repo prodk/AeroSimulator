@@ -360,8 +360,7 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    matrix = modelObjectMatrix;
 
    // Update the root and all its children.
-   mRoot->resetTRMatrix(modelObjectMatrix);
-   mRoot->updateMatrix(glm::mat4(1.0f));
+   mRoot->updateMatrix(modelObjectMatrix);
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)

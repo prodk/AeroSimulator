@@ -120,6 +120,5 @@ void CCube::traverse(std::vector<CGameObject*>& tree)
 
 void CCube::updateMatrix(const glm::mat4 & parentMatrix)
 {
-   //mTRMatrix = parentMatrix * mTRMatrix;
-   mModelMatrix = parentMatrix * mModelMatrix;
+   mModelMatrix = parentMatrix * mTRMatrix;
 }

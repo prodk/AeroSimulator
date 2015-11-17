@@ -72,11 +72,12 @@ void CParentGameObject::traverse(std::vector<CGameObject*>& tree)
 void CParentGameObject::updateMatrix(const glm::mat4 & parentMatrix)
 {
    // Update current matrix
-   mTRMatrix = parentMatrix * mTRMatrix;
-   mModelMatrix = mTRMatrix;
+   //if (isLeaf())
+      //mModelMatrix = parentMatrix * mTRMatrix;
+   //mModelMatrix = mTRMatrix;
    const std::size_t numOfChildren = mChildren.size();
    for (std::size_t count = 0; count < numOfChildren; ++count)
    {
-      mChildren[count]->updateMatrix(mModelMatrix);
+      mChildren[count]->updateMatrix(parentMatrix);
    }
 }
