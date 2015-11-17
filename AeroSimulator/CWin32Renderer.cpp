@@ -5,6 +5,7 @@
 #include "CLog.h"
 #include "CCommonMath.h" ///@todo: remove this
 #include "CCamera.h"
+#include "CGameObject.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -58,7 +59,6 @@ void CWin32Renderer::update()
       setRenderContext();
 
       ///@todo: rotate camera here if needed
-      //mCamera->rotate(glm::vec3(0.f, angle, 0.f));
 
       glm::mat4 modelObjectMatrix;
       calculateAirplaneMatrix(modelObjectMatrix);
@@ -119,6 +119,8 @@ void CWin32Renderer::destroy()
          CLog::getInstance().log("* ERROR: render context wasn't destroyed");
       mRenderContext = NULL;
    }
+
+   mRoot = nullptr;
 }
 
 void CWin32Renderer::draw(CRenderable* pRenderable)
@@ -138,16 +140,18 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
 
       ///@todo: do not multiply by the parent matrix each frame!!! Do this only if it has changed.
       // Get Renderable's dynamic library of the root object
-      glm::mat4 modelObjectMatrix = pRenderable->getParentModelMatrix();
+      //glm::mat4 modelObjectMatrix = pRenderable->getParentModelMatrix();
 
       // Calculate and set the final MVP matrix used in the shader
-      glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelObjectMatrix * modelMatrix;
+      //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelObjectMatrix * modelMatrix;
+
+      // Calculate and set the final MVP matrix used in the shader
+      glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
       pRenderable->setMvpMatrix(MVP);
 
       pShader->setup(*pRenderable);
 
       glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
-      //glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, pGeometry->getIndexBuffer());
 
       // Unbind the buffers
       ///@todo: probably place to a separate method
@@ -300,8 +304,6 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    }
 
    mCamera->resetView();
-   //mCamera->rotate(glm::vec3(mCameraAngleX, 0.f, 0.f));
-   //mCamera->translate(glm::vec3(0.f, 0.f, -10.f));
 
    // left/right
    if (mCameraHorizontalPressed)
@@ -356,6 +358,10 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
 
    matrix = modelObjectMatrix;
+
+   // Update the root and all its children.
+   mRoot->resetTRMatrix(modelObjectMatrix);
+   mRoot->updateMatrix(glm::mat4(1.0f));
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)

@@ -31,6 +31,8 @@ namespace AeroSimulatorEngine
       virtual void add(CGameObject* child);
       virtual void traverse(std::vector<CGameObject*>& tree);
 
+      virtual void updateMatrix(const glm::mat4 & parentMatrix);
+
    public:
       static const int mNumOfElementsPerVertex;
       static const int mStride;

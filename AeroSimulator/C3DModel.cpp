@@ -57,6 +57,7 @@ namespace
 C3DModel::C3DModel()
    : mCubeGeometry(new CGeometry())
    , mObjectTree(new CParentGameObject())
+   , mCabine(new CParentGameObject())
    , mBody(new CParentGameObject())
    , mLeftWing(new CParentGameObject())
    , mRightWing(new CParentGameObject())
@@ -104,10 +105,12 @@ bool C3DModel::buildModel()
    }
 
    // Build an airplane
+   mObjectTree->add(mCabine.get());
+
    mCubes[0].resetTRMatrix(mObjectTree->getTRMatrix());
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
-   mObjectTree->add(&mCubes[0]); // cube[0] is a Cabin.
-   mObjectTree->add(mBody.get());
+   mCabine->add(&mCubes[0]); // cube[0] is a Cabin.
+   mCabine->add(mBody.get());
 
    buildBody();
 
@@ -170,7 +173,7 @@ void C3DModel::getTree(std::vector<CGameObject*>& tree) const
 void C3DModel::buildBody()
 {
    // Body has 4 cubes. Use cubes 1 - 5
-   mBody->resetTRMatrix(mObjectTree->getTRMatrix());
+   mBody->resetTRMatrix(mCabine->getTRMatrix());
 
    // Move the body to the position of the firs cube
    mBody->translate(glm::vec3(0.0f, 0.0f, 0.0f));

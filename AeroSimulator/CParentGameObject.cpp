@@ -45,7 +45,7 @@ void CParentGameObject::add(CGameObject * child)
 
 void CParentGameObject::traverse(std::vector<CGameObject*>& tree)
 {
-   const std::size_t numOfChildren = mChildren.size();
+   /*const std::size_t numOfChildren = mChildren.size();
    for (std::size_t count = 0; count < numOfChildren; ++count)
    {
       if (mChildren[count]->isLeaf())
@@ -56,5 +56,27 @@ void CParentGameObject::traverse(std::vector<CGameObject*>& tree)
       {
          mChildren[count]->traverse(tree);
       }
+   }*/
+
+   const std::size_t numOfChildren = mChildren.size();
+   for (std::size_t count = 0; count < numOfChildren; ++count)
+   {
+      tree.push_back(mChildren[count]);
+      if (!mChildren[count]->isLeaf())
+      {
+         mChildren[count]->traverse(tree);
+      }
+   }
+}
+
+void CParentGameObject::updateMatrix(const glm::mat4 & parentMatrix)
+{
+   // Update current matrix
+   mTRMatrix = parentMatrix * mTRMatrix;
+   mModelMatrix = mTRMatrix;
+   const std::size_t numOfChildren = mChildren.size();
+   for (std::size_t count = 0; count < numOfChildren; ++count)
+   {
+      mChildren[count]->updateMatrix(mModelMatrix);
    }
 }

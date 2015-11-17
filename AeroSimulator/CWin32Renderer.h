@@ -13,6 +13,7 @@
 namespace AeroSimulatorEngine
 {
    class CCamera;
+   class CGameObject;
 
    class CWin32Renderer : public CRenderer
    {
@@ -33,6 +34,8 @@ namespace AeroSimulatorEngine
       void resetRenderContext();
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
+
+      void setRoot(CGameObject* root) { mRoot = root; };
 
    private:
       // Override CRenderer part
@@ -65,6 +68,8 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CCamera> mCamera;
       std::size_t mCameraVerticalPressed;
       std::size_t mCameraHorizontalPressed;
+
+      CGameObject* mRoot;
    };
 
 } // namespace AeroSimulatorEngine

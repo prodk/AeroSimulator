@@ -112,10 +112,6 @@ void CApp::setupRenderer()
    mLand->setupShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mLand.get());
 
-   
-
-   
-
    ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();
    std::vector<CGameObject*> tree; //Add cubes from the air plane
@@ -124,17 +120,21 @@ void CApp::setupRenderer()
    ///@todo: add to a separate method setupShaders()
    // Create all the shaders in mRendererTask and then add them to the model
    mSimpleShader->link();
-   mSimpleShader->setup(*tree[0]); // Use the first node in the tree as a renderable.
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)
    {
-      if (tree[count])
+      if (tree[count] && tree[count]->isLeaf())
       {
          tree[count]->setupShadersAndBuffers(mSimpleShader);
          mRendererTask->addRenderable(tree[count]);
       }
    }
+
+   //tree[0]->updateMatrix(glm::mat4(1.0f));
+
+   // Set the root;
+   mRendererTask->setRoot(tree[0]);
 
    mRendererTask->setRenderContext();
 }

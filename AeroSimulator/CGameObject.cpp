@@ -31,6 +31,10 @@ CGameObject::CGameObject(const CGameObject* parent,
 {
 }
 
+void CGameObject::updateMatrix(const glm::mat4 & parentMatrix)
+{
+}
+
 void CGameObject::resetModelMatrix(const glm::mat4& matrix)
 {
    mModelMatrix = matrix;

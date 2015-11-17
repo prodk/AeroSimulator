@@ -32,6 +32,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CGameObject> mObjectTree;
 
       // Parts of the plane
+      std::shared_ptr<CGameObject> mCabine;
       std::shared_ptr<CGameObject> mBody;
       std::shared_ptr<CGameObject> mLeftWing;
       std::shared_ptr<CGameObject> mRightWing;

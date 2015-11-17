@@ -31,6 +31,8 @@ namespace AeroSimulatorEngine
       virtual void add(CGameObject* child) = 0;
       ///Saves elements to the provided array
       virtual void traverse(std::vector<CGameObject*>& tree) = 0;
+
+      virtual void updateMatrix(const glm::mat4& parentMatrix);
       bool isLeaf() const { return mIsLeaf; }
 
       // Transforms
