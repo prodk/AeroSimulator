@@ -48,6 +48,8 @@ namespace AeroSimulatorEngine
       bool createRenderContext();
       bool loadOpenGLExtensions();
       void calculateAirplaneMatrix(glm::mat4& matrix);
+      void rotateCamera();
+      void springButtons();
 
    private:
       HDC mDC;
@@ -66,8 +68,8 @@ namespace AeroSimulatorEngine
 
       ///@todo: probably create an array of cameras later
       std::shared_ptr<CCamera> mCamera;
-      std::size_t mCameraVerticalPressed;
-      std::size_t mCameraHorizontalPressed;
+      //std::size_t mCameraVerticalPressed;
+      //std::size_t mCameraHorizontalPressed;
 
       CGameObject* mRoot;
       glm::mat4 mDynamicMatrix;

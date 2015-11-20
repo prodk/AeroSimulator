@@ -29,8 +29,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCameraAngleX(0.f) // up 'w', down 's'
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
-   , mCameraVerticalPressed(0)
-   , mCameraHorizontalPressed(0)
+   //, mCameraVerticalPressed(0)
+   //, mCameraHorizontalPressed(0)
    , mRoot(nullptr)
    , mDynamicMatrix()
 {
@@ -61,6 +61,8 @@ void CWin32Renderer::update()
       setRenderContext();
 
       ///@todo: rotate camera here if needed
+      rotateCamera();
+      springButtons();
 
       glm::mat4 modelObjectMatrix;
       calculateAirplaneMatrix(modelObjectMatrix);
@@ -294,64 +296,31 @@ bool CWin32Renderer::loadOpenGLExtensions()
 
 void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
-   ///@todo: place to a separate method
-   // Rotate camera
-   // up/down
-   if (mCameraVerticalPressed)
-   {
-      if (mCameraAngleX > 0.0f)
-      {
-         mCameraAngleX -= 0.5f;
-         mCameraAngleX = std::max<float>(0.0f, mCameraAngleX);
-      }
-   }
-
-   mCamera->resetView();
-
-   // left/right
-   if (mCameraHorizontalPressed)
-   {
-      if (mCameraAngleY > 0.0f)
-      {
-         mCameraAngleY -= 0.8f;
-         mCameraAngleY = std::max<float>(0.0f, mCameraAngleY);
-      }
-
-      if (mCameraAngleY < 0.0f)
-      {
-         mCameraAngleY += 0.8f;
-         mCameraAngleY = std::min<float>(0.0f, mCameraAngleY);
-      }
-   }
-
-   mCamera->rotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
-   mCamera->translate(glm::vec3(0.f, 0.f, -10.f));
-
    // "Spring" buttons
-   // If the button been depressed, return the plane to the previous position
-   if (mHorizontalPressed)
-   {
-      if (mAngleZ > 0.0f)
-      {
-         mAngleZ -= 0.8f;
-         mAngleZ = std::max<float>(0.0f, mAngleZ);
-      }
+   //// If the button was depressed, return the plane to the previous position
+   //if (mHorizontalPressed)
+   //{
+   //   if (mAngleZ > 0.0f)
+   //   {
+   //      mAngleZ -= 0.8f;
+   //      mAngleZ = std::max<float>(0.0f, mAngleZ);
+   //   }
 
-      if (mAngleZ < -0.0f)
-      {
-         mAngleZ += 0.8f;
-         mAngleZ = std::min<float>(0.0f, mAngleZ);
-      }
-   }
+   //   if (mAngleZ < -0.0f)
+   //   {
+   //      mAngleZ += 0.8f;
+   //      mAngleZ = std::min<float>(0.0f, mAngleZ);
+   //   }
+   //}
 
-   if (mVerticalPressed)
-   {
-      if (mAngleX > 0.f)
-         mAngleX -= 0.4f;
+   //if (mVerticalPressed)
+   //{
+   //   if (mAngleX > 0.f)
+   //      mAngleX -= 0.4f;
 
-      if (mAngleX < 0.f)
-         mAngleX += 0.4f;
-   }
+   //   if (mAngleX < 0.f)
+   //      mAngleX += 0.4f;
+   //}
 
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
 
@@ -377,6 +346,42 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 
    // Update the root and all its children.
    mRoot->updateMatrix(modelObjectMatrix, mDynamicMatrix);
+}
+
+void CWin32Renderer::rotateCamera()
+{
+   mCamera->resetView();
+
+   mCamera->rotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
+   mCamera->translate(glm::vec3(0.f, 0.f, -10.f));
+}
+
+void CWin32Renderer::springButtons()
+{
+   // If the button was depressed, return the plane to the previous position
+   if (mHorizontalPressed)
+   {
+      if (mAngleZ > 0.0f)
+      {
+         mAngleZ -= 0.8f;
+         mAngleZ = std::max<float>(0.0f, mAngleZ);
+      }
+
+      if (mAngleZ < -0.0f)
+      {
+         mAngleZ += 0.8f;
+         mAngleZ = std::min<float>(0.0f, mAngleZ);
+      }
+   }
+
+   if (mVerticalPressed)
+   {
+      if (mAngleX > 0.f)
+         mAngleX -= 0.4f;
+
+      if (mAngleX < 0.f)
+         mAngleX += 0.4f;
+   }
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
@@ -409,8 +414,6 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
    case WM_CLOSE:
    case WM_QUIT:
    {
-      // Exit flag
-      //mIsClosing = true;
    }
    return false;
 
@@ -446,22 +449,25 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       if (wParam == 0x57) // w, up
       {
          mCameraAngleX += 1.f;
-         mCameraAngleX = std::min<float>(mCameraAngleX, 245.f);
-         mCameraVerticalPressed = 0;
+         mCameraAngleX = std::min<float>(mCameraAngleX, 360.f);
+      }
+
+      if (wParam == 0x53) // s, down
+      {
+         mCameraAngleX -= 1.f;
+         mCameraAngleX = std::max<float>(mCameraAngleX, -360.f);
       }
 
       if (wParam == 0x41) // a, left
       {
          mCameraAngleY += 1.f;
-         mCameraAngleY = std::min<float>(mCameraAngleY, 245.f);
-         mCameraHorizontalPressed = 0;
+         mCameraAngleY = std::min<float>(mCameraAngleY, 360.f);
       }
 
       if (wParam == 0x44) // d, right
       {
          mCameraAngleY -= 1.f;
-         mCameraAngleY = std::max<float>(mCameraAngleY, -245.f);
-         mCameraHorizontalPressed = 0;
+         mCameraAngleY = std::max<float>(mCameraAngleY, -360.f);
       }
    }
    return false;
@@ -485,16 +491,6 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       {
          ++mVerticalPressed;
       }
-      if (wParam == 0x57) // w, up
-      {
-         ++mCameraVerticalPressed;
-      }
-
-      if (wParam == 0x41)
-         ++mCameraHorizontalPressed;
-
-      if (wParam == 0x44)
-         ++mCameraHorizontalPressed;
    }
    return false;
    } // end switch
