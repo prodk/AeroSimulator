@@ -26,7 +26,6 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix)
    if (trMatrix != mParentTRMatrix)
    {
       mParentTRMatrix = trMatrix;
-      ///@todo: update the cached product of the parentTR by the current localTR here;
       mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
    }
 
@@ -34,7 +33,7 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix)
    {
       if (pChild)
       {
-         pChild->updateTRMatrix(mParentByLocalTRMatrix); ///avoid recalculation on every frame
+         pChild->updateTRMatrix(mParentByLocalTRMatrix); /// Avoid recalculation on every frame
       }
    }
 }

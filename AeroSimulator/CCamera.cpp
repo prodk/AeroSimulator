@@ -20,19 +20,15 @@ CCamera::~CCamera()
 
 void CCamera::translate(const glm::vec3 & distance)
 {
-   ///@todo: remove these
    mTranslate = glm::mat4(1.0f);
    mTranslate = glm::translate(mTranslate, distance);
    mViewMatrix = mTranslate * mRotate;
-
-   //mViewMatrix = glm::translate(mViewMatrix, distance);
 }
 
 void CCamera::rotate(const glm::vec3 & angles)
 {
    mRotate = glm::mat4(1.0f);
 
-   ///@todo: remove these
    const float angleX = CCommonMath::degToRad(angles.x);
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    mRotate = glm::rotate(mRotate, angleX, xAxis);
@@ -45,18 +41,7 @@ void CCamera::rotate(const glm::vec3 & angles)
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    mRotate = glm::rotate(mRotate, angleZ, zAxis);
 
-   mViewMatrix = mRotate*mTranslate;
-   /*const float angleX = CCommonMath::degToRad(angles.x);
-   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   mViewMatrix = glm::rotate(mViewMatrix, angleX, xAxis);
-
-   const float angleY = CCommonMath::degToRad(angles.y);
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   mViewMatrix = glm::rotate(mViewMatrix, angleY, yAxis);
-
-   const float angleZ = CCommonMath::degToRad(angles.z);
-   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   mViewMatrix = glm::rotate(mViewMatrix, angleZ, zAxis);*/
+   mViewMatrix = mRotate * mTranslate;
 }
 
 void CCamera::resetView()

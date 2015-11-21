@@ -129,7 +129,7 @@ bool C3DModel::buildModel()
    mCubes[4].setTranslate(glm::vec3(0.0f, 0.0f, 3.0f));
    mBody->add(&mCubes[4]);
 
-   ///The Wings.
+   /// The Wings.
    // Wings are children of the Body
    const float wingX = 1.8f;
    // Left wing
@@ -188,92 +188,11 @@ bool C3DModel::buildModel()
    // Build the model matrix of each node of the tree
    mCabine->buildModelMatrix(glm::mat4x4(1.0f));
 
-   //mObjectTree->add(mCabine.get());
-
-   ////mCubes[0].resetTRMatrix(mObjectTree->getTRMatrix());
-   //mCubes[0].setParentModelMatrix(mObjectTree->getTRMatrix());
-   //mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
-   //mCabine->add(&mCubes[0]); // cube[0] is a Cabin.
-   //mCabine->add(mBody.get());
-
-   //buildBody();
-
-   //// Wings are children of the Body
-   ////Left wing
-   //mBody->add(mLeftWing.get());
-
-   ////mLeftWing->resetTRMatrix(mBody->getTRMatrix());
-   //mLeftWing->setParentModelMatrix(mBody->getParentModelMatrix());
-   ////mCubes[5].resetModelMatrix(mLeftWing->getTRMatrix());
-   //mCubes[5].setParentModelMatrix(mLeftWing->getParentModelMatrix());
-   //mCubes[5].translate(glm::vec3(-1.0f, -0.75f, 1.5f));
-   //mCubes[5].scale(glm::vec3(2.0f, 0.3f, 1.5f));
-   //mLeftWing->add(&mCubes[5]);
-
-   ////Right wing
-   //mBody->add(mRightWing.get());
-
-   //mRightWing->resetTRMatrix(mBody->getTRMatrix());
-   //mCubes[6].resetModelMatrix(mRightWing->getTRMatrix());
-   //mCubes[6].translate(glm::vec3(1.0f, -0.75f, 1.5f));
-   //mCubes[6].scale(glm::vec3(2.0f, 0.3f, 1.5f));
-   //mRightWing->add(&mCubes[6]);
-
-   //// Tail is a child of the Body
-   //mBody->add(mTail.get());
-   //mTail->resetTRMatrix(mBody->getTRMatrix());
-
-   //// Tail cube 1
-   //mCubes[7].resetTRMatrix(mTail->getTRMatrix());
-   //const float shift = 0.5f + std::sqrtf(2.0f)*0.5f;
-   //mCubes[7].translate(glm::vec3(0.0f, -0.15f, (2.8f + shift)));
-   //mCubes[7].rotate(glm::vec3(45.0f, 0.0f, 0.0f));
-   //mCubes[7].scale(glm::vec3(0.5f, 1.0f, 0.5f));
-   //mTail->add(&mCubes[7]);
-
-   //// Tail cube 2
-   //mCubes[8].resetTRMatrix(mTail->getTRMatrix());
-   //mCubes[8].translate(glm::vec3(0.0f, 0.57f, 2.7f + shift + 0.8f));
-   //mCubes[8].rotate(glm::vec3(45.0f, 0.0f, 0.0f));
-   //mCubes[8].scale(glm::vec3(0.5f, 1.0f, 0.5f));
-   //mTail->add(&mCubes[8]);
-
-   //// Propeller is a child of the Body
-   //mBody->add(mPropeller.get());
-   ////mPropeller->resetTRMatrix(mTail->getTRMatrix());
-   ////mPropeller->resetTRMatrix(mBody->getChildTRMatrix(0));
-
-   //// Base
-   ////mCubes[9].resetTRMatrix(mPropeller->getTRMatrix());
-   //mCubes[9].setParentModelMatrix(mBody->getParentModelMatrix()*mBody->getChildTRMatrix(1));
-   //mCubes[9].translate(glm::vec3(0.0f, 0.f, -0.61275f));
-   //mCubes[9].scale(glm::vec3(0.25f, 0.25f, 0.9f));
-   //mPropeller->add(&mCubes[9]);
-
-   //// Paddle 1
-   ////mCubes[10].resetTRMatrix(mPropeller->getChildTRMatrix(0));
-   //mCubes[10].setParentModelMatrix(mPropeller->getChildTRMatrix(0));
-   //mCubes[10].translate(glm::vec3(-0.7f, 0.f, -0.9f));
-   //mCubes[10].scale(glm::vec3(1.2f, 0.25f, 0.1f));
-   //mPropeller->add(&mCubes[10]);
-
-   //// Paddle 2
-   ////mCubes[11].resetTRMatrix(mPropeller->getTRMatrix());
-   //mCubes[11].setParentModelMatrix(mPropeller->getChildTRMatrix(0));
-   //mCubes[11].translate(glm::vec3(0.7f, 0.f, -0.9f));
-   //mCubes[11].scale(glm::vec3(1.2f, 0.25f, 0.1f));
-   //mPropeller->add(&mCubes[11]);
-
-   //// Force the propeller to rotate
-   //mPropeller->setDynamic();
-
-   // Fans are children of the Tail
-
+   result = true;
    return result;
 }
 
-void C3DModel::getTree(std::vector<CGameObject*>& tree) const
+void C3DModel::getTree(std::vector<CCompositeGameObject*>& tree) const
 {
-   //mObjectTree->traverse(tree);
    mCabine->traverse(tree);
 }

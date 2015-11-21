@@ -24,8 +24,6 @@ GLuint CTexture::loadBmpTexture(const char * filePath)
    unsigned int dataPos;     // Position in the file where the actual data begins
    unsigned int width, height;
    unsigned int imageSize;   // = width*height*3
-   // Actual RGB data
-   //unsigned char * data;
 
    // Open the file
    FILE * file = fopen(filePath, "rb");
@@ -74,9 +72,6 @@ GLuint CTexture::loadBmpTexture(const char * filePath)
 
    // Give the image to OpenGL
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR, GL_UNSIGNED_BYTE, data.get());
-
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
    // Unbind the texture
    glBindTexture(GL_TEXTURE_2D, 0);

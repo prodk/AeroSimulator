@@ -1,5 +1,4 @@
 // CRenderer.h - declaration of an abstract CRenderer class
-//#pragma once
 
 #ifndef AERO_SIMULATOR_CRENDERER_H
 #define AERO_SIMULATOR_CRENDERER_H
@@ -26,6 +25,8 @@ namespace AeroSimulatorEngine
       void addRenderable(CRenderable* pRenderable);
       void removeRenderable(CRenderable* pRenderable);
 
+      bool loadOpenGLExtensions();
+
    protected:
       // Methods to override
       virtual void init() = 0;
@@ -37,7 +38,6 @@ namespace AeroSimulatorEngine
       typedef std::vector<CRenderable*> RenderableVector;
       RenderableVector mRenderables;
    };
-
 } // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CRENDERER_H

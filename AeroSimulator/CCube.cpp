@@ -1,9 +1,7 @@
 #include "CCube.h"
 #include "CGeometry.h"
-//#include "CSimpleShader.h"
 #include "CShader.h"
 #include "CLog.h"
-//#include "CCommonMath.h"
 
 #include <cassert>
 
@@ -16,7 +14,7 @@ const int CCube::mNumOfElementsPerVertex = 3; // 3 coordinates/color components 
 const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates and 3 colors
 
 CCube::CCube()
-   : CGameObject()
+   : CCompositeGameObject()
 {
    mIsLeaf = true;
 
@@ -27,57 +25,19 @@ CCube::CCube()
 
 CCube::~CCube()
 {
-   //mGeometry.reset();
-   //mShader.reset();
+   mGeometry.reset();
+   mShader.reset();
 }
 
-CCube::CCube(const CGameObject* parent,
-             const glm::vec3 & scale,
+CCube::CCube(const glm::vec3 & scale,
              const glm::vec3 & rotate,
              const glm::vec3 & translate)
-   : CGameObject(scale, rotate, translate)
+   : CCompositeGameObject(scale, rotate, translate)
 {
    mIsLeaf = true;
 
-   //// Set transforms
-   //glm::mat4 myModel = glm::mat4(1.0f);
-
-   //// TRS
-   //// scale
-   //myModel = glm::scale(myModel, scale);
-
-   //// rotate
-   //const float angleX = CCommonMath::degToRad(rotate.x);
-   //glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   //myModel = glm::rotate(myModel, angleX, xAxis);
-
-   //const float angleY = CCommonMath::degToRad(rotate.y);
-   //glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   //myModel = glm::rotate(myModel, angleY, yAxis);
-
-   //const float angleZ = CCommonMath::degToRad(rotate.z);
-   //glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   //myModel = glm::rotate(myModel, angleZ, zAxis);
-
-   //// translate
-   //myModel = glm::translate(myModel, translate);
-
-   /////@todo: probably myltiply by the parent matrix
-   //glm::mat4 parentModelMatrix = glm::mat4(1.0f);
-   //if (parent)
-   //{
-   //   parentModelMatrix = parent->getModelMatrix();
-   //}
-
-   //mModelMatrix = parentModelMatrix * myModel;
-
    CLog::getInstance().log("* CCube::CCube() non-default: success.");
 }
-
-//void CCube::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
-//{
-//   mGeometry = pGeometry;
-//}
 
 void CCube::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
@@ -111,17 +71,16 @@ void CCube::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    }
 }
 
-void CCube::add(CGameObject * child)
+void CCube::add(CCompositeGameObject * child)
 {
    CLog::getInstance().log("\n!!! Cannot add a child to CCube because it is a leaf!!! \n");
 }
 
-void CCube::traverse(std::vector<CGameObject*>& tree)
+void CCube::traverse(std::vector<CCompositeGameObject*>& tree)
 {
    // No children -nothing to do here
 }
 
-///@todo: add a cached parent matrices as an argument here
 void CCube::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 {
    mParentTRMatrix = parentTRMatrix;
@@ -148,15 +107,3 @@ void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
    mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
 }
-
-//void CCube::updateMatrix(const glm::mat4 & parentMatrix, const glm::mat4& dynamicMatrix)
-//{
-//   glm::mat4 scaledTRm = glm::scale(mTRMatrix, mScale);
-//   if (isDynamic())
-//   {
-//      mModelMatrix = parentMatrix * mParentModelMatrix * dynamicMatrix * scaledTRm;
-//   }
-//   else
-//      mModelMatrix = parentMatrix * mParentModelMatrix * scaledTRm;
-//   //mModelMatrix = parentMatrix * scaledTRm;
-//}

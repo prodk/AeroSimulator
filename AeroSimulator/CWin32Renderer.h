@@ -13,7 +13,7 @@
 namespace AeroSimulatorEngine
 {
    class CCamera;
-   class CGameObject;
+   class CCompositeGameObject;
 
    class CWin32Renderer : public CRenderer
    {
@@ -35,7 +35,7 @@ namespace AeroSimulatorEngine
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
-      void setRoot(CGameObject* root) { mRoot = root; };
+      void setRoot(CCompositeGameObject* root) { mRoot = root; };
 
    private:
       // Override CRenderer part
@@ -46,7 +46,6 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
-      bool loadOpenGLExtensions();
       void calculateAirplaneMatrix(glm::mat4& matrix);
       void rotateCamera();
       void springButtons();
@@ -58,6 +57,7 @@ namespace AeroSimulatorEngine
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
 
+      ///@todo: reconsider the approach to spring buttons
       float mAngleZ; // Angle of rotating around the z-axis of the air plane
       float mAngleX;
       std::size_t mHorizontalPressed;
@@ -68,13 +68,9 @@ namespace AeroSimulatorEngine
 
       ///@todo: probably create an array of cameras later
       std::shared_ptr<CCamera> mCamera;
-      //std::size_t mCameraVerticalPressed;
-      //std::size_t mCameraHorizontalPressed;
 
-      CGameObject* mRoot;
-      glm::mat4 mDynamicMatrix;
+      CCompositeGameObject* mRoot;
    };
-
 } // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CWIN32_RENDERER_H

@@ -5,7 +5,6 @@
 
 namespace AeroSimulatorEngine
 {
-   ///@todo: probably make it a singleton later
    ///@todo: probably derive it from CGameObject
    class CCamera
    {
@@ -28,7 +27,6 @@ namespace AeroSimulatorEngine
       glm::mat4 mViewMatrix;
       glm::mat4 mProjectionMatrix;
    };
-
 } // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CCAMERA_H

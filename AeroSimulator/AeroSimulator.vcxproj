@@ -147,6 +147,7 @@
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCommonMath.h" />
+    <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CCube.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
+    <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CCube.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />

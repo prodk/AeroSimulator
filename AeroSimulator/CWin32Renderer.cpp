@@ -5,7 +5,7 @@
 #include "CLog.h"
 #include "CCommonMath.h" ///@todo: remove this
 #include "CCamera.h"
-#include "CGameObject.h"
+#include "CCompositeGameObject.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -29,14 +29,11 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCameraAngleX(0.f) // up 'w', down 's'
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
-   //, mCameraVerticalPressed(0)
-   //, mCameraHorizontalPressed(0)
    , mRoot(nullptr)
-   , mDynamicMatrix()
 {
    assert(mCamera);
 
-   mCamera->setProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f));
+   mCamera->setProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 500.0f));
 
    // View matrix.
    mCamera->translate(glm::vec3(0.0f, 0.0f, -15.0f));
@@ -48,7 +45,6 @@ CWin32Renderer::~CWin32Renderer()
    destroy();
 }
 
-///@todo: probably move to the base class
 bool CWin32Renderer::start()
 {
    return isInitialized();
@@ -60,7 +56,6 @@ void CWin32Renderer::update()
    {
       setRenderContext();
 
-      ///@todo: rotate camera here if needed
       rotateCamera();
       springButtons();
 
@@ -70,13 +65,10 @@ void CWin32Renderer::update()
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-      for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
+      for (auto * pRenderable : mRenderables)
       {
-         CRenderable* pRenderable = *iter;
          if (pRenderable && pRenderable->canBeRendered())
          {
-            ///@todo: remove this
-            //pRenderable->setParentModelMatrix(modelObjectMatrix);
             draw(pRenderable);
          }
       }
@@ -93,22 +85,19 @@ void CWin32Renderer::stop()
 
 void CWin32Renderer::init()
 {
-   if (createRenderContext())
+   if (createRenderContext() && setRenderContext() && loadOpenGLExtensions())
    {
-      if (setRenderContext() && loadOpenGLExtensions())
-      {
-         mIsInitialized = true;
+      mIsInitialized = true;
 
-         // Enable OpenGL stuff needed by the app
-         glEnable(GL_DEPTH_TEST);
-         CLog::getInstance().logGL("Depth test enabled: ");
+      // Enable OpenGL stuff needed by the app
+      glEnable(GL_DEPTH_TEST);
+      CLog::getInstance().logGL("Depth test enabled: ");
 
-         glEnable(GL_TEXTURE_2D);
-         CLog::getInstance().logGL("Textures enabled: ");
+      glEnable(GL_TEXTURE_2D);
+      CLog::getInstance().logGL("Textures enabled: ");
 
-         // Go back to the window rendering context
-         resetRenderContext();
-      }
+      // Go back to the window rendering context
+      resetRenderContext();
    }
 }
 
@@ -130,25 +119,20 @@ void CWin32Renderer::destroy()
 
 void CWin32Renderer::draw(CRenderable* pRenderable)
 {
-   if (pRenderable)
+   const GLuint vboId = pRenderable->getVboId();
+   const GLuint iboId = pRenderable->getIboId();
+   if (pRenderable && pRenderable->canBeRendered() && vboId && iboId)
    {
-      glBindBuffer(GL_ARRAY_BUFFER, pRenderable->getVboId());
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, pRenderable->getIboId());
+      glBindBuffer(GL_ARRAY_BUFFER, vboId);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
 
       CGeometry* pGeometry = pRenderable->getGeometry();
       CShader* pShader = pRenderable->getShader();
+      ///@todo: probably call here some custom step on the renderable, like switching off the depthbuffer etc.
 
       assert(pShader && pGeometry);
 
-      // Get Renderable's static model matrix
       glm::mat4 modelMatrix = pRenderable->getModelMatrix();
-
-      ///@todo: do not multiply by the parent matrix each frame!!! Do this only if it has changed.
-      // Get Renderable's dynamic library of the root object
-      //glm::mat4 modelObjectMatrix = pRenderable->getParentModelMatrix();
-
-      // Calculate and set the final MVP matrix used in the shader
-      //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelObjectMatrix * modelMatrix;
 
       // Calculate and set the final MVP matrix used in the shader
       glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
@@ -273,28 +257,6 @@ void CWin32Renderer::resetRenderContext()
       wglMakeCurrent(NULL, NULL);
 }
 
-///@todo: probably move to the base class
-bool CWin32Renderer::loadOpenGLExtensions()
-{
-   bool result = true;
-
-   CLog::getInstance().log("* Loading OpenGL extensions");
-   std::string strExtension = (const char*)glGetString(GL_EXTENSIONS);
-   std::replace(strExtension.begin(), strExtension.end(), ' ', ';');
-
-   CLog::getInstance().log("  OpenGL Extensions:");
-   CLog::getInstance().log(strExtension.c_str());
-
-   // Get the GPU information and the OpenGL extensions
-   CLog::getInstance().log("* Video-system information:");
-   CLog::getInstance().log("  Videocard: ", (const char*)glGetString(GL_RENDERER));
-   CLog::getInstance().log("  Vendor: ", (const char*)glGetString(GL_VENDOR));
-   CLog::getInstance().log("  OpenGL Version: ", (const char*)glGetString(GL_VERSION));
-   CLog::getInstance().log("\n");
-
-   return result;
-}
-
 void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
@@ -302,7 +264,6 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    // Rotate around z-axis
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    const float angleZradians = CCommonMath::degToRad(mAngleZ);
-
    modelObjectMatrix = glm::rotate(modelObjectMatrix, angleZradians, zAxis);
 
    // Rotate around x-axis
@@ -312,15 +273,7 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 
    matrix = modelObjectMatrix;
 
-   ///Rotate the dynamic part (propeller)
-   static float angle;
-   const float delta = 0.1f;
-   mDynamicMatrix = glm::mat4(1.0f);
-   mDynamicMatrix = glm::rotate(mDynamicMatrix, angle, zAxis);
-   angle += delta;
-
    // Update the root and all its children.
-   //mRoot->updateMatrix(modelObjectMatrix, mDynamicMatrix);
    mRoot->updateTRMatrix(glm::mat4(1.0f)); // Animate the parts of the tree-like object
    mRoot->updateModelMatrix(modelObjectMatrix);
 }
@@ -384,14 +337,6 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
    case WM_SYSKEYDOWN:
    case WM_SYSKEYUP:
    {}
-   return false;
-
-   ///@todo: probably unnecessary as it is present in CWin32Window
-   // Finishing
-   case WM_CLOSE:
-   case WM_QUIT:
-   {
-   }
    return false;
 
    // Keyboard is pressed

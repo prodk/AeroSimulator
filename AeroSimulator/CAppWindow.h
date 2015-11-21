@@ -25,7 +25,6 @@ namespace AeroSimulatorEngine
 
       static bool mIsClosing;
    };
-
 } // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CAPPWINDOW_H

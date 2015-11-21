@@ -112,7 +112,7 @@ void CApp::setupRenderer()
 
    ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();
-   std::vector<CGameObject*> tree; //Add cubes from the air plane
+   std::vector<CCompositeGameObject*> tree; //Add cubes from the air plane
    mAirPlane->getTree(tree); ///@todo: remove the getTree()
 
    // Create all the shaders in mRendererTask and then add them to the model

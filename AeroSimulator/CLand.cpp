@@ -15,7 +15,6 @@ namespace
       0.5f, 0.0f, 0.5f, 1.0f, 0.0f
    };
 
-   ///@todo: probably use ushort
    GLuint indices[] =
    {
       0, 1, 2, 3
@@ -27,27 +26,24 @@ CLand::CLand()
    mTexture.reset(new CTexture());
    mGeometry.reset(new CGeometry());
 
-   ///@todo: add asserts
-   mGeometry->setVertexBuffer(vertices);
-   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-   mGeometry->setNumOfVertices(numOfVertices);
+   if (mGeometry)
+   {
+      mGeometry->setVertexBuffer(vertices);
+      const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+      mGeometry->setNumOfVertices(numOfVertices);
 
-   mGeometry->setIndexBuffer(indices);
-   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-   mGeometry->setNumOfIndices(numOfIndices);
+      mGeometry->setIndexBuffer(indices);
+      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+      mGeometry->setNumOfIndices(numOfIndices);
 
-   ///@todo: get rid of the magic numbers
-   mGeometry->setNumOfElementsPerVertex(3);
-   mGeometry->setVertexStride(5); //5
+      mGeometry->setNumOfElementsPerVertex(3);
+      mGeometry->setVertexStride(5);
+   }
 }
 
 CLand::~CLand()
 {
 }
-
-//void CLand::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
-//{
-//}
 
 void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
@@ -79,26 +75,6 @@ void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
    }
-}
-
-void CLand::add(CGameObject * child)
-{
-}
-
-void CLand::traverse(std::vector<CGameObject*>& tree)
-{
-}
-
-void CLand::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
-{
-}
-
-void CLand::updateTRMatrix(const glm::mat4x4 & trMatrix)
-{
-}
-
-void CLand::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
-{
 }
 
 bool CLand::loadTexture(const char * fileName)

@@ -4,10 +4,6 @@
 #define AERO_SIMULATOR_CRENDERABLE_H
 
 #include "../AeroSimulator/include/glew.h"
-//#include "../AeroSimulator/include/wglew.h"
-#include <gl/GL.h> ///@todo: probably remove
-//#include "../AeroSimulator/include/glext.h"
-
 #include "glm/mat4x4.hpp"
 #include <memory>
 
@@ -18,7 +14,6 @@ namespace AeroSimulatorEngine
    class CGeometry;
    class CTexture;
 
-   ///@todo: think whether it would be better to make a renderable a game object.
    // CRenderable groups the geometry and its appearance in one entity
    class CRenderable
    {
@@ -43,7 +38,7 @@ namespace AeroSimulatorEngine
 
       CTexture* getTexture() const { return mTexture.get(); }
 
-      bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); } ///@todo: probably better check the validity of VBO ids
+      bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
 
       virtual bool loadTexture(const char* filePath);
 
@@ -51,13 +46,11 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
       glm::mat4 mModelMatrix;
-      glm::mat4 mMvpMatrix; ///@todo: probably remove this
+      glm::mat4 mMvpMatrix;
       std::shared_ptr<CTexture> mTexture;
       GLuint mVboId;
       GLuint mIboId;
-      //bool mCanBeRendered; ///@todo: think how to get rid of this
    };
-
 } // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CRENDERABLE_H
