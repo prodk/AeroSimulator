@@ -96,8 +96,7 @@ void CApp::setupRenderer()
 
    mSkyBox->scale(glm::vec3(120.f, 120.f, 120.0f));
    mTextureShader->link();
-   //mTextureShader->setup(*mSkyBox);
-   mSkyBox->setupShadersAndBuffers(mTextureShader);
+   mSkyBox->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mSkyBox.get());
 
    ///@todo: reconsider this system such that we should not keep in memory all this loading stuff
@@ -108,33 +107,32 @@ void CApp::setupRenderer()
    }
    mLand->translate(glm::vec3(0.f, -10.f, 0.f));
    mLand->scale(glm::vec3(120.f, 0.f, 120.0f));
-   mLand->setupShadersAndBuffers(mTextureShader);
+   mLand->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mLand.get());
 
    ///@todo: add to a separate method setupModels()
    mAirPlane->buildModel();
    std::vector<CGameObject*> tree; //Add cubes from the air plane
-   mAirPlane->getTree(tree);
+   mAirPlane->getTree(tree); ///@todo: remove the getTree()
 
-   ///@todo: add to a separate method setupShaders()
    // Create all the shaders in mRendererTask and then add them to the model
    mSimpleShader->link();
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)
    {
-      if (tree[count] && tree[count]->isLeaf())
+      // Only leafs have valid geometry and a model matrix
+      if (tree[count] /*&& tree[count]->isLeaf()*/)
       {
-         tree[count]->setupShadersAndBuffers(mSimpleShader);
+         tree[count]->setShadersAndBuffers(mSimpleShader);
          mRendererTask->addRenderable(tree[count]);
       }
    }
 
-   //tree[0]->updateMatrix(glm::mat4(1.0f));
+   // Set the root for the renderable composite
+   //mRendererTask->setRoot(tree[0]);
+   mRendererTask->setRoot(mAirPlane->getRoot());
 
-   // Set the root;
-   mRendererTask->setRoot(tree[0]);
-
-   mRendererTask->setRenderContext();
+   mRendererTask->setRenderContext(); ///@todo: reset? not set?
 }
 

@@ -9,6 +9,7 @@
 
 namespace AeroSimulatorEngine
 {
+   ///@todo: create a CCompositeGameObject, such that not all the game objects have to override the Composite pure vms
    ///It is also the abstract base class in the Composite pattern.
    class CGameObject : public CRenderable
    {
@@ -16,50 +17,66 @@ namespace AeroSimulatorEngine
       CGameObject();
       virtual ~CGameObject();
 
-      CGameObject(const CGameObject* parent,
-                  const glm::vec3& scale,
+      CGameObject(const glm::vec3& scale,
                   const glm::vec3& rotate,
                   const glm::vec3& translate);
 
       ///@todo: probably introduce one pure method setup() and call these 2 methods from it
       ///Rendering-related methods
       ///@todo: rename to setGeometry()
-      virtual void setupGeometry(std::shared_ptr<CGeometry>& pGeometry) = 0;
-      virtual void setupShadersAndBuffers(std::shared_ptr<CShader>& pShader) = 0;
+      //virtual void setGeometry(std::shared_ptr<CGeometry>& pGeometry) = 0;
+      virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader) = 0;
 
       ///Composite-related methods to be overridden by children
       virtual void add(CGameObject* child) = 0;
       ///Saves elements to the provided array
       virtual void traverse(std::vector<CGameObject*>& tree) = 0;
 
-      virtual void updateMatrix(const glm::mat4& parentMatrix, const glm::mat4& dynamicMatrix);
-      virtual void setDynamic() { mIsDynamic = true; }
+      ///Rendering related composite methods
+      virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix) = 0;
+      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix) = 0;
+      virtual void updateModelMatrix(const glm::mat4x4 & modelMatrix) = 0;
+
+      //virtual void updateMatrix(const glm::mat4& parentMatrix, const glm::mat4& dynamicMatrix);
+
+      ///@todo: remove these methods
+      /*virtual void setDynamic() { mIsDynamic = true; }
       virtual bool isDynamic() { return mIsDynamic; }
-      virtual glm::mat4 getChildTRMatrix(std::size_t childId) const;
-      bool isLeaf() const { return mIsLeaf; }
+      virtual glm::mat4 getChildTRMatrix(std::size_t childId) const;*/
 
       // Transforms
-      void resetModelMatrix(const glm::mat4& matrix);
-      void resetTRMatrix(const glm::mat4& matrix);
-      glm::mat4 getTRMatrix() const;
+      /*void resetModelMatrix(const glm::mat4& matrix);
+      void resetTRMatrix(const glm::mat4& matrix);*/
+
+      void setScale(const glm::vec3& scale);
+      void setRotate(const glm::vec3& rotate);
+      void setTranslate(const glm::vec3& translate);
+
+      void calculateTRMatrix();
 
       void scale(const glm::vec3& scale);
-      void rotate(const glm::vec3& rotate);
       void translate(const glm::vec3& translate);
 
-   protected:
-      ///@todo: save a parent ptr/reference and make it possible to easily set another parent and change the position accordingly.
-      //glm::mat4 mModelMatrix;  // Resulting model matrix for the object
+      glm::mat4 getTRMatrix() const;
 
+      //void setParentTRMatrix(const glm::mat4& m) { mParentTRMatrix = m; }
+      //glm::mat4 getParentTRMatrix() const { return mParentTRMatrix; }
+
+      bool isLeaf() const { return mIsLeaf; }
+
+   protected:
       ///@todo: probably move this to a separate CTransform class/component
       glm::vec3 mScale;   // Scale factors along the parent object axes
       glm::vec3 mRotate;  // Rotation angles in degrees around the parent axes
       glm::vec3 mTranslate;   // Translate along the parent axes
 
-      glm::mat4 mTRMatrix; // Translate+rotate matrix
+      glm::mat4 mTRMatrix; // A local translate+rotate matrix
+                           ///@todo: probably remove this member as only the cached value is really used.
+      glm::mat4 mParentTRMatrix; // Product of translate-rotate matrices of all the predecessors
+      glm::mat4 mParentByLocalTRMatrix; // Avoid multiplying static matrices
 
       bool mIsLeaf;
-      bool mIsDynamic;
+      /*bool mIsDynamic;*/
    };
 
 } // namespace AeroSimulatorEngine

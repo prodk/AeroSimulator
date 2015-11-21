@@ -4,9 +4,9 @@
 #define AERO_SIMULATOR_CRENDERABLE_H
 
 #include "../AeroSimulator/include/glew.h"
-#include "../AeroSimulator/include/wglew.h"
-#include <gl/GL.h>
-#include "../AeroSimulator/include/glext.h"
+//#include "../AeroSimulator/include/wglew.h"
+#include <gl/GL.h> ///@todo: probably remove
+//#include "../AeroSimulator/include/glext.h"
 
 #include "glm/mat4x4.hpp"
 #include <memory>
@@ -18,6 +18,7 @@ namespace AeroSimulatorEngine
    class CGeometry;
    class CTexture;
 
+   ///@todo: think whether it would be better to make a renderable a game object.
    // CRenderable groups the geometry and its appearance in one entity
    class CRenderable
    {
@@ -25,7 +26,7 @@ namespace AeroSimulatorEngine
       CRenderable();
       virtual ~CRenderable();
 
-      void setGeometry(CGeometry* pGeometry) { mGeometry.reset(pGeometry); }
+      void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
       CGeometry* getGeometry() const { return mGeometry.get(); }
 
       void setShader(CShader* pShader) { mShader.reset(pShader); }
@@ -37,25 +38,24 @@ namespace AeroSimulatorEngine
       void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
       glm::mat4 getModelMatrix() const { return mModelMatrix; }
 
-      void setParentModelMatrix(const glm::mat4& m) { mParentModelMatrix = m; }
-      glm::mat4 getParentModelMatrix() const { return mParentModelMatrix; }
-
       void setMvpMatrix(const glm::mat4& m) { mMvpMatrix = m; }
       glm::mat4 getMvpMatrix() const { return mMvpMatrix; }
 
       CTexture* getTexture() const { return mTexture.get(); }
+
+      bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); } ///@todo: probably better check the validity of VBO ids
 
       virtual bool loadTexture(const char* filePath);
 
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
-      std::shared_ptr<CTexture> mTexture;
       glm::mat4 mModelMatrix;
+      glm::mat4 mMvpMatrix; ///@todo: probably remove this
+      std::shared_ptr<CTexture> mTexture;
       GLuint mVboId;
       GLuint mIboId;
-      glm::mat4 mParentModelMatrix; // Matrix of the root object in the tree
-      glm::mat4 mMvpMatrix;
+      //bool mCanBeRendered; ///@todo: think how to get rid of this
    };
 
 } // namespace AeroSimulatorEngine

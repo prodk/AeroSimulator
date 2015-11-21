@@ -20,16 +20,17 @@ namespace AeroSimulatorEngine
       bool buildModel();
       void getTree(std::vector<CGameObject*>& tree) const;
 
+      CGameObject* getRoot() const { return mCabine.get(); }
+
       static const std::size_t numOfCubes;
 
    private:
       void setupCubeGeometry();
-      void buildBody();
 
    private:
       std::shared_ptr<CGeometry> mCubeGeometry;
 
-      std::shared_ptr<CGameObject> mObjectTree;
+      //std::shared_ptr<CGameObject> mObjectTree;
 
       // Parts of the plane
       std::shared_ptr<CGameObject> mCabine;

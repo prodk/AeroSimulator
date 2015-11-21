@@ -73,9 +73,10 @@ void CWin32Renderer::update()
       for (auto iter = std::begin(mRenderables); iter != std::end(mRenderables); ++iter)
       {
          CRenderable* pRenderable = *iter;
-         if (pRenderable)
+         if (pRenderable && pRenderable->canBeRendered())
          {
-            pRenderable->setParentModelMatrix(modelObjectMatrix);
+            ///@todo: remove this
+            //pRenderable->setParentModelMatrix(modelObjectMatrix);
             draw(pRenderable);
          }
       }
@@ -296,32 +297,6 @@ bool CWin32Renderer::loadOpenGLExtensions()
 
 void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 {
-   // "Spring" buttons
-   //// If the button was depressed, return the plane to the previous position
-   //if (mHorizontalPressed)
-   //{
-   //   if (mAngleZ > 0.0f)
-   //   {
-   //      mAngleZ -= 0.8f;
-   //      mAngleZ = std::max<float>(0.0f, mAngleZ);
-   //   }
-
-   //   if (mAngleZ < -0.0f)
-   //   {
-   //      mAngleZ += 0.8f;
-   //      mAngleZ = std::min<float>(0.0f, mAngleZ);
-   //   }
-   //}
-
-   //if (mVerticalPressed)
-   //{
-   //   if (mAngleX > 0.f)
-   //      mAngleX -= 0.4f;
-
-   //   if (mAngleX < 0.f)
-   //      mAngleX += 0.4f;
-   //}
-
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
 
    // Rotate around z-axis
@@ -345,7 +320,9 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    angle += delta;
 
    // Update the root and all its children.
-   mRoot->updateMatrix(modelObjectMatrix, mDynamicMatrix);
+   //mRoot->updateMatrix(modelObjectMatrix, mDynamicMatrix);
+   mRoot->updateTRMatrix(glm::mat4(1.0f)); // Animate the parts of the tree-like object
+   mRoot->updateModelMatrix(modelObjectMatrix);
 }
 
 void CWin32Renderer::rotateCamera()

@@ -9,18 +9,19 @@ CRenderable::CRenderable()
    : mGeometry()
    , mShader()
    , mModelMatrix()
-   , mVboId(0)
-   , mIboId(0)
-   , mParentModelMatrix()
    , mMvpMatrix()
    , mTexture()
+   , mVboId(0)
+   , mIboId(0)
+   //, mCanBeRendered(true)
 {
 }
 
 CRenderable::~CRenderable()
 {
-   mGeometry.reset();
-   mShader.reset();
+   //mGeometry.reset();
+   //mShader.reset();
+   //mTexture.reset();
 }
 
 bool CRenderable::loadTexture(const char * filePath)

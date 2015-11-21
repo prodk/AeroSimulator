@@ -45,11 +45,11 @@ CLand::~CLand()
 {
 }
 
-void CLand::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
-{
-}
+//void CLand::setupGeometry(std::shared_ptr<CGeometry>& pGeometry)
+//{
+//}
 
-void CLand::setupShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
    CLog::getInstance().logGL("\n** CLand::setupShadersAndBuffers() **");
 
@@ -86,6 +86,18 @@ void CLand::add(CGameObject * child)
 }
 
 void CLand::traverse(std::vector<CGameObject*>& tree)
+{
+}
+
+void CLand::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
+{
+}
+
+void CLand::updateTRMatrix(const glm::mat4x4 & trMatrix)
+{
+}
+
+void CLand::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
 }
 
