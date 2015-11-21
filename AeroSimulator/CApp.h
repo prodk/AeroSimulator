@@ -55,6 +55,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CGameObject> mSkyBox;
       std::shared_ptr<CGameObject> mLand;
+      std::shared_ptr<CGameObject> mBillBoard; ///@todo: make an array
    };
 
 } // namespace AeroSimulatorEngine

@@ -90,6 +90,9 @@
     <ClInclude Include="CCompositeGameObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CBillBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -162,6 +165,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CCompositeGameObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CBillBoard.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

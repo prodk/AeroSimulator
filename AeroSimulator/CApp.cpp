@@ -12,6 +12,7 @@
 #include "CTextureShader.h"
 #include "CSkyBox.h"
 #include "CLand.h"
+#include "CBillBoard.h"
 
 #include <conio.h>
 #include <cassert>
@@ -26,6 +27,7 @@ CApp::CApp()
    , mTextureShader(new CTextureShader())
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
+   , mBillBoard(new CBillBoard())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -34,6 +36,7 @@ CApp::CApp()
    assert(mTextureShader);
    assert(mSkyBox);
    assert(mLand);
+   assert(mBillBoard);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -55,6 +58,9 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
       result = true;
 
       mRendererTask->init(*mAppWindowTask);
+
+      // Setup the renderable and set it to the renderer
+      setupRenderer();
    }
 
    return result;
@@ -62,10 +68,6 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
 
 void CApp::run()
 {
-   ///@todo: probably move this to the construction phase
-   // Setup the renderable and set it to the renderer
-   setupRenderer();
-
    mTaskManager.addTask(mAppWindowTask.get());
    mTaskManager.addTask(mRendererTask.get());
 
@@ -130,9 +132,20 @@ void CApp::setupRenderer()
    }
 
    // Set the root for the renderable composite
-   //mRendererTask->setRoot(tree[0]);
    mRendererTask->setRoot(mAirPlane->getRoot());
 
-   mRendererTask->setRenderContext(); ///@todo: reset? not set?
+   // Add billboards
+   if (mBillBoard->loadTexture("../AeroSimulator/res/ground.bmp"))
+   {
+      CLog::getInstance().log("* Billboard loaded ../AeroSimulator/res/ground.bmp");
+   }
+   mBillBoard->setTranslate(glm::vec3(0.f, 0.f, -2.f));
+   mBillBoard->setRotate(glm::vec3(90.f, 0.f, 0.f));
+   mBillBoard->setScale(glm::vec3(2.f, 1.f, 2.0f));
+   mBillBoard->calculateModelMatrix();
+   mBillBoard->setShadersAndBuffers(mTextureShader);
+   mRendererTask->addRenderable(mBillBoard.get());
+
+   mRendererTask->resetRenderContext();
 }
 

@@ -8,7 +8,7 @@
 
 namespace AeroSimulatorEngine
 {
-   /// It is also the abstract base class in the Composite pattern.
+   /// Any game object can in principle be rendered
    class CGameObject : public CRenderable
    {
    public:
@@ -27,6 +27,7 @@ namespace AeroSimulatorEngine
       void setTranslate(const glm::vec3& translate) { mTranslate = translate; }
 
       void calculateTRMatrix();
+      void calculateModelMatrix();
 
       void scale(const glm::vec3& scale);
       void translate(const glm::vec3& translate);

@@ -61,7 +61,14 @@ void CGameObject::calculateTRMatrix()
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
 
-   // Scale is used only for the model matrix.
+   // Scale is used only for the model matrix
+}
+
+void CGameObject::calculateModelMatrix()
+{
+   calculateTRMatrix();
+
+   mModelMatrix = glm::scale(mTRMatrix, mScale);
 }
 
 void CGameObject::scale(const glm::vec3& scale)

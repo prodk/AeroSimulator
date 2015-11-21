@@ -1,20 +1,20 @@
-#ifndef AERO_SIMULATOR_CLAND_H
-#define AERO_SIMULATOR_CLAND_H
+#ifndef AERO_SIMULATOR_CBILLBOARD_H
+#define AERO_SIMULATOR_CBILLBOARD_H
 
 #include "CGameObject.h"
 
 namespace AeroSimulatorEngine
 {
-   class CLand : public CGameObject
+   class CBillBoard : public CGameObject
    {
    public:
-      CLand();
-      virtual ~CLand();
+      CBillBoard();
+      virtual ~CBillBoard();
 
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
 
       bool loadTexture(const char * fileName);
    };
-} //namespace AeroSimulatorEngine
+}
 
-#endif // AERO_SIMULATOR_CLAND_H
+#endif // AERO_SIMULATOR_CBILLBOARD_H

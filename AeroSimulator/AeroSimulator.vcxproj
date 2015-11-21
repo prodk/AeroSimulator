@@ -145,6 +145,7 @@
     <ClInclude Include="C3DModel.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
+    <ClInclude Include="CBillBoard.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCompositeGameObject.h" />
@@ -171,6 +172,7 @@
     <ClCompile Include="C3DModel.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
+    <ClCompile Include="CBillBoard.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
