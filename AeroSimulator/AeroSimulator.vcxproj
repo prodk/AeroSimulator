@@ -153,6 +153,7 @@
     <ClInclude Include="CLand.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CParentGameObject.h" />
+    <ClInclude Include="CPropeller.h" />
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CShader.h" />
@@ -177,6 +178,7 @@
     <ClCompile Include="CLand.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CParentGameObject.cpp" />
+    <ClCompile Include="CPropeller.cpp" />
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CShader.cpp" />

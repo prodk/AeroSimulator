@@ -2,6 +2,7 @@
 #include "CParentGameObject.h"
 #include "CCube.h"
 #include "CGeometry.h"
+#include "CPropeller.h"
 
 #include <cassert>
 
@@ -62,7 +63,8 @@ C3DModel::C3DModel()
    , mLeftWing(new CParentGameObject())
    , mRightWing(new CParentGameObject())
    , mTail(new CParentGameObject())
-   , mPropeller(new CParentGameObject()) ///@todo: make this a separate class which modifies its TR matrix in updateTRMatrix()
+   //, mPropeller(new CParentGameObject()) ///@todo: make this a separate class which modifies its TR matrix in updateTRMatrix()
+   , mPropeller(new CPropeller())
    , mCubes(numOfCubes)
 {
    assert(mCubeGeometry);

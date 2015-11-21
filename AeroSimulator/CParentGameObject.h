@@ -43,7 +43,7 @@ namespace AeroSimulatorEngine
 
       //virtual glm::mat4 getChildTRMatrix(std::size_t childId) const;
 
-   private:
+   protected:
       std::vector<CGameObject*> mChildren;
    };
 
