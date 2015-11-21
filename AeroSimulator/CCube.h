@@ -39,6 +39,7 @@ namespace AeroSimulatorEngine
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
    public:
+      ///@todo: rename to state that it is for untextured colored cube
       static const int mNumOfElementsPerVertex;
       static const int mStride;
    };

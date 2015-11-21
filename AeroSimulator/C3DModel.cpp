@@ -8,7 +8,7 @@
 
 using namespace AeroSimulatorEngine;
 
-const std::size_t C3DModel::numOfCubes = 12;
+const std::size_t C3DModel::numOfCubes = 14;
 
 namespace
 {
@@ -57,18 +57,21 @@ namespace
 
 C3DModel::C3DModel()
    : mCubeGeometry(new CGeometry())
-   //, mObjectTree(new CParentGameObject())
    , mCabine(new CParentGameObject())
    , mBody(new CParentGameObject())
    , mLeftWing(new CParentGameObject())
    , mRightWing(new CParentGameObject())
    , mTail(new CParentGameObject())
-   //, mPropeller(new CParentGameObject()) ///@todo: make this a separate class which modifies its TR matrix in updateTRMatrix()
    , mPropeller(new CPropeller())
    , mCubes(numOfCubes)
 {
    assert(mCubeGeometry);
-   //assert(mObjectTree);
+   assert(mCabine);
+   assert(mBody);
+   assert(mLeftWing);
+   assert(mRightWing);
+   assert(mTail);
+   assert(mPropeller);
 }
 
 C3DModel::~C3DModel()
@@ -87,7 +90,6 @@ void  C3DModel::setupCubeGeometry()
       const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
       mCubeGeometry->setNumOfIndices(numOfIndices);
 
-      ///@todo: get rid of the magic numbers
       mCubeGeometry->setNumOfElementsPerVertex(CCube::mNumOfElementsPerVertex);
       mCubeGeometry->setVertexStride(CCube::mStride);
    }
@@ -100,7 +102,7 @@ bool C3DModel::buildModel()
    /// Use only one cube geometry!
    setupCubeGeometry();
 
-   // Force all the cubes to use one geometry.
+   // Force all the cubes to use one geometry
    for (std::size_t count = 0u; count < mCubes.size(); ++count)
    {
       mCubes[count].setGeometry(mCubeGeometry);
@@ -111,6 +113,7 @@ bool C3DModel::buildModel()
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
 
+   /// The Body
    // Body is shifted relative to the cabine has several cubes
    mCabine->add(mBody.get());
    mBody->setTranslate(glm::vec3(0.0f, -0.75f, 0.0f));
@@ -126,6 +129,7 @@ bool C3DModel::buildModel()
    mCubes[4].setTranslate(glm::vec3(0.0f, 0.0f, 3.0f));
    mBody->add(&mCubes[4]);
 
+   ///The Wings.
    // Wings are children of the Body
    const float wingX = 1.8f;
    // Left wing
@@ -140,6 +144,7 @@ bool C3DModel::buildModel()
    mCubes[6].setScale(glm::vec3(wingX, 0.1f, 1.1f));
    mRightWing->add(&mCubes[6]);
 
+   /// The Propeller - it is dynamic, so is a special class
    // Propeller is a child of the Body
    mBody->add(mPropeller.get());
    mPropeller->setTranslate(glm::vec3(0.0f, 0.0f, -0.75f));
@@ -154,6 +159,31 @@ bool C3DModel::buildModel()
    mCubes[9].setTranslate(glm::vec3(0.0f, -0.75f, -0.25f));
    mCubes[9].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
    mPropeller->add(&mCubes[9]);
+
+   /// The Tail.
+   mBody->add(mTail.get());
+   mTail->setTranslate(glm::vec3(0.0f, 0.37*sqrtf(2.0f), 3.75f));
+   mTail->setRotate(glm::vec3(-45.0f, 0.0f, 0.0f));
+
+   mCubes[10].setScale(glm::vec3(0.25f, 0.5f, 0.5f));
+   mTail->add(&mCubes[10]);
+
+   mCubes[11].setTranslate(glm::vec3(0.0f, 0.f, 0.5f));
+   mCubes[11].setScale(glm::vec3(0.25f, 0.5f, 0.5f));
+   mTail->add(&mCubes[11]);
+
+   /// Fans are children of the tail
+   // Left fan
+   mCubes[12].setTranslate(glm::vec3(-0.4f, 0.f, 0.5f));
+   mCubes[12].setRotate(glm::vec3(45.0f, 0.0f, 0.0f));
+   mCubes[12].setScale(glm::vec3(1.0f, 0.1f, 0.5f));
+   mTail->add(&mCubes[12]);
+
+   // Right fan
+   mCubes[13].setTranslate(glm::vec3(0.4f, 0.f, 0.5f));
+   mCubes[13].setRotate(glm::vec3(45.0f, 0.0f, 0.0f));
+   mCubes[13].setScale(glm::vec3(1.0f, 0.1f, 0.5f));
+   mTail->add(&mCubes[13]);
 
    // Build the model matrix of each node of the tree
    mCabine->buildModelMatrix(glm::mat4x4(1.0f));

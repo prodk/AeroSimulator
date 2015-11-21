@@ -30,8 +30,6 @@ namespace AeroSimulatorEngine
    private:
       std::shared_ptr<CGeometry> mCubeGeometry;
 
-      //std::shared_ptr<CGameObject> mObjectTree;
-
       // Parts of the plane
       std::shared_ptr<CGameObject> mCabine;
       std::shared_ptr<CGameObject> mBody;
@@ -41,9 +39,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CGameObject> mPropeller;
 
       std::vector<CCube> mCubes;
-      ///@todo: add tail fans
    };
-
 } // namespac AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_C3DMODEL_H

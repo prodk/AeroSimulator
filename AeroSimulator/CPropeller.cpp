@@ -15,12 +15,12 @@ CPropeller::~CPropeller()
 
 void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix)
 {
+   ///@todo: for animations add timers later
    // Rotate the propeller.
-   const float deltaZ = 1.0f;
+   const float deltaZ = 4.0f;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
-   //angleZDeg += deltaZ;
    mRotate.z += deltaZ;
 
    if (trMatrix != mParentTRMatrix)
