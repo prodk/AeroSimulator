@@ -16,6 +16,7 @@
 
 #include <conio.h>
 #include <cassert>
+#include <random>
 using namespace AeroSimulatorEngine;
 
 CApp::CApp()
@@ -27,8 +28,8 @@ CApp::CApp()
    , mTextureShader(new CTextureShader())
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
-   , mBillBoard(new CBillBoard())
    , mBillboardShader(new CBillboardShader())
+   , mBillBoards(20)
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -37,7 +38,6 @@ CApp::CApp()
    assert(mTextureShader);
    assert(mSkyBox);
    assert(mLand);
-   assert(mBillBoard);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -154,25 +154,40 @@ void CApp::addAirplane()
 
 void CApp::addBillboards()
 {
-   if (mBillBoard->loadTexture("../AeroSimulator/res/cloud_512_512.bmp"))
-   {
-      CLog::getInstance().log("* Billboard loaded ../AeroSimulator/res/cloud_512_512.bmp");
-   }
-
    const float width = 3.0f;
    const float height = 3.0f;
-   const float minDistance = 5.0f;
-   const float maxDistance = 12.0f;
-
-   ///@todo: generate 10 clouds with random positions here
-
-   mBillBoard->setTranslate(glm::vec3(0.f, 0.f, -minDistance));
-   mBillBoard->setBillboardHeight(width);
-   mBillBoard->setBillboardWidth(height);
-   mBillBoard->calculateModelMatrix();
+   const float minDistance = 3.0f;
+   const float maxDistance = 7.0f;
+   const char* filePath = "../AeroSimulator/res/cloud_512_512.bmp";
 
    mBillboardShader->link();
-   mBillBoard->setShadersAndBuffers(mBillboardShader);
-   mRendererTask->addRenderable(mBillBoard.get());
+
+   std::random_device rd;
+   std::mt19937 mt(rd());
+   std::uniform_real_distribution<float> dist(minDistance, maxDistance);
+   std::uniform_real_distribution<float> sign(-1.f, 1.f);
+
+   for (std::size_t count = 0; count < mBillBoards.size(); ++count)
+   {
+      mBillBoards[count].reset(new CBillBoard());
+      if (mBillBoards[count])
+      {
+         if (mBillBoards[count]->loadTexture(filePath))
+         {
+            CLog::getInstance().log("* Billboard loaded: ", filePath);
+         }
+
+         mBillBoards[count]->setTranslate(glm::vec3(dist(mt)*(sign(mt) > 0. ? 1.f : -1.f),
+                                                    dist(mt)*(sign(mt) > 0. ? 1.f : -1.f),
+                                                    dist(mt)*(sign(mt) > 0. ? 1.f : -1.f) ));
+         mBillBoards[count]->setBillboardHeight(width);
+         mBillBoards[count]->setBillboardWidth(height);
+         mBillBoards[count]->calculateModelMatrix();
+
+         mBillboardShader->link();
+         mBillBoards[count]->setShadersAndBuffers(mBillboardShader);
+         mRendererTask->addRenderable(mBillBoards[count].get());
+      }
+   }
 }
 

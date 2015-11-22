@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <memory>
+#include <vector>
 
 namespace AeroSimulatorEngine
 {
@@ -49,6 +50,8 @@ namespace AeroSimulatorEngine
       void addBillboards();
 
    private:
+      typedef std::shared_ptr<CGameObject> tGameObjectPtr;
+
       ///@todo: introduce a Bridge pattern and place Win32-specific code there
       CTaskManager mTaskManager;
       std::shared_ptr<CWin32Window> mAppWindowTask;
@@ -58,9 +61,11 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mSimpleShader;
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CShader> mBillboardShader;
-      std::shared_ptr<CGameObject> mSkyBox;
-      std::shared_ptr<CGameObject> mLand;
-      std::shared_ptr<CGameObject> mBillBoard; ///@todo: make an array
+      tGameObjectPtr mSkyBox;
+      tGameObjectPtr mLand;
+
+      ///@todo: place billboards to some bridge class CClouds
+      std::vector<tGameObjectPtr > mBillBoards;
    };
 
 } // namespace AeroSimulatorEngine
