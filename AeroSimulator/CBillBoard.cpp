@@ -9,10 +9,10 @@ namespace
 {
    GLfloat vertices[] =
    {
-      -0.5f, 0.0f, -0.5f, 0.0f, 1.0f,
-      -0.5f, 0.0f, 0.5f, 0.0f, 0.0f,
-      0.5f, 0.0f, -0.5f, 1.0f, 1.0f,
-      0.5f, 0.0f, 0.5f, 1.0f, 0.0f
+      0.0f, 0.0f, 0.0f, 0.0f, 1.0f, -0.5f, -0.5f,
+      0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -0.5f, 0.5f,
+      0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.5f, 0.5f,
+      0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.5f, -0.5f
    };
 
    GLuint indices[] =
@@ -36,8 +36,8 @@ CBillBoard::CBillBoard()
       const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
       mGeometry->setNumOfIndices(numOfIndices);
 
-      mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(5);
+      mGeometry->setNumOfElementsPerVertex(3); ///@todo: probably remove this
+      mGeometry->setVertexStride(7); // 3 coords + 2 tex coords + 2 squad
    }
 }
 

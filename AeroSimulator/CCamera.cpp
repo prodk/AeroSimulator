@@ -1,7 +1,6 @@
 #include "CCamera.h"
 #include "CCommonMath.h"
 
-#include "glm/vec3.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace AeroSimulatorEngine;
@@ -47,5 +46,27 @@ void CCamera::rotate(const glm::vec3 & angles)
 void CCamera::resetView()
 {
    mViewMatrix = glm::mat4(1.0f);
+}
+
+glm::vec3 CCamera::getRightVector() const
+{
+   glm::vec3 result;
+
+   /// glm mat4x4 is composed out of 4 vectors in column-major order
+   result.x = mViewMatrix[0].x;
+   result.y = mViewMatrix[1].x;
+   result.z = mViewMatrix[2].x;
+
+   return result;
+}
+
+glm::vec3 CCamera::getUpVector() const
+{
+   glm::vec3 result;
+   result.x = mViewMatrix[0].y;
+   result.y = mViewMatrix[1].y;
+   result.z = mViewMatrix[2].y;
+
+   return result;
 }
 

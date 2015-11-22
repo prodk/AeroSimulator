@@ -15,6 +15,7 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
 
    private:
+      GLint mSquadAttribute;
       GLint mRightUniform;
       GLint mUpUniform;
       GLint mWidthUniform;

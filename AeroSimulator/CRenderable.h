@@ -5,6 +5,7 @@
 
 #include "../AeroSimulator/include/glew.h"
 #include "glm/mat4x4.hpp"
+#include "glm/vec3.hpp"
 #include <memory>
 
 namespace AeroSimulatorEngine
@@ -21,26 +22,43 @@ namespace AeroSimulatorEngine
       CRenderable();
       virtual ~CRenderable();
 
+      /// General
+      virtual void setEnvironment();
+      virtual void resetEnvironment();
+      bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
+
+      /// Textures
+      virtual bool loadTexture(const char* filePath);
+      CTexture* getTexture() const { return mTexture.get(); }
+
+      /// Geometry
       void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
       CGeometry* getGeometry() const { return mGeometry.get(); }
 
+      /// Shaders
       void setShader(CShader* pShader) { mShader.reset(pShader); }
       CShader* getShader() const { return mShader.get(); }
 
       GLuint getVboId() const { return mVboId; }
       GLuint getIboId() const { return mIboId; }
 
+      /// Matrices
       void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
       glm::mat4 getModelMatrix() const { return mModelMatrix; }
 
       void setMvpMatrix(const glm::mat4& m) { mMvpMatrix = m; }
       glm::mat4 getMvpMatrix() const { return mMvpMatrix; }
 
-      CTexture* getTexture() const { return mTexture.get(); }
+      /// Billboards
+      void setRightVector(const glm::vec3 & right) { mRightVector = right; }
+      glm::vec3 getRightVector() const { return mRightVector; }
+      void setUpVector(const glm::vec3 & up) { mUpVector = up; }
+      glm::vec3 getUpVector() const { return mUpVector; }
 
-      bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
-
-      virtual bool loadTexture(const char* filePath);
+      void setBillboardWidth(const float width) { mBillboardWidth = width; }
+      float getBillboardWidth() const { return mBillboardWidth; }
+      void setBillboardHeight(const float height) { mBillboardWidth = height; }
+      float getBillboardHeight() const { return mBillboardHeight; }
 
    protected:
       std::shared_ptr<CGeometry> mGeometry;
@@ -50,6 +68,13 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CTexture> mTexture;
       GLuint mVboId;
       GLuint mIboId;
+
+      ///@todo: probably create a separate renderable for a billboard
+      /// These are used only fro billboards
+      glm::vec3 mRightVector;
+      glm::vec3 mUpVector;
+      float mBillboardWidth;
+      float mBillboardHeight;
    };
 } // namespace AeroSimulatorEngine
 

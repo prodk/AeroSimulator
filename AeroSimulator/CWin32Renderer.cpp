@@ -69,6 +69,9 @@ void CWin32Renderer::update()
       {
          if (pRenderable && pRenderable->canBeRendered())
          {
+            ///todo: think how to set the width/height of the billboard
+            pRenderable->setRightVector(mCamera->getRightVector());
+            pRenderable->setUpVector(mCamera->getUpVector());
             draw(pRenderable);
          }
       }
@@ -126,21 +129,24 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       glBindBuffer(GL_ARRAY_BUFFER, vboId);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
 
+      pRenderable->setEnvironment(); /// Renderable specific changes of the OpenGL environment: switch depth on/off etc.
+
       CGeometry* pGeometry = pRenderable->getGeometry();
       CShader* pShader = pRenderable->getShader();
-      ///@todo: probably call here some custom step on the renderable, like switching off the depthbuffer etc.
-
       assert(pShader && pGeometry);
 
-      glm::mat4 modelMatrix = pRenderable->getModelMatrix();
-
       // Calculate and set the final MVP matrix used in the shader
+      glm::mat4 modelMatrix = pRenderable->getModelMatrix();
       glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
       pRenderable->setMvpMatrix(MVP);
 
+      // Set shader attributes/uniforms
       pShader->setup(*pRenderable);
 
       glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+
+      // Return to the initial OpenGL state.
+      pRenderable->resetEnvironment();
 
       // Unbind the buffers
       ///@todo: probably place to a separate method

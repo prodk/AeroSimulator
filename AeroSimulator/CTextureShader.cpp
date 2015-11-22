@@ -61,7 +61,7 @@ void CTextureShader::link()
 
 void CTextureShader::setup(CRenderable & renderable)
 {
-   CGeometry* pGeometry = renderable.getGeometry();
+   const CGeometry* pGeometry = renderable.getGeometry();
    assert(pGeometry);
    assert(mTexture);
 

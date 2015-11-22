@@ -2,6 +2,8 @@
 #define AERO_SIMULATOR_CCAMERA_H
 
 #include "glm/mat4x4.hpp"
+#include "glm/vec3.hpp"
+
 
 namespace AeroSimulatorEngine
 {
@@ -20,6 +22,9 @@ namespace AeroSimulatorEngine
 
       glm::mat4 getProjectionMatrix() const { return mProjectionMatrix; }
       glm::mat4 getViewMatrix() const { return mViewMatrix; }
+
+      glm::vec3 getRightVector() const;
+      glm::vec3 getUpVector() const;
 
    private:
       glm::mat4 mRotate;
