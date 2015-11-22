@@ -77,13 +77,12 @@ CSkyBox::CSkyBox()
    mGeometry->setVertexStride(5); //5
 }
 
-
 CSkyBox::~CSkyBox()
 {
 }
 
 bool CSkyBox::loadTexture(const char * fileName)
 {
-   return (0 != mTexture->loadBmpTexture(fileName));
+   return (0 != mTexture->loadDDSTexture(fileName));
 }
 

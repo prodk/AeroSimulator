@@ -101,9 +101,9 @@ void CApp::setupRenderer()
 
 void CApp::addSkyBox()
 {
-   if (mSkyBox->loadTexture("../AeroSimulator/res/sky_1024.bmp"))
+   if (mSkyBox->loadTexture("../AeroSimulator/res/sky_1024.dds"))
    {
-      CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.bmp");
+      CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.dds");
    }
 
    mSkyBox->scale(glm::vec3(35.f, 35.f, 35.0f));
