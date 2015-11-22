@@ -52,7 +52,7 @@ glm::vec3 CCamera::getRightVector() const
 {
    glm::vec3 result;
 
-   /// glm mat4x4 is composed out of 4 vectors in column-major order
+   /// mat4x4 is composed out of 4 vectors in column-major order
    result.x = mViewMatrix[0].x;
    result.y = mViewMatrix[1].x;
    result.z = mViewMatrix[2].x;

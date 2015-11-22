@@ -57,7 +57,7 @@ namespace AeroSimulatorEngine
 
       void setBillboardWidth(const float width) { mBillboardWidth = width; }
       float getBillboardWidth() const { return mBillboardWidth; }
-      void setBillboardHeight(const float height) { mBillboardWidth = height; }
+      void setBillboardHeight(const float height) { mBillboardHeight = height; }
       float getBillboardHeight() const { return mBillboardHeight; }
 
    protected:

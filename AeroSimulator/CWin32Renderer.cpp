@@ -374,25 +374,25 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       if (wParam == 0x57) // w, up
       {
          mCameraAngleX += 1.f;
-         mCameraAngleX = std::min<float>(mCameraAngleX, 360.f);
+         if (mCameraAngleX >= 360.f) mCameraAngleX = 0.f;
       }
 
       if (wParam == 0x53) // s, down
       {
          mCameraAngleX -= 1.f;
-         mCameraAngleX = std::max<float>(mCameraAngleX, -360.f);
+         if (mCameraAngleX <= -360.f) mCameraAngleX = 0.f;
       }
 
       if (wParam == 0x41) // a, left
       {
          mCameraAngleY += 1.f;
-         mCameraAngleY = std::min<float>(mCameraAngleY, 360.f);
+         if (mCameraAngleY >= 360.f) mCameraAngleY = 0.f;
       }
 
       if (wParam == 0x44) // d, right
       {
          mCameraAngleY -= 1.f;
-         mCameraAngleY = std::max<float>(mCameraAngleY, -360.f);
+         if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
       }
    }
    return false;

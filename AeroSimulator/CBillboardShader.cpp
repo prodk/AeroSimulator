@@ -26,23 +26,12 @@ CBillboardShader::CBillboardShader()
       "uniform float uHeight;  // Height of the billboard\n"
       "varying vec2 vTexCoord;\n"
       "void main(){\n"
-      //"    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-      //"    vec3 position = aPosition + uRight*aSquad.x*uWidth + uUp*aSquad.y*uHeight;\n"
-      "    vec3 right = vec3(1, 0, 0);\n"
-      "    vec3 height = vec3(1, 0, 0);\n"
-      "    vec3 position = aPosition + uRight*aSquad.x + uUp*aSquad.y;\n"
+      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
       "    gl_Position = MVP * vec4(position, 1.0);\n"
       "    vTexCoord = aTexCoord;\n"
       "}\n";
 
-   ///@todo: probably remove this
-   mFragmentShaderCode =
-      "precision highp float; \n"
-      "varying vec2 vTexCoord;\n"
-      "uniform sampler2D sTexture; \n"
-      "void main(){\n"
-      "    gl_FragColor = texture2D(sTexture, vTexCoord);\n"
-      "}\n";
+   // Fragment shader is the same as in CTextureShader
 
    assert(mTexture);
 
@@ -102,10 +91,10 @@ void CBillboardShader::setup(CRenderable & renderable)
    glUniform3fv(mUpUniform, 1, &(up.x));
 
    /// mWidthUniform
-   const float width = renderable.getBillboardWidth();
-   glUniform3fv(mWidthUniform, 1, &width);
+   const GLfloat width = renderable.getBillboardWidth();
+   glUniform1f(mWidthUniform, width);
 
    /// mHeightUniform
-   const float height = renderable.getBillboardHeight();
-   glUniform3fv(mHeightUniform, 1, &height);
+   const GLfloat height = renderable.getBillboardHeight();
+   glUniform1f(mHeightUniform, height);
 }

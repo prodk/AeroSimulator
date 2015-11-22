@@ -154,13 +154,21 @@ void CApp::addAirplane()
 
 void CApp::addBillboards()
 {
-   if (mBillBoard->loadTexture("../AeroSimulator/res/ground.bmp"))
+   if (mBillBoard->loadTexture("../AeroSimulator/res/cloud_512_512.bmp"))
    {
-      CLog::getInstance().log("* Billboard loaded ../AeroSimulator/res/ground.bmp");
+      CLog::getInstance().log("* Billboard loaded ../AeroSimulator/res/cloud_512_512.bmp");
    }
-   mBillBoard->setTranslate(glm::vec3(0.f, 0.f, -2.f));
-   mBillBoard->setRotate(glm::vec3(90.f, 0.f, 0.f));
-   mBillBoard->setScale(glm::vec3(2.f, 1.f, 2.0f));
+
+   const float width = 3.0f;
+   const float height = 3.0f;
+   const float minDistance = 5.0f;
+   const float maxDistance = 12.0f;
+
+   ///@todo: generate 10 clouds with random positions here
+
+   mBillBoard->setTranslate(glm::vec3(0.f, 0.f, -minDistance));
+   mBillBoard->setBillboardHeight(width);
+   mBillBoard->setBillboardWidth(height);
    mBillBoard->calculateModelMatrix();
 
    mBillboardShader->link();
