@@ -99,6 +99,9 @@ void CWin32Renderer::init()
       glEnable(GL_TEXTURE_2D);
       CLog::getInstance().logGL("Textures enabled: ");
 
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
       // Go back to the window rendering context
       resetRenderContext();
    }

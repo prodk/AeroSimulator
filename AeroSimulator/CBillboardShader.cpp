@@ -65,6 +65,7 @@ void CBillboardShader::link()
 void CBillboardShader::setup(CRenderable & renderable)
 {
    CTextureShader::setup(renderable);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
    const CGeometry* pGeometry = renderable.getGeometry();
 

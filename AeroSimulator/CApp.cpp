@@ -158,7 +158,7 @@ void CApp::addBillboards()
    const float height = 3.0f;
    const float minDistance = 3.0f;
    const float maxDistance = 7.0f;
-   const char* filePath = "../AeroSimulator/res/cloud_512_512.bmp";
+   const char* filePath = "../AeroSimulator/res/cloud_512_512.dds"; // "../AeroSimulator/res/cloud_512_512.bmp";
 
    mBillboardShader->link();
 

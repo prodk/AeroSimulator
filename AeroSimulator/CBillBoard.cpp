@@ -79,5 +79,6 @@ void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 
 bool CBillBoard::loadTexture(const char * fileName)
 {
-   return (0 != mTexture->loadBmpTexture(fileName));
+   //return (0 != mTexture->loadBmpTexture(fileName));
+   return (0 != mTexture->loadDDSTexture(fileName));
 }
