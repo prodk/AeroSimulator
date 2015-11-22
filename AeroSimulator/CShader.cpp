@@ -21,22 +21,25 @@ CShader::~CShader()
 
 void CShader::link()
 {
-   mProgramId = glCreateProgram();
+   if (!mIsLinked)
+   {
+      mProgramId = glCreateProgram();
 
-   // Vertex shader
-   mVertexShaderId = glCreateShader(GL_VERTEX_SHADER);
-   GLint status = loadShader(mVertexShaderId, mVertexShaderCode);
-   CLog::getInstance().logGL("* Load vertex shader: ", status);
+      // Vertex shader
+      mVertexShaderId = glCreateShader(GL_VERTEX_SHADER);
+      GLint status = loadShader(mVertexShaderId, mVertexShaderCode);
+      CLog::getInstance().logGL("* Load vertex shader: ", status);
 
-   // Fragment shader
-   mFragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
-   status = loadShader(mFragmentShaderId, mFragmentShaderCode);
-   CLog::getInstance().logGL("* Load fragment shader: ", status);
+      // Fragment shader
+      mFragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+      status = loadShader(mFragmentShaderId, mFragmentShaderCode);
+      CLog::getInstance().logGL("* Load fragment shader: ", status);
 
-   glLinkProgram(mProgramId);
-   CLog::getInstance().logGL("* glLinkProgram(): ");
+      glLinkProgram(mProgramId);
+      CLog::getInstance().logGL("* glLinkProgram(): ");
 
-   mIsLinked = true;
+      mIsLinked = true;
+   }
 }
 
 void CShader::setup(CRenderable & renderable)

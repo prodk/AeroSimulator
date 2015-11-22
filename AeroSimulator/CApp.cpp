@@ -1,5 +1,4 @@
 // CApp.cpp - the application implementation
-
 #include "CApp.h"
 #include "CWin32Window.h"
 #include "CWin32Renderer.h"
@@ -13,6 +12,7 @@
 #include "CSkyBox.h"
 #include "CLand.h"
 #include "CBillBoard.h"
+#include "CBillboardShader.h"
 
 #include <conio.h>
 #include <cassert>
@@ -28,6 +28,7 @@ CApp::CApp()
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
    , mBillBoard(new CBillBoard())
+   , mBillboardShader(new CBillboardShader())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -90,41 +91,57 @@ void CApp::setupRenderer()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   ///@todo: add to a separate method. Add skybox
+   addSkyBox();
+   addLand();
+   addAirplane();
+   addBillboards();
+
+   mRendererTask->resetRenderContext();
+}
+
+void CApp::addSkyBox()
+{
    if (mSkyBox->loadTexture("../AeroSimulator/res/sky_1024.bmp"))
    {
       CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.bmp");
    }
 
-   mSkyBox->scale(glm::vec3(120.f, 120.f, 120.0f));
+   mSkyBox->scale(glm::vec3(35.f, 35.f, 35.0f));
+
    mTextureShader->link();
    mSkyBox->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mSkyBox.get());
+}
 
-   ///@todo: reconsider this system such that we should not keep in memory all this loading stuff
-   // Add land
+void CApp::addLand()
+{
    if (mLand->loadTexture("../AeroSimulator/res/ground.bmp"))
    {
       CLog::getInstance().log("* Land loaded ../AeroSimulator/res/ground.bmp");
    }
-   mLand->translate(glm::vec3(0.f, -10.f, 0.f));
-   mLand->scale(glm::vec3(120.f, 0.f, 120.0f));
+   mLand->setTranslate(glm::vec3(0.f, -17.f, 0.f));
+   mLand->setScale(glm::vec3(35.f, 1.f, 35.0f));
+   mLand->calculateModelMatrix();
+
+   mTextureShader->link();
    mLand->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mLand.get());
+}
 
-   ///@todo: add to a separate method setupModels()
+void CApp::addAirplane()
+{
    mAirPlane->buildModel();
-   std::vector<CCompositeGameObject*> tree; //Add cubes from the air plane
-   mAirPlane->getTree(tree); ///@todo: remove the getTree()
 
-   // Create all the shaders in mRendererTask and then add them to the model
+   std::vector<CCompositeGameObject*> tree;
+   mAirPlane->getTree(tree);
+
+   // Every part of the tree uses the simple shader
    mSimpleShader->link();
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)
    {
-      // Only leafs have valid geometry and a model matrix
-      if (tree[count] /*&& tree[count]->isLeaf()*/)
+      if (tree[count])
       {
          tree[count]->setShadersAndBuffers(mSimpleShader);
          mRendererTask->addRenderable(tree[count]);
@@ -133,8 +150,10 @@ void CApp::setupRenderer()
 
    // Set the root for the renderable composite
    mRendererTask->setRoot(mAirPlane->getRoot());
+}
 
-   // Add billboards
+void CApp::addBillboards()
+{
    if (mBillBoard->loadTexture("../AeroSimulator/res/ground.bmp"))
    {
       CLog::getInstance().log("* Billboard loaded ../AeroSimulator/res/ground.bmp");
@@ -143,9 +162,9 @@ void CApp::setupRenderer()
    mBillBoard->setRotate(glm::vec3(90.f, 0.f, 0.f));
    mBillBoard->setScale(glm::vec3(2.f, 1.f, 2.0f));
    mBillBoard->calculateModelMatrix();
-   mBillBoard->setShadersAndBuffers(mTextureShader);
-   mRendererTask->addRenderable(mBillBoard.get());
 
-   mRendererTask->resetRenderContext();
+   mBillboardShader->link();
+   mBillBoard->setShadersAndBuffers(mBillboardShader);
+   mRendererTask->addRenderable(mBillBoard.get());
 }
 

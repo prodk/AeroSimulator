@@ -21,7 +21,7 @@ namespace AeroSimulatorEngine
       virtual void link();
       virtual void setup(CRenderable& renderable);
 
-   private:
+   protected:
       std::shared_ptr<CTexture> mTexture;
       GLint mPositionAttributeId;
       GLint mTexCoordAttributeId;

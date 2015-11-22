@@ -44,12 +44,6 @@ CTextureShader::~CTextureShader()
 
 void CTextureShader::link()
 {
-   ///@todo: probably move file loading outside the CTexture class
-   /*if (mTexture->loadBmpTexture("../AeroSimulator/res/sky_1024.bmp"))
-   {
-      CLog::getInstance().log("* CTexture loaded ../AeroSimulator/res/sky_1024.bmp");
-   }*/
-
    CShader::link();
 
    mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
@@ -75,11 +69,10 @@ void CTextureShader::setup(CRenderable & renderable)
 
    // Texture-specific part
    glActiveTexture(GL_TEXTURE0);
-   //glBindTexture(GL_TEXTURE_2D, mTexture->getId());
    glBindTexture(GL_TEXTURE_2D, renderable.getTexture()->getId());
    glUniform1i(mSamplerUniformId, 0);
 
-   // TODO: use mip maps later
+   ///@todo: use mip maps later
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -102,7 +95,6 @@ void CTextureShader::setup(CRenderable & renderable)
       GL_FALSE,
       sizeof(float)*pGeometry->getVertexStride(),
       (const void*)(3 * sizeof(float))); // Important!! Shift relative to the first array element
-      //&static_cast<GLfloat*>(pGeometry->getVertexBuffer())[3]);
 
    glEnableVertexAttribArray(mTexCoordAttributeId);
 

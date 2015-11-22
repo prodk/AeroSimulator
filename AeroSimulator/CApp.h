@@ -43,6 +43,10 @@ namespace AeroSimulatorEngine
       void operator=(const CApp&) = delete;
 
       void setupRenderer();///@todo: rename this method as we also build the tree here, setup scene or smth like that
+      void addSkyBox();
+      void addLand();
+      void addAirplane();
+      void addBillboards();
 
    private:
       ///@todo: introduce a Bridge pattern and place Win32-specific code there
@@ -53,6 +57,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<C3DModel> mAirPlane;
       std::shared_ptr<CShader> mSimpleShader;
       std::shared_ptr<CShader> mTextureShader;
+      std::shared_ptr<CShader> mBillboardShader;
       std::shared_ptr<CGameObject> mSkyBox;
       std::shared_ptr<CGameObject> mLand;
       std::shared_ptr<CGameObject> mBillBoard; ///@todo: make an array

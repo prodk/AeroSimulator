@@ -280,10 +280,7 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
 
 void CWin32Renderer::rotateCamera()
 {
-   mCamera->resetView();
-
    mCamera->rotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
-   mCamera->translate(glm::vec3(0.f, 0.f, -10.f));
 }
 
 void CWin32Renderer::springButtons()

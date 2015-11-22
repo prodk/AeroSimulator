@@ -41,7 +41,7 @@ void CCamera::rotate(const glm::vec3 & angles)
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    mRotate = glm::rotate(mRotate, angleZ, zAxis);
 
-   mViewMatrix = mRotate * mTranslate;
+   mViewMatrix = mTranslate * mRotate;
 }
 
 void CCamera::resetView()
