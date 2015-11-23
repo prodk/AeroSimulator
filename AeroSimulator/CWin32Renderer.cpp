@@ -36,7 +36,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->translate(glm::vec3(0.0f, 0.0f, -15.0f));
+   mCamera->translate(glm::vec3(0.0f, 0.0f, -13.0f));
    mCamera->rotate(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 

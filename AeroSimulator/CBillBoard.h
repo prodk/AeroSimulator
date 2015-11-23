@@ -13,6 +13,9 @@ namespace AeroSimulatorEngine
 
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
 
+      virtual void setEnvironment();
+      virtual void resetEnvironment();
+
       bool loadTexture(const char * fileName);
    };
 }

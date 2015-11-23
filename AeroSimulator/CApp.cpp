@@ -29,7 +29,7 @@ CApp::CApp()
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
    , mBillboardShader(new CBillboardShader())
-   , mBillBoards(20)
+   , mBillBoards(25)
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -101,12 +101,12 @@ void CApp::setupRenderer()
 
 void CApp::addSkyBox()
 {
-   if (mSkyBox->loadTexture("../AeroSimulator/res/sky_1024.dds"))
+   if (mSkyBox->loadTexture("../AeroSimulator/res/sky.dds"))
    {
       CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.dds");
    }
 
-   mSkyBox->scale(glm::vec3(35.f, 35.f, 35.0f));
+   mSkyBox->scale(glm::vec3(55.f, 55.f, 55.0f));
 
    mTextureShader->link();
    mSkyBox->setShadersAndBuffers(mTextureShader);
@@ -115,12 +115,12 @@ void CApp::addSkyBox()
 
 void CApp::addLand()
 {
-   if (mLand->loadTexture("../AeroSimulator/res/ground.bmp"))
+   if (mLand->loadTexture("../AeroSimulator/res/land.dds"))
    {
-      CLog::getInstance().log("* Land loaded ../AeroSimulator/res/ground.bmp");
+      CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
    }
-   mLand->setTranslate(glm::vec3(0.f, -17.f, 0.f));
-   mLand->setScale(glm::vec3(35.f, 1.f, 35.0f));
+   mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
+   mLand->setScale(glm::vec3(55.f, 1.f, 55.0f));
    mLand->calculateModelMatrix();
 
    mTextureShader->link();
@@ -158,7 +158,7 @@ void CApp::addBillboards()
    const float height = 3.0f;
    const float minDistance = 3.0f;
    const float maxDistance = 7.0f;
-   const char* filePath = "../AeroSimulator/res/cloud_512_512.dds"; // "../AeroSimulator/res/cloud_512_512.bmp";
+   const char* filePath = "../AeroSimulator/res/cloud.dds";
 
    mBillboardShader->link();
 

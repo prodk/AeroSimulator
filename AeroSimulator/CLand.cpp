@@ -79,5 +79,5 @@ void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 
 bool CLand::loadTexture(const char * fileName)
 {
-   return (0 != mTexture->loadBmpTexture(fileName));
+   return (0 != mTexture->loadDDSTexture(fileName));
 }

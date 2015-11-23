@@ -77,6 +77,16 @@ void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    }
 }
 
+void CBillBoard::setEnvironment()
+{
+   glDepthMask(GL_FALSE);
+}
+
+void CBillBoard::resetEnvironment()
+{
+   glDepthMask(GL_TRUE);
+}
+
 bool CBillBoard::loadTexture(const char * fileName)
 {
    //return (0 != mTexture->loadBmpTexture(fileName));
