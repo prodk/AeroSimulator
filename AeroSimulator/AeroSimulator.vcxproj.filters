@@ -96,6 +96,9 @@
     <ClInclude Include="CBillboardShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CLine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -174,6 +177,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CBillboardShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CLine.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
