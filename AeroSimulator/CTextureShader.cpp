@@ -47,16 +47,16 @@ void CTextureShader::link()
    CShader::link();
 
    mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-   CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aPosition): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aPosition): ");
 
    mTexCoordAttributeId = glGetAttribLocation(mProgramId, "aTexCoord");
-   CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord): ");
 
    mMvpAttributeId = glGetUniformLocation(mProgramId, "MVP");
-   CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP): ");
 
    mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
-   CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture): ");
 }
 
 void CTextureShader::setup(CRenderable & renderable)

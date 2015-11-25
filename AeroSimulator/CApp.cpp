@@ -137,6 +137,7 @@ void CApp::addAirplane()
    std::vector<CCompositeGameObject*> tree;
    mAirPlane->getTree(tree);
 
+   ///@todo: set shaders inside the mAirPlane
    // Every part of the tree uses the simple shader
    mSimpleShader->link();
 
@@ -145,7 +146,11 @@ void CApp::addAirplane()
    {
       if (tree[count])
       {
-         tree[count]->setShadersAndBuffers(mSimpleShader);
+         ///@todo: temporary solution
+         if (tree[count]->getDrawWithLines())
+            tree[count]->setShadersAndBuffers(mColorShader);
+         else
+            tree[count]->setShadersAndBuffers(mSimpleShader);
          mRendererTask->addRenderable(tree[count]);
       }
    }

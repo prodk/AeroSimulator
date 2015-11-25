@@ -47,19 +47,19 @@ void CBillboardShader::link()
    CTextureShader::link();
    // Add uniform names here
    mSquadAttribute = glGetAttribLocation(mProgramId, "aSquad");
-   CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aSquad): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aSquad): ");
 
    mRightUniform = glGetUniformLocation(mProgramId, "uRight");
-   CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uRight): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uRight): ");
 
    mUpUniform = glGetUniformLocation(mProgramId, "uUp");
-   CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uUp): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uUp): ");
 
    mWidthUniform = glGetUniformLocation(mProgramId, "uWidth");
-   CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uWidth): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uWidth): ");
 
    mHeightUniform = glGetUniformLocation(mProgramId, "uHeight");
-   CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uHeight): ");
+   //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, uHeight): ");
 }
 
 void CBillboardShader::setup(CRenderable & renderable)

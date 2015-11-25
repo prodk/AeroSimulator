@@ -9,6 +9,7 @@ namespace AeroSimulatorEngine
    class CCompositeGameObject;
    class CCube;
    class CGeometry;
+   class CAxesFrame;
 
    /// A bridge for the CGameObject Composite (tree structure)
    class C3DModel
@@ -40,7 +41,7 @@ namespace AeroSimulatorEngine
 
       std::vector<CCube> mCubes;
       // Axis frames
-      std::shared_ptr<CCompositeGameObject> mAxes;
+      std::shared_ptr<CAxesFrame> mAxes;
    };
 } // namespace AeroSimulatorEngine
 
