@@ -9,8 +9,8 @@ namespace AeroSimulatorEngine
 
    // A node in the Composite which can have children.
    // Differences between a parent and a child node: 
-   // i) parent contains children; ii) parent doesn't have valid geometry;
-   // iii) parent doesn't have a valid model matrix;
+   // i) parent contains children; ii) parent may not have valid geometry;
+   // iii) parent may not have a valid model matrix;
    class CParentGameObject : public CCompositeGameObject
    {
    public:

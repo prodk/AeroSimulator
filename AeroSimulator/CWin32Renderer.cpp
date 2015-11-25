@@ -146,7 +146,12 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       // Set shader attributes/uniforms
       pShader->setup(*pRenderable);
 
-      glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+      GLenum mode = GL_TRIANGLE_STRIP;
+      
+      if (pRenderable->getDrawWithLines())
+         mode = GL_LINES;
+
+      glDrawElements(mode, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
 
       // Return to the initial OpenGL state.
       pRenderable->resetEnvironment();

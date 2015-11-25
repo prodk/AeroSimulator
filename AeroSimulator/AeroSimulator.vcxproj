@@ -145,9 +145,11 @@
     <ClInclude Include="C3DModel.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
+    <ClInclude Include="CAxesFrame.h" />
     <ClInclude Include="CBillBoard.h" />
     <ClInclude Include="CBillboardShader.h" />
     <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CColorShader.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CCube.h" />
@@ -174,9 +176,11 @@
     <ClCompile Include="C3DModel.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
+    <ClCompile Include="CAxesFrame.cpp" />
     <ClCompile Include="CBillBoard.cpp" />
     <ClCompile Include="CBillboardShader.cpp" />
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CColorShader.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CCube.cpp" />

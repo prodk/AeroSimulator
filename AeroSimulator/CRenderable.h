@@ -60,6 +60,12 @@ namespace AeroSimulatorEngine
       void setBillboardHeight(const float height) { mBillboardHeight = height; }
       float getBillboardHeight() const { return mBillboardHeight; }
 
+      void setDrawWithLines(bool flag) { mDrawWithLines = flag; }
+      bool getDrawWithLines() const { return mDrawWithLines; }
+
+      void setColor(glm::vec4& color) { mColor = color; }
+      glm::vec4 getColor() const { return mColor; }
+
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
@@ -75,6 +81,9 @@ namespace AeroSimulatorEngine
       glm::vec3 mUpVector;
       float mBillboardWidth;
       float mBillboardHeight;
+
+      bool mDrawWithLines;
+      glm::vec4 mColor; // Only for color shader
    };
 } // namespace AeroSimulatorEngine
 

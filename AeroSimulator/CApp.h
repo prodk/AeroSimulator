@@ -61,6 +61,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mSimpleShader;
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CShader> mBillboardShader;
+      std::shared_ptr<CShader> mColorShader;
       tGameObjectPtr mSkyBox;
       tGameObjectPtr mLand;
 

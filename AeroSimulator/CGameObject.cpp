@@ -1,5 +1,10 @@
 #include "CGameObject.h"
 #include "CCommonMath.h"
+#include "CGeometry.h"
+#include "CShader.h"
+#include "CLog.h"
+
+#include <gl/GL.h>
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -31,6 +36,36 @@ CGameObject::CGameObject(const glm::vec3 & scale,
    , mParentTRMatrix()
    , mIsLeaf(false)
 {
+}
+
+void CGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+{
+   // Shader setup
+   assert(pShader);
+   mShader = pShader;
+
+   if (mGeometry)
+   {
+      // VBO
+      glGenBuffers(1, &mVboId);
+      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
+      CLog::getInstance().logGL("* glBindBuffer() VBO: ");
+
+      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
+      glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
+
+      // Index buffer
+      glGenBuffers(1, &mIboId);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
+      CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
+
+      GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
+
+      // Reset VBOs
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
 }
 
 glm::mat4 CGameObject::getTRMatrix() const

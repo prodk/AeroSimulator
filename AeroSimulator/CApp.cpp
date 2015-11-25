@@ -13,6 +13,7 @@
 #include "CLand.h"
 #include "CBillBoard.h"
 #include "CBillboardShader.h"
+#include "CColorShader.h"
 
 #include <conio.h>
 #include <cassert>
@@ -29,6 +30,7 @@ CApp::CApp()
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
    , mBillboardShader(new CBillboardShader())
+   , mColorShader(new CColorShader())
    , mBillBoards(25)
 {
    assert(mAppWindowTask);

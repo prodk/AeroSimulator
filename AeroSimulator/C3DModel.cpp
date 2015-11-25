@@ -3,6 +3,7 @@
 #include "CCube.h"
 #include "CGeometry.h"
 #include "CPropeller.h"
+#include "CAxesFrame.h"
 
 #include <cassert>
 
@@ -64,6 +65,7 @@ C3DModel::C3DModel()
    , mTail(new CParentGameObject())
    , mPropeller(new CPropeller())
    , mCubes(numOfCubes)
+   , mAxes(new CAxesFrame())
 {
    assert(mCubeGeometry);
    assert(mCabine);
@@ -112,6 +114,9 @@ bool C3DModel::buildModel()
    // Cabine is at (0., 0., 0.) and contains 1 Cube
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
+
+   mAxes->setTranslate(glm::vec3(0.0f, 0.0f, 0.0f));
+   mCabine->add(mAxes.get());
 
    /// The Body
    // Body is shifted relative to the cabine has several cubes

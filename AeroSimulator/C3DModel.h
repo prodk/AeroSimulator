@@ -39,6 +39,8 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CCompositeGameObject> mPropeller;
 
       std::vector<CCube> mCubes;
+      // Axis frames
+      std::shared_ptr<CCompositeGameObject> mAxes;
    };
 } // namespace AeroSimulatorEngine
 

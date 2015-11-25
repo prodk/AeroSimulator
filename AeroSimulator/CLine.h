@@ -10,11 +10,17 @@ namespace AeroSimulatorEngine
    {
    public:
       CLine();
-      CLine(std::shared_ptr<float>& vertices);
       virtual ~CLine();
 
-   private:
-      std::shared_ptr<float> mVertices; ///@todo: may be redundant, could be passed directly in setGeometry()
+      virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
+
+      /// Composite-related methods
+      virtual void add(CCompositeGameObject* child);
+      virtual void traverse(std::vector<CCompositeGameObject*>& tree);
+      virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
+      ///@todo: probably add some timing arguments here
+      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix);
+      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
    };
 } // namespace AeroSimulatorEngine
 

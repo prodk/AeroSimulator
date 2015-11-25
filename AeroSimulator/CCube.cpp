@@ -41,34 +41,8 @@ CCube::CCube(const glm::vec3 & scale,
 
 void CCube::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   CLog::getInstance().logGL("\n** CCube::setupShadersAndBuffers() **");
-
-   // Shader setup
-   assert(pShader);
-   mShader = pShader;
-
-   if (mGeometry)
-   {
-      // VBO
-      glGenBuffers(1, &mVboId);
-      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-      CLog::getInstance().logGL("* glBindBuffer() VBO: ");
-
-      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
-      glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
-
-      // Index buffer
-      glGenBuffers(1, &mIboId);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-      CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
-
-      GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
-
-      // Reset VBOs
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-   }
+   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
+   CGameObject::setShadersAndBuffers(pShader);
 }
 
 void CCube::add(CCompositeGameObject * child)
@@ -89,7 +63,7 @@ void CCube::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
    const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make it a member
    mModelMatrix = mParentTRMatrix * scaledTRMatrix;
 
-   // For the leaf cach the product of the parent by the scaled TR
+   // For the leaf cache the product of the parent by the scaled TR
    mParentByLocalTRMatrix = mModelMatrix;
 }
 

@@ -99,6 +99,12 @@
     <ClInclude Include="CLine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CAxesFrame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CColorShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -180,6 +186,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CLine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CAxesFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CColorShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
