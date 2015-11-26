@@ -140,6 +140,7 @@ void CApp::addAirplane()
    ///@todo: set shaders inside the mAirPlane
    // Every part of the tree uses the simple shader
    mSimpleShader->link();
+   mColorShader->link();
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)

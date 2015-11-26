@@ -149,7 +149,10 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       GLenum mode = GL_TRIANGLE_STRIP;
       
       if (pRenderable->getDrawWithLines())
+      {
          mode = GL_LINES;
+         glLineWidth(3.0f); ///@todo: put this param to renderable
+      }
 
       glDrawElements(mode, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
 
