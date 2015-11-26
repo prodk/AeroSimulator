@@ -134,21 +134,17 @@ void CApp::addLand()
 
 void CApp::addAirplane()
 {
-   mAirPlane->buildModel();
+   mColorShader->link();
+   mAirPlane->buildModel(mColorShader);
 
    std::vector<CCompositeGameObject*> tree;
    mAirPlane->getTree(tree);
-
-   ///@todo: set shaders inside the mAirPlane
-   //mSimpleShader->link();
-   mColorShader->link();
 
    const std::size_t numOfCubes = tree.size();
    for (std::size_t count = 0; count < numOfCubes; ++count)
    {
       if (tree[count])
       {
-         tree[count]->setShadersAndBuffers(mColorShader);
          mRendererTask->addRenderable(tree[count]);
       }
    }

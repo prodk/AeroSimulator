@@ -128,10 +128,13 @@ void C3DModel::setupColorCubeGeometry()
    }
 }
 
-bool C3DModel::buildModel()
+bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
 {
    bool result = false;
-
+   if (nullptr == pShader)
+   {
+      return result;
+   }
    /// Use only one cube geometry!
    setupColorCubeGeometry();
 
@@ -140,8 +143,9 @@ bool C3DModel::buildModel()
    {
       mCubes[count].setGeometry(mCubeGeometry);
       // Add debug mode axis to each cube
-      mAxes[count].buildModel();
+      mAxes[count].buildModel(pShader);
       mCubes[count].add(&mAxes[count]);
+      mCubes[count].setShadersAndBuffers(pShader);
    }
 
    // Build an airplane

@@ -11,7 +11,7 @@ namespace AeroSimulatorEngine
       CAxesFrame();
       virtual ~CAxesFrame();
 
-      void buildModel();
+      void buildModel(std::shared_ptr<CShader>& pShader);
 
    private:
       std::shared_ptr<CGeometry> mLineGeometry;

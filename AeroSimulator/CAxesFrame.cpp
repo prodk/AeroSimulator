@@ -1,6 +1,7 @@
 #include "CAxesFrame.h"
 #include "CLine.h"
 #include "CGeometry.h"
+#include "CShader.h"
 
 #include <cassert>
 
@@ -33,7 +34,7 @@ CAxesFrame::~CAxesFrame()
 {
 }
 
-void CAxesFrame::buildModel()
+void CAxesFrame::buildModel(std::shared_ptr<CShader>& pShader)
 {
    // Setup the geometry, use x direction as a default
    if (mLineGeometry)
@@ -72,4 +73,12 @@ void CAxesFrame::buildModel()
    mAxisZ->setColor(color);
    mAxisZ->setRotate(glm::vec3(0.0f, 90.0f, 0.0f));
    add(mAxisZ.get());
+
+   if (pShader)
+   {
+      pShader->link(); // Just in case
+      mAxisX->setShadersAndBuffers(pShader);
+      mAxisY->setShadersAndBuffers(pShader);
+      mAxisZ->setShadersAndBuffers(pShader);
+   }
 }

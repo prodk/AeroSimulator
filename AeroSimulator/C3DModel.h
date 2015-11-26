@@ -10,6 +10,7 @@ namespace AeroSimulatorEngine
    class CCube;
    class CGeometry;
    class CAxesFrame;
+   class CShader;
 
    /// A bridge for the CGameObject Composite (tree structure)
    class C3DModel
@@ -18,7 +19,7 @@ namespace AeroSimulatorEngine
       C3DModel();
       ~C3DModel();
 
-      bool buildModel();
+      bool buildModel(std::shared_ptr<CShader>& pShader);
       void getTree(std::vector<CCompositeGameObject*>& tree) const;
 
       CCompositeGameObject* getRoot() const { return mCabine.get(); }

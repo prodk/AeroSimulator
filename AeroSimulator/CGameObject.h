@@ -20,6 +20,7 @@ namespace AeroSimulatorEngine
                   const glm::vec3& translate);
 
       /// Rendering-related methods
+      ///@todo: probably do not make it pure virtual and remove from CCube, CBillBoard and CLine
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader) = 0;
 
       void setScale(const glm::vec3& scale) { mScale = scale; }

@@ -48,33 +48,7 @@ CBillBoard::~CBillBoard()
 void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
    CLog::getInstance().logGL("\n** CBillBoard::setupShadersAndBuffers() **");
-
-   // Shader setup
-   assert(pShader);
-   mShader = pShader;
-
-   if (mGeometry)
-   {
-      // VBO
-      glGenBuffers(1, &mVboId);
-      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-      CLog::getInstance().logGL("* CBillBoard glBindBuffer() VBO: ");
-
-      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
-      glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
-
-      // Index buffer
-      glGenBuffers(1, &mIboId);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-      CLog::getInstance().logGL("* CBillBoard glBindBuffer() index buffer: ");
-
-      GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
-
-      // Reset VBOs
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-   }
+   CGameObject::setShadersAndBuffers(pShader);
 }
 
 void CBillBoard::setEnvironment()
@@ -89,6 +63,5 @@ void CBillBoard::resetEnvironment()
 
 bool CBillBoard::loadTexture(const char * fileName)
 {
-   //return (0 != mTexture->loadBmpTexture(fileName));
    return (0 != mTexture->loadDDSTexture(fileName));
 }

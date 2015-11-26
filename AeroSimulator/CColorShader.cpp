@@ -31,16 +31,21 @@ CColorShader::~CColorShader()
 
 void CColorShader::link()
 {
-   CShader::link();
+   if (!mIsLinked)
+   {
+      CShader::link();
 
-   mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-   CLog::getInstance().logGL("* CColorShader: glGetAttribLocation(mProgramId, aPosition): ");
+      mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
+      CLog::getInstance().logGL("* CColorShader: glGetAttribLocation(mProgramId, aPosition): ");
 
-   mColorUniformId = glGetUniformLocation(mProgramId, "uColor");
-   CLog::getInstance().logGL("* CColorShader: glGetAttribLocation(mProgramId, uColor): ");
+      mColorUniformId = glGetUniformLocation(mProgramId, "uColor");
+      CLog::getInstance().logGL("* CColorShader: glGetAttribLocation(mProgramId, uColor): ");
 
-   mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
-   CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
+      mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
+      CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
+
+      mIsLinked = true;
+   }
 }
 
 void CColorShader::setup(CRenderable & renderable)
