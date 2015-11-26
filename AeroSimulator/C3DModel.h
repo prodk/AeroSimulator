@@ -51,9 +51,6 @@ namespace AeroSimulatorEngine
       std::vector<CAxesFrame> mAxes;
 
       std::shared_ptr<CShader> mBillboardShader;
-
-      ///@todo: debug
-      std::shared_ptr<CCompositeGameObject> mHealthBar;
    };
 } // namespace AeroSimulatorEngine
 

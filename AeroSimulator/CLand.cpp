@@ -49,33 +49,6 @@ void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
    CLog::getInstance().log("\n** CLand::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
-
-   // Shader setup
-   //assert(pShader);
-   //mShader = pShader;
-
-   //if (mGeometry)
-   //{
-   //   // VBO
-   //   glGenBuffers(1, &mVboId);
-   //   glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-   //   CLog::getInstance().logGL("* CLand glBindBuffer() VBO: ");
-
-   //   GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
-   //   glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
-
-   //   // Index buffer
-   //   glGenBuffers(1, &mIboId);
-   //   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-   //   CLog::getInstance().logGL("* CLand glBindBuffer() index buffer: ");
-
-   //   GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
-   //   glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
-
-   //   // Reset VBOs
-   //   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   //   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-   //}
 }
 
 bool CLand::loadTexture(const char * fileName)

@@ -35,7 +35,7 @@ CBillboardShader::CBillboardShader()
 
    assert(mTexture);
 
-   CLog::getInstance().log("* CTextureShader created");
+   CLog::getInstance().log("* CBillboardShader created");
 }
 
 CBillboardShader::~CBillboardShader()

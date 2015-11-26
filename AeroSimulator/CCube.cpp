@@ -2,7 +2,8 @@
 #include "CGeometry.h"
 #include "CShader.h"
 #include "CLog.h"
-#include "CBillBoard.h"
+//#include "CBillBoard.h"
+#include "CColorBillBoard.h"
 #include "CTexture.h"
 
 #include <cassert>
@@ -19,6 +20,7 @@ CCube::CCube()
    : CParentGameObject()
    , mScaledTRMatrix()
    , mHealthBar()
+   , mHealthBarShift(glm::vec3(0.0f, 0.7f, 0.0f))
 {
    CLog::getInstance().log("* CCube::CCube() default: success.");
 }
@@ -76,8 +78,24 @@ void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 
 void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
 {
+   //mHealthBar.reset(new CBillBoard());
+   mHealthBar.reset(new CColorBillBoard());
+   if (mHealthBar)
+   {
+      mHealthBar->setTranslate(mHealthBarShift);
+      mHealthBar->setBillboardHeight(0.25f);
+      mHealthBar->setBillboardWidth(0.8f);
+      mHealthBar->calculateModelMatrix();
+      mHealthBar->setColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+
+      pShader->link();
+      mHealthBar->setShadersAndBuffers(pShader);
+      add(mHealthBar.get());
+   }
+}
+
    ///@todo: use a CColorBillBoard later
-   const char* filePath = "../AeroSimulator/res/cloud.dds";
+   /*const char* filePath = "../AeroSimulator/res/cloud.dds";
 
    mTexture.reset(new CTexture());
    mHealthBar.reset(new CBillBoard());
@@ -90,7 +108,7 @@ void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
       }
 
       ///@todo: introduce mPosition later and use her
-      mHealthBar->setTranslate(glm::vec3(1.0f, 0.0f, 0.0f));
+      mHealthBar->setTranslate(mHealthBarShift);
       mHealthBar->setBillboardHeight(0.8f);
       mHealthBar->setBillboardWidth(0.4f);
       mHealthBar->calculateModelMatrix();
@@ -99,9 +117,15 @@ void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
       mHealthBar->setShadersAndBuffers(pShader);
       add(mHealthBar.get());
    }
-}
+}*/
 
 bool CCube::loadTexture(const char * fileName)
 {
    return (0 != mTexture->loadDDSTexture(fileName));
+}
+
+void CCube::translateHealthBar(const glm::vec3 & shift)
+{
+   mHealthBarShift = shift;
+   mHealthBar->setTranslate(mHealthBarShift);
 }

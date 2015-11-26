@@ -149,6 +149,7 @@
     <ClInclude Include="CBillBoard.h" />
     <ClInclude Include="CBillboardShader.h" />
     <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CColorBillboardShader.h" />
     <ClInclude Include="CColorShader.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCompositeGameObject.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="CLand.h" />
     <ClInclude Include="CLine.h" />
     <ClInclude Include="CLog.h" />
+    <ClInclude Include="CColorBillBoard.h" />
     <ClInclude Include="CParentGameObject.h" />
     <ClInclude Include="CPropeller.h" />
     <ClInclude Include="CRenderable.h" />
@@ -180,6 +182,7 @@
     <ClCompile Include="CBillBoard.cpp" />
     <ClCompile Include="CBillboardShader.cpp" />
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CColorBillboardShader.cpp" />
     <ClCompile Include="CColorShader.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
@@ -189,6 +192,7 @@
     <ClCompile Include="CLand.cpp" />
     <ClCompile Include="CLine.cpp" />
     <ClCompile Include="CLog.cpp" />
+    <ClCompile Include="CColorBillBoard.cpp" />
     <ClCompile Include="CParentGameObject.cpp" />
     <ClCompile Include="CPropeller.cpp" />
     <ClCompile Include="CRenderable.cpp" />

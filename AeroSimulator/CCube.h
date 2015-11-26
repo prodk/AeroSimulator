@@ -29,6 +29,8 @@ namespace AeroSimulatorEngine
 
       virtual bool loadTexture(const char * fileName);
 
+      void translateHealthBar(const glm::vec3& shift);
+
    public:
       ///@todo: rename to state that it is for untextured colored cube
       static const int mNumOfElementsPerVertex;
@@ -37,6 +39,7 @@ namespace AeroSimulatorEngine
    private:
       glm::mat4x4 mScaledTRMatrix;
       std::shared_ptr<CCompositeGameObject> mHealthBar;
+      glm::vec3 mHealthBarShift;
    };
 } // namespace AeroSimulatorEngine
 

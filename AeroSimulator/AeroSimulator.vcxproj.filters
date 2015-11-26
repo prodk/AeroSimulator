@@ -105,6 +105,12 @@
     <ClInclude Include="CColorShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CColorBillBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CColorBillboardShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CApp.cpp">
@@ -192,6 +198,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CColorShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CColorBillBoard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CColorBillboardShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

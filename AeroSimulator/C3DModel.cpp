@@ -82,7 +82,6 @@ C3DModel::C3DModel()
    , mPropeller(new CPropeller())
    , mCubes(numOfCubes)
    , mAxes(numOfCubes)
-   , mHealthBar(new CBillBoard()) ///@todo: remove
 {
    assert(mCubeGeometry);
    assert(mCabine);
@@ -141,24 +140,6 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    /// Use only one cube geometry!
    setupColorCubeGeometry();
 
-   ///@todo: debug
-   const char* filePath = "../AeroSimulator/res/land.dds";
-   if (mHealthBar->loadTexture(filePath))
-   {
-      //CLog::getInstance().log("* Billboard loaded: ", filePath);
-   }
-
-   /*mHealthBar->setTranslate(glm::vec3(0.f, 0.f, 0.f));
-   mHealthBar->setBillboardHeight(2.f);
-   mHealthBar->setBillboardWidth(2.f);
-   mHealthBar->calculateModelMatrix();
-
-   mBillboardShader->link();
-   mHealthBar->setShadersAndBuffers(mBillboardShader);*/
-
-   mCabine->add(mHealthBar.get());
-   ///@todo: end
-
    // Force all the cubes to use one geometry
    for (std::size_t count = 0u; count < mCubes.size(); ++count)
    {
@@ -178,8 +159,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
    mCubes[0].setColor(cabineColor);
-
-   //mCubes[0].setupHealthBar(mBillboardShader);
+   mCubes[0].translateHealthBar(glm::vec3(0.0f, 0.5f, 0.0f));
 
    /// The Body
    const glm::vec4 bodyColor(0.5f, 0.2f, 0.9f, 1.0f);
@@ -190,11 +170,13 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    // Cubes of the body
    // Cube 1 coincides with the body
    mCubes[1].setColor(bodyColor);
+   mCubes[1].translateHealthBar(glm::vec3(0.4f, 0.7f, 0.0f));
    mBody->add(&mCubes[1]);
    // Cubes 2-4 are shifted
    mCubes[2].setTranslate(glm::vec3(0.0f, 0.0f, 1.0f));
    mCubes[2].setScale(glm::vec3(1.0f, 0.5f, 1.0f));
    mCubes[2].setColor(bodyColor);
+   mCubes[2].translateHealthBar(glm::vec3(0.0f, 0.5f, 0.0f));
    mBody->add(&mCubes[2]);
 
    mCubes[3].setTranslate(glm::vec3(0.0f, 0.0f, 2.0f));
@@ -214,6 +196,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mLeftWing->setTranslate(glm::vec3(-1.0f - 0.5f*(wingX - 1.0f), 0.0f, 1.25f));
    mCubes[5].setScale(glm::vec3(wingX, 0.1f, 1.1f));
    mCubes[5].setColor(wingColor);
+   mCubes[5].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mLeftWing->add(&mCubes[5]);
 
    // Right wing
@@ -221,6 +204,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mRightWing->setTranslate(glm::vec3(1.0f + 0.5f*(wingX - 1.0f), 0.0f, 1.25f));
    mCubes[6].setScale(glm::vec3(wingX, 0.1f, 1.1f));
    mCubes[6].setColor(wingColor);
+   mCubes[6].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mRightWing->add(&mCubes[6]);
 
    /// The Propeller - it is dynamic, so is a special class
@@ -232,16 +216,20 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
 
    mCubes[7].setScale(glm::vec3(0.2f, 0.25f, 0.5f));
    mCubes[7].setColor(baseColor);
+
+   mCubes[7].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mPropeller->add(&mCubes[7]);
 
    mCubes[8].setTranslate(glm::vec3(0.0f, 0.75f, -0.25f));
    mCubes[8].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
    mCubes[8].setColor(paddleColor);
+   mCubes[8].translateHealthBar(glm::vec3(0.0f, 0.0f, -0.3f));
    mPropeller->add(&mCubes[8]);
 
    mCubes[9].setTranslate(glm::vec3(0.0f, -0.75f, -0.25f));
    mCubes[9].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
    mCubes[9].setColor(paddleColor);
+   mCubes[9].translateHealthBar(glm::vec3(0.0f, 0.0f, -0.3f));
    mPropeller->add(&mCubes[9]);
 
    /// The Tail.
@@ -253,11 +241,13 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
 
    mCubes[10].setScale(glm::vec3(0.25f, 0.5f, 0.5f));
    mCubes[10].setColor(tailColor);
+   mCubes[10].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mTail->add(&mCubes[10]);
 
    mCubes[11].setTranslate(glm::vec3(0.0f, 0.f, 0.5f));
    mCubes[11].setScale(glm::vec3(0.25f, 0.5f, 0.5f));
    mCubes[11].setColor(tailColor);
+   mCubes[11].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mTail->add(&mCubes[11]);
 
    /// Fans are children of the tail
@@ -267,6 +257,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mCubes[12].setRotate(glm::vec3(45.0f, 0.0f, 0.0f));
    mCubes[12].setScale(glm::vec3(1.0f, 0.1f, 0.5f));
    mCubes[12].setColor(fansColor);
+   mCubes[12].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mTail->add(&mCubes[12]);
 
    // Right fan
@@ -274,6 +265,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mCubes[13].setRotate(glm::vec3(45.0f, 0.0f, 0.0f));
    mCubes[13].setScale(glm::vec3(1.0f, 0.1f, 0.5f));
    mCubes[13].setColor(fansColor);
+   mCubes[13].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
    mTail->add(&mCubes[13]);
 
    // Build the model matrix of each node of the tree
