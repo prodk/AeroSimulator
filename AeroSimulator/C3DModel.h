@@ -24,6 +24,11 @@ namespace AeroSimulatorEngine
 
       CCompositeGameObject* getRoot() const { return mCabine.get(); }
 
+      void setBillboardShader(std::shared_ptr<CShader>& pShader) 
+      { 
+         if (pShader) mBillboardShader = pShader;
+      }
+
       static const std::size_t numOfCubes;
 
    private:
@@ -44,6 +49,11 @@ namespace AeroSimulatorEngine
       std::vector<CCube> mCubes;
       // Axis frames
       std::vector<CAxesFrame> mAxes;
+
+      std::shared_ptr<CShader> mBillboardShader;
+
+      ///@todo: debug
+      std::shared_ptr<CCompositeGameObject> mHealthBar;
    };
 } // namespace AeroSimulatorEngine
 

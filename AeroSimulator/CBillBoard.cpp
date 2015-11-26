@@ -3,6 +3,8 @@
 #include "CLog.h"
 #include "CTexture.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 using namespace AeroSimulatorEngine;
 
 namespace
@@ -64,4 +66,41 @@ void CBillBoard::resetEnvironment()
 bool CBillBoard::loadTexture(const char * fileName)
 {
    return (0 != mTexture->loadDDSTexture(fileName));
+}
+
+void CBillBoard::add(CCompositeGameObject * child)
+{
+   CLog::getInstance().log("\n!!! Cannot add a child to CBillBoard because it is a leaf!!! \n");
+}
+
+void CBillBoard::traverse(std::vector<CCompositeGameObject*>& tree)
+{
+   // No children -nothing to do here
+}
+
+void CBillBoard::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
+{
+   mParentTRMatrix = parentTRMatrix;
+   calculateTRMatrix();
+
+   const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make it a member
+   mModelMatrix = mParentTRMatrix * scaledTRMatrix;
+
+   // For the leaf cache the product of the parent by the scaled TR
+   mParentByLocalTRMatrix = mModelMatrix;
+}
+
+void CBillBoard::updateTRMatrix(const glm::mat4x4 & trMatrix)
+{
+   if (trMatrix != mParentTRMatrix)
+   {
+      mParentTRMatrix = trMatrix; ///@todo: probably remove this member as only the cached value is really used.
+      const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make this a member value
+      mParentByLocalTRMatrix = mParentTRMatrix * scaledTRMatrix;
+   }
+}
+
+void CBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+{
+   mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
 }

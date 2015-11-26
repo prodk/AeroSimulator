@@ -25,11 +25,18 @@ namespace AeroSimulatorEngine
       virtual void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
+      void setupHealthBar(std::shared_ptr<CShader>& pShader);
+
+      virtual bool loadTexture(const char * fileName);
+
    public:
       ///@todo: rename to state that it is for untextured colored cube
       static const int mNumOfElementsPerVertex;
       static const int mStride;
+
+   private:
       glm::mat4x4 mScaledTRMatrix;
+      std::shared_ptr<CCompositeGameObject> mHealthBar;
    };
 } // namespace AeroSimulatorEngine
 

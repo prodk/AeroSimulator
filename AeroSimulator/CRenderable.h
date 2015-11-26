@@ -42,6 +42,8 @@ namespace AeroSimulatorEngine
       GLuint getVboId() const { return mVboId; }
       GLuint getIboId() const { return mIboId; }
 
+      void setTexture(std::shared_ptr<CTexture>& pTexture) { mTexture = pTexture; }
+
       /// Matrices
       void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
       glm::mat4 getModelMatrix() const { return mModelMatrix; }

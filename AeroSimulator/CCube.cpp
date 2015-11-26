@@ -2,6 +2,8 @@
 #include "CGeometry.h"
 #include "CShader.h"
 #include "CLog.h"
+#include "CBillBoard.h"
+#include "CTexture.h"
 
 #include <cassert>
 
@@ -16,6 +18,7 @@ const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates a
 CCube::CCube()
    : CParentGameObject()
    , mScaledTRMatrix()
+   , mHealthBar()
 {
    CLog::getInstance().log("* CCube::CCube() default: success.");
 }
@@ -24,12 +27,15 @@ CCube::~CCube()
 {
    mGeometry.reset();
    mShader.reset();
+   mHealthBar.reset();
 }
 
 CCube::CCube(const glm::vec3 & scale,
              const glm::vec3 & rotate,
              const glm::vec3 & translate)
    : CParentGameObject(scale, rotate, translate)
+   , mScaledTRMatrix()
+   , mHealthBar()
 {
    CLog::getInstance().log("* CCube::CCube() non-default: success.");
 }
@@ -66,4 +72,36 @@ void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 
    // Model matrix of the cube
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
+}
+
+void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
+{
+   ///@todo: use a CColorBillBoard later
+   const char* filePath = "../AeroSimulator/res/cloud.dds";
+
+   mTexture.reset(new CTexture());
+   mHealthBar.reset(new CBillBoard());
+   if (mTexture && mHealthBar)
+   {
+      if (loadTexture(filePath))
+      {
+         mHealthBar->setTexture(mTexture);
+         CLog::getInstance().log("* mHealthBar loaded: ", filePath);
+      }
+
+      ///@todo: introduce mPosition later and use her
+      mHealthBar->setTranslate(glm::vec3(1.0f, 0.0f, 0.0f));
+      mHealthBar->setBillboardHeight(0.8f);
+      mHealthBar->setBillboardWidth(0.4f);
+      mHealthBar->calculateModelMatrix();
+
+      pShader->link();
+      mHealthBar->setShadersAndBuffers(pShader);
+      add(mHealthBar.get());
+   }
+}
+
+bool CCube::loadTexture(const char * fileName)
+{
+   return (0 != mTexture->loadDDSTexture(fileName));
 }

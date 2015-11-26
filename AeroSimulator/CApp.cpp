@@ -31,7 +31,7 @@ CApp::CApp()
    , mLand(new CLand())
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
-   , mBillBoards(15)
+   , mBillBoards(10)
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -135,6 +135,8 @@ void CApp::addLand()
 void CApp::addAirplane()
 {
    mColorShader->link();
+   ///@todo: use color texture when CColorBillBoard is used for healthbars.
+   mAirPlane->setBillboardShader(mBillboardShader);
    mAirPlane->buildModel(mColorShader);
 
    std::vector<CCompositeGameObject*> tree;

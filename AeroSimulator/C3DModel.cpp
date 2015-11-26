@@ -4,6 +4,8 @@
 #include "CGeometry.h"
 #include "CPropeller.h"
 #include "CAxesFrame.h"
+#include "CBillBoard.h"
+#include "CShader.h"
 
 #include <cassert>
 
@@ -80,6 +82,7 @@ C3DModel::C3DModel()
    , mPropeller(new CPropeller())
    , mCubes(numOfCubes)
    , mAxes(numOfCubes)
+   , mHealthBar(new CBillBoard()) ///@todo: remove
 {
    assert(mCubeGeometry);
    assert(mCabine);
@@ -138,6 +141,24 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    /// Use only one cube geometry!
    setupColorCubeGeometry();
 
+   ///@todo: debug
+   const char* filePath = "../AeroSimulator/res/land.dds";
+   if (mHealthBar->loadTexture(filePath))
+   {
+      //CLog::getInstance().log("* Billboard loaded: ", filePath);
+   }
+
+   /*mHealthBar->setTranslate(glm::vec3(0.f, 0.f, 0.f));
+   mHealthBar->setBillboardHeight(2.f);
+   mHealthBar->setBillboardWidth(2.f);
+   mHealthBar->calculateModelMatrix();
+
+   mBillboardShader->link();
+   mHealthBar->setShadersAndBuffers(mBillboardShader);*/
+
+   mCabine->add(mHealthBar.get());
+   ///@todo: end
+
    // Force all the cubes to use one geometry
    for (std::size_t count = 0u; count < mCubes.size(); ++count)
    {
@@ -146,6 +167,8 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
       mAxes[count].buildModel(pShader);
       mCubes[count].add(&mAxes[count]);
       mCubes[count].setShadersAndBuffers(pShader);
+
+      mCubes[count].setupHealthBar(mBillboardShader);
    }
 
    // Build an airplane
@@ -155,6 +178,8 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
    mCubes[0].setColor(cabineColor);
+
+   //mCubes[0].setupHealthBar(mBillboardShader);
 
    /// The Body
    const glm::vec4 bodyColor(0.5f, 0.2f, 0.9f, 1.0f);
