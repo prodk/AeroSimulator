@@ -4,7 +4,7 @@
 #include "CWin32Renderer.h"
 #include "CRenderable.h"
 #include "CGeometry.h"
-#include "CSimpleShader.h"
+#include "CSimpleShader.h"  ///@todo: probably remove this
 #include "CGameObject.h"
 #include "CLog.h"
 #include "C3DModel.h"
@@ -25,13 +25,13 @@ CApp::CApp()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
    , mAirPlane(new C3DModel())
-   , mSimpleShader (new CSimpleShader())
+   , mSimpleShader (new CSimpleShader())  ///@todo: probably remove this
    , mTextureShader(new CTextureShader())
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
-   , mBillBoards(25)
+   , mBillBoards(15)
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -40,6 +40,8 @@ CApp::CApp()
    assert(mTextureShader);
    assert(mSkyBox);
    assert(mLand);
+   assert(mBillboardShader);
+   assert(mColorShader);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -48,6 +50,7 @@ CApp::~CApp()
 {
    mRendererTask.reset();
    mAppWindowTask.reset();
+   ///@todo: reset other ptrs here
 
    CLog::getInstance().log("* CApp destroyed");
 }
@@ -63,7 +66,7 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
       mRendererTask->init(*mAppWindowTask);
 
       // Setup the renderable and set it to the renderer
-      setupRenderer();
+      setupScene();
    }
 
    return result;
@@ -87,8 +90,7 @@ int CApp::exit()
    return 0;
 }
 
-///@todo: rename this method
-void CApp::setupRenderer()
+void CApp::setupScene()
 {
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
@@ -105,7 +107,7 @@ void CApp::addSkyBox()
 {
    if (mSkyBox->loadTexture("../AeroSimulator/res/sky.dds"))
    {
-      CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky_1024.dds");
+      CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky.dds");
    }
 
    mSkyBox->scale(glm::vec3(55.f, 55.f, 55.0f));
@@ -138,7 +140,6 @@ void CApp::addAirplane()
    mAirPlane->getTree(tree);
 
    ///@todo: set shaders inside the mAirPlane
-   // Every part of the tree uses the simple shader
    //mSimpleShader->link();
    mColorShader->link();
 
@@ -147,12 +148,7 @@ void CApp::addAirplane()
    {
       if (tree[count])
       {
-         ///@todo: temporary solution
-         ///@todo: place choosing shaders inside the model object
-         //if (tree[count]->getDrawWithLines())
-            tree[count]->setShadersAndBuffers(mColorShader);
-         //else
-            //tree[count]->setShadersAndBuffers(mSimpleShader);
+         tree[count]->setShadersAndBuffers(mColorShader);
          mRendererTask->addRenderable(tree[count]);
       }
    }

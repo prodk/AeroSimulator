@@ -6,8 +6,6 @@
 
 namespace AeroSimulatorEngine
 {
-   ///@todo: probably in the future introduce CLeafGameObject,
-   ///but at the moment CCube is the only possible leaf
    class CCube : public CParentGameObject
    {
    public:
@@ -18,18 +16,20 @@ namespace AeroSimulatorEngine
             const glm::vec3& rotate,
             const glm::vec3& translate);
 
-      /// These methods require a valid render context
+      /// This method requires a valid render context
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
 
       /// Composite-related methods - override only some of them
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
       ///@todo: probably add some timing arguments here
+      virtual void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
    public:
       ///@todo: rename to state that it is for untextured colored cube
       static const int mNumOfElementsPerVertex;
       static const int mStride;
+      glm::mat4x4 mScaledTRMatrix;
    };
 } // namespace AeroSimulatorEngine
 

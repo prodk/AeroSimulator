@@ -63,10 +63,11 @@ namespace AeroSimulatorEngine
       void setDrawWithLines(bool flag) { mDrawWithLines = flag; }
       bool getDrawWithLines() const { return mDrawWithLines; }
 
-      // Line-specific
-      void setColor(glm::vec4& color) { mColor = color; }
+      // Uniform color renderables-specific
+      void setColor(const glm::vec4& color) { mColor = color; }
       glm::vec4 getColor() const { return mColor; }
 
+      // Line-specific
       void setLineWidth(const float width) { mLineWidth = width; }
       float getLineWidth() const { return mLineWidth; }
 

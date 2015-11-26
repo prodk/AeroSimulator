@@ -133,7 +133,6 @@ bool C3DModel::buildModel()
    bool result = false;
 
    /// Use only one cube geometry!
-   //setupCubeGeometry();
    setupColorCubeGeometry();
 
    // Force all the cubes to use one geometry
@@ -146,85 +145,106 @@ bool C3DModel::buildModel()
    }
 
    // Build an airplane
+   /// Cabine.
+   const glm::vec4 cabineColor(0.7f, 0.5f, 0.7f, 1.0f);
    // Cabine is at (0., 0., 0.) and contains 1 Cube
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
-   mCubes[0].setColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+   mCubes[0].setColor(cabineColor);
 
    /// The Body
-   // Body is shifted relative to the cabine has several cubes
+   const glm::vec4 bodyColor(0.5f, 0.2f, 0.9f, 1.0f);
+   // Body is shifted relative to the cabine, it has several cubes
    mCabine->add(mBody.get());
    mBody->setTranslate(glm::vec3(0.0f, -0.75f, 0.0f));
+
    // Cubes of the body
    // Cube 1 coincides with the body
-   mCubes[1].setColor(glm::vec4(0.0f, 1.f, 1.0f, 1.0f));
+   mCubes[1].setColor(bodyColor);
    mBody->add(&mCubes[1]);
    // Cubes 2-4 are shifted
    mCubes[2].setTranslate(glm::vec3(0.0f, 0.0f, 1.0f));
    mCubes[2].setScale(glm::vec3(1.0f, 0.5f, 1.0f));
+   mCubes[2].setColor(bodyColor);
    mBody->add(&mCubes[2]);
+
    mCubes[3].setTranslate(glm::vec3(0.0f, 0.0f, 2.0f));
+   mCubes[3].setColor(bodyColor);
    mBody->add(&mCubes[3]);
+
    mCubes[4].setTranslate(glm::vec3(0.0f, 0.0f, 3.0f));
+   mCubes[4].setColor(bodyColor);
    mBody->add(&mCubes[4]);
 
    /// The Wings.
+   const glm::vec4 wingColor(1.0f, 0.5f, 0.0f, 1.0f);
    // Wings are children of the Body
    const float wingX = 1.8f;
    // Left wing
    mBody->add(mLeftWing.get());
    mLeftWing->setTranslate(glm::vec3(-1.0f - 0.5f*(wingX - 1.0f), 0.0f, 1.25f));
    mCubes[5].setScale(glm::vec3(wingX, 0.1f, 1.1f));
+   mCubes[5].setColor(wingColor);
    mLeftWing->add(&mCubes[5]);
 
    // Right wing
    mBody->add(mRightWing.get());
    mRightWing->setTranslate(glm::vec3(1.0f + 0.5f*(wingX - 1.0f), 0.0f, 1.25f));
    mCubes[6].setScale(glm::vec3(wingX, 0.1f, 1.1f));
+   mCubes[6].setColor(wingColor);
    mRightWing->add(&mCubes[6]);
 
    /// The Propeller - it is dynamic, so is a special class
+   const glm::vec4 baseColor(1.0f, 0.5f, 0.0f, 1.0f);
+   const glm::vec4 paddleColor(1.0f, 1.0f, 0.0f, 1.0f);
    // Propeller is a child of the Body
    mBody->add(mPropeller.get());
    mPropeller->setTranslate(glm::vec3(0.0f, 0.0f, -0.75f));
 
    mCubes[7].setScale(glm::vec3(0.2f, 0.25f, 0.5f));
-   mCubes[7].setColor(glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
+   mCubes[7].setColor(baseColor);
    mPropeller->add(&mCubes[7]);
 
    mCubes[8].setTranslate(glm::vec3(0.0f, 0.75f, -0.25f));
    mCubes[8].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
-   mCubes[8].setColor(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+   mCubes[8].setColor(paddleColor);
    mPropeller->add(&mCubes[8]);
 
    mCubes[9].setTranslate(glm::vec3(0.0f, -0.75f, -0.25f));
    mCubes[9].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
-   mCubes[9].setColor(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
+   mCubes[9].setColor(paddleColor);
    mPropeller->add(&mCubes[9]);
 
    /// The Tail.
+   const glm::vec4 tailColor(1.0f, 0.8, 0.2f, 1.0f);
+
    mBody->add(mTail.get());
    mTail->setTranslate(glm::vec3(0.0f, 0.37*sqrtf(2.0f), 3.75f));
    mTail->setRotate(glm::vec3(-45.0f, 0.0f, 0.0f));
 
    mCubes[10].setScale(glm::vec3(0.25f, 0.5f, 0.5f));
+   mCubes[10].setColor(tailColor);
    mTail->add(&mCubes[10]);
 
    mCubes[11].setTranslate(glm::vec3(0.0f, 0.f, 0.5f));
    mCubes[11].setScale(glm::vec3(0.25f, 0.5f, 0.5f));
+   mCubes[11].setColor(tailColor);
    mTail->add(&mCubes[11]);
 
    /// Fans are children of the tail
+   const glm::vec4 fansColor(1.0f, 0.5f, 0.0f, 1.0f);
    // Left fan
    mCubes[12].setTranslate(glm::vec3(-0.4f, 0.f, 0.5f));
    mCubes[12].setRotate(glm::vec3(45.0f, 0.0f, 0.0f));
    mCubes[12].setScale(glm::vec3(1.0f, 0.1f, 0.5f));
+   mCubes[12].setColor(fansColor);
    mTail->add(&mCubes[12]);
 
    // Right fan
    mCubes[13].setTranslate(glm::vec3(0.4f, 0.f, 0.5f));
    mCubes[13].setRotate(glm::vec3(45.0f, 0.0f, 0.0f));
    mCubes[13].setScale(glm::vec3(1.0f, 0.1f, 0.5f));
+   mCubes[13].setColor(fansColor);
    mTail->add(&mCubes[13]);
 
    // Build the model matrix of each node of the tree

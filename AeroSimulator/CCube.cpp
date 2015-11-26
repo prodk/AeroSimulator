@@ -13,9 +13,10 @@ using namespace AeroSimulatorEngine;
 const int CCube::mNumOfElementsPerVertex = 3; // 3 coordinates/color components per vertex
 const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates and 3 colors
 
-CCube::CCube() : CParentGameObject()
+CCube::CCube()
+   : CParentGameObject()
+   , mScaledTRMatrix()
 {
-   //mScale = glm::vec3(1.0f, 1.0f, 1.0f);
    CLog::getInstance().log("* CCube::CCube() default: success.");
 }
 
@@ -41,42 +42,28 @@ void CCube::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 
 void CCube::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 {
-   ///@todo: think about caching of the matrixces!
-   mParentTRMatrix = parentTRMatrix;
-   calculateTRMatrix();
-   mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
+   CParentGameObject::buildModelMatrix(parentTRMatrix);
 
-   ///@todo: probably call the parent version and then calculate the model matrix
    // For the cube we need to calculate the model matrix
-   const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make it a member
-   mModelMatrix = mParentTRMatrix * scaledTRMatrix;
+   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
+}
 
-   for (auto * pChild : mChildren)
+void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix)
+{
+   CParentGameObject::updateTRMatrix(trMatrix);
+
+   // Don't forget to change the cached scaled TR matrix
+   if (trMatrix != mParentTRMatrix)
    {
-      if (pChild)
-      {
-         pChild->buildModelMatrix(mParentByLocalTRMatrix);
-      }
+      mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
    }
-
-   // For the leaf cache the product of the parent by the scaled TR
-   //mParentByLocalTRMatrix = mModelMatrix;
 }
 
 void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
-   ///@todo: probably call the CParentGameObject version and then calculate the model matrix
+   CParentGameObject::updateModelMatrix(rootModelMatrix);
 
-   const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make it a member
-
-   //mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
-   mModelMatrix = rootModelMatrix * mParentTRMatrix * scaledTRMatrix;
-
-   for (auto * pChild : mChildren)
-   {
-      if (pChild)
-      {
-         pChild->updateModelMatrix(rootModelMatrix);
-      }
-   }
+   // Model matrix of the cube
+   mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
 }

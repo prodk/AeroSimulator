@@ -13,13 +13,11 @@ namespace AeroSimulatorEngine
 {
    class CWin32Window;
    class CWin32Renderer;
-
    class CShader;
    class CGeometry;
    class C3DModel;
    class CTextureShader;
    class CGameObject;
-  // class CSkyBox;
 
    class CApp
    {
@@ -43,7 +41,7 @@ namespace AeroSimulatorEngine
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 
-      void setupRenderer();///@todo: rename this method as we also build the tree here, setup scene or smth like that
+      void setupScene();
       void addSkyBox();
       void addLand();
       void addAirplane();
@@ -58,7 +56,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CWin32Renderer> mRendererTask;
 
       std::shared_ptr<C3DModel> mAirPlane;
-      std::shared_ptr<CShader> mSimpleShader;
+      std::shared_ptr<CShader> mSimpleShader; ///@todo: probably remove this
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CShader> mBillboardShader;
       std::shared_ptr<CShader> mColorShader;

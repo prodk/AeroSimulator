@@ -56,7 +56,6 @@ void CAxesFrame::buildModel()
    mAxisZ->setGeometry(mLineGeometry);
 
    // Add the axes
-   ///@todo: set color for each axis
    // x
    glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
    mAxisX->setColor(color);
