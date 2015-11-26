@@ -30,6 +30,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mRoot(nullptr)
+   , mIsDebugMode(false)
 {
    assert(mCamera);
 
@@ -146,15 +147,15 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       // Set shader attributes/uniforms
       pShader->setup(*pRenderable);
 
-      GLenum mode = GL_TRIANGLE_STRIP;
+      //GLenum mode = GL_TRIANGLE_STRIP;
       
-      if (pRenderable->getDrawWithLines())
+      if (mIsDebugMode && pRenderable->getDrawWithLines())
       {
-         mode = GL_LINES;
-         glLineWidth(pRenderable->getLineWidth()); ///@todo: put this param to renderable
+         glLineWidth(pRenderable->getLineWidth());
+         glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
       }
-
-      glDrawElements(mode, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+      else
+         glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
 
       // Return to the initial OpenGL state.
       pRenderable->resetEnvironment();
@@ -404,6 +405,16 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       {
          mCameraAngleY -= 1.f;
          if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
+      }
+
+      if (wParam == 0x31) // 1, debug mode on
+      {
+         mIsDebugMode = true;
+      }
+
+      if (wParam == 0x32) // 2, debug mode off
+      {
+         mIsDebugMode = false;
       }
    }
    return false;

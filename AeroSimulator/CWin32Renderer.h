@@ -70,6 +70,8 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CCamera> mCamera;
 
       CCompositeGameObject* mRoot;
+
+      bool mIsDebugMode;
    };
 } // namespace AeroSimulatorEngine
 

@@ -44,10 +44,10 @@ void CCube::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    CGameObject::setShadersAndBuffers(pShader);
 }
 
-void CCube::add(CCompositeGameObject * child)
-{
-   CLog::getInstance().log("\n!!! Cannot add a child to CCube because it is a leaf!!! \n");
-}
+//void CCube::add(CCompositeGameObject * child)
+//{
+//   CLog::getInstance().log("\n!!! Cannot add a child to CCube because it is a leaf!!! \n");
+//}
 
 //void CCube::traverse(std::vector<CCompositeGameObject*>& tree)
 //{
@@ -96,4 +96,12 @@ void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 
    //mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
    mModelMatrix = rootModelMatrix * mParentTRMatrix * scaledTRMatrix;
+
+   for (auto * pChild : mChildren)
+   {
+      if (pChild)
+      {
+         pChild->updateModelMatrix(rootModelMatrix);
+      }
+   }
 }

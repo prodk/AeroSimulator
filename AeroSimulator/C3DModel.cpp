@@ -108,16 +108,15 @@ bool C3DModel::buildModel()
    for (std::size_t count = 0u; count < mCubes.size(); ++count)
    {
       mCubes[count].setGeometry(mCubeGeometry);
-      //mAxes[count].setTranslate(glm::vec3(0.0f, 0.0f, 0.0f));
+      // Add debug mode axis to each cube
       mAxes[count].buildModel();
+      mCubes[count].add(&mAxes[count]);
    }
 
    // Build an airplane
    // Cabine is at (0., 0., 0.) and contains 1 Cube
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
-
-   mCabine->add(&mAxes[0]);
 
    /// The Body
    // Body is shifted relative to the cabine has several cubes
@@ -134,8 +133,6 @@ bool C3DModel::buildModel()
    mBody->add(&mCubes[3]);
    mCubes[4].setTranslate(glm::vec3(0.0f, 0.0f, 3.0f));
    mBody->add(&mCubes[4]);
-
-   mBody->add(&mAxes[1]);
 
    /// The Wings.
    // Wings are children of the Body
@@ -167,8 +164,6 @@ bool C3DModel::buildModel()
    mCubes[9].setTranslate(glm::vec3(0.0f, -0.75f, -0.25f));
    mCubes[9].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
    mPropeller->add(&mCubes[9]);
-
-   mPropeller->add(&mAxes[10]);
 
    /// The Tail.
    mBody->add(mTail.get());
