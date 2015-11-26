@@ -27,6 +27,7 @@ namespace AeroSimulatorEngine
 
    private:
       void setupCubeGeometry();
+      void setupColorCubeGeometry();
 
    private:
       std::shared_ptr<CGeometry> mCubeGeometry;

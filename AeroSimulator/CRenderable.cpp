@@ -18,7 +18,7 @@ CRenderable::CRenderable()
    , mBillboardWidth(1.0f)
    , mBillboardHeight(1.0f)
    , mDrawWithLines(false)
-   , mColor()
+   , mColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
    , mLineWidth(2.0f)
 {
 }

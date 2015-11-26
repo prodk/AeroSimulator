@@ -22,11 +22,8 @@ namespace AeroSimulatorEngine
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
 
       /// Composite-related methods - override only some of them
-      //virtual void add(CCompositeGameObject* child);
-      //virtual void traverse(std::vector<CCompositeGameObject*>& tree);
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
       ///@todo: probably add some timing arguments here
-      //virtual void updateTRMatrix(const glm::mat4x4 & trMatrix);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
    public:

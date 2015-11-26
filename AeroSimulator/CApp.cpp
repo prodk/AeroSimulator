@@ -139,7 +139,7 @@ void CApp::addAirplane()
 
    ///@todo: set shaders inside the mAirPlane
    // Every part of the tree uses the simple shader
-   mSimpleShader->link();
+   //mSimpleShader->link();
    mColorShader->link();
 
    const std::size_t numOfCubes = tree.size();
@@ -148,10 +148,11 @@ void CApp::addAirplane()
       if (tree[count])
       {
          ///@todo: temporary solution
-         if (tree[count]->getDrawWithLines())
+         ///@todo: place choosing shaders inside the model object
+         //if (tree[count]->getDrawWithLines())
             tree[count]->setShadersAndBuffers(mColorShader);
-         else
-            tree[count]->setShadersAndBuffers(mSimpleShader);
+         //else
+            //tree[count]->setShadersAndBuffers(mSimpleShader);
          mRendererTask->addRenderable(tree[count]);
       }
    }

@@ -24,7 +24,7 @@ namespace
       0.0f, 0.0f, 1.0f, //2 color
       -0.5f,  0.5f,  0.5f,
       0.2f, 0.0f, 0.5f, //3 color
-                        // back
+      // back
       -0.5f, -0.5f, -0.5f,
       1.0f, 0.0f, 0.0f,//4 color
       0.5f, -0.5f, -0.5f,
@@ -33,6 +33,20 @@ namespace
       0.0f, 0.0f, 1.0f,//6 color
       -0.5f,  0.5f, -0.5f,
       0.2f, 0.6f, 0.0f //7 color
+   };
+
+   GLfloat colorCubeData[] = {
+      //front
+      -0.5f, -0.5f,  0.5f,
+      0.5f, -0.5f,  0.5f,
+      0.5f,  0.5f,  0.5f,
+      -0.5f,  0.5f,  0.5f,
+
+      // back
+      -0.5f, -0.5f, -0.5f,
+      0.5f, -0.5f, -0.5f,
+      0.5f,  0.5f, -0.5f,
+      -0.5f,  0.5f, -0.5f,
    };
 
    GLuint indices[] = {
@@ -97,12 +111,30 @@ void  C3DModel::setupCubeGeometry()
    }
 }
 
+void C3DModel::setupColorCubeGeometry()
+{
+   if (mCubeGeometry)
+   {
+      mCubeGeometry->setVertexBuffer(colorCubeData);
+      const int numOfVertices = sizeof(colorCubeData) / sizeof(colorCubeData[0]);
+      mCubeGeometry->setNumOfVertices(numOfVertices);
+
+      mCubeGeometry->setIndexBuffer(indices);
+      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+      mCubeGeometry->setNumOfIndices(numOfIndices);
+
+      mCubeGeometry->setNumOfElementsPerVertex(CCube::mNumOfElementsPerVertex);
+      mCubeGeometry->setVertexStride(3); // 3 coords and nothing else
+   }
+}
+
 bool C3DModel::buildModel()
 {
    bool result = false;
 
    /// Use only one cube geometry!
-   setupCubeGeometry();
+   //setupCubeGeometry();
+   setupColorCubeGeometry();
 
    // Force all the cubes to use one geometry
    for (std::size_t count = 0u; count < mCubes.size(); ++count)
@@ -117,6 +149,7 @@ bool C3DModel::buildModel()
    // Cabine is at (0., 0., 0.) and contains 1 Cube
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
+   mCubes[0].setColor(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
 
    /// The Body
    // Body is shifted relative to the cabine has several cubes
@@ -124,6 +157,7 @@ bool C3DModel::buildModel()
    mBody->setTranslate(glm::vec3(0.0f, -0.75f, 0.0f));
    // Cubes of the body
    // Cube 1 coincides with the body
+   mCubes[1].setColor(glm::vec4(0.0f, 1.f, 1.0f, 1.0f));
    mBody->add(&mCubes[1]);
    // Cubes 2-4 are shifted
    mCubes[2].setTranslate(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -155,14 +189,17 @@ bool C3DModel::buildModel()
    mPropeller->setTranslate(glm::vec3(0.0f, 0.0f, -0.75f));
 
    mCubes[7].setScale(glm::vec3(0.2f, 0.25f, 0.5f));
+   mCubes[7].setColor(glm::vec4(1.0f, 0.5f, 0.0f, 1.0f));
    mPropeller->add(&mCubes[7]);
 
    mCubes[8].setTranslate(glm::vec3(0.0f, 0.75f, -0.25f));
    mCubes[8].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
+   mCubes[8].setColor(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
    mPropeller->add(&mCubes[8]);
 
    mCubes[9].setTranslate(glm::vec3(0.0f, -0.75f, -0.25f));
    mCubes[9].setScale(glm::vec3(0.1f, 1.5f, 0.1f));
+   mCubes[9].setColor(glm::vec4(0.0f, 0.5f, 0.0f, 1.0f));
    mPropeller->add(&mCubes[9]);
 
    /// The Tail.
