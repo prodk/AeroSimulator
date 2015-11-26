@@ -151,7 +151,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       if (pRenderable->getDrawWithLines())
       {
          mode = GL_LINES;
-         glLineWidth(3.0f); ///@todo: put this param to renderable
+         glLineWidth(pRenderable->getLineWidth()); ///@todo: put this param to renderable
       }
 
       glDrawElements(mode, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);

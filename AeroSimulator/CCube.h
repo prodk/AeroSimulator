@@ -2,13 +2,13 @@
 #ifndef AERO_SIMULATOR_CCUBE_H
 #define AERO_SIMULATOR_CCUBE_H
 
-#include "CCompositeGameObject.h"
+#include "CParentGameObject.h"
 
 namespace AeroSimulatorEngine
 {
    ///@todo: probably in the future introduce CLeafGameObject,
    ///but at the moment CCube is the only possible leaf
-   class CCube : public CCompositeGameObject
+   class CCube : public CParentGameObject
    {
    public:
       CCube();
@@ -23,10 +23,10 @@ namespace AeroSimulatorEngine
 
       /// Composite-related methods
       virtual void add(CCompositeGameObject* child);
-      virtual void traverse(std::vector<CCompositeGameObject*>& tree);
+      //virtual void traverse(std::vector<CCompositeGameObject*>& tree);
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
       ///@todo: probably add some timing arguments here
-      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix);
+      //virtual void updateTRMatrix(const glm::mat4x4 & trMatrix);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
    public:

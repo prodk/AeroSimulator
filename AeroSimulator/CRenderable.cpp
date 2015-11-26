@@ -19,6 +19,7 @@ CRenderable::CRenderable()
    , mBillboardHeight(1.0f)
    , mDrawWithLines(false)
    , mColor()
+   , mLineWidth(2.0f)
 {
 }
 

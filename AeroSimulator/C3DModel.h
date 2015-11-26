@@ -41,7 +41,7 @@ namespace AeroSimulatorEngine
 
       std::vector<CCube> mCubes;
       // Axis frames
-      std::shared_ptr<CAxesFrame> mAxes;
+      std::vector<CAxesFrame> mAxes;
    };
 } // namespace AeroSimulatorEngine
 

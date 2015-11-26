@@ -8,6 +8,7 @@ using namespace AeroSimulatorEngine;
 
 namespace
 {
+   ///@todo: probably move to the model as is done for CCube.
    GLfloat lineData[] = {
        0.0f, 0.0f, 0.0f,
        1.0f, 0.0f, 0.0f

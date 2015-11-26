@@ -13,10 +13,9 @@ using namespace AeroSimulatorEngine;
 const int CCube::mNumOfElementsPerVertex = 3; // 3 coordinates/color components per vertex
 const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates and 3 colors
 
-CCube::CCube()
-   : CCompositeGameObject()
+CCube::CCube() : CParentGameObject()
 {
-   mIsLeaf = true;
+   //mIsLeaf = true;
 
    mScale = glm::vec3(1.0f, 1.0f, 1.0f);
 
@@ -32,7 +31,7 @@ CCube::~CCube()
 CCube::CCube(const glm::vec3 & scale,
              const glm::vec3 & rotate,
              const glm::vec3 & translate)
-   : CCompositeGameObject(scale, rotate, translate)
+   : CParentGameObject(scale, rotate, translate)
 {
    mIsLeaf = true;
 
@@ -50,34 +49,51 @@ void CCube::add(CCompositeGameObject * child)
    CLog::getInstance().log("\n!!! Cannot add a child to CCube because it is a leaf!!! \n");
 }
 
-void CCube::traverse(std::vector<CCompositeGameObject*>& tree)
-{
-   // No children -nothing to do here
-}
+//void CCube::traverse(std::vector<CCompositeGameObject*>& tree)
+//{
+//   // No children -nothing to do here
+//}
 
 void CCube::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 {
+   ///@todo: think about caching of the matrixces!
    mParentTRMatrix = parentTRMatrix;
    calculateTRMatrix();
+   mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
+   ///@todo: probably call the parent version and then calculate the model matrix
+   // For the cube we need to calculate the model matrix
    const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make it a member
    mModelMatrix = mParentTRMatrix * scaledTRMatrix;
 
+   for (auto * pChild : mChildren)
+   {
+      if (pChild)
+      {
+         pChild->buildModelMatrix(mParentByLocalTRMatrix);
+      }
+   }
+
    // For the leaf cache the product of the parent by the scaled TR
-   mParentByLocalTRMatrix = mModelMatrix;
+   //mParentByLocalTRMatrix = mModelMatrix;
 }
 
-void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix)
-{
-   if (trMatrix != mParentTRMatrix)
-   {
-      mParentTRMatrix = trMatrix; ///@todo: probably remove this member as only the cached value is really used.
-      const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make this a member value
-      mParentByLocalTRMatrix = mParentTRMatrix * scaledTRMatrix;
-   }
-}
+//void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix)
+//{
+//   if (trMatrix != mParentTRMatrix)
+//   {
+//      mParentTRMatrix = trMatrix; ///@todo: probably remove this member as only the cached value is really used.
+//      const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make this a member value
+//      mParentByLocalTRMatrix = mParentTRMatrix * scaledTRMatrix;
+//   }
+//}
 
 void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
-   mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
+   ///@todo: probably call the CParentGameObject version and then calculate the model matrix
+
+   const glm::mat4x4 scaledTRMatrix = glm::scale(mTRMatrix, mScale); ///@todo: make it a member
+
+   //mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
+   mModelMatrix = rootModelMatrix * mParentTRMatrix * scaledTRMatrix;
 }
