@@ -2,7 +2,6 @@
 #include "CGeometry.h"
 #include "CShader.h"
 #include "CLog.h"
-//#include "CBillBoard.h"
 #include "CColorBillBoard.h"
 #include "CTexture.h"
 
@@ -22,6 +21,11 @@ CCube::CCube()
    , mHealthBarBack()
    , mHealthBarFore()
    , mHealthBarShift(glm::vec3(0.0f, 0.7f, 0.0f))
+   , mBackgroundWidth(0.6f)
+   , mForegroundWidth(0.4f)
+   , mHealthbarHeight(0.3f)
+   //, mShiftForeground(0.5f*(mBackgroundWidth - mForegroundWidth))
+   , mShiftForeground(0.f)
 {
    CLog::getInstance().log("* CCube::CCube() default: success.");
 }
@@ -89,28 +93,29 @@ void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
 
       if (mHealthBarBack && mHealthBarFore)
       {
-         const float bgWidth = 0.6f;
+         ///@todo: add to a method which obtains a healthbar as an argument
          // Background billboard
          mHealthBarBack->setTranslate(mHealthBarShift);
-         mHealthBarBack->setBillboardHeight(0.3f);
-         mHealthBarBack->setBillboardWidth(bgWidth);
+         mHealthBarBack->setBillboardHeight(mHealthbarHeight);
+         mHealthBarBack->setBillboardWidth(mBackgroundWidth);
          mHealthBarBack->calculateModelMatrix();
          mHealthBarBack->setColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+         mHealthBarBack->setHealthbarShift(0.f);
 
          mHealthBarBack->setShadersAndBuffers(pShader);
          add(mHealthBarBack.get());
 
-         const float fgWidth = 0.4f;
          // Foreground billboard
-         glm::vec3 fgShift = mHealthBarShift;
-         fgShift.x -= 0.5f*(bgWidth - fgWidth);
-         //mHealthBarFore->setTranslate(fgShift);
+         /*glm::vec3 fgShift = mHealthBarShift;
+         fgShift.x -= mShiftForeground;
+         mHealthBarFore->setTranslate(fgShift);*/
 
          mHealthBarFore->setTranslate(mHealthBarShift);
-         mHealthBarFore->setBillboardHeight(0.3f);
-         mHealthBarFore->setBillboardWidth(0.4f);
+         mHealthBarFore->setBillboardHeight(mHealthbarHeight);
+         mHealthBarFore->setBillboardWidth(mForegroundWidth);
          mHealthBarFore->calculateModelMatrix();
          mHealthBarFore->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+         mHealthBarFore->setHealthbarShift(mShiftForeground);
 
          mHealthBarFore->setShadersAndBuffers(pShader);
          add(mHealthBarFore.get());
@@ -128,4 +133,8 @@ void CCube::translateHealthBar(const glm::vec3 & shift)
    mHealthBarShift = shift;
    mHealthBarBack->setTranslate(mHealthBarShift);
    mHealthBarFore->setTranslate(mHealthBarShift);
+
+   /*glm::vec3 fgShift = mHealthBarShift;
+   fgShift.x -= mShiftForeground;
+   mHealthBarFore->setTranslate(fgShift);*/
 }

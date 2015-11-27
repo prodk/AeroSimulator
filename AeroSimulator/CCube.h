@@ -41,6 +41,10 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CCompositeGameObject> mHealthBarBack;
       std::shared_ptr<CCompositeGameObject> mHealthBarFore;
       glm::vec3 mHealthBarShift;
+      float mBackgroundWidth;
+      float mForegroundWidth;
+      float mHealthbarHeight;
+      float mShiftForeground;
    };
 } // namespace AeroSimulatorEngine
 

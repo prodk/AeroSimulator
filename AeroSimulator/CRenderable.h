@@ -73,6 +73,9 @@ namespace AeroSimulatorEngine
       void setLineWidth(const float width) { mLineWidth = width; }
       float getLineWidth() const { return mLineWidth; }
 
+      void setHealthbarShift(float shift) { mHealthbarShift = shift; }
+      float getHealthbarShift() const { return mHealthbarShift; }
+
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
@@ -92,6 +95,10 @@ namespace AeroSimulatorEngine
       bool mDrawWithLines;
       glm::vec4 mColor; // Only for color shader
       float mLineWidth; // Only for debug mode
+
+      ///@todo: change the architecture such that it is not required to add all
+      ///@todo these variables to CRenderer. They should be added to those objects where they are needed!
+      float mHealthbarShift; // Shift of the healthbar foreground relative to the background
    };
 } // namespace AeroSimulatorEngine
 

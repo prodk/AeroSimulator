@@ -167,12 +167,14 @@
     <ClInclude Include="CShader.h" />
     <ClInclude Include="CSimpleShader.h" />
     <ClInclude Include="CSkyBox.h" />
+    <ClInclude Include="CSphere.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTextureShader.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
+    <ClInclude Include="CLeafCompositeGameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C3DModel.cpp" />
@@ -200,12 +202,14 @@
     <ClCompile Include="CShader.cpp" />
     <ClCompile Include="CSimpleShader.cpp" />
     <ClCompile Include="CSkyBox.cpp" />
+    <ClCompile Include="CSphere.cpp" />
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTextureShader.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
+    <ClCompile Include="CLeafCompositeGameObject.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,6 +15,7 @@ CColorBillboardShader::CColorBillboardShader()
    , mWidthUniform(0)
    , mHeightUniform(0)
    , mColorUniform(0)
+   , mShiftUniform(0)
 {
    mVertexShaderCode =
       "attribute vec3 aPosition; // Center of the billboard\n"
@@ -24,21 +25,17 @@ CColorBillboardShader::CColorBillboardShader()
       "uniform vec3 uUp;       // Camera vector up\n"
       "uniform float uWidth;   // Width of the billboard\n"
       "uniform float uHeight;  // Height of the billboard\n"
-      //"varying vec2 vTexCoord;\n"
+      ///@todo: remove
+      "uniform float uShift;  // Relative shift of the billboard\n"
       "void main(){\n"
-      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
+      "    vec3 position = aPosition - vec3(uShift, 0.f, 0.f ) + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
       "    gl_Position = MVP * vec4(position, 1.0);\n"
-      //"    vTexCoord = aTexCoord;\n"
       "}\n";
 
    // Fragment shader is the same as in CTextureShader
    mFragmentShaderCode =
-      "precision highp float; \n"
-      //"varying vec2 vTexCoord;\n"
-      //"uniform sampler2D sTexture; \n"
       "uniform vec4 uColor; \n"
       "void main(){\n"
-      //"    gl_FragColor = texture2D(sTexture, vTexCoord);\n"
       "    gl_FragColor = uColor;\n"
       "}\n";
 
@@ -78,6 +75,10 @@ void CColorBillboardShader::link()
 
       mMvpUniform = glGetUniformLocation(mProgramId, "MVP");
       CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
+
+      ///@todo: remove
+      mShiftUniform = glGetUniformLocation(mProgramId, "uShift");
+      CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, uShift): ");
 
       mIsLinked = true;
    }
@@ -134,4 +135,8 @@ void CColorBillboardShader::setup(CRenderable & renderable)
    // Send the transformation to the currently bound shader in the "MVP" uniform
    const glm::mat4 MVP = renderable.getMvpMatrix();
    glUniformMatrix4fv(mMvpUniform, 1, GL_FALSE, &MVP[0][0]);
+
+   ///@todo: remove
+   const GLfloat shift = renderable.getHealthbarShift();
+   glUniform1f(mShiftUniform, shift);
 }

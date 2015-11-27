@@ -23,6 +23,7 @@ namespace AeroSimulatorEngine
       GLint mHeightUniform;
       GLint mColorUniform;
       GLint mMvpUniform;
+      GLint mShiftUniform;
    };
 }
 #endif // AERO_SIMULATOR_CCOLOR_BILLBOARD_SHADER_H
