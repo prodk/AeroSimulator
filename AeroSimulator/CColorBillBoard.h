@@ -13,6 +13,9 @@ namespace AeroSimulatorEngine
 
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
 
+      virtual void CColorBillBoard::setEnvironment();
+      virtual void CColorBillBoard::resetEnvironment();
+
       /// Composite-related methods
       virtual void add(CCompositeGameObject* child);
       virtual void traverse(std::vector<CCompositeGameObject*>& tree);

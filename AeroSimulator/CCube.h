@@ -38,7 +38,8 @@ namespace AeroSimulatorEngine
 
    private:
       glm::mat4x4 mScaledTRMatrix;
-      std::shared_ptr<CCompositeGameObject> mHealthBar;
+      std::shared_ptr<CCompositeGameObject> mHealthBarBack;
+      std::shared_ptr<CCompositeGameObject> mHealthBarFore;
       glm::vec3 mHealthBarShift;
    };
 } // namespace AeroSimulatorEngine

@@ -53,6 +53,16 @@ void CColorBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    CGameObject::setShadersAndBuffers(pShader);
 }
 
+void CColorBillBoard::setEnvironment()
+{
+   glDepthMask(GL_FALSE);
+}
+
+void CColorBillBoard::resetEnvironment()
+{
+   glDepthMask(GL_TRUE);
+}
+
 void CColorBillBoard::add(CCompositeGameObject * child)
 {
    CLog::getInstance().log("\n!!! Cannot add a child to CBillBoard because it is a leaf!!! \n");
