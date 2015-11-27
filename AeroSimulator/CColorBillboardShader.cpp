@@ -28,7 +28,9 @@ CColorBillboardShader::CColorBillboardShader()
       ///@todo: remove
       "uniform float uShift;  // Relative shift of the billboard\n"
       "void main(){\n"
-      "    vec3 position = aPosition - vec3(uShift, 0.f, 0.f ) + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
+      //"    vec3 position = aPosition - vec3(uShift, 0.f, 0.f ) + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
+      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
+      "    position = position - vec3(uShift, 0.f, 0.f);\n"
       "    gl_Position = MVP * vec4(position, 1.0);\n"
       "}\n";
 

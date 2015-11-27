@@ -3,6 +3,9 @@
 
 #include "CLeafCompositeGameObject.h"
 
+#include "glm/vec3.hpp"
+#include <vector>
+
 namespace AeroSimulatorEngine
 {
    class CSphere : public CLeafCompositeGameObject
@@ -10,6 +13,13 @@ namespace AeroSimulatorEngine
    public:
       CSphere();
       virtual ~CSphere();
+
+   private:
+      void generateSphere();
+
+   private:
+      std::vector<glm::vec3> mVertices;
+      std::vector<GLuint> mIndices;
    };
 }
 

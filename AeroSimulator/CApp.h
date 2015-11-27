@@ -63,6 +63,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mColorBillboardShader;
       tGameObjectPtr mSkyBox;
       tGameObjectPtr mLand;
+      tGameObjectPtr mSphere;
 
       ///@todo: place billboards to some bridge class CClouds
       std::vector<tGameObjectPtr > mBillBoards;

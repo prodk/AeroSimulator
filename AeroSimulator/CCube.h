@@ -39,7 +39,7 @@ namespace AeroSimulatorEngine
    private:
       glm::mat4x4 mScaledTRMatrix;
       std::shared_ptr<CCompositeGameObject> mHealthBarBack;
-      std::shared_ptr<CCompositeGameObject> mHealthBarFore;
+      std::shared_ptr<CCompositeGameObject> mHealthBarFore; ///@todo: remove this
       glm::vec3 mHealthBarShift;
       float mBackgroundWidth;
       float mForegroundWidth;

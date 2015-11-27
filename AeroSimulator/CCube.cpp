@@ -24,7 +24,8 @@ CCube::CCube()
    , mBackgroundWidth(0.6f)
    , mForegroundWidth(0.4f)
    , mHealthbarHeight(0.3f)
-   //, mShiftForeground(0.5f*(mBackgroundWidth - mForegroundWidth))
+   ///@todo: remove shift foreground and use shaders for the healthbar
+   //, mShiftForeground(0.5f*(mBackgroundWidth + mForegroundWidth))
    , mShiftForeground(0.f)
 {
    CLog::getInstance().log("* CCube::CCube() default: success.");
@@ -106,7 +107,7 @@ void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
          add(mHealthBarBack.get());
 
          // Foreground billboard
-         /*glm::vec3 fgShift = mHealthBarShift;
+        /* glm::vec3 fgShift = mHealthBarShift;
          fgShift.x -= mShiftForeground;
          mHealthBarFore->setTranslate(fgShift);*/
 

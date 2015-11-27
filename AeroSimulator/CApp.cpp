@@ -15,6 +15,7 @@
 #include "CBillboardShader.h"
 #include "CColorShader.h"
 #include "CColorBillboardShader.h"
+#include "CSphere.h"
 
 #include <conio.h>
 #include <cassert>
@@ -34,6 +35,7 @@ CApp::CApp()
    , mColorShader(new CColorShader())
    , mColorBillboardShader(new CColorBillboardShader())
    , mBillBoards(10)
+   , mSphere(new CSphere())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -44,6 +46,7 @@ CApp::CApp()
    assert(mLand);
    assert(mBillboardShader);
    assert(mColorShader);
+   assert(mSphere);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -101,6 +104,13 @@ void CApp::setupScene()
    addLand();
    addAirplane();
    addBillboards();
+
+   ///@todo: place to a method
+   mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
+   mSphere->calculateModelMatrix();
+   mColorShader->link();
+   mSphere->setShadersAndBuffers(mColorShader);
+   mRendererTask->addRenderable(mSphere.get());
 
    mRendererTask->resetRenderContext();
 }
