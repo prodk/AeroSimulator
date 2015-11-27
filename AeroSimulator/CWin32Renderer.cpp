@@ -31,10 +31,11 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCamera(new CCamera())
    , mRoot(nullptr)
    , mIsDebugMode(false)
+   , mCameraScale(1.0f)
 {
    assert(mCamera);
 
-   mCamera->setProjectionMatrix(glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 500.0f));
+   mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
    mCamera->translate(glm::vec3(0.0f, 0.0f, -13.0f));
@@ -57,7 +58,7 @@ void CWin32Renderer::update()
    {
       setRenderContext();
 
-      rotateCamera();
+      updateCamera();
       springButtons();
 
       glm::mat4 modelObjectMatrix;
@@ -296,9 +297,10 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    mRoot->updateModelMatrix(modelObjectMatrix);
 }
 
-void CWin32Renderer::rotateCamera()
+void CWin32Renderer::updateCamera()
 {
    mCamera->rotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
+   mCamera->update();
 }
 
 void CWin32Renderer::springButtons()
@@ -415,6 +417,19 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       if (wParam == 0x32) // 2, debug mode off
       {
          mIsDebugMode = false;
+      }
+
+      if (wParam == VK_OEM_PLUS) // +, zoom in
+      {
+         mCameraScale += 0.02f;
+         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
+      }
+
+      if (wParam == VK_OEM_MINUS) // -, zoom out
+      {
+         mCameraScale -= 0.02f;
+         mCameraScale = std::max(0.1f, mCameraScale);
+         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
       }
    }
    return false;

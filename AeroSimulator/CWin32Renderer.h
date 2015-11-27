@@ -47,7 +47,7 @@ namespace AeroSimulatorEngine
    private:
       bool createRenderContext();
       void calculateAirplaneMatrix(glm::mat4& matrix);
-      void rotateCamera();
+      void updateCamera();
       void springButtons();
 
    private:
@@ -72,6 +72,7 @@ namespace AeroSimulatorEngine
       CCompositeGameObject* mRoot;
 
       bool mIsDebugMode;
+      float mCameraScale;
    };
 } // namespace AeroSimulatorEngine
 

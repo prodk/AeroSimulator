@@ -40,7 +40,7 @@ CSphere::~CSphere()
 void CSphere::generateSphere()
 {
    const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
-   const float Band_Points = 32.f; // 16 = 2^Band_Power
+   const int Band_Points = std::pow(2, 5); // 16 = 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
    const int Total_Points = Sections_In_Band*Band_Points;

@@ -34,7 +34,7 @@ CApp::CApp()
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
    , mColorBillboardShader(new CColorBillboardShader())
-   , mBillBoards(10)
+   , mBillBoards(20)
    , mSphere(new CSphere())
 {
    assert(mAppWindowTask);
@@ -173,8 +173,8 @@ void CApp::addBillboards()
 {
    const float width = 3.0f;
    const float height = 3.0f;
-   const float minDistance = 3.0f;
-   const float maxDistance = 7.0f;
+   const float minDistance = 6.0f;
+   const float maxDistance = 13.0f;
    const char* filePath = "../AeroSimulator/res/cloud.dds";
 
    mBillboardShader->link();

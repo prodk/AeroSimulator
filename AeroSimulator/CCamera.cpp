@@ -6,10 +6,12 @@
 using namespace AeroSimulatorEngine;
 
 CCamera::CCamera()
-   : mRotate()
+   : mScale()
+   , mRotate()
    , mTranslate()
    , mViewMatrix()
    , mProjectionMatrix()
+   , mNonScaledViewMatrix()
 {
 }
 
@@ -17,11 +19,16 @@ CCamera::~CCamera()
 {
 }
 
+void CCamera::scale(const glm::vec3 & scales)
+{
+   mScale = glm::mat4x4(1.0f);
+   mScale = glm::scale(mScale, scales);
+}
+
 void CCamera::translate(const glm::vec3 & distance)
 {
    mTranslate = glm::mat4(1.0f);
    mTranslate = glm::translate(mTranslate, distance);
-   mViewMatrix = mTranslate * mRotate;
 }
 
 void CCamera::rotate(const glm::vec3 & angles)
@@ -39,8 +46,6 @@ void CCamera::rotate(const glm::vec3 & angles)
    const float angleZ = CCommonMath::degToRad(angles.z);
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    mRotate = glm::rotate(mRotate, angleZ, zAxis);
-
-   mViewMatrix = mTranslate * mRotate;
 }
 
 void CCamera::resetView()
@@ -48,14 +53,20 @@ void CCamera::resetView()
    mViewMatrix = glm::mat4(1.0f);
 }
 
+void CCamera::update()
+{
+   mNonScaledViewMatrix = mTranslate * mRotate;
+   mViewMatrix = mNonScaledViewMatrix * mScale;
+}
+
 glm::vec3 CCamera::getRightVector() const
 {
    glm::vec3 result;
 
    /// mat4x4 is composed out of 4 vectors in column-major order
-   result.x = mViewMatrix[0].x;
-   result.y = mViewMatrix[1].x;
-   result.z = mViewMatrix[2].x;
+   result.x = mNonScaledViewMatrix[0].x;
+   result.y = mNonScaledViewMatrix[1].x;
+   result.z = mNonScaledViewMatrix[2].x;
 
    return result;
 }
@@ -63,9 +74,9 @@ glm::vec3 CCamera::getRightVector() const
 glm::vec3 CCamera::getUpVector() const
 {
    glm::vec3 result;
-   result.x = mViewMatrix[0].y;
-   result.y = mViewMatrix[1].y;
-   result.z = mViewMatrix[2].y;
+   result.x = mNonScaledViewMatrix[0].y;
+   result.y = mNonScaledViewMatrix[1].y;
+   result.z = mNonScaledViewMatrix[2].y;
 
    return result;
 }
