@@ -154,7 +154,7 @@ void CSphere::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 void CSphere::generateSphere()
 {
    ///@todo: rename the variables and reconsider their type
-   const int Band_Power = 4;  // 2^Band_Power = Total Points in a band.
+   const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
    const int Band_Points = std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;

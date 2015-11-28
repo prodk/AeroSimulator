@@ -87,6 +87,7 @@ void CWin32Renderer::update()
             ///todo: think how to set the width/height of the billboard
             pRenderable->setRightVector(mCamera->getRightVector());
             pRenderable->setUpVector(mCamera->getUpVector());
+            pRenderable->setViewMatrix(mCamera->getViewMatrix());
             draw(pRenderable);
          }
       }

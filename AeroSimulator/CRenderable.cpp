@@ -21,6 +21,7 @@ CRenderable::CRenderable()
    , mColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
    , mLineWidth(2.0f)
    , mHealthbarShift(0.0f)
+   , mViewMatrix()
 {
 }
 
