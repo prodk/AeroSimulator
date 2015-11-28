@@ -12,6 +12,8 @@ CColorLambertianShader::CColorLambertianShader()
       "attribute vec3 aNormal;\n"
       "uniform mat4 MVP;\n"
       "void main(){\n"
+      //"    vec3 pos = aPosition - 0.5* aNormal;\n"
+      //"    gl_Position = MVP * vec4(pos, 1.0);\n"
       "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
       "}\n";
 

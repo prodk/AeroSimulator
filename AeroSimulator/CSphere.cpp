@@ -47,7 +47,7 @@ CSphere::CSphere()
       mGeometry->setNumOfIndices(numOfIndices);
 
       mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(3); // 3 coords, change to 6 when normals are added
+      mGeometry->setVertexStride(6); // 3 coords, change to 6 when normals are added
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
@@ -70,7 +70,7 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
    {
       pShader->link();
 
-      const std::size_t numOfNormals = mVertices.size();
+      const std::size_t numOfNormals = 0.5*mVertices.size();
 
       mNormalLine.resize(numOfNormals);          // Lines drawing normals
       mGeometryNormals.resize(numOfNormals);  // Geometry for lines depicting normals
@@ -94,7 +94,7 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
             mNormalLine[count].reset(new CLine());
             if (mNormalLine[count])
             {
-               const glm::vec3& v = mVertices[count];
+               const glm::vec3& v = mVertices[2*count];
 
                mNormalLine[count]->setGeometry(mGeometryNormals[count]);
                mNormalLine[count]->setColor(color);
@@ -154,7 +154,7 @@ void CSphere::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 void CSphere::generateSphere()
 {
    ///@todo: rename the variables and reconsider their type
-   const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
+   const int Band_Power = 4;  // 2^Band_Power = Total Points in a band.
    const int Band_Points = std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
@@ -167,7 +167,7 @@ void CSphere::generateSphere()
    float x_angle;
    float y_angle;
 
-   mVertices.resize(Total_Points); // vertex + normal
+   mVertices.resize(2*Total_Points); // vertex + normal
    mIndices.resize(Total_Points);
 
    for (i = 0; i < Total_Points; i++)
@@ -185,13 +185,27 @@ void CSphere::generateSphere()
       x_angle *= (float)Section_Arc / 2.0f; // remember - 180° x rot not 360
       y_angle *= (float)Section_Arc;// *-1;
 
-      mVertices[i].x = R*sin(x_angle)*sin(y_angle);
+      const int id = 2 * i;
+      mVertices[id].x = R*sin(x_angle)*sin(y_angle);
+      mVertices[id].y = R*cos(x_angle);
+      mVertices[id].z = R*sin(x_angle)*cos(y_angle);
+
+      // Save the normal, it is the same as the vertex if R == 1
+      ///@todo: normalize if R != 1
+      mVertices[id + 1] = mVertices[id];
+
+      glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
+      mDataNormals.push_back(v1);
+      mDataNormals.push_back(mVertices[id]);
+
+      ///@todo: correct without normals
+      /*mVertices[i].x = R*sin(x_angle)*sin(y_angle);
       mVertices[i].y = R*cos(x_angle);
       mVertices[i].z = R*sin(x_angle)*cos(y_angle);
 
       glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
       mDataNormals.push_back(v1);
-      mDataNormals.push_back(mVertices[i]);
+      mDataNormals.push_back(mVertices[i]);*/
 
       mIndices[i] = i;
    }
