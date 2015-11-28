@@ -9,6 +9,7 @@
 #include "glm/mat4x4.hpp"
 
 #include <memory>
+#include <vector>
 
 namespace AeroSimulatorEngine
 {
@@ -35,7 +36,10 @@ namespace AeroSimulatorEngine
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
-      void setRoot(CCompositeGameObject* root) { mRoot = root; };
+      void setAirplaneRoot(CCompositeGameObject* root) { if (root) mAirplaneRoot = root; };
+      void setSphereRoot(CCompositeGameObject* root) { if (root) mSphereRoot = root; };
+
+      //CCamera getCamera() const { return *mCamera; }
 
    private:
       // Override CRenderer part
@@ -46,9 +50,10 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
-      void calculateAirplaneMatrix(glm::mat4& matrix);
+      void updateAirplane();
       void updateCamera();
       void springButtons();
+      void updateRenderables();
 
    private:
       HDC mDC;
@@ -69,7 +74,8 @@ namespace AeroSimulatorEngine
       ///@todo: probably create an array of cameras later
       std::shared_ptr<CCamera> mCamera;
 
-      CCompositeGameObject* mRoot;
+      CCompositeGameObject* mAirplaneRoot;
+      CCompositeGameObject* mSphereRoot;
 
       bool mIsDebugMode;
       float mCameraScale;

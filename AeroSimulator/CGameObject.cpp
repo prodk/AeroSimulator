@@ -68,6 +68,10 @@ void CGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    }
 }
 
+void CGameObject::addCustomObjects(std::shared_ptr<CShader>& pShader)
+{
+}
+
 glm::mat4 CGameObject::getTRMatrix() const
 {
    return mTRMatrix;

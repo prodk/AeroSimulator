@@ -49,12 +49,12 @@ void CAxesFrame::buildModel(std::shared_ptr<CShader>& pShader)
 
       mLineGeometry->setNumOfElementsPerVertex(3);
       mLineGeometry->setVertexStride(3);
-   }
 
-   // Set the geometry
-   mAxisX->setGeometry(mLineGeometry);
-   mAxisY->setGeometry(mLineGeometry);
-   mAxisZ->setGeometry(mLineGeometry);
+      // Set the geometry
+      mAxisX->setGeometry(mLineGeometry);
+      mAxisY->setGeometry(mLineGeometry);
+      mAxisZ->setGeometry(mLineGeometry);
+   }
 
    // Add the axes
    // x

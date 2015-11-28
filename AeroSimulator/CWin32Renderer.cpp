@@ -13,6 +13,19 @@
 #include <algorithm>
 using namespace AeroSimulatorEngine;
 
+// Comparator for sorting renderables
+//struct SCompareRenderables
+//{
+//   bool operator()(CRenderable* lhs, CRenderable* rhs)
+//   {
+//      if (lhs && rhs)
+//      {
+//         // get the distance to camera and return lhsDist < rhsDist;
+//            return a < b;
+//      }
+//   }
+//};
+
 ///@todo: move non-Win32 code to the base class
 
 CWin32Renderer::CWin32Renderer(ePriority prio)
@@ -26,10 +39,11 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mAngleX(0.0f)
    , mHorizontalPressed(0)
    , mVerticalPressed(0)
-   , mCameraAngleX(0.f) // up 'w', down 's'
-   , mCameraAngleY(0.f)
+   , mCameraAngleX(30.f) // up 'w', down 's'
+   , mCameraAngleY(80.f)
    , mCamera(new CCamera())
-   , mRoot(nullptr)
+   , mAirplaneRoot(nullptr)
+   , mSphereRoot(nullptr)
    , mIsDebugMode(false)
    , mCameraScale(1.0f)
 {
@@ -39,7 +53,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
 
    // View matrix.
    mCamera->translate(glm::vec3(0.0f, 0.0f, -13.0f));
-   mCamera->rotate(glm::vec3(0.0f, 0.0f, 0.0f));
+   //mCamera->rotate(glm::vec3(30.0f, 80.0f, 0.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -61,8 +75,7 @@ void CWin32Renderer::update()
       updateCamera();
       springButtons();
 
-      glm::mat4 modelObjectMatrix;
-      calculateAirplaneMatrix(modelObjectMatrix);
+      updateRenderables();
 
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -122,7 +135,7 @@ void CWin32Renderer::destroy()
       mRenderContext = NULL;
    }
 
-   mRoot = nullptr;
+   //mRoot = nullptr;
 }
 
 void CWin32Renderer::draw(CRenderable* pRenderable)
@@ -276,7 +289,7 @@ void CWin32Renderer::resetRenderContext()
       wglMakeCurrent(NULL, NULL);
 }
 
-void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
+void CWin32Renderer::updateAirplane()
 {
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
 
@@ -290,11 +303,14 @@ void CWin32Renderer::calculateAirplaneMatrix(glm::mat4& matrix)
    const float angleXradians = CCommonMath::degToRad(mAngleX);
    modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
 
-   matrix = modelObjectMatrix;
+   //matrix = modelObjectMatrix;
 
    // Update the root and all its children.
-   mRoot->updateTRMatrix(glm::mat4(1.0f)); // Animate the parts of the tree-like object
-   mRoot->updateModelMatrix(modelObjectMatrix);
+   if (mAirplaneRoot)
+   {
+      mAirplaneRoot->updateTRMatrix(glm::mat4(1.0f)); // Animate the parts of the tree-like object
+      mAirplaneRoot->updateModelMatrix(modelObjectMatrix);
+   }
 }
 
 void CWin32Renderer::updateCamera()
@@ -329,6 +345,14 @@ void CWin32Renderer::springButtons()
       if (mAngleX < 0.f)
          mAngleX += 0.4f;
    }
+}
+
+void CWin32Renderer::updateRenderables()
+{
+   updateAirplane();
+
+   ///@todo: place to a method updateSphere
+   
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)

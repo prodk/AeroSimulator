@@ -17,7 +17,13 @@ namespace AeroSimulatorEngine
          return angleDegrees * piTo180;
       }
 
+      static float radToDeg(const float angleRadians)
+      {
+         return angleRadians * hundredEightyToPi;
+      }
+
       static const float piTo180;
+      static const float hundredEightyToPi;
    };
 
 } // namespace AeroSimulatorEngine

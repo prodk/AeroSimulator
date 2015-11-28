@@ -34,8 +34,8 @@ CApp::CApp()
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
    , mColorBillboardShader(new CColorBillboardShader())
-   , mBillBoards(20)
    , mSphere(new CSphere())
+   , mBillBoards(20)
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -104,13 +104,7 @@ void CApp::setupScene()
    addLand();
    addAirplane();
    addBillboards();
-
-   ///@todo: place to a method
-   mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
-   mSphere->calculateModelMatrix();
-   mColorShader->link();
-   mSphere->setShadersAndBuffers(mColorShader);
-   mRendererTask->addRenderable(mSphere.get());
+   addSphere();
 
    mRendererTask->resetRenderContext();
 }
@@ -166,7 +160,7 @@ void CApp::addAirplane()
    }
 
    // Set the root for the renderable composite
-   mRendererTask->setRoot(mAirPlane->getRoot());
+   mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
 }
 
 void CApp::addBillboards()
@@ -208,3 +202,26 @@ void CApp::addBillboards()
    }
 }
 
+void CApp::addSphere()
+{
+   mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
+   mSphere->calculateModelMatrix();
+   mColorShader->link();
+   mSphere->setShadersAndBuffers(mColorShader);
+   mSphere->addCustomObjects(mColorShader);
+
+   std::vector<CCompositeGameObject*> tree;
+   mSphere->traverse(tree);
+
+   for (auto * pTree : tree)
+   {
+      if (pTree)
+      {
+         mRendererTask->addRenderable(pTree);
+      }
+   }
+   
+   ///@todo: change to setRoot()
+   mRendererTask->addRenderable(mSphere.get());
+   mRendererTask->setSphereRoot(mSphere.get());
+}
