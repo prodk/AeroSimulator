@@ -3,7 +3,7 @@
 
 #include "CShader.h"
 
-#include "../AeroSimulator/include/glew.h"
+#include "../include/glew.h"
 #include <gl/GL.h>
 
 #include <memory>

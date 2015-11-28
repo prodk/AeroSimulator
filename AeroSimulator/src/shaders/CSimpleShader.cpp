@@ -1,7 +1,7 @@
 #include "CSimpleShader.h"
-#include "CGeometry.h"
-#include "CRenderable.h"
-#include "CLog.h"
+#include "../CGeometry.h"
+#include "../CRenderable.h"
+#include "../CLog.h"
 
 ///@todo: probably remove some glm headers from here
 #include "glm/vec3.hpp"

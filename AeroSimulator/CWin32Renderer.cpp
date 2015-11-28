@@ -1,6 +1,6 @@
 #include "CWin32Renderer.h"
 #include "CRenderable.h"
-#include "CShader.h"
+#include "../src/shaders/CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
 #include "CCommonMath.h" ///@todo: remove this

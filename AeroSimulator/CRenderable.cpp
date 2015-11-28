@@ -1,6 +1,6 @@
 
 #include "CRenderable.h"
-#include "CShader.h"
+#include "../src/shaders/CShader.h"
 #include "CGeometry.h"
 
 using namespace AeroSimulatorEngine;

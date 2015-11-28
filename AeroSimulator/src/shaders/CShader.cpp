@@ -1,6 +1,6 @@
 #include "CShader.h"
-#include "CRenderable.h"
-#include "CLog.h"
+#include "../CRenderable.h"
+#include "../CLog.h"
 #include <iostream>
 using namespace AeroSimulatorEngine;
 

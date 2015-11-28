@@ -14,7 +14,7 @@ namespace AeroSimulatorEngine
       virtual void link();
       virtual void setup(CRenderable& renderable);
 
-   private:
+   protected:
       GLint mPositionAttributeId;
       GLint mColorUniformId;
       GLint mMvpUniformId;

@@ -1,8 +1,8 @@
 #include "CTextureShader.h"
-#include "CRenderable.h"
-#include "CGeometry.h"
-#include "CTexture.h"
-#include "CLog.h"
+#include "../CRenderable.h"
+#include "../CGeometry.h"
+#include "../CTexture.h"
+#include "../CLog.h"
 
 #include <cassert>
 

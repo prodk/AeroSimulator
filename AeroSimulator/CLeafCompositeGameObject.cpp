@@ -17,7 +17,7 @@ CLeafCompositeGameObject::~CLeafCompositeGameObject()
 
 void CLeafCompositeGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   CLog::getInstance().logGL("\n** CLeafCompositeGO::setupShadersAndBuffers() **");
+   //CLog::getInstance().logGL("\n** CLeafCompositeGO::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }
 

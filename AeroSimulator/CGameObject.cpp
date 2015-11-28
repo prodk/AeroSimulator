@@ -1,7 +1,7 @@
 #include "CGameObject.h"
 #include "CCommonMath.h"
 #include "CGeometry.h"
-#include "CShader.h"
+#include "../src/shaders/CShader.h"
 #include "CLog.h"
 
 #include <gl/GL.h>
@@ -19,8 +19,6 @@ CGameObject::CGameObject()
    , mParentTRMatrix()
    , mParentByLocalTRMatrix()
    , mIsLeaf(false)
-   , mArbitraryAngle(0.f)
-   , mArbitraryAxis()
 {
 }
 
@@ -51,7 +49,7 @@ void CGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
       // VBO
       glGenBuffers(1, &mVboId);
       glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-      CLog::getInstance().logGL("* glBindBuffer() VBO: ");
+      //CLog::getInstance().logGL("* glBindBuffer() VBO: ");
 
       GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
       glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
@@ -59,7 +57,7 @@ void CGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
       // Index buffer
       glGenBuffers(1, &mIboId);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-      CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
+      //CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
 
       GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
       glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
@@ -79,6 +77,7 @@ glm::mat4 CGameObject::getTRMatrix() const
    return mTRMatrix;
 }
 
+///@todo: use rotation around any axis under the hood!
 void CGameObject::calculateTRMatrix()
 {
    // To get a TRS sequence of matrices, act as follows: translate, rotate, scale
@@ -103,13 +102,6 @@ void CGameObject::calculateTRMatrix()
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
    mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
 
-   // Any axis
-   /*if (std::fabs(mArbitraryAngle) > std::numeric_limits<float>::epsilon())
-   {
-      const float angle = CCommonMath::degToRad(mArbitraryAngle);
-      mTRMatrix = glm::rotate(mTRMatrix, angle, mArbitraryAxis);
-   }*/
-
    // Scale is used only for the model matrix
 }
 
@@ -124,12 +116,6 @@ void CGameObject::scale(const glm::vec3& scale)
 {
    mScale = scale;
    mModelMatrix = glm::scale(mModelMatrix, scale);
-}
-
-void CGameObject::setRotate(const float angle, const glm::vec3& axis)
-{
-   mArbitraryAngle = angle;
-   mArbitraryAxis = axis;
 }
 
 void CGameObject::translate(const glm::vec3& translate)

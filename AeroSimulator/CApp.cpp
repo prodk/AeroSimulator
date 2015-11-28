@@ -4,18 +4,19 @@
 #include "CWin32Renderer.h"
 #include "CRenderable.h"
 #include "CGeometry.h"
-#include "CSimpleShader.h"  ///@todo: probably remove this
+#include "../AeroSimulator/src/shaders/CSimpleShader.h"  ///@todo: probably remove this
 #include "CGameObject.h"
 #include "CLog.h"
 #include "C3DModel.h"
-#include "CTextureShader.h"
+#include "../AeroSimulator/src/shaders/CTextureShader.h"
 #include "CSkyBox.h"
 #include "CLand.h"
 #include "CBillBoard.h"
-#include "CBillboardShader.h"
-#include "CColorShader.h"
-#include "CColorBillboardShader.h"
+#include "../AeroSimulator/src/shaders/CBillboardShader.h"
+#include "../AeroSimulator/src/shaders/CColorShader.h"
+#include "../AeroSimulator/src/shaders/CColorBillboardShader.h"
 #include "CSphere.h"
+#include "../AeroSimulator/src/shaders/CColorLambertianShader.h"
 
 #include <conio.h>
 #include <cassert>
@@ -29,11 +30,12 @@ CApp::CApp()
    , mAirPlane(new C3DModel())
    , mSimpleShader (new CSimpleShader())  ///@todo: probably remove this
    , mTextureShader(new CTextureShader())
-   , mSkyBox(new CSkyBox())
-   , mLand(new CLand())
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
    , mColorBillboardShader(new CColorBillboardShader())
+   , mColorLambertianShader(new CColorLambertianShader())
+   , mSkyBox(new CSkyBox())
+   , mLand(new CLand())
    , mSphere(new CSphere())
    , mBillBoards(20)
 {
@@ -55,6 +57,14 @@ CApp::~CApp()
 {
    mRendererTask.reset();
    mAppWindowTask.reset();
+   mAirPlane.reset();
+   mSimpleShader.reset();
+   mTextureShader.reset();
+   mSkyBox.reset();
+   mLand.reset();
+   mBillboardShader.reset();
+   mColorShader.reset();
+   mSphere.reset();
    ///@todo: reset other ptrs here
 
    CLog::getInstance().log("* CApp destroyed");
@@ -142,8 +152,6 @@ void CApp::addAirplane()
 {
    mColorShader->link();
    mColorBillboardShader->link();
-   ///@todo: use color texture when CColorBillBoard is used for healthbars.
-   //mAirPlane->setBillboardShader(mBillboardShader);
    mAirPlane->setBillboardShader(mColorBillboardShader);
    mAirPlane->buildModel(mColorShader);
 
@@ -204,10 +212,11 @@ void CApp::addBillboards()
 
 void CApp::addSphere()
 {
+   mColorLambertianShader->link();
+
    mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
    mSphere->calculateModelMatrix();
-   mColorShader->link();
-   mSphere->setShadersAndBuffers(mColorShader);
+   mSphere->setShadersAndBuffers(mColorLambertianShader);
    mSphere->addCustomObjects(mColorShader);
 
    std::vector<CCompositeGameObject*> tree;
@@ -220,8 +229,7 @@ void CApp::addSphere()
          mRendererTask->addRenderable(pTree);
       }
    }
-   
-   ///@todo: change to setRoot()
+
    mRendererTask->addRenderable(mSphere.get());
    mRendererTask->setSphereRoot(mSphere.get());
 }

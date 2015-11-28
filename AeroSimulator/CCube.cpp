@@ -1,6 +1,6 @@
 #include "CCube.h"
 #include "CGeometry.h"
-#include "CShader.h"
+#include "../src/shaders/CShader.h"
 #include "CLog.h"
 #include "CColorBillBoard.h"
 #include "CTexture.h"

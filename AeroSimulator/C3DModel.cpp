@@ -5,7 +5,7 @@
 #include "CPropeller.h"
 #include "CAxesFrame.h"
 #include "CBillBoard.h"
-#include "CShader.h"
+#include "../src/shaders/CShader.h"
 
 #include <cassert>
 

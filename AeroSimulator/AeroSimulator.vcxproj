@@ -147,10 +147,7 @@
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CAxesFrame.h" />
     <ClInclude Include="CBillBoard.h" />
-    <ClInclude Include="CBillboardShader.h" />
     <ClInclude Include="CCamera.h" />
-    <ClInclude Include="CColorBillboardShader.h" />
-    <ClInclude Include="CColorShader.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CCube.h" />
@@ -164,17 +161,21 @@
     <ClInclude Include="CPropeller.h" />
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderer.h" />
-    <ClInclude Include="CShader.h" />
-    <ClInclude Include="CSimpleShader.h" />
     <ClInclude Include="CSkyBox.h" />
     <ClInclude Include="CSphere.h" />
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CTexture.h" />
-    <ClInclude Include="CTextureShader.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
     <ClInclude Include="CLeafCompositeGameObject.h" />
+    <ClInclude Include="src\shaders\CBillboardShader.h" />
+    <ClInclude Include="src\shaders\CColorBillboardShader.h" />
+    <ClInclude Include="src\shaders\CColorLambertianShader.h" />
+    <ClInclude Include="src\shaders\CColorShader.h" />
+    <ClInclude Include="src\shaders\CShader.h" />
+    <ClInclude Include="src\shaders\CSimpleShader.h" />
+    <ClInclude Include="src\shaders\CTextureShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C3DModel.cpp" />
@@ -182,10 +183,7 @@
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CAxesFrame.cpp" />
     <ClCompile Include="CBillBoard.cpp" />
-    <ClCompile Include="CBillboardShader.cpp" />
     <ClCompile Include="CCamera.cpp" />
-    <ClCompile Include="CColorBillboardShader.cpp" />
-    <ClCompile Include="CColorShader.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CCube.cpp" />
@@ -199,17 +197,21 @@
     <ClCompile Include="CPropeller.cpp" />
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderer.cpp" />
-    <ClCompile Include="CShader.cpp" />
-    <ClCompile Include="CSimpleShader.cpp" />
     <ClCompile Include="CSkyBox.cpp" />
     <ClCompile Include="CSphere.cpp" />
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CTexture.cpp" />
-    <ClCompile Include="CTextureShader.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
     <ClCompile Include="CLeafCompositeGameObject.cpp" />
+    <ClCompile Include="src\shaders\CBillboardShader.cpp" />
+    <ClCompile Include="src\shaders\CColorBillboardShader.cpp" />
+    <ClCompile Include="src\shaders\CColorLambertianShader.cpp" />
+    <ClCompile Include="src\shaders\CColorShader.cpp" />
+    <ClCompile Include="src\shaders\CShader.cpp" />
+    <ClCompile Include="src\shaders\CSimpleShader.cpp" />
+    <ClCompile Include="src\shaders\CTextureShader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

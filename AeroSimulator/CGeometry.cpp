@@ -12,7 +12,7 @@ CGeometry::CGeometry()
    , mNumOfElementsPerVertex(1)
    , mVertexStride(0)
 {
-   CLog::getInstance().log("CGeometry created");
+   //CLog::getInstance().log("CGeometry created");
 }
 
 CGeometry::~CGeometry()

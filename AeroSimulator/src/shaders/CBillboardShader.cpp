@@ -1,7 +1,7 @@
 #include "CBillboardShader.h"
-#include "CLog.h"
-#include "CRenderable.h"
-#include "CGeometry.h"
+#include "../CLog.h"
+#include "../CRenderable.h"
+#include "../CGeometry.h"
 
 #include <cassert>
 

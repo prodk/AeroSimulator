@@ -2,7 +2,8 @@
 #include "CCommonMath.h"
 #include "CGeometry.h"
 #include "CLine.h"
-#include "CShader.h"
+#include "../src/shaders/CShader.h"
+#include "CLog.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -26,7 +27,7 @@ namespace
 CSphere::CSphere()
    : mVertices()
    , mIndices()
-   , mNormals()
+   , mNormalLine()
    , mLineGeometry(new CGeometry())
    , mGeometryNormals()
    , mDataNormals()
@@ -45,8 +46,8 @@ CSphere::CSphere()
       const int numOfIndices = mIndices.size();
       mGeometry->setNumOfIndices(numOfIndices);
 
-      mGeometry->setNumOfElementsPerVertex(3); ///@todo: probably remove this
-      mGeometry->setVertexStride(3); // 3 coords
+      mGeometry->setNumOfElementsPerVertex(3);
+      mGeometry->setVertexStride(3); // 3 coords, change to 6 when normals are added
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
@@ -56,9 +57,10 @@ CSphere::CSphere()
 CSphere::~CSphere()
 {
 }
+
 void CSphere::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   //CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
+   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }
 
@@ -70,8 +72,8 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
 
       const std::size_t numOfNormals = mVertices.size();
 
-      mNormals.resize(numOfNormals);
-      mGeometryNormals.resize(numOfNormals);
+      mNormalLine.resize(numOfNormals);          // Lines drawing normals
+      mGeometryNormals.resize(numOfNormals);  // Geometry for lines depicting normals
 
       const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -89,25 +91,24 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
             mGeometryNormals[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
             mGeometryNormals[count]->setVertexStride(3); // 3 coords
 
-            mNormals[count].reset(new CLine());
-            if (mNormals[count])
+            mNormalLine[count].reset(new CLine());
+            if (mNormalLine[count])
             {
                const glm::vec3& v = mVertices[count];
 
-               mNormals[count]->setGeometry(mGeometryNormals[count]);
-               mNormals[count]->setColor(color);
-               mNormals[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
-               mNormals[count]->setTranslate(v);
-               add(mNormals[count].get());
+               mNormalLine[count]->setGeometry(mGeometryNormals[count]);
+               mNormalLine[count]->setColor(color);
+               mNormalLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
+               mNormalLine[count]->setTranslate(v);
+               add(mNormalLine[count].get());
 
-               mNormals[count]->setShadersAndBuffers(pShader);
+               mNormalLine[count]->setShadersAndBuffers(pShader);
             }
-
-         }
-      }
+         } // end if mGeometryNormals[count]
+      } // end for
    }
 
-   buildModelMatrix(glm::mat4x4(1.0f));
+   buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
 }
 
 void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
@@ -168,6 +169,7 @@ void CSphere::generateSphere()
 
    mVertices.resize(Total_Points); // vertex + normal
    mIndices.resize(Total_Points);
+
    for (i = 0; i < Total_Points; i++)
    {
       // using last bit to alternate,+band number (which band)

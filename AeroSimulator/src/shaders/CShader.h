@@ -3,10 +3,10 @@
 #ifndef AERO_SIMULATOR_CSHADER_H
 #define AERO_SIMULATOR_CSHADER_H
 
-#include "../AeroSimulator/include/glew.h"
-#include "../AeroSimulator/include/wglew.h"
+#include "../include/glew.h"
+#include "../include/wglew.h"
 #include <gl/GL.h>
-#include "../AeroSimulator/include/glext.h"
+#include "../include/glext.h"
 
 #include <string>
 

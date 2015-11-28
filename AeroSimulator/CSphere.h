@@ -32,8 +32,10 @@ namespace AeroSimulatorEngine
    private:
       std::vector<glm::vec3> mVertices; ///@todo: use a map to avoid repeating vertices
       std::vector<GLuint> mIndices;
-      std::vector<tLine> mNormals;
+      std::vector<tLine> mNormalLine; // Lines depicting normals
       std::shared_ptr<CGeometry> mLineGeometry;
+
+      ///@todo: remove when rotating around any axis is implemented in CGameObject
       std::vector<std::shared_ptr<CGeometry> > mGeometryNormals;
       std::vector<glm::vec3> mDataNormals;
       glm::mat4x4 mScaledTRMatrix;

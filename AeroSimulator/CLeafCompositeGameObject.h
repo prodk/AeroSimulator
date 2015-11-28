@@ -3,6 +3,8 @@
 
 #include "CCompositeGameObject.h"
 
+///@todo: rename to CLeafGameObject
+
 namespace AeroSimulatorEngine
 {
    class CLeafCompositeGameObject : public CCompositeGameObject

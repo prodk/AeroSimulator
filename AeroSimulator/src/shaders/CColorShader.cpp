@@ -1,7 +1,7 @@
 #include "CColorShader.h"
-#include "CLog.h"
-#include "CRenderable.h"
-#include "CGeometry.h"
+#include "../CLog.h"
+#include "../CRenderable.h"
+#include "../CGeometry.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -22,7 +22,7 @@ CColorShader::CColorShader()
       "    gl_FragColor = uColor;//vec4(1.0, 0.0, 0.0, 1.0); //uColor;\n"
       "}\n";
 
-   CLog::getInstance().log("* CSimpleShader::CSimpleShader(): created");
+   CLog::getInstance().log("* CColorShader created");
 }
 
 CColorShader::~CColorShader()
