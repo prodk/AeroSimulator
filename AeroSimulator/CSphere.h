@@ -34,6 +34,8 @@ namespace AeroSimulatorEngine
       std::vector<GLuint> mIndices;
       std::vector<tLine> mNormals;
       std::shared_ptr<CGeometry> mLineGeometry;
+      std::vector<std::shared_ptr<CGeometry> > mGeometryNormals;
+      std::vector<glm::vec3> mDataNormals;
       glm::mat4x4 mScaledTRMatrix;
    };
 }

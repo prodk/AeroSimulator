@@ -352,7 +352,8 @@ void CWin32Renderer::updateRenderables()
    updateAirplane();
 
    ///@todo: place to a method updateSphere
-   
+   mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f));
+   mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)

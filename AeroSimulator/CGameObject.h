@@ -39,6 +39,8 @@ namespace AeroSimulatorEngine
 
       bool isLeaf() const { return mIsLeaf; }
 
+      void setRotate(const float angle, const glm::vec3& axis);
+
    protected:
       ///@todo: probably move this to a separate CTransform class/component
       glm::vec3 mScale;       // Scale factors along the parent object axes
@@ -50,6 +52,8 @@ namespace AeroSimulatorEngine
       glm::mat4 mParentByLocalTRMatrix; // Avoid multiplying static matrices
 
       bool mIsLeaf;
+      float mArbitraryAngle;
+      glm::vec3 mArbitraryAxis;
    };
 } // namespace AeroSimulatorEngine
 

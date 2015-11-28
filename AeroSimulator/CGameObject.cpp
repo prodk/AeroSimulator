@@ -19,6 +19,8 @@ CGameObject::CGameObject()
    , mParentTRMatrix()
    , mParentByLocalTRMatrix()
    , mIsLeaf(false)
+   , mArbitraryAngle(0.f)
+   , mArbitraryAxis()
 {
 }
 
@@ -84,21 +86,29 @@ void CGameObject::calculateTRMatrix()
    mTRMatrix = glm::mat4x4(1);
    mTRMatrix = glm::translate(mTRMatrix, mTranslate);
 
+   ///@todo add checking for non-0 angles
    // 2) rotate
    // x axis
    const float angleX = CCommonMath::degToRad(mRotate.x);
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
 
+   // z axis
+   const float angleZ = CCommonMath::degToRad(mRotate.z);
+   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+   mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
+
    // y axis
    const float angleY = CCommonMath::degToRad(mRotate.y);
    glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
    mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
 
-   // z axis
-   const float angleZ = CCommonMath::degToRad(mRotate.z);
-   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
+   // Any axis
+   /*if (std::fabs(mArbitraryAngle) > std::numeric_limits<float>::epsilon())
+   {
+      const float angle = CCommonMath::degToRad(mArbitraryAngle);
+      mTRMatrix = glm::rotate(mTRMatrix, angle, mArbitraryAxis);
+   }*/
 
    // Scale is used only for the model matrix
 }
@@ -116,10 +126,15 @@ void CGameObject::scale(const glm::vec3& scale)
    mModelMatrix = glm::scale(mModelMatrix, scale);
 }
 
+void CGameObject::setRotate(const float angle, const glm::vec3& axis)
+{
+   mArbitraryAngle = angle;
+   mArbitraryAxis = axis;
+}
+
 void CGameObject::translate(const glm::vec3& translate)
 {
    mTranslate = translate;
 
    mTRMatrix = glm::translate(mTRMatrix, translate);
-   mModelMatrix = mTRMatrix;
 }

@@ -28,6 +28,8 @@ CSphere::CSphere()
    , mIndices()
    , mNormals()
    , mLineGeometry(new CGeometry())
+   , mGeometryNormals()
+   , mDataNormals()
    , mScaledTRMatrix()
 {
    generateSphere();
@@ -48,7 +50,7 @@ CSphere::CSphere()
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
-   setDrawWithLines(true);
+   //setDrawWithLines(true);
 }
 
 CSphere::~CSphere()
@@ -62,63 +64,48 @@ void CSphere::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 
 void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
 {
-   if (mLineGeometry && pShader)
+   if (pShader)
    {
-      pShader->link(); // Just in case
+      pShader->link();
 
-      // Set the raw data for the geometry
-      mLineGeometry->setVertexBuffer(lineData);
-      const int numOfVertices = sizeof(lineData) / sizeof(lineData[0]);
-      mLineGeometry->setNumOfVertices(numOfVertices);
+      const std::size_t numOfNormals = mVertices.size();
 
-      mLineGeometry->setIndexBuffer(indices);
-      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-      mLineGeometry->setNumOfIndices(numOfIndices);
-
-      mLineGeometry->setNumOfElementsPerVertex(3);
-      mLineGeometry->setVertexStride(3);
-
-      // Create a normal for each vertex
-      ///@todo: put them in one array later
-      const std::size_t numOfNormals = 5;// mVertices.size();
       mNormals.resize(numOfNormals);
+      mGeometryNormals.resize(numOfNormals);
 
       const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
 
       for (std::size_t count = 0; count < numOfNormals; ++count)
       {
-         mNormals[count].reset(new CLine());
-         if (mNormals[count])
+         mGeometryNormals[count].reset(new CGeometry());
+         if (mGeometryNormals[count])
          {
-            const glm::vec3& v = mVertices[count];
-            /*const float length = std::sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-            const glm::vec3 n = glm::vec3(v.x / length, v.y / length, v.z / length);
+            mGeometryNormals[count]->setVertexBuffer(&mDataNormals[2*count]);
+            mGeometryNormals[count]->setNumOfVertices(6);
 
-            const float projectXY = std::sqrtf(n.x*n.x + n.y*n.y);
+            mGeometryNormals[count]->setIndexBuffer(indices);
+            mGeometryNormals[count]->setNumOfIndices(2);
 
-            float angleY = 90.f;
-            if (projectXY > std::numeric_limits<float>::epsilon())
-               angleY = std::atan(n.z / projectXY);
+            mGeometryNormals[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
+            mGeometryNormals[count]->setVertexStride(3); // 3 coords
 
-            float angleZ = 90.f;
-            if (n.x > std::numeric_limits<float>::epsilon())
-               angleZ = std::atan(n.y / n.x);
+            mNormals[count].reset(new CLine());
+            if (mNormals[count])
+            {
+               const glm::vec3& v = mVertices[count];
 
-            ///@todo: this is not good, because inside the game object we will again transfrom to radians
-            angleY = CCommonMath::radToDeg(angleY);
-            angleZ = CCommonMath::radToDeg(angleZ);*/
-            // Setup line for the normal
-            mNormals[count]->setGeometry(mLineGeometry);
-            mNormals[count]->setColor(color);
-            //mNormals[count]->setRotate(glm::vec3(0.0f, angleY, angleZ));
-            mNormals[count]->setTranslate(-v);
-            //mNormals[count]->calculateModelMatrix();
-            add(mNormals[count].get());
+               mNormals[count]->setGeometry(mGeometryNormals[count]);
+               mNormals[count]->setColor(color);
+               mNormals[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
+               mNormals[count]->setTranslate(v);
+               add(mNormals[count].get());
 
-            mNormals[count]->setShadersAndBuffers(pShader);
+               mNormals[count]->setShadersAndBuffers(pShader);
+            }
+
          }
       }
-   }// end if mLineGeometry
+   }
 
    buildModelMatrix(glm::mat4x4(1.0f));
 }
@@ -134,12 +121,24 @@ void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 
 void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix)
 {
-   CParentGameObject::updateTRMatrix(trMatrix);
+   const float deltaX = 1.0f;
+   calculateTRMatrix();
+   mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
-   // Don't forget to change the cached scaled TR matrix
+   mRotate.x += deltaX;
+
    if (trMatrix != mParentTRMatrix)
    {
-      mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+      mParentTRMatrix = trMatrix;
+      mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
+   }
+
+   for (auto * pChild : mChildren)
+   {
+      if (pChild)
+      {
+         pChild->updateTRMatrix(mParentByLocalTRMatrix); /// Avoid recalculation on every frame
+      }
    }
 }
 
@@ -154,20 +153,20 @@ void CSphere::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 void CSphere::generateSphere()
 {
    ///@todo: rename the variables and reconsider their type
-   const int Band_Power = 4;  // 2^Band_Power = Total Points in a band.
+   const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
    const int Band_Points = std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
    const int Total_Points = Sections_In_Band*Band_Points;
    // remember - for each section in a band, we have a band
    const float Section_Arc = 2 * M_PI / Sections_In_Band;
-   const float R = -1.f; // radius of 10
+   const float R = -1.f; // radius
 
    int i;
    float x_angle;
    float y_angle;
 
-   mVertices.resize(Total_Points);
+   mVertices.resize(Total_Points); // vertex + normal
    mIndices.resize(Total_Points);
    for (i = 0; i < Total_Points; i++)
    {
@@ -188,7 +187,10 @@ void CSphere::generateSphere()
       mVertices[i].y = R*cos(x_angle);
       mVertices[i].z = R*sin(x_angle)*cos(y_angle);
 
+      glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
+      mDataNormals.push_back(v1);
+      mDataNormals.push_back(mVertices[i]);
+
       mIndices[i] = i;
    }
 }
-
