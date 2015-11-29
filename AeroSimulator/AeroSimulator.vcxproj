@@ -88,7 +88,7 @@
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(SolutionDir)AeroSimulator\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>winmm.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -171,6 +171,7 @@
     <ClInclude Include="CTask.h" />
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CTexture.h" />
+    <ClInclude Include="CTimer.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
     <ClInclude Include="CLeafCompositeGameObject.h" />
@@ -207,6 +208,7 @@
     <ClCompile Include="CTask.cpp" />
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CTexture.cpp" />
+    <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
     <ClCompile Include="CLeafCompositeGameObject.cpp" />

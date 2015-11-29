@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\shaders">
-      <UniqueIdentifier>{f7953c60-a167-4a25-a9d4-8a199e372edb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\shaders">
-      <UniqueIdentifier>{397cd2f9-572f-450f-8cbb-0e42964d0255}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\app">
       <UniqueIdentifier>{3122706b-64d1-46ac-885d-822f6b6f453a}</UniqueIdentifier>
     </Filter>
@@ -49,28 +43,34 @@
     <Filter Include="Header Files\gameObject\billboard">
       <UniqueIdentifier>{a746d2ed-ae11-467e-9ee6-32b4a72d61a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\renderer\shaders">
+      <UniqueIdentifier>{397cd2f9-572f-450f-8cbb-0e42964d0255}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\renderer\shaders">
+      <UniqueIdentifier>{f7953c60-a167-4a25-a9d4-8a199e372edb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\shaders\CColorLambertianShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CTextureShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CColorShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CBillboardShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CSimpleShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="CApp.h">
       <Filter>Header Files\app</Filter>
@@ -154,24 +154,27 @@
       <Filter>Header Files\gameObject\billboard</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CHealthbarShader.h">
-      <Filter>Header Files\shaders</Filter>
+      <Filter>Header Files\renderer\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="CTimer.h">
+      <Filter>Header Files\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CColorShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CBillboardShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CSimpleShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="CAppWindow.cpp">
       <Filter>Source Files\app</Filter>
@@ -204,7 +207,7 @@
       <Filter>Source Files\renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CTextureShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="CCompositeGameObject.cpp">
       <Filter>Source Files\gameObject\composite</Filter>
@@ -258,7 +261,10 @@
       <Filter>Source Files\gameObject\billboard</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CHealthbarShader.cpp">
-      <Filter>Source Files\shaders</Filter>
+      <Filter>Source Files\renderer\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="CTimer.cpp">
+      <Filter>Source Files\app</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
