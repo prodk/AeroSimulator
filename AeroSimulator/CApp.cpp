@@ -181,7 +181,7 @@ void CApp::addClouds()
    const float width = 3.0f;
    const float height = 3.0f;
    const float minDistance = 7.0f;
-   const float maxDistance = 14.0f;
+   const float maxDistance = 13.0f;
    const char* filePath = "../AeroSimulator/res/cloud.dds";
 
    mBillboardShader->link();

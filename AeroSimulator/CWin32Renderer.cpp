@@ -50,6 +50,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mKeyCode(0)
    , mCameraKeyPressed(false)
    , mCameraKeyCode(0)
+   , mFrameDt(0.0)
 {
    assert(mCamera);
 
@@ -315,7 +316,7 @@ void CWin32Renderer::updateAirplane()
    // Update the root and all its children.
    if (mAirplaneRoot)
    {
-      mAirplaneRoot->updateTRMatrix(glm::mat4(1.0f)); // Animate the parts of the tree-like object
+      mAirplaneRoot->updateTRMatrix(glm::mat4(1.0f), mFrameDt); // Animate the parts of the tree-like object
       mAirplaneRoot->updateModelMatrix(modelObjectMatrix);
    }
 }
@@ -329,18 +330,19 @@ void CWin32Renderer::updateCamera()
 void CWin32Renderer::springButtons()
 {
    // If the button was depressed, return the plane to the previous position
+   const float rotationSpeed = 80.f*mFrameDt;
    if (!mKeyPressed
       || (mKeyPressed && mKeyCode != VK_LEFT && mKeyCode != VK_RIGHT))
    {
       if (mAngleZ > 0.0f)
       {
-         mAngleZ -= 1.f;
+         mAngleZ -= rotationSpeed;
          mAngleZ = std::max<float>(0.0f, mAngleZ);
       }
 
       if (mAngleZ < -0.0f)
       {
-         mAngleZ += 1.f;
+         mAngleZ += rotationSpeed;
          mAngleZ = std::min<float>(0.0f, mAngleZ);
       }
    }
@@ -349,10 +351,10 @@ void CWin32Renderer::springButtons()
       || (mKeyPressed && mKeyCode != VK_UP && mKeyCode != VK_DOWN))
    {
       if (mAngleX > 0.f)
-         mAngleX -= 1.f;
+         mAngleX -= rotationSpeed;
 
       if (mAngleX < 0.f)
-         mAngleX += 1.f;
+         mAngleX += rotationSpeed;
    }
 }
 
@@ -361,7 +363,7 @@ void CWin32Renderer::updateRenderables()
    updateAirplane();
 
    ///@todo: place to a method updateSphere
-   mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f));
+   mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
    mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
 }
 
@@ -372,40 +374,41 @@ void CWin32Renderer::updateFPS(CTask * pTask)
       CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
 
       const int fps = pTimer->getFPS();
-      const double frameDt = pTimer->getTimeFrame();
-      const double simDt = pTimer->getTimeSim();
+      mFrameDt = pTimer->getDtFrame();
+      const double simDt = pTimer->getDtSim();
 
       wchar_t buf[256];
-      swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, frameDt, simDt);
+      swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, mFrameDt, simDt);
       SetWindowText(mWndHandle, buf);
    }
 }
 
 void CWin32Renderer::updateInput()
 {
+   const float rotationSpeed = 50.f*mFrameDt;
    if (mKeyPressed)
    {
       switch (mKeyCode)
       {
          /// Airplane rotations
       case (VK_LEFT) :
-         mAngleZ += 1.0f;
-         mAngleZ = std::min<float>(mAngleZ, 45.f);
+         mAngleZ += rotationSpeed;
+         mAngleZ = std::min<float>(mAngleZ, 90.f);
          break;
 
       case (VK_RIGHT) :
-         mAngleZ -= 1.0f;
-         mAngleZ = std::max<float>(mAngleZ, -45.f);
+         mAngleZ -= rotationSpeed;
+         mAngleZ = std::max<float>(mAngleZ, -90.f);
          break;
 
       case (VK_UP) :
-         mAngleX -= 1.0f;
-         mAngleX = std::max<float>(mAngleX, -45.f);
+         mAngleX -= rotationSpeed;
+         mAngleX = std::max<float>(mAngleX, -90.f);
          break;
 
       case (VK_DOWN) :
-         mAngleX += 1.0f;
-         mAngleX = std::min<float>(mAngleX, 45.f);
+         mAngleX += rotationSpeed;
+         mAngleX = std::min<float>(mAngleX, 90.f);
          break;
 
          /// System changes in reaction to the keyboard
@@ -436,7 +439,7 @@ void CWin32Renderer::updateInput()
       switch (mCameraKeyCode)
       {
       case (0x57) : // w, up
-         mCameraAngleX += 1.0f;
+         mCameraAngleX += rotationSpeed;
          if (mCameraAngleX >= 360.f) mCameraAngleX = 0.f;
          break;
 
@@ -446,12 +449,12 @@ void CWin32Renderer::updateInput()
          break;
 
       case (0x41) : // a, left
-         mCameraAngleY += 1.0f;
+         mCameraAngleY += rotationSpeed;
          if (mCameraAngleY >= 360.f) mCameraAngleY = 0.f;
          break;
 
       case (0x44) : // d, right
-         mCameraAngleY -= 1.f;
+         mCameraAngleY -= rotationSpeed;
          if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
          break;
       }

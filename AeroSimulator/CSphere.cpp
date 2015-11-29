@@ -119,9 +119,9 @@ void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
    mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
 }
 
-void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix)
+void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
-   const float deltaX = 1.0f;
+   const float deltaX = 150.0f * dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
@@ -137,7 +137,7 @@ void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix)
    {
       if (pChild)
       {
-         pChild->updateTRMatrix(mParentByLocalTRMatrix); /// Avoid recalculation on every frame
+         pChild->updateTRMatrix(mParentByLocalTRMatrix, dt); /// Avoid recalculation on every frame
 
          ///@todo: probably incorrect, think about it
          if ((mScale.x != 1.0) || (mScale.y != 1.0) || (mScale.z != 1.0))

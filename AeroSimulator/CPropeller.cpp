@@ -13,11 +13,11 @@ CPropeller::~CPropeller()
 {
 }
 
-void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix)
+void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    ///@todo: for animations add timers later
    // Rotate the propeller.
-   const float deltaZ = 4.0f;
+   const float deltaZ = 300.0f*dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
@@ -33,7 +33,7 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix)
    {
       if (pChild)
       {
-         pChild->updateTRMatrix(mParentByLocalTRMatrix); /// Avoid recalculation on every frame
+         pChild->updateTRMatrix(mParentByLocalTRMatrix, dt); /// Avoid recalculation on every frame
       }
    }
 }

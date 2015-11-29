@@ -20,7 +20,7 @@ namespace AeroSimulatorEngine
       virtual void traverse(std::vector<CCompositeGameObject*>& tree);
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
       ///@todo: probably add some timing arguments here
-      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix);
+      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
    };
 } // namespace AeroSimulatorEngine

@@ -86,6 +86,7 @@ namespace AeroSimulatorEngine
       bool mCameraKeyPressed;
       WPARAM mKeyCode;
       WPARAM mCameraKeyCode;
+      double mFrameDt;
    };
 } // namespace AeroSimulatorEngine
 

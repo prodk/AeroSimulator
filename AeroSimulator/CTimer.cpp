@@ -29,12 +29,12 @@ CTimer::~CTimer()
 {
 }
 
-float CTimer::getTimeFrame() const
+float CTimer::getDtFrame() const
 {
    return mFrameDt;
 }
 
-float CTimer::getTimeSim() const
+float CTimer::getDtSim() const
 {
    return mSimDt;
 }

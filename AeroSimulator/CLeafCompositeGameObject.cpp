@@ -43,7 +43,7 @@ void CLeafCompositeGameObject::buildModelMatrix(const glm::mat4x4 & parentTRMatr
    mParentByLocalTRMatrix = mModelMatrix;
 }
 
-void CLeafCompositeGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix)
+void CLeafCompositeGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    if (trMatrix != mParentTRMatrix)
    {

@@ -65,7 +65,7 @@ void CParentGameObject::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
    }
 }
 
-void CParentGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix)
+void CParentGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    if (trMatrix != mParentTRMatrix)
    {
@@ -77,7 +77,7 @@ void CParentGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix)
    {
       if (pChild)
       {
-         pChild->updateTRMatrix(mParentByLocalTRMatrix); /// Avoid recalculation on every frame
+         pChild->updateTRMatrix(mParentByLocalTRMatrix, dt); /// Avoid recalculation on every frame
       }
    }
 }

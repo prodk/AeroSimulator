@@ -57,9 +57,9 @@ void CCube::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
    mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
 }
 
-void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix)
+void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
-   CParentGameObject::updateTRMatrix(trMatrix);
+   CParentGameObject::updateTRMatrix(trMatrix, dt);
 
    // Don't forget to change the cached scaled TR matrix
    if (trMatrix != mParentTRMatrix)

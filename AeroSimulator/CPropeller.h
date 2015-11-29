@@ -11,7 +11,7 @@ namespace AeroSimulatorEngine
       CPropeller();
       virtual ~CPropeller();
 
-      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix);
+      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
    };
 } // namespace AeroSimulatorEngine
 
