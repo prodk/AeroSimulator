@@ -4,6 +4,24 @@
 using namespace AeroSimulatorEngine;
 
 CTimer::CTimer()
+   : CTask()
+   , mTimeScale(1.0)
+   , mTimeLastFrame(1.0)
+   , mFrameDt(0.0)
+   , mSimDt(mFrameDt)
+   , mSimMultiplier(1.0)
+   , mFPS(0)
+{
+}
+
+CTimer::CTimer(ePriority prio)
+   :CTask(prio)
+   , mTimeScale(1.0)
+   , mTimeLastFrame(1.0)
+   , mFrameDt(0.0)
+   , mSimDt(mFrameDt)
+   , mSimMultiplier(1.0)
+   , mFPS(0)
 {
 }
 
@@ -13,12 +31,12 @@ CTimer::~CTimer()
 
 float CTimer::getTimeFrame() const
 {
-   return 0.0f;
+   return mFrameDt;
 }
 
 float CTimer::getTimeSim() const
 {
-   return 0.0f;
+   return mSimDt;
 }
 
 void CTimer::setSimMultiplier(const float simMultiplier)
@@ -28,18 +46,21 @@ void CTimer::setSimMultiplier(const float simMultiplier)
 
 bool CTimer::start()
 {
+   getTimeScale();
    mTimeLastFrame = getCurrentTime();
 
-   return false;
+   return true;
 }
 
-void CTimer::update()
+void CTimer::update(CTask* pTask)
 {
    // Get the delta between the last frame and this
    double currentTime = getCurrentTime();
    mFrameDt = (currentTime - mTimeLastFrame) ;
    mTimeLastFrame = currentTime;
    mSimDt = mFrameDt * mSimMultiplier;
+
+   calculateFPS();
 }
 
 void CTimer::stop()
@@ -59,6 +80,25 @@ void CTimer::getTimeScale()
 
    // Get a scaling factor which will convert the timer units to seconds.
    mTimeScale = 1.0 / (double)cntsPerSec;
+}
+
+void CTimer::calculateFPS()
+{
+   static int frameCnt = 0;
+   static double timeElapsed = 0.0f;
+
+   ++frameCnt;
+
+   timeElapsed += mFrameDt;
+   // Has one second passed?
+   if (timeElapsed >= 1.0f)
+   {
+      mFPS = frameCnt;
+
+      // Reset values
+      frameCnt = 0;
+      timeElapsed = 0.0f;
+   }
 }
 
 double CTimer::getCurrentTime()

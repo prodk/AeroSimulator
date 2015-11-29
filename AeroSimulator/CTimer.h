@@ -12,6 +12,7 @@ namespace AeroSimulatorEngine
    public:
       CTimer();
       virtual ~CTimer();
+      explicit CTimer(ePriority prio);
 
       typedef __int64 TimeUnits;
 
@@ -20,12 +21,15 @@ namespace AeroSimulatorEngine
       void setSimMultiplier(const float simMultiplier);
       double getCurrentTime(); ///@todo: probably make virtual such that it can be overriden on different platforms
 
+      int getFPS() const { return mFPS; }
+
       virtual bool start();
-      virtual void update();
+      virtual void update(CTask* pTask);
       virtual void stop();
 
    private:
       void getTimeScale();
+      void calculateFPS();
 
    private:
       double mTimeScale;
@@ -33,6 +37,7 @@ namespace AeroSimulatorEngine
       double mFrameDt;
       double mSimDt;
       double mSimMultiplier;
+      int mFPS;
    };
 } // namespace AeroSimulatorEngine
 

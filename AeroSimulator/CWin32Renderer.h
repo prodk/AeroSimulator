@@ -24,7 +24,7 @@ namespace AeroSimulatorEngine
 
       // Override CTask part
       virtual bool start();
-      virtual void update();
+      virtual void update(CTask* pTask);
       virtual void stop();
 
       bool isInitialized() const { return mIsInitialized; }
@@ -54,6 +54,7 @@ namespace AeroSimulatorEngine
       void updateCamera();
       void springButtons();
       void updateRenderables();
+      void updateFPS(CTask* pTask);
 
    private:
       HDC mDC;
@@ -79,6 +80,7 @@ namespace AeroSimulatorEngine
 
       bool mIsDebugMode;
       float mCameraScale;
+      HWND mWndHandle;
    };
 } // namespace AeroSimulatorEngine
 

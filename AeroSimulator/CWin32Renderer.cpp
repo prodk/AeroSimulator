@@ -6,6 +6,7 @@
 #include "CCommonMath.h" ///@todo: remove this
 #include "CCamera.h"
 #include "CCompositeGameObject.h"
+#include "CTimer.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -46,6 +47,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mSphereRoot(nullptr)
    , mIsDebugMode(false)
    , mCameraScale(1.0f)
+   , mWndHandle(0)
 {
    assert(mCamera);
 
@@ -65,10 +67,12 @@ bool CWin32Renderer::start()
    return isInitialized();
 }
 
-void CWin32Renderer::update()
+void CWin32Renderer::update(CTask* pTask)
 {
    if (mIsInitialized)
    {
+      updateFPS(pTask);
+
       setRenderContext();
 
       updateCamera();
@@ -356,10 +360,31 @@ void CWin32Renderer::updateRenderables()
    mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
 }
 
+void CWin32Renderer::updateFPS(CTask * pTask)
+{
+   if (pTask)
+   {
+      CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
+
+      const int fps = pTimer->getFPS();
+      const double frameDt = pTimer->getTimeFrame();
+      const double simDt = pTimer->getTimeSim();
+
+      wchar_t buf[256];
+      swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, frameDt, simDt);
+      SetWindowText(mWndHandle, buf);
+   }
+}
+
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
    switch (uMessage)
    {
+   case WM_CREATE:
+   {
+      mWndHandle = hWnd;
+      SetWindowText(hWnd, L"Hi there!");
+   }
       // Stubs for system commands
    case WM_SYSCOMMAND:
    {

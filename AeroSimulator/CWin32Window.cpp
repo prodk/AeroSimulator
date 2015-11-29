@@ -186,7 +186,7 @@ bool CWin32Window::start()
    return true;
 }
 
-void CWin32Window::update()
+void CWin32Window::update(CTask* pTask)
 {
    MSG msg;
    ZeroMemory(&msg, sizeof(MSG));

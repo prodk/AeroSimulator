@@ -45,7 +45,7 @@ bool CRenderer::loadOpenGLExtensions()
    std::replace(strExtension.begin(), strExtension.end(), ' ', ';');
 
    CLog::getInstance().log("  OpenGL Extensions:");
-   CLog::getInstance().log(strExtension.c_str());
+   //CLog::getInstance().log(strExtension.c_str());
 
    // Get the GPU information and the OpenGL extensions
    CLog::getInstance().log("* Video-system information:");

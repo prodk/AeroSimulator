@@ -25,7 +25,7 @@ namespace AeroSimulatorEngine
 
       // Override CTask part
       virtual bool start();
-      virtual void update();
+      virtual void update(CTask* pTask);
       virtual void stop();
 
       HDC getDC() const { return mDC; }

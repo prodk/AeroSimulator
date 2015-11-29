@@ -19,6 +19,7 @@ namespace AeroSimulatorEngine
    class CTextureShader;
    class CGameObject;
    class CCompositeGameObject;
+   class CTimer;
 
    class CApp
    {
@@ -56,6 +57,7 @@ namespace AeroSimulatorEngine
       CTaskManager mTaskManager;
       std::shared_ptr<CWin32Window> mAppWindowTask;
       std::shared_ptr<CWin32Renderer> mRendererTask;
+      std::shared_ptr<CTimer> mTimerTask;
 
       std::shared_ptr<C3DModel> mAirPlane;
       std::shared_ptr<CShader> mSimpleShader; ///@todo: probably remove this

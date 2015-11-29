@@ -17,6 +17,7 @@
 #include "../AeroSimulator/src/shaders/CHealthbarShader.h"
 #include "CSphere.h"
 #include "../AeroSimulator/src/shaders/CColorLambertianShader.h"
+#include "CTimer.h"
 
 #include <conio.h>
 #include <cassert>
@@ -25,8 +26,9 @@ using namespace AeroSimulatorEngine;
 
 CApp::CApp()
    : mTaskManager()
-   , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO))
+   , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO_1))
    , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
+   , mTimerTask(new CTimer(CTask::HIGHEST_PRIO_0))
    , mAirPlane(new C3DModel())
    , mSimpleShader (new CSimpleShader())  ///@todo: probably remove this
    , mTextureShader(new CTextureShader())
@@ -41,6 +43,7 @@ CApp::CApp()
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
+   assert(mTimerTask);
    assert(mAirPlane);
    assert(mSimpleShader);
    assert(mTextureShader);
@@ -91,6 +94,8 @@ void CApp::run()
 {
    mTaskManager.addTask(mAppWindowTask.get());
    mTaskManager.addTask(mRendererTask.get());
+   mTaskManager.addTask(mTimerTask.get());
+   mTaskManager.setTaskToShare(mTimerTask.get());
 
    mTaskManager.execute();
 }

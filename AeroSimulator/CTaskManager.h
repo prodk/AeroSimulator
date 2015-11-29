@@ -36,10 +36,13 @@ namespace AeroSimulatorEngine
 
       bool hasTasks() const { return !mTasks.empty(); }
 
+      void setTaskToShare(CTask* task) { if(task) mTaskToShare = task; }
+
       typedef std::set<CTask*, CCompareTasks> TTaskSet;
 
    private:
       TTaskSet mTasks;
+      CTask* mTaskToShare; // Typically this is timer
    };
 
 } // namespace AeroSimulatorEngine

@@ -2,10 +2,12 @@
 
 #include "CTaskManager.h"
 #include "CAppWindow.h"
+#include "CLog.h"
 using namespace AeroSimulatorEngine;
 
 CTaskManager::CTaskManager()
    : mTasks()
+   , mTaskToShare(nullptr)
 {
 }
 
@@ -21,7 +23,7 @@ bool CTaskManager::addTask(CTask * pTask)
    {
       result = true;
       mTasks.insert(pTask);
-      ///@todo: add log here
+      CLog::getInstance().log("Task added.");
    }
 
    return result;
@@ -65,7 +67,7 @@ void CTaskManager::execute()
          CTask* pTask = (*iter);
          if (pTask && !pTask->getCanKill())
          {
-            pTask->update();
+            pTask->update(mTaskToShare);
          }
       }
 
