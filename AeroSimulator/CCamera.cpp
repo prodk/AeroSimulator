@@ -34,19 +34,35 @@ void CCamera::translate(const glm::vec3 & distance)
 void CCamera::rotate(const glm::vec3 & angles)
 {
    ///@todo: check that angles are non-zero
-   mRotate = glm::mat4(1.0f);
+   const bool changeX = (angles.x != 0.0f);
+   const bool changeY = (angles.y != 0.0f);
+   const bool changeZ = (angles.z != 0.0f);
 
-   const float angleX = CCommonMath::degToRad(angles.x);
-   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   mRotate = glm::rotate(mRotate, angleX, xAxis);
+   if (changeX || changeY || changeZ)
+   {
+      mRotate = glm::mat4(1.0f);
 
-   const float angleY = CCommonMath::degToRad(angles.y);
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   mRotate = glm::rotate(mRotate, angleY, yAxis);
+      if (changeX)
+      {
+         const float angleX = CCommonMath::degToRad(angles.x);
+         glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+         mRotate = glm::rotate(mRotate, angleX, xAxis);
+      }
 
-   const float angleZ = CCommonMath::degToRad(angles.z);
-   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   mRotate = glm::rotate(mRotate, angleZ, zAxis);
+      if (changeY)
+      {
+         const float angleY = CCommonMath::degToRad(angles.y);
+         glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+         mRotate = glm::rotate(mRotate, angleY, yAxis);
+      }
+
+      if (changeZ)
+      {
+         const float angleZ = CCommonMath::degToRad(angles.z);
+         glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+         mRotate = glm::rotate(mRotate, angleZ, zAxis);
+      }
+   }
 }
 
 void CCamera::resetView()

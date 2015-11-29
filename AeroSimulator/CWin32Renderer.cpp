@@ -38,8 +38,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mHorizontalPressed(0)
-   , mVerticalPressed(0)
    , mCameraAngleX(30.f)
    , mCameraAngleY(80.f)
    , mCamera(new CCamera())
@@ -48,6 +46,10 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsDebugMode(false)
    , mCameraScale(1.0f)
    , mWndHandle(0)
+   , mKeyPressed(false)
+   , mKeyCode(0)
+   , mCameraKeyPressed(false)
+   , mCameraKeyCode(0)
 {
    assert(mCamera);
 
@@ -72,6 +74,7 @@ void CWin32Renderer::update(CTask* pTask)
    if (mIsInitialized)
    {
       updateFPS(pTask);
+      updateInput();    // Handle keyboard events
 
       setRenderContext();
 
@@ -326,28 +329,30 @@ void CWin32Renderer::updateCamera()
 void CWin32Renderer::springButtons()
 {
    // If the button was depressed, return the plane to the previous position
-   if (mHorizontalPressed)
+   if (!mKeyPressed
+      || (mKeyPressed && mKeyCode != VK_LEFT && mKeyCode != VK_RIGHT))
    {
       if (mAngleZ > 0.0f)
       {
-         mAngleZ -= 0.8f;
+         mAngleZ -= 1.f;
          mAngleZ = std::max<float>(0.0f, mAngleZ);
       }
 
       if (mAngleZ < -0.0f)
       {
-         mAngleZ += 0.8f;
+         mAngleZ += 1.f;
          mAngleZ = std::min<float>(0.0f, mAngleZ);
       }
    }
 
-   if (mVerticalPressed)
+   if (!mKeyPressed
+      || (mKeyPressed && mKeyCode != VK_UP && mKeyCode != VK_DOWN))
    {
       if (mAngleX > 0.f)
-         mAngleX -= 0.4f;
+         mAngleX -= 1.f;
 
       if (mAngleX < 0.f)
-         mAngleX += 0.4f;
+         mAngleX += 1.f;
    }
 }
 
@@ -373,6 +378,83 @@ void CWin32Renderer::updateFPS(CTask * pTask)
       wchar_t buf[256];
       swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, frameDt, simDt);
       SetWindowText(mWndHandle, buf);
+   }
+}
+
+void CWin32Renderer::updateInput()
+{
+   if (mKeyPressed)
+   {
+      switch (mKeyCode)
+      {
+         /// Airplane rotations
+      case (VK_LEFT) :
+         mAngleZ += 1.0f;
+         mAngleZ = std::min<float>(mAngleZ, 45.f);
+         break;
+
+      case (VK_RIGHT) :
+         mAngleZ -= 1.0f;
+         mAngleZ = std::max<float>(mAngleZ, -45.f);
+         break;
+
+      case (VK_UP) :
+         mAngleX -= 1.0f;
+         mAngleX = std::max<float>(mAngleX, -45.f);
+         break;
+
+      case (VK_DOWN) :
+         mAngleX += 1.0f;
+         mAngleX = std::min<float>(mAngleX, 45.f);
+         break;
+
+         /// System changes in reaction to the keyboard
+      case (0x31) : // 1, debug mode on
+         mIsDebugMode = true;
+         break;
+
+      case (0x32) : // 2, debug mode off
+         mIsDebugMode = false;
+         break;
+
+      case (VK_OEM_PLUS) : // +, zoom in
+         mCameraScale += 0.02f;
+         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
+         break;
+
+      case (VK_OEM_MINUS) : // -, zoom out
+         mCameraScale -= 0.02f;
+         mCameraScale = std::max(0.1f, mCameraScale);
+         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
+         break;
+      }
+   }
+
+   // Camera rotations
+   if (mCameraKeyPressed)
+   {
+      switch (mCameraKeyCode)
+      {
+      case (0x57) : // w, up
+         mCameraAngleX += 1.0f;
+         if (mCameraAngleX >= 360.f) mCameraAngleX = 0.f;
+         break;
+
+      case (0x53) : // s, down
+         mCameraAngleX -= 1.f;
+         if (mCameraAngleX <= -360.f) mCameraAngleX = 0.f;
+         break;
+
+      case (0x41) : // a, left
+         mCameraAngleY += 1.0f;
+         if (mCameraAngleY >= 360.f) mCameraAngleY = 0.f;
+         break;
+
+      case (0x44) : // d, right
+         mCameraAngleY -= 1.f;
+         if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
+         break;
+      }
    }
 }
 
@@ -409,77 +491,16 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
    // Keyboard is pressed
    case WM_KEYDOWN:
    {
-      if (wParam == VK_LEFT)
+      // w, s, a, d - camera key strokes, move camera independently of whether other keys are pressed
+      if ((wParam == 0x57) || (wParam == 0x53) || (wParam == 0x41) || (wParam == 0x44))
       {
-         mAngleZ += 1.0f;
-         mAngleZ = std::min<float>(mAngleZ, 45.f);
-         mHorizontalPressed = 0;
+         mCameraKeyPressed = true;
+         mCameraKeyCode = wParam;
       }
-      if (wParam == VK_RIGHT)
+      else
       {
-         mAngleZ -= 1.0f;
-         mAngleZ = std::max<float>(mAngleZ, -45.f);
-         mHorizontalPressed = 0;
-      }
-      if (wParam == VK_UP)
-      {
-         mAngleX -= 1.0f;
-         mAngleX = std::max<float>(mAngleX, -45.f);
-         mVerticalPressed = 0;
-      }
-      if (wParam == VK_DOWN)
-      {
-         mAngleX += 1.0f;
-         mAngleX = std::min<float>(mAngleX, 45.f);
-         mVerticalPressed = 0;
-      }
-
-      // Camera rotations
-      if (wParam == 0x57) // w, up
-      {
-         mCameraAngleX += 1.f;
-         if (mCameraAngleX >= 360.f) mCameraAngleX = 0.f;
-      }
-
-      if (wParam == 0x53) // s, down
-      {
-         mCameraAngleX -= 1.f;
-         if (mCameraAngleX <= -360.f) mCameraAngleX = 0.f;
-      }
-
-      if (wParam == 0x41) // a, left
-      {
-         mCameraAngleY += 1.f;
-         if (mCameraAngleY >= 360.f) mCameraAngleY = 0.f;
-      }
-
-      if (wParam == 0x44) // d, right
-      {
-         mCameraAngleY -= 1.f;
-         if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
-      }
-
-      if (wParam == 0x31) // 1, debug mode on
-      {
-         mIsDebugMode = true;
-      }
-
-      if (wParam == 0x32) // 2, debug mode off
-      {
-         mIsDebugMode = false;
-      }
-
-      if (wParam == VK_OEM_PLUS) // +, zoom in
-      {
-         mCameraScale += 0.02f;
-         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
-      }
-
-      if (wParam == VK_OEM_MINUS) // -, zoom out
-      {
-         mCameraScale -= 0.02f;
-         mCameraScale = std::max(0.1f, mCameraScale);
-         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
+         mKeyPressed = true;
+         mKeyCode = wParam;
       }
    }
    return false;
@@ -487,22 +508,10 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
    // Keyboard is depressed
    case WM_KEYUP:
    {
-      if (wParam == VK_LEFT)
-      {
-         ++mHorizontalPressed;
-      }
-      if (wParam == VK_RIGHT)
-      {
-         ++mHorizontalPressed;
-      }
-      if (wParam == VK_UP)
-      {
-         ++mVerticalPressed;
-      }
-      if (wParam == VK_DOWN)
-      {
-         ++mVerticalPressed;
-      }
+      if ((wParam == 0x57) || (wParam == 0x53) || (wParam == 0x41) || (wParam == 0x44))
+         mCameraKeyPressed = false;
+      else
+         mKeyPressed = false;
    }
    return false;
    } // end switch

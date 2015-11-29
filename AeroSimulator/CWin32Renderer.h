@@ -56,6 +56,8 @@ namespace AeroSimulatorEngine
       void updateRenderables();
       void updateFPS(CTask* pTask);
 
+      void updateInput();
+
    private:
       HDC mDC;
       bool mIsInitialized;
@@ -66,8 +68,6 @@ namespace AeroSimulatorEngine
       ///@todo: reconsider the approach to spring buttons
       float mAngleZ; // Angle of rotating around the z-axis of the air plane
       float mAngleX;
-      std::size_t mHorizontalPressed;
-      std::size_t mVerticalPressed;
 
       float mCameraAngleX; // up 'w', down 's'
       float mCameraAngleY; // left 'a', right 'd'
@@ -81,6 +81,11 @@ namespace AeroSimulatorEngine
       bool mIsDebugMode;
       float mCameraScale;
       HWND mWndHandle;
+
+      bool mKeyPressed;
+      bool mCameraKeyPressed;
+      WPARAM mKeyCode;
+      WPARAM mCameraKeyCode;
    };
 } // namespace AeroSimulatorEngine
 
