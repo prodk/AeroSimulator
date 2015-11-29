@@ -14,7 +14,7 @@
 #include "CBillBoard.h"
 #include "../AeroSimulator/src/shaders/CBillboardShader.h"
 #include "../AeroSimulator/src/shaders/CColorShader.h"
-#include "../AeroSimulator/src/shaders/CColorBillboardShader.h"
+#include "../AeroSimulator/src/shaders/CHealthbarShader.h"
 #include "CSphere.h"
 #include "../AeroSimulator/src/shaders/CColorLambertianShader.h"
 
@@ -32,7 +32,7 @@ CApp::CApp()
    , mTextureShader(new CTextureShader())
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
-   , mColorBillboardShader(new CColorBillboardShader())
+   , mHealthbarShader(new CHealthbarShader())
    , mColorLambertianShader(new CColorLambertianShader())
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
@@ -113,7 +113,7 @@ void CApp::setupScene()
    addSkyBox();
    addLand();
    addAirplane();
-   addBillboards();
+   addClouds();
    addSphere();
 
    mRendererTask->resetRenderContext();
@@ -151,8 +151,8 @@ void CApp::addLand()
 void CApp::addAirplane()
 {
    mColorShader->link();
-   mColorBillboardShader->link();
-   mAirPlane->setBillboardShader(mColorBillboardShader);
+   mHealthbarShader->link();
+   mAirPlane->setBillboardShader(mHealthbarShader);
    mAirPlane->buildModel(mColorShader);
 
    std::vector<CCompositeGameObject*> tree;
@@ -171,12 +171,12 @@ void CApp::addAirplane()
    mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
 }
 
-void CApp::addBillboards()
+void CApp::addClouds()
 {
    const float width = 3.0f;
    const float height = 3.0f;
-   const float minDistance = 6.0f;
-   const float maxDistance = 13.0f;
+   const float minDistance = 7.0f;
+   const float maxDistance = 14.0f;
    const char* filePath = "../AeroSimulator/res/cloud.dds";
 
    mBillboardShader->link();

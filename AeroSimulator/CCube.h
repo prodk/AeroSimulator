@@ -3,6 +3,7 @@
 #define AERO_SIMULATOR_CCUBE_H
 
 #include "CParentGameObject.h"
+#include <algorithm>
 
 namespace AeroSimulatorEngine
 {
@@ -31,6 +32,8 @@ namespace AeroSimulatorEngine
 
       void translateHealthBar(const glm::vec3& shift);
 
+      void setHealth(float health) { mHealthValue = std::min<float>(1.0, std::max<float>(0.0, health)); }
+
    public:
       ///@todo: rename to state that it is for untextured colored cube
       static const int mNumOfElementsPerVertex;
@@ -38,13 +41,11 @@ namespace AeroSimulatorEngine
 
    private:
       glm::mat4x4 mScaledTRMatrix;
-      std::shared_ptr<CCompositeGameObject> mHealthBarBack;
-      std::shared_ptr<CCompositeGameObject> mHealthBarFore; ///@todo: remove this
+      std::shared_ptr<CCompositeGameObject> mHealthBar;
       glm::vec3 mHealthBarShift;
-      float mBackgroundWidth;
-      float mForegroundWidth;
+      float mHealthBarWidth;
       float mHealthbarHeight;
-      float mShiftForeground;
+      float mHealthValue;
    };
 } // namespace AeroSimulatorEngine
 

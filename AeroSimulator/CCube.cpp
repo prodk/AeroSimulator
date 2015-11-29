@@ -18,15 +18,11 @@ const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates a
 CCube::CCube()
    : CParentGameObject()
    , mScaledTRMatrix()
-   , mHealthBarBack()
-   , mHealthBarFore()
+   , mHealthBar()
    , mHealthBarShift(glm::vec3(0.0f, 0.7f, 0.0f))
-   , mBackgroundWidth(0.6f)
-   , mForegroundWidth(0.4f)
-   , mHealthbarHeight(0.3f)
-   ///@todo: remove shift foreground and use shaders for the healthbar
-   //, mShiftForeground(0.5f*(mBackgroundWidth + mForegroundWidth))
-   , mShiftForeground(0.f)
+   , mHealthBarWidth(0.5f)
+   , mHealthbarHeight(0.2f)
+   , mHealthValue(0.4f)
 {
    CLog::getInstance().log("* CCube::CCube() default: success.");
 }
@@ -35,17 +31,13 @@ CCube::~CCube()
 {
    mGeometry.reset();
    mShader.reset();
-   mHealthBarBack.reset();
-   mHealthBarFore.reset();
+   mHealthBar.reset();
 }
 
 CCube::CCube(const glm::vec3 & scale,
              const glm::vec3 & rotate,
              const glm::vec3 & translate)
    : CParentGameObject(scale, rotate, translate)
-   , mScaledTRMatrix()
-   , mHealthBarBack()
-   , mHealthBarFore()
 {
    CLog::getInstance().log("* CCube::CCube() non-default: success.");
 }
@@ -89,37 +81,19 @@ void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
    if (pShader)
    {
       pShader->link();
-      mHealthBarBack.reset(new CColorBillBoard());
-      mHealthBarFore.reset(new CColorBillBoard());
+      mHealthBar.reset(new CColorBillBoard());
 
-      if (mHealthBarBack && mHealthBarFore)
+      if (mHealthBar)
       {
-         ///@todo: add to a method which obtains a healthbar as an argument
-         // Background billboard
-         mHealthBarBack->setTranslate(mHealthBarShift);
-         mHealthBarBack->setBillboardHeight(mHealthbarHeight);
-         mHealthBarBack->setBillboardWidth(mBackgroundWidth);
-         mHealthBarBack->calculateModelMatrix();
-         mHealthBarBack->setColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
-         mHealthBarBack->setHealthbarShift(0.f);
+         mHealthBar->setTranslate(mHealthBarShift);
+         mHealthBar->setBillboardHeight(mHealthbarHeight);
+         mHealthBar->setBillboardWidth(mHealthBarWidth);
+         mHealthBar->calculateModelMatrix();
+         mHealthBar->setColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
+         mHealthBar->setHealthValue(mHealthValue);
 
-         mHealthBarBack->setShadersAndBuffers(pShader);
-         add(mHealthBarBack.get());
-
-         // Foreground billboard
-        /* glm::vec3 fgShift = mHealthBarShift;
-         fgShift.x -= mShiftForeground;
-         mHealthBarFore->setTranslate(fgShift);*/
-
-         mHealthBarFore->setTranslate(mHealthBarShift);
-         mHealthBarFore->setBillboardHeight(mHealthbarHeight);
-         mHealthBarFore->setBillboardWidth(mForegroundWidth);
-         mHealthBarFore->calculateModelMatrix();
-         mHealthBarFore->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-         mHealthBarFore->setHealthbarShift(mShiftForeground);
-
-         mHealthBarFore->setShadersAndBuffers(pShader);
-         add(mHealthBarFore.get());
+         mHealthBar->setShadersAndBuffers(pShader);
+         add(mHealthBar.get());
       }
    }
 }
@@ -132,10 +106,5 @@ bool CCube::loadTexture(const char * fileName)
 void CCube::translateHealthBar(const glm::vec3 & shift)
 {
    mHealthBarShift = shift;
-   mHealthBarBack->setTranslate(mHealthBarShift);
-   mHealthBarFore->setTranslate(mHealthBarShift);
-
-   /*glm::vec3 fgShift = mHealthBarShift;
-   fgShift.x -= mShiftForeground;
-   mHealthBarFore->setTranslate(fgShift);*/
+   mHealthBar->setTranslate(mHealthBarShift);
 }

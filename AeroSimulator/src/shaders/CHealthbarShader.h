@@ -5,11 +5,11 @@
 
 namespace AeroSimulatorEngine
 {
-   class CColorBillboardShader : public CShader
+   class CHealthbarShader : public CShader
    {
    public:
-      CColorBillboardShader();
-      virtual ~CColorBillboardShader();
+      CHealthbarShader();
+      virtual ~CHealthbarShader();
 
       virtual void link();
       virtual void setup(CRenderable& renderable);
@@ -23,7 +23,7 @@ namespace AeroSimulatorEngine
       GLint mHeightUniform;
       GLint mColorUniform;
       GLint mMvpUniform;
-      GLint mShiftUniform;
+      GLint mHealthUniform;
    };
 }
 #endif // AERO_SIMULATOR_CCOLOR_BILLBOARD_SHADER_H

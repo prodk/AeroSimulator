@@ -79,8 +79,8 @@ namespace AeroSimulatorEngine
       void setLineWidth(const float width) { mLineWidth = width; }
       float getLineWidth() const { return mLineWidth; }
 
-      void setHealthbarShift(float shift) { mHealthbarShift = shift; }
-      float getHealthbarShift() const { return mHealthbarShift; }
+      void setHealthValue(float shift) { mHealthValue = shift; }
+      float getHealthValue() const { return mHealthValue; }
 
    protected:
       std::shared_ptr<CGeometry> mGeometry;
@@ -104,7 +104,7 @@ namespace AeroSimulatorEngine
 
       ///@todo: change the architecture such that it is not required to add all
       ///@todo these variables to CRenderer. They should be added to those objects where they are needed!
-      float mHealthbarShift; // Shift of the healthbar foreground relative to the background
+      float mHealthValue; // Shift of the healthbar foreground relative to the background
       glm::mat4 mViewMatrix;
       glm::vec3 mEyePos;
    };

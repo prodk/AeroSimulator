@@ -175,7 +175,7 @@
     <ClInclude Include="CWin32Window.h" />
     <ClInclude Include="CLeafCompositeGameObject.h" />
     <ClInclude Include="src\shaders\CBillboardShader.h" />
-    <ClInclude Include="src\shaders\CColorBillboardShader.h" />
+    <ClInclude Include="src\shaders\CHealthbarShader.h" />
     <ClInclude Include="src\shaders\CColorLambertianShader.h" />
     <ClInclude Include="src\shaders\CColorShader.h" />
     <ClInclude Include="src\shaders\CShader.h" />
@@ -211,7 +211,7 @@
     <ClCompile Include="CWin32Window.cpp" />
     <ClCompile Include="CLeafCompositeGameObject.cpp" />
     <ClCompile Include="src\shaders\CBillboardShader.cpp" />
-    <ClCompile Include="src\shaders\CColorBillboardShader.cpp" />
+    <ClCompile Include="src\shaders\CHealthbarShader.cpp" />
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp" />
     <ClCompile Include="src\shaders\CColorShader.cpp" />
     <ClCompile Include="src\shaders\CShader.cpp" />

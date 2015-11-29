@@ -1,4 +1,4 @@
-#include "CColorBillboardShader.h"
+#include "CHealthbarShader.h"
 #include "../CLog.h"
 #include "../CRenderable.h"
 #include "../CGeometry.h"
@@ -7,7 +7,7 @@
 
 using namespace AeroSimulatorEngine;
 
-CColorBillboardShader::CColorBillboardShader()
+CHealthbarShader::CHealthbarShader()
    : CShader()
    , mSquadAttribute(0)
    , mRightUniform(0)
@@ -15,7 +15,7 @@ CColorBillboardShader::CColorBillboardShader()
    , mWidthUniform(0)
    , mHeightUniform(0)
    , mColorUniform(0)
-   , mShiftUniform(0)
+   , mHealthUniform(0)
 {
    mVertexShaderCode =
       "attribute vec3 aPosition; // Center of the billboard\n"
@@ -25,30 +25,33 @@ CColorBillboardShader::CColorBillboardShader()
       "uniform vec3 uUp;       // Camera vector up\n"
       "uniform float uWidth;   // Width of the billboard\n"
       "uniform float uHeight;  // Height of the billboard\n"
-      ///@todo: remove
-      "uniform float uShift;  // Relative shift of the billboard\n"
+      "varying vec3 vPos;  // Shifted vertex position, model space\n"
       "void main(){\n"
-      //"    vec3 position = aPosition - vec3(uShift, 0.f, 0.f ) + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
       "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
-      "    position = position - vec3(uShift, 0.f, 0.f);\n"
+      "    vPos = aPosition + vec3(aSquad.x + 0.5, aSquad.y + 0.5f, 0.f);\n"
       "    gl_Position = MVP * vec4(position, 1.0);\n"
       "}\n";
 
    // Fragment shader is the same as in CTextureShader
    mFragmentShaderCode =
       "uniform vec4 uColor; \n"
+      "uniform float uHealth;  // Health value\n" ///@todo: probably rename
+      "varying vec3 vPos;  // Shifted vertex position, model space\n"
       "void main(){\n"
-      "    gl_FragColor = uColor;\n"
+      "    if ((vPos.x > uHealth) || (vPos.y < 0.1) || (vPos.y > 0.9))\n"
+      "       gl_FragColor = uColor;\n"
+      "    else\n"
+      "       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
       "}\n";
 
    CLog::getInstance().log("* CColorBillboardShader created");
 }
 
-CColorBillboardShader::~CColorBillboardShader()
+CHealthbarShader::~CHealthbarShader()
 {
 }
 
-void CColorBillboardShader::link()
+void CHealthbarShader::link()
 {
    if (!mIsLinked)
    {
@@ -79,14 +82,14 @@ void CColorBillboardShader::link()
       CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
 
       ///@todo: remove
-      mShiftUniform = glGetUniformLocation(mProgramId, "uShift");
-      CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, uShift): ");
+      mHealthUniform = glGetUniformLocation(mProgramId, "uHealth");
+      CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, uHealth): ");
 
       mIsLinked = true;
    }
 }
 
-void CColorBillboardShader::setup(CRenderable & renderable)
+void CHealthbarShader::setup(CRenderable & renderable)
 {
    CShader::setup(renderable);
 
@@ -139,6 +142,6 @@ void CColorBillboardShader::setup(CRenderable & renderable)
    glUniformMatrix4fv(mMvpUniform, 1, GL_FALSE, &MVP[0][0]);
 
    ///@todo: remove
-   const GLfloat shift = renderable.getHealthbarShift();
-   glUniform1f(mShiftUniform, shift);
+   const float health = renderable.getHealthValue();
+   glUniform1f(mHealthUniform, health);
 }

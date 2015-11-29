@@ -54,9 +54,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\shaders\CColorBillboardShader.h">
-      <Filter>Header Files\shaders</Filter>
-    </ClInclude>
     <ClInclude Include="src\shaders\CColorLambertianShader.h">
       <Filter>Header Files\shaders</Filter>
     </ClInclude>
@@ -156,11 +153,11 @@
     <ClInclude Include="CColorBillBoard.h">
       <Filter>Header Files\gameObject\billboard</Filter>
     </ClInclude>
+    <ClInclude Include="src\shaders\CHealthbarShader.h">
+      <Filter>Header Files\shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\shaders\CColorBillboardShader.cpp">
-      <Filter>Source Files\shaders</Filter>
-    </ClCompile>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
       <Filter>Source Files\shaders</Filter>
     </ClCompile>
@@ -259,6 +256,9 @@
     </ClCompile>
     <ClCompile Include="CColorBillBoard.cpp">
       <Filter>Source Files\gameObject\billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\CHealthbarShader.cpp">
+      <Filter>Source Files\shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

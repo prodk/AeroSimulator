@@ -20,7 +20,7 @@ CRenderable::CRenderable()
    , mDrawWithLines(false)
    , mColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
    , mLineWidth(2.0f)
-   , mHealthbarShift(0.0f)
+   , mHealthValue(0.0f)
    , mViewMatrix()
    , mEyePos()
 {

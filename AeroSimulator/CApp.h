@@ -46,7 +46,7 @@ namespace AeroSimulatorEngine
       void addSkyBox();
       void addLand();
       void addAirplane();
-      void addBillboards();
+      void addClouds();
       void addSphere();
 
    private:
@@ -62,7 +62,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CShader> mBillboardShader;
       std::shared_ptr<CShader> mColorShader;
-      std::shared_ptr<CShader> mColorBillboardShader;
+      std::shared_ptr<CShader> mHealthbarShader;
       std::shared_ptr<CShader> mColorLambertianShader;
       tGameObjectPtr mSkyBox;
       tGameObjectPtr mLand;

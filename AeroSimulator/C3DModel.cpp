@@ -159,7 +159,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mCabine->add(&mCubes[0]);
    mCubes[0].scale(glm::vec3(0.5f, 0.5f, 0.4f));
    mCubes[0].setColor(cabineColor);
-   mCubes[0].translateHealthBar(glm::vec3(0.0f, 0.5f, 0.0f));
+   mCubes[0].translateHealthBar(glm::vec3(0.0f, 0.6f, 0.0f));
 
    /// The Body
    const glm::vec4 bodyColor(0.5f, 0.2f, 0.9f, 1.0f);
@@ -170,7 +170,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    // Cubes of the body
    // Cube 1 coincides with the body
    mCubes[1].setColor(bodyColor);
-   mCubes[1].translateHealthBar(glm::vec3(0.4f, 0.7f, 0.0f));
+   mCubes[1].translateHealthBar(glm::vec3(0.5f, 0.7f, 0.0f));
    mBody->add(&mCubes[1]);
    // Cubes 2-4 are shifted
    mCubes[2].setTranslate(glm::vec3(0.0f, 0.0f, 1.0f));
