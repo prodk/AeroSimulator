@@ -30,9 +30,6 @@ namespace AeroSimulatorEngine
       glm::vec3 getPositionWorldSpace() const;
 
    private:
-      void copyColumn(int columnId, glm::mat3x3& out, const glm::mat4x4 in) const;
-
-   private:
       glm::mat4 mScale;
       glm::mat4 mRotate;
       glm::mat4 mTranslate;

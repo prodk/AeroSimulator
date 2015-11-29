@@ -215,6 +215,7 @@ void CApp::addSphere()
    mColorLambertianShader->link();
 
    mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
+   mSphere->setScale(glm::vec3(1.f, 1.f, 1.f));
    mSphere->calculateModelMatrix();
    mSphere->setShadersAndBuffers(mColorLambertianShader);
    mSphere->addCustomObjects(mColorShader);

@@ -3,6 +3,8 @@
 
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "glm/mat4x4.hpp"
+#include "glm/mat3x3.hpp"
 
 namespace AeroSimulatorEngine
 {
@@ -20,6 +22,13 @@ namespace AeroSimulatorEngine
       static float radToDeg(const float angleRadians)
       {
          return angleRadians * hundredEightyToPi;
+      }
+
+      static void copyColumn(int columnId, glm::mat3x3 & out, const glm::mat4x4 in)
+      {
+         out[columnId].x = in[columnId].x;
+         out[columnId].y = in[columnId].y;
+         out[columnId].z = in[columnId].z;
       }
 
       static const float piTo180;

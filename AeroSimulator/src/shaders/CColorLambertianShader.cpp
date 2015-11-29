@@ -22,6 +22,7 @@ CColorLambertianShader::CColorLambertianShader()
       "varying vec3 vPos;\n"
       "void main(){\n"
       "    vEyeNormal = (uM * vec4(aNormal, 0.0)).xyz;\n"
+      //"    vEyeNormal = (gl_NormalMatrix * vec4(aNormal, 0.0)).xyz;\n"
       "    vPos = (uM * vec4(aPosition, 1.0)).xyz;\n"
       "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
       "}\n";
@@ -41,11 +42,9 @@ CColorLambertianShader::CColorLambertianShader()
       "    float cosD = clamp(dot(N, L), 0, 1);\n"
       "    // Specular;\n"
       "    float cosS = 0.0;\n"
-      "    if (cosD != 0.0) {\n"
       "    vec3 cameraDir = normalize(uEyePos - vPos);\n"
       "    vec3 R = reflect(-L, N);\n"
       "    cosS = clamp(dot(cameraDir, R), 0, 1);\n"
-      "    }\n"
       "    gl_FragColor = uColor * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
       "}\n";
 
@@ -113,7 +112,6 @@ void CColorLambertianShader::setup(CRenderable & renderable)
       const glm::vec3 sunDirection(0.0f, 1.0f, 1.0f);
       glUniform3fv(mSunDirUniformId, 1, &(sunDirection.x));
 
-      ///@todo: remove
       const glm::vec3 eyePos = renderable.getEyePos();
       glUniform3fv(mEyePosUniformId, 1, &eyePos.x);
    }

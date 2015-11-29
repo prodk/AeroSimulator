@@ -54,6 +54,8 @@ namespace AeroSimulatorEngine
       void setViewMatrix(const glm::mat4& m) { mViewMatrix = m; }
       glm::mat4 getViewMatrix() const { return mViewMatrix; }
 
+      glm::mat3 getNormalMatrix() const;
+
       void setEyePos(const glm::vec3& eyePos) { mEyePos = eyePos; }
       glm::vec3 getEyePos() const { return mEyePos; }
 

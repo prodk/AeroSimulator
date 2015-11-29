@@ -16,10 +16,10 @@ using namespace AeroSimulatorEngine;
 namespace
 {
    ///@todo: probably move to the model as is done for CCube.
-   GLfloat lineData[] = {
+   /*GLfloat lineData[] = {
       0.0f, 0.0f, 0.0f,
       1.0f, 0.0f, 0.0f
-   };
+   };*/
 
    GLuint indices[] = { 0, 1 };
 }
@@ -51,7 +51,6 @@ CSphere::CSphere()
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
-   //setDrawWithLines(true);
 }
 
 CSphere::~CSphere()
@@ -139,6 +138,10 @@ void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix)
       if (pChild)
       {
          pChild->updateTRMatrix(mParentByLocalTRMatrix); /// Avoid recalculation on every frame
+
+         ///@todo: probably incorrect, think about it
+         if ((mScale.x != 1.0) || (mScale.y != 1.0) || (mScale.z != 1.0))
+            pChild->setScale(mScale);
       }
    }
 }
@@ -197,15 +200,6 @@ void CSphere::generateSphere()
       glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
       mDataNormals.push_back(v1);
       mDataNormals.push_back(mVertices[id]);
-
-      ///@todo: correct without normals
-      /*mVertices[i].x = R*sin(x_angle)*sin(y_angle);
-      mVertices[i].y = R*cos(x_angle);
-      mVertices[i].z = R*sin(x_angle)*cos(y_angle);
-
-      glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
-      mDataNormals.push_back(v1);
-      mDataNormals.push_back(mVertices[i]);*/
 
       mIndices[i] = i;
    }

@@ -92,21 +92,14 @@ glm::vec3 CCamera::getPositionWorldSpace() const
    position.z = -mViewMatrix[3].z;
 
    glm::mat3x3 noTranslate;
-   copyColumn(0, noTranslate, mViewMatrix);
-   copyColumn(1, noTranslate, mViewMatrix);
-   copyColumn(2, noTranslate, mViewMatrix);
+   CCommonMath::copyColumn(0, noTranslate, mViewMatrix);
+   CCommonMath::copyColumn(1, noTranslate, mViewMatrix);
+   CCommonMath::copyColumn(2, noTranslate, mViewMatrix);
 
    noTranslate = glm::inverse(noTranslate);
 
    position = noTranslate * position;
 
    return position;
-}
-
-void CCamera::copyColumn(int columnId, glm::mat3x3 & out, const glm::mat4x4 in) const
-{
-   out[columnId].x = in[columnId].x;
-   out[columnId].y = in[columnId].y;
-   out[columnId].z = in[columnId].z;
 }
 
