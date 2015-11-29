@@ -39,7 +39,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mAngleX(0.0f)
    , mHorizontalPressed(0)
    , mVerticalPressed(0)
-   , mCameraAngleX(30.f) // up 'w', down 's'
+   , mCameraAngleX(30.f)
    , mCameraAngleY(80.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
@@ -53,7 +53,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
 
    // View matrix.
    mCamera->translate(glm::vec3(0.0f, 0.0f, -13.0f));
-   //mCamera->rotate(glm::vec3(30.0f, 80.0f, 0.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -87,7 +86,7 @@ void CWin32Renderer::update()
             ///todo: think how to set the width/height of the billboard
             pRenderable->setRightVector(mCamera->getRightVector());
             pRenderable->setUpVector(mCamera->getUpVector());
-            pRenderable->setViewMatrix(mCamera->getViewMatrix());
+            pRenderable->setEyePos(mCamera->getPositionWorldSpace());
             draw(pRenderable);
          }
       }

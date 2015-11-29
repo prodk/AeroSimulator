@@ -33,6 +33,7 @@ void CCamera::translate(const glm::vec3 & distance)
 
 void CCamera::rotate(const glm::vec3 & angles)
 {
+   ///@todo: check that angles are non-zero
    mRotate = glm::mat4(1.0f);
 
    const float angleX = CCommonMath::degToRad(angles.x);
@@ -79,5 +80,33 @@ glm::vec3 CCamera::getUpVector() const
    result.z = mNonScaledViewMatrix[2].y;
 
    return result;
+}
+
+glm::vec3 CCamera::getPositionWorldSpace() const
+{
+   glm::vec3 position;
+   // Inversing the view matrix will give camera position in the world space
+   // Translate is inverse translation of the view
+   position.x = -mViewMatrix[3].x;
+   position.y = -mViewMatrix[3].y;
+   position.z = -mViewMatrix[3].z;
+
+   glm::mat3x3 noTranslate;
+   copyColumn(0, noTranslate, mViewMatrix);
+   copyColumn(1, noTranslate, mViewMatrix);
+   copyColumn(2, noTranslate, mViewMatrix);
+
+   noTranslate = glm::inverse(noTranslate);
+
+   position = noTranslate * position;
+
+   return position;
+}
+
+void CCamera::copyColumn(int columnId, glm::mat3x3 & out, const glm::mat4x4 in) const
+{
+   out[columnId].x = in[columnId].x;
+   out[columnId].y = in[columnId].y;
+   out[columnId].z = in[columnId].z;
 }
 

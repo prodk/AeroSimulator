@@ -19,8 +19,8 @@ namespace AeroSimulatorEngine
       GLint mModelMatrixUniformId;
       GLint mAmbientUniformId;
       GLint mDiffuseUniformId;
-      GLint mSunPosUniformId;
-      GLint mViewMatrixUniformId;
+      GLint mSunDirUniformId;
+      GLint mEyePosUniformId;
    };
 } // namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CCOLOR_LAMBERTIAN_SHADER_H

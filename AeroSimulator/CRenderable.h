@@ -54,6 +54,9 @@ namespace AeroSimulatorEngine
       void setViewMatrix(const glm::mat4& m) { mViewMatrix = m; }
       glm::mat4 getViewMatrix() const { return mViewMatrix; }
 
+      void setEyePos(const glm::vec3& eyePos) { mEyePos = eyePos; }
+      glm::vec3 getEyePos() const { return mEyePos; }
+
       /// Billboards
       void setRightVector(const glm::vec3 & right) { mRightVector = right; }
       glm::vec3 getRightVector() const { return mRightVector; }
@@ -103,6 +106,7 @@ namespace AeroSimulatorEngine
       ///@todo these variables to CRenderer. They should be added to those objects where they are needed!
       float mHealthbarShift; // Shift of the healthbar foreground relative to the background
       glm::mat4 mViewMatrix;
+      glm::vec3 mEyePos;
    };
 } // namespace AeroSimulatorEngine
 

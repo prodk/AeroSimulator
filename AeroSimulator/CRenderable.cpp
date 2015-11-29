@@ -22,6 +22,7 @@ CRenderable::CRenderable()
    , mLineWidth(2.0f)
    , mHealthbarShift(0.0f)
    , mViewMatrix()
+   , mEyePos()
 {
 }
 
