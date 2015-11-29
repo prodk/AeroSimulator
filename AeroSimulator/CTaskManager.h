@@ -11,7 +11,7 @@ namespace AeroSimulatorEngine
    // A comparator for the queue of tasks
    struct CCompareTasks
    {
-      bool operator()(const CTask* lhs, const CTask* rhs)
+      bool operator()(const CTask* lhs, const CTask* rhs) const
       {
          bool result = false;
          if (lhs && rhs)
