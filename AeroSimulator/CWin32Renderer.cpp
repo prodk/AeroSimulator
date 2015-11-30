@@ -51,6 +51,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCameraKeyPressed(false)
    , mCameraKeyCode(0)
    , mFrameDt(0.0)
+   , mAirplaneMatrix()
 {
    assert(mCamera);
 
@@ -302,21 +303,33 @@ void CWin32Renderer::updateAirplane()
    glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
 
    // Rotate around z-axis
+   //glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+   //const float angleZradians = CCommonMath::degToRad(mAngleZ);
+   //modelObjectMatrix = glm::rotate(modelObjectMatrix, angleZradians, zAxis);
+
+   //// Rotate around x-axis
+   //glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+   //const float angleXradians = CCommonMath::degToRad(mAngleX);
+   //modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
+
+   ///@todo: probably just use the model matrix of the root instead of mAirplaneMatrix
+   glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
+   mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplaneRoot->getPosition().y, 0.f));
+
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    const float angleZradians = CCommonMath::degToRad(mAngleZ);
-   modelObjectMatrix = glm::rotate(modelObjectMatrix, angleZradians, zAxis);
+   mAirplaneMatrix = glm::rotate(mAirplaneMatrix, angleZradians, zAxis);
 
    // Rotate around x-axis
    glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
    const float angleXradians = CCommonMath::degToRad(mAngleX);
-   modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
-
-   //matrix = modelObjectMatrix;
+   mAirplaneMatrix = glm::rotate(mAirplaneMatrix, angleXradians, xAxis);
 
    // Update the root and all its children.
    if (mAirplaneRoot)
    {
-      mAirplaneRoot->updateTRMatrix(glm::mat4(1.0f), mFrameDt); // Animate the parts of the tree-like object
+      //mAirplaneRoot->setTranslate(mAirplaneRoot->getPosition());
+      mAirplaneRoot->updateTRMatrix(mAirplaneMatrix, mFrameDt); // Animate the parts of the tree-like object
       mAirplaneRoot->updateModelMatrix(modelObjectMatrix);
    }
 }
@@ -402,13 +415,22 @@ void CWin32Renderer::updateInput()
          break;
 
       case (VK_UP) :
-         mAngleX -= rotationSpeed;
-         mAngleX = std::max<float>(mAngleX, -90.f);
+         mAngleX += rotationSpeed;
+         mAngleX = std::min<float>(mAngleX, 70.f);
          break;
 
       case (VK_DOWN) :
-         mAngleX += rotationSpeed;
-         mAngleX = std::min<float>(mAngleX, 90.f);
+      {
+         mAngleX -= rotationSpeed;
+         mAngleX = std::max<float>(mAngleX, -70.f);
+
+         ///@todo: make a member, probably introduce a struct for the movement params
+         const float speedOfFlightY = 5.f;
+         glm::vec3 position = mAirplaneRoot->getPosition();
+         position.y -= speedOfFlightY * mFrameDt;
+         position.y = std::max(-11.5f, position.y);///@todo: move to handle collisions
+         mAirplaneRoot->setPosition(position);
+      }
          break;
 
          /// System changes in reaction to the keyboard

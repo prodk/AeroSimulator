@@ -39,7 +39,8 @@ namespace AeroSimulatorEngine
 
       bool isLeaf() const { return mIsLeaf; }
 
-      void setRotate(const float angle, const glm::vec3& axis);
+      void setPosition(const glm::vec3& pos) { mPosition = pos; }
+      glm::vec3 getPosition() const { return mPosition; }
 
    protected:
       ///@todo: probably move this to a separate CTransform class/component
@@ -54,6 +55,10 @@ namespace AeroSimulatorEngine
       bool mIsLeaf;
       float mArbitraryAngle;
       glm::vec3 mArbitraryAxis;
+
+      // Current position in the world space
+      ///@todo: probably rename this to mWorldPosition
+      glm::vec3 mPosition;
    };
 } // namespace AeroSimulatorEngine
 

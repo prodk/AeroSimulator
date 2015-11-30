@@ -82,6 +82,7 @@ C3DModel::C3DModel()
    , mPropeller(new CPropeller())
    , mCubes(numOfCubes)
    , mAxes(numOfCubes)
+   , mBillboardShader()
 {
    assert(mCubeGeometry);
    assert(mCabine);

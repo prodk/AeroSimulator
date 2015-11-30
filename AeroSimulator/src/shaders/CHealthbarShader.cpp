@@ -38,6 +38,7 @@ CHealthbarShader::CHealthbarShader()
       "uniform float uHealth;  // Health value\n" ///@todo: probably rename
       "varying vec3 vPos;  // Shifted vertex position, model space\n"
       "void main(){\n"
+      //"       gl_FragDepth = 0.0; // Ensure always on top\n"
       "    if ((vPos.x > uHealth) || (vPos.y < 0.1) || (vPos.y > 0.9))\n"
       "       gl_FragColor = uColor;\n"
       "    else\n"

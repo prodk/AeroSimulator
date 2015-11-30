@@ -87,6 +87,10 @@ namespace AeroSimulatorEngine
       WPARAM mKeyCode;
       WPARAM mCameraKeyCode;
       double mFrameDt;
+
+      ///@todo: when the event framwork is setup, 
+      ///@todo: transfer moving objects and collisions to a separaete task
+      glm::mat4x4 mAirplaneMatrix;
    };
 } // namespace AeroSimulatorEngine
 
