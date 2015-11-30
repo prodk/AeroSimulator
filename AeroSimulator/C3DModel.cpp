@@ -84,6 +84,7 @@ C3DModel::C3DModel()
    , mAxes(numOfCubes)
    , mBillboardShader()
    , mPosition()
+   , mSpeedOfFlight(glm::vec3(0.0f, 5.0f, 0.0f))
 {
    assert(mCubeGeometry);
    assert(mCabine);

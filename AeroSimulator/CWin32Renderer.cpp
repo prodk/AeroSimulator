@@ -49,9 +49,11 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCameraScale(1.0f)
    , mWndHandle(0)
    , mKeyPressed(false)
-   , mKeyCode(0)
    , mCameraKeyPressed(false)
+   , mThirdKeyPressed(false)
+   , mKeyCode(0)
    , mCameraKeyCode(0)
+   , mThirdKeyCode(0)
    , mFrameDt(0.0)
    , mAirplaneMatrix()
 {
@@ -349,15 +351,23 @@ void CWin32Renderer::springButtons()
    }
 
    if (!mKeyPressed
-      || (mKeyPressed && mKeyCode != VK_UP && mKeyCode != VK_DOWN))
+      || (mKeyPressed && mKeyCode != VK_UP))
+   {
+      mAirplane->decreasePropellerSpeed();
+   }
+
+   if (!mKeyPressed
+      || (mKeyPressed && mKeyCode != VK_DOWN && mKeyCode != VK_UP))
+   {
+      // Put the plane tail down when not moving downwards
+      if (mAngleX < 0.f)
+         mAngleX += rotationSpeed;
+   }
+
+   if (!mThirdKeyPressed)
    {
       if (mAngleX > 0.f)
          mAngleX -= rotationSpeed;
-
-      if (mAngleX < 0.f)
-         mAngleX += rotationSpeed;
-
-      mAirplane->decreasePropellerSpeed();
    }
 }
 
@@ -405,10 +415,18 @@ void CWin32Renderer::updateInput()
          break;
 
       case (VK_UP) :
-         ///@todo: move this to the space button handler
-         //mAngleX += rotationSpeed;
-         //mAngleX = std::min<float>(mAngleX, 70.f);
          mAirplane->increasePropellerSpeed();
+         if (mThirdKeyPressed && (mThirdKeyCode == VK_SPACE))
+         {
+            mAngleX += rotationSpeed;
+            mAngleX = std::min<float>(mAngleX, 70.f);
+
+            // Move upwards
+            glm::vec3 position = mAirplane->getPosition();
+            ///@todo: move to handle collisions
+            position.y = std::min<float>(11.5f, position.y + mAirplane->getSpeedOfFlight().y*mFrameDt);
+            mAirplane->setPosition(position);
+         }
          break;
 
       case (VK_DOWN) :
@@ -416,11 +434,10 @@ void CWin32Renderer::updateInput()
          mAngleX -= rotationSpeed;
          mAngleX = std::max<float>(mAngleX, -70.f);
 
-         ///@todo: make a member, probably introduce a struct for the movement params
-         const float speedOfFlightY = 5.f;
+         // Move the plane downwards
          glm::vec3 position = mAirplane->getPosition();
-         position.y -= speedOfFlightY * mFrameDt;
-         position.y = std::max(-11.5f, position.y);///@todo: move to handle collisions
+         ///@todo: move to handle collisions
+         position.y = std::max<float>(-11.5f, position.y - mAirplane->getSpeedOfFlight().y*mFrameDt);
          mAirplane->setPosition(position);
       }
          break;
@@ -435,12 +452,12 @@ void CWin32Renderer::updateInput()
          break;
 
       case (VK_OEM_PLUS) : // +, zoom in
-         mCameraScale += 0.02f;
+         mCameraScale += 0.01f;
          mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
          break;
 
       case (VK_OEM_MINUS) : // -, zoom out
-         mCameraScale -= 0.02f;
+         mCameraScale -= 0.01f;
          mCameraScale = std::max(0.1f, mCameraScale);
          mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
          break;
@@ -514,10 +531,15 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
          mCameraKeyPressed = true;
          mCameraKeyCode = wParam;
       }
-      else
+      else if (!mKeyPressed)
       {
          mKeyPressed = true;
          mKeyCode = wParam;
+      }
+      else if(mKeyCode == VK_UP)// Only if UP was pressed
+      {
+         mThirdKeyPressed = true;
+         mThirdKeyCode = wParam;
       }
    }
    return false;
@@ -527,8 +549,13 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
    {
       if ((wParam == 0x57) || (wParam == 0x53) || (wParam == 0x41) || (wParam == 0x44))
          mCameraKeyPressed = false;
-      else
-         mKeyPressed = false;
+      else //if (mKeyPressed && (wParam == mThirdKeyCode))
+      {
+         mThirdKeyPressed = false;
+
+         if (wParam == mKeyCode)
+            mKeyPressed = false;
+      }
    }
    return false;
    } // end switch

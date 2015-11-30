@@ -85,8 +85,10 @@ namespace AeroSimulatorEngine
 
       bool mKeyPressed;
       bool mCameraKeyPressed;
+      bool mThirdKeyPressed;
       WPARAM mKeyCode;
       WPARAM mCameraKeyCode;
+      WPARAM mThirdKeyCode;
       double mFrameDt;
 
       ///@todo: when the event framwork is setup, 

@@ -38,6 +38,8 @@ namespace AeroSimulatorEngine
       void increasePropellerSpeed();
       void decreasePropellerSpeed();
 
+      glm::vec3 getSpeedOfFlight() const { return mSpeedOfFlight; }
+
       static const std::size_t numOfCubes;
 
    private:
@@ -63,6 +65,7 @@ namespace AeroSimulatorEngine
 
       // Position in the world space
       glm::vec3 mPosition;
+      glm::vec3 mSpeedOfFlight;
    };
 } // namespace AeroSimulatorEngine
 

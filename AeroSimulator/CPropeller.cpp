@@ -45,10 +45,10 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 
 void CPropeller::increaseSpeed()
 {
-   mPropellerSpeed = std::min<float>(1600.0f, mPropellerSpeed + 4.0f);
+   mPropellerSpeed = std::min<float>(2000.0f, mPropellerSpeed + 16.0f);
 }
 
 void CPropeller::decreaseSpeed()
 {
-   mPropellerSpeed = std::max<float>(mInitialSpeed, mPropellerSpeed - 4.0f);
+   mPropellerSpeed = std::max<float>(mInitialSpeed, mPropellerSpeed - 16.0f);
 }
