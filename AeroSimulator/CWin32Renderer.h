@@ -15,6 +15,7 @@ namespace AeroSimulatorEngine
 {
    class CCamera;
    class CCompositeGameObject;
+   class C3DModel;
 
    class CWin32Renderer : public CRenderer
    {
@@ -39,7 +40,7 @@ namespace AeroSimulatorEngine
       void setAirplaneRoot(CCompositeGameObject* root) { if (root) mAirplaneRoot = root; };
       void setSphereRoot(CCompositeGameObject* root) { if (root) mSphereRoot = root; };
 
-      //CCamera getCamera() const { return *mCamera; }
+      void setAirplane(std::shared_ptr<C3DModel> airplane) { mAirplane = airplane; };
 
    private:
       // Override CRenderer part
@@ -91,6 +92,9 @@ namespace AeroSimulatorEngine
       ///@todo: when the event framwork is setup, 
       ///@todo: transfer moving objects and collisions to a separaete task
       glm::mat4x4 mAirplaneMatrix;
+
+      ///@todo: move to the movement/collisions task when events are implemented
+      std::shared_ptr<C3DModel> mAirplane;
    };
 } // namespace AeroSimulatorEngine
 

@@ -12,6 +12,13 @@ namespace AeroSimulatorEngine
       virtual ~CPropeller();
 
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
+
+      void increaseSpeed();
+      void decreaseSpeed();
+
+   private:
+      float mPropellerSpeed;
+      static const float mInitialSpeed;
    };
 } // namespace AeroSimulatorEngine
 

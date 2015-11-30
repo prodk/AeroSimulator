@@ -4,6 +4,8 @@
 #include <memory>
 #include <vector>
 
+#include "glm/vec3.hpp"
+
 namespace AeroSimulatorEngine
 {
    class CCompositeGameObject;
@@ -11,6 +13,7 @@ namespace AeroSimulatorEngine
    class CGeometry;
    class CAxesFrame;
    class CShader;
+   class CPropeller;
 
    /// A bridge for the CGameObject Composite (tree structure)
    class C3DModel
@@ -24,10 +27,16 @@ namespace AeroSimulatorEngine
 
       CCompositeGameObject* getRoot() const { return mCabine.get(); }
 
-      void setBillboardShader(std::shared_ptr<CShader>& pShader) 
-      { 
+      void setBillboardShader(std::shared_ptr<CShader>& pShader)
+      {
          if (pShader) mBillboardShader = pShader;
       }
+
+      void setPosition(const glm::vec3& pos) { mPosition = pos; }
+      glm::vec3 getPosition() const { return mPosition; }
+
+      void increasePropellerSpeed();
+      void decreasePropellerSpeed();
 
       static const std::size_t numOfCubes;
 
@@ -44,13 +53,16 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CCompositeGameObject> mLeftWing;
       std::shared_ptr<CCompositeGameObject> mRightWing;
       std::shared_ptr<CCompositeGameObject> mTail;
-      std::shared_ptr<CCompositeGameObject> mPropeller;
+      std::shared_ptr<CPropeller> mPropeller;
 
       std::vector<CCube> mCubes;
       // Axis frames
       std::vector<CAxesFrame> mAxes;
 
       std::shared_ptr<CShader> mBillboardShader;
+
+      // Position in the world space
+      glm::vec3 mPosition;
    };
 } // namespace AeroSimulatorEngine
 

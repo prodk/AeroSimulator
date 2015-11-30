@@ -7,6 +7,8 @@
 #include "CCamera.h"
 #include "CCompositeGameObject.h"
 #include "CTimer.h"
+#include "C3DModel.h"
+#include "CSphere.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -300,21 +302,8 @@ void CWin32Renderer::resetRenderContext()
 
 void CWin32Renderer::updateAirplane()
 {
-   glm::mat4 modelObjectMatrix = glm::mat4(1.0f);
-
-   // Rotate around z-axis
-   //glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   //const float angleZradians = CCommonMath::degToRad(mAngleZ);
-   //modelObjectMatrix = glm::rotate(modelObjectMatrix, angleZradians, zAxis);
-
-   //// Rotate around x-axis
-   //glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   //const float angleXradians = CCommonMath::degToRad(mAngleX);
-   //modelObjectMatrix = glm::rotate(modelObjectMatrix, angleXradians, xAxis);
-
-   ///@todo: probably just use the model matrix of the root instead of mAirplaneMatrix
    glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
-   mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplaneRoot->getPosition().y, 0.f));
+   mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplane->getPosition().y, 0.f));
 
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    const float angleZradians = CCommonMath::degToRad(mAngleZ);
@@ -328,9 +317,8 @@ void CWin32Renderer::updateAirplane()
    // Update the root and all its children.
    if (mAirplaneRoot)
    {
-      //mAirplaneRoot->setTranslate(mAirplaneRoot->getPosition());
       mAirplaneRoot->updateTRMatrix(mAirplaneMatrix, mFrameDt); // Animate the parts of the tree-like object
-      mAirplaneRoot->updateModelMatrix(modelObjectMatrix);
+      mAirplaneRoot->updateModelMatrix(glm::mat4(1.0f)); ///@todo: use 1 as default arg
    }
 }
 
@@ -368,6 +356,8 @@ void CWin32Renderer::springButtons()
 
       if (mAngleX < 0.f)
          mAngleX += rotationSpeed;
+
+      mAirplane->decreasePropellerSpeed();
    }
 }
 
@@ -415,8 +405,10 @@ void CWin32Renderer::updateInput()
          break;
 
       case (VK_UP) :
-         mAngleX += rotationSpeed;
-         mAngleX = std::min<float>(mAngleX, 70.f);
+         ///@todo: move this to the space button handler
+         //mAngleX += rotationSpeed;
+         //mAngleX = std::min<float>(mAngleX, 70.f);
+         mAirplane->increasePropellerSpeed();
          break;
 
       case (VK_DOWN) :
@@ -426,10 +418,10 @@ void CWin32Renderer::updateInput()
 
          ///@todo: make a member, probably introduce a struct for the movement params
          const float speedOfFlightY = 5.f;
-         glm::vec3 position = mAirplaneRoot->getPosition();
+         glm::vec3 position = mAirplane->getPosition();
          position.y -= speedOfFlightY * mFrameDt;
          position.y = std::max(-11.5f, position.y);///@todo: move to handle collisions
-         mAirplaneRoot->setPosition(position);
+         mAirplane->setPosition(position);
       }
          break;
 

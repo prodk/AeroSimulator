@@ -19,7 +19,6 @@ CGameObject::CGameObject()
    , mParentTRMatrix()
    , mParentByLocalTRMatrix()
    , mIsLeaf(false)
-   , mPosition()
 {
 }
 

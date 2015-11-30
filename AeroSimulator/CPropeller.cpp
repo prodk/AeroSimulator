@@ -3,9 +3,14 @@
 
 #include "glm/gtc/matrix_transform.hpp"
 
+#include <algorithm>
+
 using namespace AeroSimulatorEngine;
 
+const float CPropeller::mInitialSpeed = 300.0f;
+
 CPropeller::CPropeller()
+   : mPropellerSpeed(mInitialSpeed)
 {
 }
 
@@ -17,7 +22,7 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    ///@todo: for animations add timers later
    // Rotate the propeller.
-   const float deltaZ = 300.0f*dt;
+   const float deltaZ = mPropellerSpeed*dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
@@ -36,4 +41,14 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
          pChild->updateTRMatrix(mParentByLocalTRMatrix, dt); /// Avoid recalculation on every frame
       }
    }
+}
+
+void CPropeller::increaseSpeed()
+{
+   mPropellerSpeed = std::min<float>(1600.0f, mPropellerSpeed + 4.0f);
+}
+
+void CPropeller::decreaseSpeed()
+{
+   mPropellerSpeed = std::max<float>(mInitialSpeed, mPropellerSpeed - 4.0f);
 }

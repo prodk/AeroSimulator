@@ -83,6 +83,7 @@ C3DModel::C3DModel()
    , mCubes(numOfCubes)
    , mAxes(numOfCubes)
    , mBillboardShader()
+   , mPosition()
 {
    assert(mCubeGeometry);
    assert(mCabine);
@@ -95,6 +96,16 @@ C3DModel::C3DModel()
 
 C3DModel::~C3DModel()
 {
+}
+
+void C3DModel::increasePropellerSpeed()
+{
+   mPropeller->increaseSpeed();
+}
+
+void C3DModel::decreasePropellerSpeed()
+{
+   mPropeller->decreaseSpeed();
 }
 
 void  C3DModel::setupCubeGeometry()

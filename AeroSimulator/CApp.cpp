@@ -174,6 +174,7 @@ void CApp::addAirplane()
 
    // Set the root for the renderable composite
    mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
+   mRendererTask->setAirplane(mAirPlane);
 }
 
 void CApp::addClouds()
