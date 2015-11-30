@@ -32,7 +32,7 @@ namespace AeroSimulatorEngine
 
       void translateHealthBar(const glm::vec3& shift);
 
-      void setHealth(float health) { mHealthValue = std::min<float>(1.0, std::max<float>(0.0, health)); }
+      void setHealth(float health);
 
    public:
       ///@todo: rename to state that it is for untextured colored cube

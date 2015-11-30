@@ -109,6 +109,22 @@ void C3DModel::decreasePropellerSpeed()
    mPropeller->decreaseSpeed();
 }
 
+void C3DModel::setPropellerSpeed(const float speed)
+{
+   mPropeller->setSpeed(speed);
+}
+
+void C3DModel::resetPropellerSpeed()
+{
+   mPropeller->setSpeed(100.f);
+}
+
+void C3DModel::resetHealthBars(const float value)
+{
+   for (auto& cube : mCubes)
+      cube.setHealth(value);
+}
+
 void  C3DModel::setupCubeGeometry()
 {
    if (mCubeGeometry)

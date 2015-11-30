@@ -57,7 +57,8 @@ namespace AeroSimulatorEngine
       void updateRenderables();
       void updateFPS(CTask* pTask);
 
-      void updateInput();
+      void updateInput(); ///@todo: move to CWin32Window or a separate handler when events are implemented
+      void handleCollisions(); ///@todo; move to a special task when events are implemented
 
    private:
       HDC mDC;

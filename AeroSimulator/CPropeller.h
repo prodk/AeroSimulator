@@ -15,9 +15,10 @@ namespace AeroSimulatorEngine
 
       void increaseSpeed();
       void decreaseSpeed();
+      void setSpeed(const float speed) { mRotationSpeed = speed; }
 
    private:
-      float mPropellerSpeed;
+      float mRotationSpeed;
       static const float mInitialSpeed;
    };
 } // namespace AeroSimulatorEngine

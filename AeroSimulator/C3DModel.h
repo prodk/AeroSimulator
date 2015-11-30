@@ -32,13 +32,18 @@ namespace AeroSimulatorEngine
          if (pShader) mBillboardShader = pShader;
       }
 
+      /// Airplane's in the game
       void setPosition(const glm::vec3& pos) { mPosition = pos; }
       glm::vec3 getPosition() const { return mPosition; }
 
       void increasePropellerSpeed();
       void decreasePropellerSpeed();
+      void setPropellerSpeed(const float speed);
+      void resetPropellerSpeed();
 
       glm::vec3 getSpeedOfFlight() const { return mSpeedOfFlight; }
+
+      void resetHealthBars(const float value = 0.0f);
 
       static const std::size_t numOfCubes;
 

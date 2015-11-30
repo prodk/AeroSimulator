@@ -10,7 +10,7 @@ using namespace AeroSimulatorEngine;
 const float CPropeller::mInitialSpeed = 300.0f;
 
 CPropeller::CPropeller()
-   : mPropellerSpeed(mInitialSpeed)
+   : mRotationSpeed(mInitialSpeed)
 {
 }
 
@@ -22,7 +22,7 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    ///@todo: for animations add timers later
    // Rotate the propeller.
-   const float deltaZ = mPropellerSpeed*dt;
+   const float deltaZ = mRotationSpeed*dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
@@ -45,10 +45,10 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 
 void CPropeller::increaseSpeed()
 {
-   mPropellerSpeed = std::min<float>(2000.0f, mPropellerSpeed + 16.0f);
+   mRotationSpeed = std::min<float>(2000.0f, mRotationSpeed + 16.0f);
 }
 
 void CPropeller::decreaseSpeed()
 {
-   mPropellerSpeed = std::max<float>(mInitialSpeed, mPropellerSpeed - 16.0f);
+   mRotationSpeed = std::max<float>(mInitialSpeed, mRotationSpeed - 16.0f);
 }

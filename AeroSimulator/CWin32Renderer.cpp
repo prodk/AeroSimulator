@@ -350,9 +350,11 @@ void CWin32Renderer::springButtons()
       }
    }
 
+   ///@todo: check that no ground collision event happened
    if (!mKeyPressed
       || (mKeyPressed && mKeyCode != VK_UP))
    {
+      if (mAirplane->getPosition().y > -11.f)
       mAirplane->decreasePropellerSpeed();
    }
 
@@ -378,6 +380,8 @@ void CWin32Renderer::updateRenderables()
    ///@todo: place to a method updateSphere
    mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
    mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
+
+   handleCollisions();
 }
 
 void CWin32Renderer::updateFPS(CTask * pTask)
@@ -489,6 +493,25 @@ void CWin32Renderer::updateInput()
          if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
          break;
       }
+   }
+}
+
+void CWin32Renderer::handleCollisions()
+{
+   ///@todo: get bounding boxes of the plane, star and ground here
+   ///@todo: check whether bounding boxes are intersecting and act appropriately
+
+   ///@todo: temporary before bounding boxes are not implemented: collision if plane reached bound
+   ///@todo: don't do this update all the time
+   if (mAirplane->getPosition().y <= -11.f)
+   {
+      mAirplane->resetHealthBars();
+      mAirplane->setPropellerSpeed(0.0f);
+   }
+   else
+   {
+      mAirplane->resetHealthBars(0.7);
+      
    }
 }
 
