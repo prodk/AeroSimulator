@@ -16,6 +16,7 @@ namespace AeroSimulatorEngine
    class CCamera;
    class CCompositeGameObject;
    class C3DModel;
+   class CAnimationBillBoard;
 
    class CWin32Renderer : public CRenderer
    {
@@ -37,10 +38,11 @@ namespace AeroSimulatorEngine
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
-      void setAirplaneRoot(CCompositeGameObject* root) { if (root) mAirplaneRoot = root; };
-      void setSphereRoot(CCompositeGameObject* root) { if (root) mSphereRoot = root; };
+      void setAirplaneRoot(CCompositeGameObject* root) { if (root) mAirplaneRoot = root; }
+      void setSphereRoot(CCompositeGameObject* root) { if (root) mSphereRoot = root; }
 
-      void setAirplane(std::shared_ptr<C3DModel> airplane) { mAirplane = airplane; };
+      void setAirplane(std::shared_ptr<C3DModel> airplane) { mAirplane = airplane; }
+      void setStars(std::shared_ptr<CAnimationBillBoard> stars) { mStar = stars; }
 
    private:
       // Override CRenderer part
@@ -98,6 +100,7 @@ namespace AeroSimulatorEngine
 
       ///@todo: move to the movement/collisions task when events are implemented
       std::shared_ptr<C3DModel> mAirplane;
+      std::shared_ptr<CAnimationBillBoard> mStar; ///@todo: change to the vector later
    };
 } // namespace AeroSimulatorEngine
 

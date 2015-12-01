@@ -18,6 +18,8 @@
 #include "CSphere.h"
 #include "../AeroSimulator/src/shaders/CColorLambertianShader.h"
 #include "CTimer.h"
+#include "CAnimationBillBoard.h"
+#include "../src/shaders/CAnimationBillboardShader.h"
 
 #include <conio.h>
 #include <cassert>
@@ -36,10 +38,12 @@ CApp::CApp()
    , mColorShader(new CColorShader())
    , mHealthbarShader(new CHealthbarShader())
    , mColorLambertianShader(new CColorLambertianShader())
+   , mAnimationBbShader(new CAnimationBillboardShader())
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
    , mSphere(new CSphere())
    , mBillBoards(20)
+   , mStar(new CAnimationBillBoard())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -51,7 +55,11 @@ CApp::CApp()
    assert(mLand);
    assert(mBillboardShader);
    assert(mColorShader);
+   assert(mHealthbarShader);
+   assert(mColorLambertianShader);
+   assert(mAnimationBbShader);
    assert(mSphere);
+   assert(mStar);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -68,6 +76,7 @@ CApp::~CApp()
    mBillboardShader.reset();
    mColorShader.reset();
    mSphere.reset();
+   mStar.reset();
    ///@todo: reset other ptrs here
 
    CLog::getInstance().log("* CApp destroyed");
@@ -120,6 +129,7 @@ void CApp::setupScene()
    addAirplane();
    addClouds();
    addSphere();
+   addStars();
 
    mRendererTask->resetRenderContext();
 }
@@ -239,4 +249,26 @@ void CApp::addSphere()
 
    mRendererTask->addRenderable(mSphere.get());
    mRendererTask->setSphereRoot(mSphere.get());
+}
+
+void CApp::addStars()
+{
+   const float width = 2.0f;
+   const float height = 2.0f;
+   const char* filePath = "../AeroSimulator/res/capguy-walk.dds";
+   mAnimationBbShader->link();
+
+   if (mStar->loadTexture(filePath))
+   {
+      CLog::getInstance().log("* Billboard loaded: ", filePath);
+   }
+
+   mStar->setTranslate(glm::vec3(-2.0f, 0.0f, -3.0f));
+   mStar->setBillboardHeight(width);
+   mStar->setBillboardWidth(height);
+   mStar->calculateModelMatrix();
+
+   mBillboardShader->link();
+   mStar->setShadersAndBuffers(mAnimationBbShader);
+   mRendererTask->addRenderable(mStar.get());
 }

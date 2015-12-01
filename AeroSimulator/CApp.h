@@ -20,6 +20,7 @@ namespace AeroSimulatorEngine
    class CGameObject;
    class CCompositeGameObject;
    class CTimer;
+   class CAnimationBillBoard;
 
    class CApp
    {
@@ -49,6 +50,7 @@ namespace AeroSimulatorEngine
       void addAirplane();
       void addClouds();
       void addSphere();
+      void addStars();
 
    private:
       typedef std::shared_ptr<CGameObject> tGameObjectPtr;
@@ -66,12 +68,16 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mColorShader;
       std::shared_ptr<CShader> mHealthbarShader;
       std::shared_ptr<CShader> mColorLambertianShader;
+      std::shared_ptr<CShader> mAnimationBbShader;
+
+      ///@todo: probably use the concrete types here
       tGameObjectPtr mSkyBox;
       tGameObjectPtr mLand;
       std::shared_ptr<CCompositeGameObject> mSphere;
 
       ///@todo: place billboards to some bridge class CClouds
       std::vector<tGameObjectPtr > mBillBoards;
+      std::shared_ptr<CAnimationBillBoard> mStar; ///@todo: change to an array
    };
 
 } // namespace AeroSimulatorEngine

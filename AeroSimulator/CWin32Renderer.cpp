@@ -9,6 +9,7 @@
 #include "CTimer.h"
 #include "C3DModel.h"
 #include "CSphere.h"
+#include "CAnimationBillBoard.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -56,6 +57,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mThirdKeyCode(0)
    , mFrameDt(0.0)
    , mAirplaneMatrix()
+   , mStar()
 {
    assert(mCamera);
 

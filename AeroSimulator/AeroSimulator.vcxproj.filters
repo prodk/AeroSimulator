@@ -159,6 +159,12 @@
     <ClInclude Include="CTimer.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
+    <ClInclude Include="CAnimationBillBoard.h">
+      <Filter>Header Files\gameObject\billboard</Filter>
+    </ClInclude>
+    <ClInclude Include="src\shaders\CAnimationBillboardShader.h">
+      <Filter>Header Files\renderer\shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -265,6 +271,12 @@
     </ClCompile>
     <ClCompile Include="CTimer.cpp">
       <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimationBillBoard.cpp">
+      <Filter>Source Files\gameObject\billboard</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp">
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

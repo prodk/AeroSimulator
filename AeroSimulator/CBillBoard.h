@@ -14,7 +14,7 @@ namespace AeroSimulatorEngine
       virtual void setEnvironment();
       virtual void resetEnvironment();
 
-      bool loadTexture(const char * fileName);
+      virtual bool loadTexture(const char * fileName);
    };
 }
 

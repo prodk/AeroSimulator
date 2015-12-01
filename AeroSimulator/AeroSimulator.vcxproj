@@ -148,6 +148,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="C3DModel.h" />
+    <ClInclude Include="CAnimationBillBoard.h" />
     <ClInclude Include="CApp.h" />
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CAxesFrame.h" />
@@ -175,6 +176,7 @@
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
     <ClInclude Include="CLeafCompositeGameObject.h" />
+    <ClInclude Include="src\shaders\CAnimationBillboardShader.h" />
     <ClInclude Include="src\shaders\CBillboardShader.h" />
     <ClInclude Include="src\shaders\CHealthbarShader.h" />
     <ClInclude Include="src\shaders\CColorLambertianShader.h" />
@@ -185,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C3DModel.cpp" />
+    <ClCompile Include="CAnimationBillBoard.cpp" />
     <ClCompile Include="CApp.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CAxesFrame.cpp" />
@@ -212,6 +215,7 @@
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
     <ClCompile Include="CLeafCompositeGameObject.cpp" />
+    <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CHealthbarShader.cpp" />
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp" />
