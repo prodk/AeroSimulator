@@ -3,6 +3,7 @@
 
 using namespace AeroSimulatorEngine;
 
+///@todo: remove this class, it is redundant, when CGameObject contains update()
 CAnimationBillBoard::CAnimationBillBoard()
 {
 }
@@ -11,14 +12,21 @@ CAnimationBillBoard::~CAnimationBillBoard()
 {
 }
 
-bool CAnimationBillBoard::loadTexture(const char * fileName)
+void CAnimationBillBoard::update(const float deltaTime)
 {
-   bool result = CBillBoard::loadTexture(fileName);
-   if (result)
+   ///@todo: make members
+   const float animationSpeed = 10.0f; // frames per second
+   const float animationTime = 1.0f / animationSpeed;
+
+   static float timeSinceLastFrame;
+   if (timeSinceLastFrame >= animationTime)
    {
-      ///@todo: think why this is needed to work for the animated sprite
-      glGenerateTextureMipmap(mTexture->getId());
+      timeSinceLastFrame = 0.0f;
+
+      ++mCurrentFrame;
+      mCurrentFrame.x = static_cast<int>(mCurrentFrame.x) % static_cast<int>(mNumOfFrames.x);
+      mCurrentFrame.y = static_cast<int>(mCurrentFrame.y) % static_cast<int>(mNumOfFrames.y);
    }
 
-   return result;
+   timeSinceLastFrame += deltaTime;
 }

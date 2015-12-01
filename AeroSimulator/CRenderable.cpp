@@ -27,6 +27,9 @@ CRenderable::CRenderable()
    , mHealthValue(0.0f)
    , mViewMatrix()
    , mEyePos()
+   , mCurrentFrame()
+   , mFrameSize()
+   , mNumOfFrames()
 {
 }
 

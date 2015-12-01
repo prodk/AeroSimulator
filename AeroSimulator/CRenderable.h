@@ -6,6 +6,7 @@
 #include "../AeroSimulator/include/glew.h"
 #include "glm/mat4x4.hpp"
 #include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
 #include <memory>
 
 namespace AeroSimulatorEngine
@@ -84,6 +85,21 @@ namespace AeroSimulatorEngine
       void setHealthValue(float shift) { mHealthValue = shift; }
       float getHealthValue() const { return mHealthValue; }
 
+      // Animation-specific
+      void setCurrentFrame(const glm::vec2& frame) { mCurrentFrame = frame; }
+      glm::vec2 getCurrentFrame() const { return mCurrentFrame; }
+
+      void setFrameSize(const glm::vec2& size)
+      { 
+         mFrameSize = size; 
+         if (mFrameSize.length())
+         {
+            mNumOfFrames.x = 1.f / mFrameSize.x;
+            mNumOfFrames.y = 1.f / mFrameSize.y;
+         }
+      }
+      glm::vec2 getFrameSize() const { return mFrameSize; }
+
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
@@ -106,9 +122,14 @@ namespace AeroSimulatorEngine
 
       ///@todo: change the architecture such that it is not required to add all
       ///@todo these variables to CRenderer. They should be added to those objects where they are needed!
+      ///@todo: or create several types of renderables for each type of objects
       float mHealthValue; // Shift of the healthbar foreground relative to the background
       glm::mat4 mViewMatrix;
       glm::vec3 mEyePos;
+
+      glm::vec2 mCurrentFrame;
+      glm::vec2 mFrameSize;
+      glm::vec2 mNumOfFrames;
    };
 } // namespace AeroSimulatorEngine
 

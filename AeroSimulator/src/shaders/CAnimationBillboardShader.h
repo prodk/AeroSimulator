@@ -10,6 +10,13 @@ namespace AeroSimulatorEngine
    public:
       CAnimationBillboardShader();
       virtual ~CAnimationBillboardShader();
+
+      virtual void link();
+      virtual void setup(CRenderable & renderable);
+
+   private:
+      GLint mCurrentFrameUniform;
+      GLint mFrameSizeUniform;
    };
 } // namespace AeroSimulatorEngine
 

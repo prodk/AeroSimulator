@@ -41,8 +41,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(30.f)
-   , mCameraAngleY(80.f)
+   , mCameraAngleX(20.f)
+   , mCameraAngleY(-80.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
    , mSphereRoot(nullptr)
@@ -64,7 +64,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->translate(glm::vec3(0.0f, 0.0f, -13.0f));
+   mCamera->translate(glm::vec3(0.0f, 0.0f, -14.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -380,8 +380,16 @@ void CWin32Renderer::updateRenderables()
    updateAirplane();
 
    ///@todo: place to a method updateSphere
-   mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
-   mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
+   if (mSphereRoot)
+   {
+      mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
+      mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
+   }
+
+   if (mStar)
+   {
+      mStar->update(mFrameDt);
+   }
 
    handleCollisions();
 }

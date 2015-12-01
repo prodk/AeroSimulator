@@ -25,6 +25,8 @@ namespace AeroSimulatorEngine
 
       virtual void addCustomObjects(std::shared_ptr<CShader>& pShader);
 
+      virtual void update(const float deltaTime);
+
       void setScale(const glm::vec3& scale) { mScale = scale; }
       void setRotate(const glm::vec3& rotate) { mRotate = rotate; }
       void setTranslate(const glm::vec3& translate) { mTranslate = translate; }

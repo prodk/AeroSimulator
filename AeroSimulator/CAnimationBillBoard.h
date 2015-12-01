@@ -11,7 +11,7 @@ namespace AeroSimulatorEngine
       CAnimationBillBoard();
       virtual ~CAnimationBillBoard();
 
-      virtual bool loadTexture(const char * fileName);
+      virtual void update(const float deltaTime);
    };
 } // namespace AeroSimulatorEngine
 

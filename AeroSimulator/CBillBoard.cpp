@@ -1,6 +1,7 @@
 #include "CBillBoard.h"
 #include "CGeometry.h"
 #include "CTexture.h"
+#include "CLog.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -56,5 +57,15 @@ void CBillBoard::resetEnvironment()
 
 bool CBillBoard::loadTexture(const char * fileName)
 {
-   return (0 != mTexture->loadDDSTexture(fileName));
+   const bool result = (0 != mTexture->loadDDSTexture(fileName));
+
+   if (result && (mTexture->getWidth() != mTexture->getHeight()))
+   {
+      glGenerateTextureMipmap(mTexture->getId());
+      CLog::getInstance().log("CBillBoard::loadTexture(): generating mipmaps for non-square texture, height: ",
+         mTexture->getHeight());
+   }
+
+   return result;
+   //return (0 != mTexture->loadDDSTexture(fileName));
 }

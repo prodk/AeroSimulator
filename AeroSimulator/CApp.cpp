@@ -253,8 +253,8 @@ void CApp::addSphere()
 
 void CApp::addStars()
 {
-   const float width = 2.0f;
-   const float height = 2.0f;
+   const float width = 3.0f;
+   const float height = 3.0f;
    const char* filePath = "../AeroSimulator/res/capguy-walk.dds";
    mAnimationBbShader->link();
 
@@ -263,12 +263,14 @@ void CApp::addStars()
       CLog::getInstance().log("* Billboard loaded: ", filePath);
    }
 
-   mStar->setTranslate(glm::vec3(-2.0f, 0.0f, -3.0f));
+   mStar->setTranslate(glm::vec3(-6.0f, 0.0f, -4.0f));
    mStar->setBillboardHeight(width);
    mStar->setBillboardWidth(height);
    mStar->calculateModelMatrix();
+   mStar->setFrameSize(glm::vec2(1.0f / 8.0f, 1.0f));
 
    mBillboardShader->link();
    mStar->setShadersAndBuffers(mAnimationBbShader);
    mRendererTask->addRenderable(mStar.get());
+   mRendererTask->setStars(mStar);
 }

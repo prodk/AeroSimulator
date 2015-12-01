@@ -72,6 +72,10 @@ void CGameObject::addCustomObjects(std::shared_ptr<CShader>& pShader)
 {
 }
 
+void CGameObject::update(const float deltaTime)
+{
+}
+
 glm::mat4 CGameObject::getTRMatrix() const
 {
    return mTRMatrix;

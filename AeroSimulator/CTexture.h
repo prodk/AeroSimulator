@@ -18,6 +18,8 @@ namespace AeroSimulatorEngine
       GLuint loadDDSTexture(const char * filePath);
 
       GLint getId() const { return mId; }
+      GLint getWidth() const { return mWidth; }
+      GLint getHeight() const { return mHeight; }
 
    private:
       GLuint mId;
