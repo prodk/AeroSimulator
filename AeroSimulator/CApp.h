@@ -21,6 +21,7 @@ namespace AeroSimulatorEngine
    class CCompositeGameObject;
    class CTimer;
    class CAnimationBillBoard;
+   class CSphere;
 
    class CApp
    {
@@ -73,7 +74,7 @@ namespace AeroSimulatorEngine
       ///@todo: probably use the concrete types here
       tGameObjectPtr mSkyBox;
       tGameObjectPtr mLand;
-      std::shared_ptr<CCompositeGameObject> mSphere;
+      std::shared_ptr<CSphere> mSphere;
 
       ///@todo: place billboards to some bridge class CClouds
       std::vector<tGameObjectPtr > mBillBoards;

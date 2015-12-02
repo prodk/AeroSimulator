@@ -84,6 +84,7 @@ glm::mat4 CGameObject::getTRMatrix() const
 ///@todo: use rotation around any axis under the hood!
 void CGameObject::calculateTRMatrix()
 {
+   ///@todo: check that angles are non-zero
    // To get a TRS sequence of matrices, act as follows: translate, rotate, scale
    // 1) translate
    mTRMatrix = glm::mat4x4(1);

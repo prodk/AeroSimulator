@@ -9,6 +9,7 @@
 namespace AeroSimulatorEngine
 {
    class CCompositeGameObject;
+   class CParentGameObject;
    class CCube;
    class CGeometry;
    class CAxesFrame;
@@ -25,7 +26,7 @@ namespace AeroSimulatorEngine
       bool buildModel(std::shared_ptr<CShader>& pShader);
       void getTree(std::vector<CCompositeGameObject*>& tree) const;
 
-      CCompositeGameObject* getRoot() const { return mCabine.get(); }
+      CParentGameObject* getRoot() const { return mCabine.get(); }
 
       void setBillboardShader(std::shared_ptr<CShader>& pShader)
       {
@@ -55,7 +56,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CGeometry> mCubeGeometry;
 
       // Parts of the plane
-      std::shared_ptr<CCompositeGameObject> mCabine;
+      std::shared_ptr<CParentGameObject> mCabine;
       std::shared_ptr<CCompositeGameObject> mBody;
       std::shared_ptr<CCompositeGameObject> mLeftWing;
       std::shared_ptr<CCompositeGameObject> mRightWing;

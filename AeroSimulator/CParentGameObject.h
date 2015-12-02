@@ -32,6 +32,7 @@ namespace AeroSimulatorEngine
       ///@todo: probably add some timing arguments here
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
+      bool remove(const CCompositeGameObject* child);
 
    protected:
       std::vector<CCompositeGameObject*> mChildren;

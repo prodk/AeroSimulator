@@ -6,9 +6,7 @@
 using namespace AeroSimulatorEngine;
 
 CCamera::CCamera()
-   : mScale()
-   , mRotate()
-   , mTranslate()
+   : CLeafCompositeGameObject()
    , mViewMatrix()
    , mProjectionMatrix()
    , mNonScaledViewMatrix()
@@ -19,61 +17,10 @@ CCamera::~CCamera()
 {
 }
 
-void CCamera::scale(const glm::vec3 & scales)
-{
-   mScale = glm::mat4x4(1.0f);
-   mScale = glm::scale(mScale, scales);
-}
-
-void CCamera::translate(const glm::vec3 & distance)
-{
-   mTranslate = glm::mat4(1.0f);
-   mTranslate = glm::translate(mTranslate, distance);
-}
-
-void CCamera::rotate(const glm::vec3 & angles)
-{
-   ///@todo: check that angles are non-zero
-   const bool changeX = (angles.x != 0.0f);
-   const bool changeY = (angles.y != 0.0f);
-   const bool changeZ = (angles.z != 0.0f);
-
-   if (changeX || changeY || changeZ)
-   {
-      mRotate = glm::mat4(1.0f);
-
-      if (changeX)
-      {
-         const float angleX = CCommonMath::degToRad(angles.x);
-         glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-         mRotate = glm::rotate(mRotate, angleX, xAxis);
-      }
-
-      if (changeY)
-      {
-         const float angleY = CCommonMath::degToRad(angles.y);
-         glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-         mRotate = glm::rotate(mRotate, angleY, yAxis);
-      }
-
-      if (changeZ)
-      {
-         const float angleZ = CCommonMath::degToRad(angles.z);
-         glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-         mRotate = glm::rotate(mRotate, angleZ, zAxis);
-      }
-   }
-}
-
-void CCamera::resetView()
-{
-   mViewMatrix = glm::mat4(1.0f);
-}
-
 void CCamera::update()
 {
-   mNonScaledViewMatrix = mTranslate * mRotate;
-   mViewMatrix = mNonScaledViewMatrix * mScale;
+   calculateModelMatrix();
+   mViewMatrix = mModelMatrix;
 }
 
 glm::vec3 CCamera::getRightVector() const
@@ -81,9 +28,9 @@ glm::vec3 CCamera::getRightVector() const
    glm::vec3 result;
 
    /// mat4x4 is composed out of 4 vectors in column-major order
-   result.x = mNonScaledViewMatrix[0].x;
-   result.y = mNonScaledViewMatrix[1].x;
-   result.z = mNonScaledViewMatrix[2].x;
+   result.x = mViewMatrix[0].x;
+   result.y = mViewMatrix[1].x;
+   result.z = mViewMatrix[2].x;
 
    return result;
 }
@@ -91,9 +38,9 @@ glm::vec3 CCamera::getRightVector() const
 glm::vec3 CCamera::getUpVector() const
 {
    glm::vec3 result;
-   result.x = mNonScaledViewMatrix[0].y;
-   result.y = mNonScaledViewMatrix[1].y;
-   result.z = mNonScaledViewMatrix[2].y;
+   result.x = mViewMatrix[0].y;
+   result.y = mViewMatrix[1].y;
+   result.z = mViewMatrix[2].y;
 
    return result;
 }
@@ -112,6 +59,7 @@ glm::vec3 CCamera::getPositionWorldSpace() const
    CCommonMath::copyColumn(1, noTranslate, mViewMatrix);
    CCommonMath::copyColumn(2, noTranslate, mViewMatrix);
 
+   ///@todo: as we do not have scale, just transpose it
    noTranslate = glm::inverse(noTranslate);
 
    position = noTranslate * position;

@@ -15,6 +15,7 @@ namespace AeroSimulatorEngine
 {
    class CCamera;
    class CCompositeGameObject;
+   class CParentGameObject;
    class C3DModel;
    class CAnimationBillBoard;
 
@@ -38,8 +39,8 @@ namespace AeroSimulatorEngine
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
-      void setAirplaneRoot(CCompositeGameObject* root) { if (root) mAirplaneRoot = root; }
-      void setSphereRoot(CCompositeGameObject* root) { if (root) mSphereRoot = root; }
+      void setAirplaneRoot(CParentGameObject* root) { if (root) mAirplaneRoot = root; }
+      void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
 
       void setAirplane(std::shared_ptr<C3DModel> airplane) { mAirplane = airplane; }
       void setStars(std::shared_ptr<CAnimationBillBoard> stars) { mStar = stars; }
@@ -79,10 +80,12 @@ namespace AeroSimulatorEngine
       ///@todo: probably create an array of cameras later
       std::shared_ptr<CCamera> mCamera;
 
-      CCompositeGameObject* mAirplaneRoot;
-      CCompositeGameObject* mSphereRoot;
+      CParentGameObject* mAirplaneRoot;
+      CParentGameObject* mSphereRoot;
 
       bool mIsDebugMode;
+      bool mIsSetCameraMode;
+      bool mCameraAttached;
       float mCameraScale;
       HWND mWndHandle;
 

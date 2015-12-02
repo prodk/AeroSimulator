@@ -1,6 +1,8 @@
 #include "CParentGameObject.h"
 #include "CLog.h"
 
+#include <algorithm>
+
 using namespace AeroSimulatorEngine;
 
 CParentGameObject::CParentGameObject()
@@ -92,4 +94,16 @@ void CParentGameObject::updateModelMatrix(const glm::mat4x4 & modelMatrix)
          pChild->updateModelMatrix(modelMatrix);
       }
    }
+}
+
+bool CParentGameObject::remove(const CCompositeGameObject * child)
+{
+   bool result = false;
+   auto iter = std::find(mChildren.begin(), mChildren.end(), child);
+   if (iter != mChildren.end())
+   {
+      mChildren.erase(iter);
+      result = true;
+   }
+   return result;
 }

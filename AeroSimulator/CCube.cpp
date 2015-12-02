@@ -106,11 +106,13 @@ bool CCube::loadTexture(const char * fileName)
 void CCube::translateHealthBar(const glm::vec3 & shift)
 {
    mHealthBarShift = shift;
-   mHealthBar->setTranslate(mHealthBarShift);
+   if (mHealthBar)
+      mHealthBar->setTranslate(mHealthBarShift);
 }
 
 void CCube::setHealth(float health)
 {
    mHealthValue = std::min<float>(1.0, std::max<float>(0.0, health));
-   mHealthBar->setHealthValue(mHealthValue);
+   if (mHealthBar)
+      mHealthBar->setHealthValue(mHealthValue);
 }

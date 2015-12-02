@@ -3,7 +3,7 @@
 #include "../src/shaders/CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
-#include "CCommonMath.h" ///@todo: remove this
+#include "CCommonMath.h" ///@todo: remove this, we can use glm::radians
 #include "CCamera.h"
 #include "CCompositeGameObject.h"
 #include "CTimer.h"
@@ -46,7 +46,9 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
    , mSphereRoot(nullptr)
-   , mIsDebugMode(false)
+   , mIsDebugMode(false)     // press 1
+   , mIsSetCameraMode(false) // press 3
+   , mCameraAttached(false)
    , mCameraScale(1.0f)
    , mWndHandle(0)
    , mKeyPressed(false)
@@ -64,7 +66,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->translate(glm::vec3(0.0f, 0.0f, -14.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -14.0f));
+   mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -149,8 +152,6 @@ void CWin32Renderer::destroy()
          CLog::getInstance().log("* ERROR: render context wasn't destroyed");
       mRenderContext = NULL;
    }
-
-   //mRoot = nullptr;
 }
 
 void CWin32Renderer::draw(CRenderable* pRenderable)
@@ -162,7 +163,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       glBindBuffer(GL_ARRAY_BUFFER, vboId);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
 
-      pRenderable->setEnvironment(); /// Renderable specific changes of the OpenGL environment: switch depth on/off etc.
+      pRenderable->setEnvironment(); /// Renderable-specific changes of the OpenGL environment: switch depth on/off etc.
 
       CGeometry* pGeometry = pRenderable->getGeometry();
       CShader* pShader = pRenderable->getShader();
@@ -176,8 +177,6 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
       // Set shader attributes/uniforms
       pShader->setup(*pRenderable);
 
-      //GLenum mode = GL_TRIANGLE_STRIP;
-      
       if (mIsDebugMode && pRenderable->getDrawWithLines())
       {
          glLineWidth(pRenderable->getLineWidth());
@@ -328,8 +327,11 @@ void CWin32Renderer::updateAirplane()
 
 void CWin32Renderer::updateCamera()
 {
-   mCamera->rotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
-   mCamera->update();
+   if (!mCameraAttached)
+   {
+      mCamera->setRotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
+      mCamera->update();
+   }
 }
 
 void CWin32Renderer::springButtons()
@@ -419,8 +421,15 @@ void CWin32Renderer::updateInput()
       {
          /// Airplane rotations
       case (VK_LEFT) :
-         mAngleZ += rotationSpeed;
-         mAngleZ = std::min<float>(mAngleZ, 90.f);
+         if (mIsSetCameraMode)
+         {
+
+         }
+         else
+         {
+            mAngleZ += rotationSpeed;
+            mAngleZ = std::min<float>(mAngleZ, 90.f);
+         }
          break;
 
       case (VK_RIGHT) :
@@ -465,6 +474,14 @@ void CWin32Renderer::updateInput()
          mIsDebugMode = false;
          break;
 
+      //case (0x33) : // 3, camera setup mode on
+      //   mIsSetCameraMode = true;
+      //   break;
+
+      //case (0x34) : // 4, camera setup mode on
+      //   mIsSetCameraMode = false;
+      //   break;
+
       case (VK_OEM_PLUS) : // +, zoom in
          mCameraScale += 0.01f;
          mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
@@ -475,6 +492,11 @@ void CWin32Renderer::updateInput()
          mCameraScale = std::max(0.1f, mCameraScale);
          mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
          break;
+
+      //case (VK_RETURN) : // Enter, attach the camera to the airplane
+      //   if (mIsSetCameraMode)
+      //      mAirplaneRoot->add(mCamera.get());
+      //   break;
       }
    }
 
@@ -574,6 +596,33 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
          mThirdKeyPressed = true;
          mThirdKeyCode = wParam;
       }
+
+      switch (wParam)
+      {
+      case (0x33) : // 3, camera setup mode on
+         mIsSetCameraMode = true;
+         break;
+
+      case (0x34) : // 4, camera setup mode on
+         mIsSetCameraMode = false;
+         break;
+      case (VK_RETURN) : // Enter, attach the camera to the airplane
+         if (mIsSetCameraMode)
+         {
+            if (!mCameraAttached)
+            {
+               mAirplaneRoot->add(mCamera.get());
+               mAirplaneRoot->buildModelMatrix(glm::mat4x4(1.0f));
+               mCameraAttached = true;
+            }
+            else
+            {
+               mAirplaneRoot->remove(mCamera.get());
+               mCameraAttached = false;
+            }
+         }
+         break;
+      } // end switch (wParam)
    }
    return false;
 
@@ -586,7 +635,7 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       {
          mThirdKeyPressed = false;
 
-         if (wParam == mKeyCode)
+         //if (wParam == mKeyCode)
             mKeyPressed = false;
       }
    }
