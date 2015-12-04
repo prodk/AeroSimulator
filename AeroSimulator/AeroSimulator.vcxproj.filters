@@ -165,6 +165,9 @@
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="CBoundingBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -277,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="CBoundingBox.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

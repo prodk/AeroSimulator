@@ -7,6 +7,8 @@
 
 namespace AeroSimulatorEngine
 {
+   ///@todo: introduce a special healthbar cube and move mHealthBar there.
+   ///@todo: this is because the sky box and bounding box do not need health bars.
    class CCube : public CParentGameObject
    {
    public:

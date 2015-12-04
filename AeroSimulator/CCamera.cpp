@@ -67,3 +67,10 @@ glm::vec3 CCamera::getPositionWorldSpace() const
    return position;
 }
 
+void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+{
+   CLeafCompositeGameObject::updateModelMatrix(rootModelMatrix);
+   mViewMatrix = mModelMatrix;
+   //mViewMatrix = glm::inverse(mModelMatrix);
+}
+

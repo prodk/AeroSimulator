@@ -26,6 +26,8 @@ namespace AeroSimulatorEngine
       glm::vec3 getUpVector() const;
       glm::vec3 getPositionWorldSpace() const;
 
+      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
+
    private:
       glm::mat4 mViewMatrix;
       glm::mat4 mProjectionMatrix;

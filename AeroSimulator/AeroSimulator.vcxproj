@@ -153,6 +153,7 @@
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CAxesFrame.h" />
     <ClInclude Include="CBillBoard.h" />
+    <ClInclude Include="CBoundingBox.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCompositeGameObject.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CAxesFrame.cpp" />
     <ClCompile Include="CBillBoard.cpp" />
+    <ClCompile Include="CBoundingBox.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
