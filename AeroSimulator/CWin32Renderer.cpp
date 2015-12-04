@@ -182,7 +182,7 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
          glLineWidth(pRenderable->getLineWidth());
          glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
       }
-      else
+      else if (!pRenderable->getDrawWithLines())
          glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
 
       // Return to the initial OpenGL state.
@@ -305,8 +305,11 @@ void CWin32Renderer::resetRenderContext()
 
 void CWin32Renderer::updateAirplane()
 {
-   glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
-   mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplane->getPosition().y, 0.f));
+   if (mAirplane)
+   {
+      glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
+      mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplane->getPosition().y, 0.f));
+   }
 
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
    const float angleZradians = CCommonMath::degToRad(mAngleZ);
@@ -358,8 +361,8 @@ void CWin32Renderer::springButtons()
    if (!mKeyPressed
       || (mKeyPressed && mKeyCode != VK_UP))
    {
-      if (mAirplane->getPosition().y > -11.f)
-      mAirplane->decreasePropellerSpeed();
+      if (mAirplane && mAirplane->getPosition().y > -11.f)
+         mAirplane->decreasePropellerSpeed();
    }
 
    if (!mKeyPressed
@@ -391,6 +394,12 @@ void CWin32Renderer::updateRenderables()
    if (mStar)
    {
       mStar->update(mFrameDt);
+   }
+
+   if (mStarRoot)
+   {
+      mStarRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
+      mStarRoot->updateModelMatrix(glm::mat4x4(1.0f));
    }
 
    handleCollisions();
@@ -438,30 +447,36 @@ void CWin32Renderer::updateInput()
          break;
 
       case (VK_UP) :
-         mAirplane->increasePropellerSpeed();
-         if (mThirdKeyPressed && (mThirdKeyCode == VK_SPACE))
+         if (mAirplane)
          {
-            mAngleX += rotationSpeed;
-            mAngleX = std::min<float>(mAngleX, 70.f);
+            mAirplane->increasePropellerSpeed();
+            if (mThirdKeyPressed && (mThirdKeyCode == VK_SPACE))
+            {
+               mAngleX += rotationSpeed;
+               mAngleX = std::min<float>(mAngleX, 70.f);
 
-            // Move upwards
-            glm::vec3 position = mAirplane->getPosition();
-            ///@todo: move to handle collisions
-            position.y = std::min<float>(11.5f, position.y + mAirplane->getSpeedOfFlight().y*mFrameDt);
-            mAirplane->setPosition(position);
+               // Move upwards
+               glm::vec3 position = mAirplane->getPosition();
+               ///@todo: move to handle collisions
+               position.y = std::min<float>(11.5f, position.y + mAirplane->getSpeedOfFlight().y*mFrameDt);
+               mAirplane->setPosition(position);
+            }
          }
          break;
 
       case (VK_DOWN) :
       {
-         mAngleX -= rotationSpeed;
-         mAngleX = std::max<float>(mAngleX, -70.f);
+         if (mAirplane)
+         {
+            mAngleX -= rotationSpeed;
+            mAngleX = std::max<float>(mAngleX, -70.f);
 
-         // Move the plane downwards
-         glm::vec3 position = mAirplane->getPosition();
-         ///@todo: move to handle collisions
-         position.y = std::max<float>(-11.5f, position.y - mAirplane->getSpeedOfFlight().y*mFrameDt);
-         mAirplane->setPosition(position);
+            // Move the plane downwards
+            glm::vec3 position = mAirplane->getPosition();
+            ///@todo: move to handle collisions
+            position.y = std::max<float>(-11.5f, position.y - mAirplane->getSpeedOfFlight().y*mFrameDt);
+            mAirplane->setPosition(position);
+         }
       }
          break;
 
@@ -535,15 +550,17 @@ void CWin32Renderer::handleCollisions()
 
    ///@todo: temporary before bounding boxes are not implemented: collision if plane reached bound
    ///@todo: don't do this update all the time
-   if (mAirplane->getPosition().y <= -11.f)
+   if (mAirplane)
    {
-      mAirplane->resetHealthBars();
-      mAirplane->setPropellerSpeed(0.0f);
-   }
-   else
-   {
-      mAirplane->resetHealthBars(0.7);
-      
+      if (mAirplane->getPosition().y <= -11.f)
+      {
+         mAirplane->resetHealthBars();
+         mAirplane->setPropellerSpeed(0.0f);
+      }
+      else
+      {
+         mAirplane->resetHealthBars(0.7);
+      }
    }
 }
 

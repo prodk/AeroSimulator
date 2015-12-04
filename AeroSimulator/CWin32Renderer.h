@@ -41,6 +41,7 @@ namespace AeroSimulatorEngine
 
       void setAirplaneRoot(CParentGameObject* root) { if (root) mAirplaneRoot = root; }
       void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
+      void setStarsRoot(CParentGameObject* root) { if (root) mStarRoot = root; }
 
       void setAirplane(std::shared_ptr<C3DModel> airplane) { mAirplane = airplane; }
       void setStars(std::shared_ptr<CAnimationBillBoard> stars) { mStar = stars; }
@@ -82,6 +83,7 @@ namespace AeroSimulatorEngine
 
       CParentGameObject* mAirplaneRoot;
       CParentGameObject* mSphereRoot;
+      CParentGameObject* mStarRoot;
 
       bool mIsDebugMode;
       bool mIsSetCameraMode;

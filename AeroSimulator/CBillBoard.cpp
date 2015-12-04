@@ -2,6 +2,9 @@
 #include "CGeometry.h"
 #include "CTexture.h"
 #include "CLog.h"
+#include "CBoundingBox.h"
+
+#include "glm/gtc/matrix_transform.hpp"
 
 using namespace AeroSimulatorEngine;
 
@@ -22,9 +25,14 @@ namespace
 }
 
 CBillBoard::CBillBoard()
+   : mScaledTRMatrix()
+   , mBoundingBox()
 {
    mTexture.reset(new CTexture());
    mGeometry.reset(new CGeometry());
+
+   assert(mTexture);
+   assert(mGeometry);
 
    if (mGeometry)
    {
@@ -67,5 +75,56 @@ bool CBillBoard::loadTexture(const char * fileName)
    }
 
    return result;
-   //return (0 != mTexture->loadDDSTexture(fileName));
+}
+
+void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+{
+   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
+   CGameObject::setShadersAndBuffers(pShader);
+}
+
+void CBillBoard::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
+{
+   CParentGameObject::buildModelMatrix(parentTRMatrix);
+
+   // We need to calculate the model matrix for the node
+   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
+}
+
+void CBillBoard::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
+{
+   CParentGameObject::updateTRMatrix(trMatrix, dt);
+
+   // Don't forget to change the cached scaled TR matrix
+   if (trMatrix != mParentTRMatrix)
+   {
+      mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+   }
+}
+
+void CBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+{
+   CParentGameObject::updateModelMatrix(rootModelMatrix);
+
+   mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
+}
+
+void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader)
+{
+   if (pShader)
+   {
+      mBoundingBox.reset(new CBoundingBox());
+      if (mBoundingBox)
+      {
+         mBoundingBox->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+         mBoundingBox->setScale(glm::vec3(mBillboardWidth, mBillboardHeight, mBillboardWidth));
+         mBoundingBox->calculateModelMatrix();
+
+         mBoundingBox->setShadersAndBuffers(pShader);
+         add(mBoundingBox.get());
+      }
+
+      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
+   }
 }

@@ -24,16 +24,12 @@ namespace AeroSimulatorEngine
 
       /// Composite-related methods - override only some of them
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
-      ///@todo: probably add some timing arguments here
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
       void setupHealthBar(std::shared_ptr<CShader>& pShader);
-
       virtual bool loadTexture(const char * fileName);
-
       void translateHealthBar(const glm::vec3& shift);
-
       void setHealth(float health);
 
    public:

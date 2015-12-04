@@ -124,11 +124,11 @@ void CApp::setupScene()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   addSkyBox();
+   //addSkyBox();
    addLand();
-   addAirplane();
-   addClouds();
-   addSphere();
+   //addAirplane();
+   //addClouds();
+   //addSphere();
    addStars();
 
    mRendererTask->resetRenderContext();
@@ -271,6 +271,21 @@ void CApp::addStars()
 
    mBillboardShader->link();
    mStar->setShadersAndBuffers(mAnimationBbShader);
+   mColorShader->link();
+   mStar->setBoundingBox(mColorShader);
+
+   std::vector<CCompositeGameObject*> tree;
+   mStar->traverse(tree);
+
+   for (auto * pTree : tree)
+   {
+      if (pTree)
+      {
+         mRendererTask->addRenderable(pTree);
+      }
+   }
+
    mRendererTask->addRenderable(mStar.get());
    mRendererTask->setStars(mStar);
+   mRendererTask->setStarsRoot(mStar.get());
 }
