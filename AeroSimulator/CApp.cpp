@@ -154,13 +154,31 @@ void CApp::addLand()
    {
       CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
    }
+   const glm::vec3 landSize = glm::vec3(55.f, 1.f, 55.0f);
    mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
-   mLand->setScale(glm::vec3(55.f, 1.f, 55.0f));
+   mLand->setScale(landSize);
    mLand->calculateModelMatrix();
 
    mTextureShader->link();
    mLand->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mLand.get());
+
+   mColorShader->link();
+   const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
+   mLand->setBoundingBox(mColorShader, landSize, bBoxColor);
+
+   std::vector<CCompositeGameObject*> tree;
+   mLand->traverse(tree);
+
+   for (auto * pTree : tree)
+   {
+      if (pTree)
+      {
+         mRendererTask->addRenderable(pTree);
+      }
+   }
+
+   mRendererTask->setLand(mLand);
 }
 
 void CApp::addAirplane()
@@ -272,7 +290,8 @@ void CApp::addStars()
    mBillboardShader->link();
    mStar->setShadersAndBuffers(mAnimationBbShader);
    mColorShader->link();
-   mStar->setBoundingBox(mColorShader);
+   const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
+   mStar->setBoundingBox(mColorShader, bBoxColor);
 
    std::vector<CCompositeGameObject*> tree;
    mStar->traverse(tree);
@@ -287,5 +306,4 @@ void CApp::addStars()
 
    mRendererTask->addRenderable(mStar.get());
    mRendererTask->setStars(mStar);
-   mRendererTask->setStarsRoot(mStar.get());
 }

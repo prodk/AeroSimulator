@@ -30,6 +30,7 @@ CRenderable::CRenderable()
    , mCurrentFrame()
    , mFrameSize()
    , mNumOfFrames()
+   , mIsVisible(true)
 {
 }
 

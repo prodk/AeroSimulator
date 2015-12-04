@@ -128,6 +128,14 @@ void C3DModel::resetHealthBars(const float value)
       cube.setHealth(value);
 }
 
+const CBoundingBox * C3DModel::getBoundingBox() const
+{
+   if (mBoundingBox)
+      return mBoundingBox.get();
+   else
+      return 0;
+}
+
 void  C3DModel::setupCubeGeometry()
 {
    if (mCubeGeometry)
@@ -186,7 +194,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
 
    // Build an airplane
    /// Bounding box:
-   const glm::vec4 bbColor(1.0f, 0.0f, 0.0f, 1.0f);
+   const glm::vec4 bbColor(0.0f, 1.0f, 0.5f, 1.0f);
    const float bbWidth = 4.0f;
    const float bbHeight = 2.0f;
    const float bbDepth = 5.0f;

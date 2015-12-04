@@ -47,6 +47,8 @@ namespace AeroSimulatorEngine
 
       void resetHealthBars(const float value = 0.0f);
 
+      const CBoundingBox* getBoundingBox() const;
+
       static const std::size_t numOfCubes;
 
    private:

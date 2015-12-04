@@ -10,6 +10,8 @@ namespace AeroSimulatorEngine
    public:
       CBoundingBox();
       virtual ~CBoundingBox();
+
+      bool collidesWith(const CBoundingBox& box) const;
    };
 } // namespace AeroSimulatorEngine
 

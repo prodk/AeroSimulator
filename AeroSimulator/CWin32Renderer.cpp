@@ -10,6 +10,7 @@
 #include "C3DModel.h"
 #include "CSphere.h"
 #include "CAnimationBillBoard.h"
+#include "CLand.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -59,7 +60,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mThirdKeyCode(0)
    , mFrameDt(0.0)
    , mAirplaneMatrix()
-   , mStar()
+   , mStar(nullptr)
+   , mLand(nullptr)
 {
    assert(mCamera);
 
@@ -99,7 +101,7 @@ void CWin32Renderer::update(CTask* pTask)
 
       for (auto * pRenderable : mRenderables)
       {
-         if (pRenderable && pRenderable->canBeRendered())
+         if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
          {
             ///todo: think how to set the width/height of the billboard
             pRenderable->setRightVector(mCamera->getRightVector());
@@ -402,10 +404,11 @@ void CWin32Renderer::updateRenderables()
       mStar->update(mFrameDt);
    }
 
-   if (mStarRoot)
+   CAnimationBillBoard* star = mStar.get();
+   if (star)
    {
-      mStarRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
-      mStarRoot->updateModelMatrix(glm::mat4x4(1.0f));
+      star->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
+      star->updateModelMatrix(glm::mat4x4(1.0f));
    }
 
    handleCollisions();

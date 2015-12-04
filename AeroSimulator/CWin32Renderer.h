@@ -18,6 +18,7 @@ namespace AeroSimulatorEngine
    class CParentGameObject;
    class C3DModel;
    class CAnimationBillBoard;
+   class CLand;
 
    class CWin32Renderer : public CRenderer
    {
@@ -41,10 +42,10 @@ namespace AeroSimulatorEngine
 
       void setAirplaneRoot(CParentGameObject* root) { if (root) mAirplaneRoot = root; }
       void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
-      void setStarsRoot(CParentGameObject* root) { if (root) mStarRoot = root; }
 
-      void setAirplane(std::shared_ptr<C3DModel> airplane) { mAirplane = airplane; }
-      void setStars(std::shared_ptr<CAnimationBillBoard> stars) { mStar = stars; }
+      void setAirplane(std::shared_ptr<C3DModel>& airplane) { mAirplane = airplane; }
+      void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { mStar = stars; }
+      void setLand(std::shared_ptr<CLand>& land) { mLand = land; }
 
    private:
       // Override CRenderer part
@@ -83,7 +84,6 @@ namespace AeroSimulatorEngine
 
       CParentGameObject* mAirplaneRoot;
       CParentGameObject* mSphereRoot;
-      CParentGameObject* mStarRoot;
 
       bool mIsDebugMode;
       bool mIsSetCameraMode;
@@ -106,6 +106,7 @@ namespace AeroSimulatorEngine
       ///@todo: move to the movement/collisions task when events are implemented
       std::shared_ptr<C3DModel> mAirplane;
       std::shared_ptr<CAnimationBillBoard> mStar; ///@todo: change to the vector later
+      std::shared_ptr<CLand> mLand; ///@todo: change to the vector later
    };
 } // namespace AeroSimulatorEngine
 

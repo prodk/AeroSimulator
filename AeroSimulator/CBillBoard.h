@@ -7,6 +7,8 @@ namespace AeroSimulatorEngine
 {
    class CBoundingBox;
 
+   ///@todo: probably change CParentGameObject taking into account that it can have model matrix to avoid overriding methods
+   ///@todo: then change CCube, CLand, CBillboard, CSphere
    class CBillBoard : public CParentGameObject
    {
    public:
@@ -26,7 +28,8 @@ namespace AeroSimulatorEngine
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
 
-      void setBoundingBox(std::shared_ptr<CShader>& pShader);
+      void setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec4& color, const glm::vec3& size = glm::vec3());
+      const CBoundingBox* getBoundingBox() const;
 
    private:
       glm::mat4x4 mScaledTRMatrix;

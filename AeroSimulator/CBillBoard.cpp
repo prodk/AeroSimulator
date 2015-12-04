@@ -110,14 +110,14 @@ void CBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
 }
 
-void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader)
+void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec4& color, const glm::vec3& size)
 {
    if (pShader)
    {
       mBoundingBox.reset(new CBoundingBox());
       if (mBoundingBox)
       {
-         mBoundingBox->setColor(glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
+         mBoundingBox->setColor(color);
          mBoundingBox->setScale(glm::vec3(mBillboardWidth, mBillboardHeight, mBillboardWidth));
          mBoundingBox->calculateModelMatrix();
 
@@ -126,5 +126,16 @@ void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader)
       }
 
       buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
+
+      ///@todo: debug
+      //mBoundingBox->setVisible(false);
    }
+}
+
+const CBoundingBox * CBillBoard::getBoundingBox() const
+{
+   if (mBoundingBox)
+      return mBoundingBox.get();
+   else
+      return 0;
 }
