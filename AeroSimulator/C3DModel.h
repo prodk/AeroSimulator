@@ -15,6 +15,7 @@ namespace AeroSimulatorEngine
    class CAxesFrame;
    class CShader;
    class CPropeller;
+   class CBoundingBox;
 
    /// A bridge for the CGameObject Composite (tree structure)
    class C3DModel
@@ -72,6 +73,8 @@ namespace AeroSimulatorEngine
       // Position in the world space
       glm::vec3 mPosition;
       glm::vec3 mSpeedOfFlight;
+
+      std::shared_ptr<CBoundingBox> mBoundingBox;
    };
 } // namespace AeroSimulatorEngine
 

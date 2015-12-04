@@ -6,6 +6,7 @@
 #include "CAxesFrame.h"
 #include "CBillBoard.h"
 #include "../src/shaders/CShader.h"
+#include "CBoundingBox.h"
 
 #include <cassert>
 
@@ -85,6 +86,7 @@ C3DModel::C3DModel()
    , mBillboardShader()
    , mPosition()
    , mSpeedOfFlight(glm::vec3(0.0f, 5.0f, 0.0f))
+   , mBoundingBox(new CBoundingBox())
 {
    assert(mCubeGeometry);
    assert(mCabine);
@@ -93,6 +95,7 @@ C3DModel::C3DModel()
    assert(mRightWing);
    assert(mTail);
    assert(mPropeller);
+   assert(mBoundingBox);
 }
 
 C3DModel::~C3DModel()
@@ -182,6 +185,18 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    }
 
    // Build an airplane
+   /// Bounding box:
+   const glm::vec4 bbColor(1.0f, 0.0f, 0.0f, 1.0f);
+   const float bbWidth = 4.0f;
+   const float bbHeight = 2.0f;
+   const float bbDepth = 5.0f;
+   mBoundingBox->setColor(bbColor);
+   mBoundingBox->setScale(glm::vec3(bbWidth, bbHeight, bbDepth));
+   mBoundingBox->setTranslate(glm::vec3(0.0f, -0.2f*bbHeight, 0.4f*bbDepth));
+   mBoundingBox->calculateModelMatrix();
+   mBoundingBox->setShadersAndBuffers(pShader);
+   mCabine->add(mBoundingBox.get());
+
    /// Cabine.
    const glm::vec4 cabineColor(0.7f, 0.5f, 0.7f, 1.0f);
    // Cabine is at (0., 0., 0.) and contains 1 Cube

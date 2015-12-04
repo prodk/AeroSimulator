@@ -305,9 +305,9 @@ void CWin32Renderer::resetRenderContext()
 
 void CWin32Renderer::updateAirplane()
 {
+   glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
    if (mAirplane)
    {
-      glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
       mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplane->getPosition().y, 0.f));
    }
 
@@ -370,13 +370,19 @@ void CWin32Renderer::springButtons()
    {
       // Put the plane tail down when not moving downwards
       if (mAngleX < 0.f)
+      {
          mAngleX += rotationSpeed;
+         //mAngleX = std::min<float>(0.0f, mAngleX);
+      }
    }
 
    if (!mThirdKeyPressed)
    {
       if (mAngleX > 0.f)
+      {
          mAngleX -= rotationSpeed;
+         //mAngleX = std::max<float>(0.0f, mAngleX);
+      }
    }
 }
 
@@ -430,11 +436,11 @@ void CWin32Renderer::updateInput()
       {
          /// Airplane rotations
       case (VK_LEFT) :
-         if (mIsSetCameraMode)
+         /*if (mIsSetCameraMode)
          {
 
          }
-         else
+         else*/
          {
             mAngleZ += rotationSpeed;
             mAngleZ = std::min<float>(mAngleZ, 90.f);

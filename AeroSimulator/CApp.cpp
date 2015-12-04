@@ -126,7 +126,7 @@ void CApp::setupScene()
 
    //addSkyBox();
    addLand();
-   //addAirplane();
+   addAirplane();
    //addClouds();
    //addSphere();
    addStars();
@@ -263,7 +263,7 @@ void CApp::addStars()
       CLog::getInstance().log("* Billboard loaded: ", filePath);
    }
 
-   mStar->setTranslate(glm::vec3(-6.0f, 0.0f, -4.0f));
+   mStar->setTranslate(glm::vec3(0.0f, -5.0f, 0.0f));
    mStar->setBillboardHeight(width);
    mStar->setBillboardWidth(height);
    mStar->calculateModelMatrix();
