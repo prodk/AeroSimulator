@@ -124,11 +124,11 @@ void CApp::setupScene()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   //addSkyBox();
+   addSkyBox();
    addLand();
    addAirplane();
-   //addClouds();
-   //addSphere();
+   addClouds();
+   addSphere();
    addStars();
 
    mRendererTask->resetRenderContext();

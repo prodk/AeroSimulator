@@ -31,6 +31,8 @@ namespace AeroSimulatorEngine
       void setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec4& color, const glm::vec3& size = glm::vec3());
       const CBoundingBox* getBoundingBox() const;
 
+      virtual void setVisible(const bool visible);
+
    private:
       glm::mat4x4 mScaledTRMatrix;
       std::shared_ptr<CBoundingBox> mBoundingBox;

@@ -101,7 +101,7 @@ namespace AeroSimulatorEngine
       glm::vec2 getFrameSize() const { return mFrameSize; }
 
       bool isVisible() const { return mIsVisible; }
-      void setVisible(const bool visible) { mIsVisible = visible; }
+      virtual void setVisible(const bool visible) { mIsVisible = visible; }
 
    protected:
       std::shared_ptr<CGeometry> mGeometry;

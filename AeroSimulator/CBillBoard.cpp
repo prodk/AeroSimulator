@@ -139,3 +139,10 @@ const CBoundingBox * CBillBoard::getBoundingBox() const
    else
       return 0;
 }
+
+void CBillBoard::setVisible(const bool visible)
+{
+   mIsVisible = visible;
+   if (mBoundingBox)
+      mBoundingBox->setVisible(visible);
+}

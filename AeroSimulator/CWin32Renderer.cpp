@@ -11,6 +11,7 @@
 #include "CSphere.h"
 #include "CAnimationBillBoard.h"
 #include "CLand.h"
+#include "CBoundingBox.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -68,7 +69,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -14.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -16.0f));
    mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
@@ -554,21 +555,46 @@ void CWin32Renderer::updateInput()
 
 void CWin32Renderer::handleCollisions()
 {
-   ///@todo: get bounding boxes of the plane, star and ground here
-   ///@todo: check whether bounding boxes are intersecting and act appropriately
-
-   ///@todo: temporary before bounding boxes are not implemented: collision if plane reached bound
    ///@todo: don't do this update all the time
-   if (mAirplane)
+   ///@todo: do these checks and actions when the distance is small enough
+
+   /// Airplane vs land collisions
+   ///@todo: put to a separate method
+   if (mAirplane && mLand)
    {
-      if (mAirplane->getPosition().y <= -11.f)
+      const CBoundingBox* boxAirPlane = mAirplane->getBoundingBox();
+      const CBoundingBox* boxLand = mLand->getBoundingBox();
+      if (boxAirPlane && boxLand)
       {
-         mAirplane->resetHealthBars();
-         mAirplane->setPropellerSpeed(0.0f);
+         if (boxAirPlane->collidesWith(*boxLand))
+         {
+            mAirplane->resetHealthBars();
+            mAirplane->setPropellerSpeed(0.0f);
+         }
+         else
+         {
+            mAirplane->resetHealthBars(0.4);
+         }
       }
-      else
+   }
+
+   /// Airplane vs stars collisions
+   ///@todo: put to a separate method
+   if (mAirplane && mStar)
+   {
+      const CBoundingBox* boxAirPlane = mAirplane->getBoundingBox();
+      const CBoundingBox* boxStar = mStar->getBoundingBox();
+      if (boxAirPlane && boxStar)
       {
-         mAirplane->resetHealthBars(0.7);
+         if (boxAirPlane->collidesWith(*boxStar))
+         {
+            mAirplane->resetHealthBars(0.8);
+            mStar->setVisible(false);
+         }
+         else
+         {
+            mStar->setVisible(true);
+         }
       }
    }
 }
