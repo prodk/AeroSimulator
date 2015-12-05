@@ -1,12 +1,12 @@
 #ifndef AERO_SIMULATOR_CLINE_H
 #define AERO_SIMULATOR_CLINE_H
 
-#include "CLeafCompositeGameObject.h"
+#include "CLeafGameObject.h"
 #include <memory>
 
 namespace AeroSimulatorEngine
 {
-   class CLine : public CLeafCompositeGameObject
+   class CLine : public CLeafGameObject
    {
    public:
       CLine();

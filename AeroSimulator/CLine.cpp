@@ -2,7 +2,7 @@
 
 using namespace AeroSimulatorEngine;
 
-CLine::CLine() : CLeafCompositeGameObject()
+CLine::CLine() : CLeafGameObject()
 {
    mIsLeaf = true;
    mDrawWithLines = true;

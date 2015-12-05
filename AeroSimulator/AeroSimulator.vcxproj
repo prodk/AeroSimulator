@@ -176,7 +176,7 @@
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
-    <ClInclude Include="CLeafCompositeGameObject.h" />
+    <ClInclude Include="CLeafGameObject.h" />
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h" />
     <ClInclude Include="src\shaders\CBillboardShader.h" />
     <ClInclude Include="src\shaders\CHealthbarShader.h" />
@@ -216,7 +216,7 @@
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
-    <ClCompile Include="CLeafCompositeGameObject.cpp" />
+    <ClCompile Include="CLeafGameObject.cpp" />
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CHealthbarShader.cpp" />

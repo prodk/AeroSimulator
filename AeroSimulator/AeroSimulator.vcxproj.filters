@@ -108,9 +108,6 @@
     <ClInclude Include="CCompositeGameObject.h">
       <Filter>Header Files\gameObject\composite</Filter>
     </ClInclude>
-    <ClInclude Include="CLeafCompositeGameObject.h">
-      <Filter>Header Files\gameObject\composite</Filter>
-    </ClInclude>
     <ClInclude Include="C3DModel.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
@@ -168,6 +165,9 @@
     <ClInclude Include="CBoundingBox.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
+    <ClInclude Include="CLeafGameObject.h">
+      <Filter>Header Files\gameObject\composite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -222,9 +222,6 @@
       <Filter>Source Files\gameObject\composite</Filter>
     </ClCompile>
     <ClCompile Include="CParentGameObject.cpp">
-      <Filter>Source Files\gameObject\composite</Filter>
-    </ClCompile>
-    <ClCompile Include="CLeafCompositeGameObject.cpp">
       <Filter>Source Files\gameObject\composite</Filter>
     </ClCompile>
     <ClCompile Include="C3DModel.cpp">
@@ -283,6 +280,9 @@
     </ClCompile>
     <ClCompile Include="CBoundingBox.cpp">
       <Filter>Source Files\gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CLeafGameObject.cpp">
+      <Filter>Source Files\gameObject\composite</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

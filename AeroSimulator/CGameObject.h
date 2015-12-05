@@ -43,6 +43,8 @@ namespace AeroSimulatorEngine
 
       bool isLeaf() const { return mIsLeaf; }
 
+      void resetParentTRMatrix() { mParentTRMatrix = glm::mat4x4(1.0f); }
+
    protected:
       ///@todo: probably move this to a separate CTransform class/component
       glm::vec3 mScale;       // Scale factors along the parent object axes

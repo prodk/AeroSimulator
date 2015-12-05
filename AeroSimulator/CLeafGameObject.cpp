@@ -1,4 +1,4 @@
-#include "CLeafCompositeGameObject.h"
+#include "CLeafGameObject.h"
 #include "CLog.h"
 #include "CTexture.h"
 #include "CGeometry.h"
@@ -7,31 +7,31 @@
 
 using namespace AeroSimulatorEngine;
 
-CLeafCompositeGameObject::CLeafCompositeGameObject()
+CLeafGameObject::CLeafGameObject()
 {
 }
 
-CLeafCompositeGameObject::~CLeafCompositeGameObject()
+CLeafGameObject::~CLeafGameObject()
 {
 }
 
-void CLeafCompositeGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+void CLeafGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
    //CLog::getInstance().logGL("\n** CLeafCompositeGO::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }
 
-void CLeafCompositeGameObject::add(CCompositeGameObject * child)
+void CLeafGameObject::add(CCompositeGameObject * child)
 {
    CLog::getInstance().log("\n!!! Cannot add a child to CBillBoard because it is a leaf!!! \n");
 }
 
-void CLeafCompositeGameObject::traverse(std::vector<CCompositeGameObject*>& tree)
+void CLeafGameObject::traverse(std::vector<CCompositeGameObject*>& tree)
 {
    // No children -nothing to do here
 }
 
-void CLeafCompositeGameObject::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
+void CLeafGameObject::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 {
    mParentTRMatrix = parentTRMatrix;
    calculateTRMatrix();
@@ -43,7 +43,7 @@ void CLeafCompositeGameObject::buildModelMatrix(const glm::mat4x4 & parentTRMatr
    mParentByLocalTRMatrix = mModelMatrix;
 }
 
-void CLeafCompositeGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
+void CLeafGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    if (trMatrix != mParentTRMatrix)
    {
@@ -53,7 +53,7 @@ void CLeafCompositeGameObject::updateTRMatrix(const glm::mat4x4 & trMatrix, cons
    }
 }
 
-void CLeafCompositeGameObject::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+void CLeafGameObject::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
    mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
 }

@@ -43,8 +43,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(0.f)
-   , mCameraAngleY(0.f)
+   , mCameraAngleX(30.f)
+   , mCameraAngleY(80.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
    , mSphereRoot(nullptr)
@@ -68,8 +68,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -16.0f));
-   //mCamera->buildModelMatrix(glm::mat4x4(1.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -13.0f));
+   mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -326,17 +326,14 @@ void CWin32Renderer::updateAirplane()
    if (mAirplaneRoot)
    {
       mAirplaneRoot->updateTRMatrix(mAirplaneMatrix, mFrameDt); // Animate the parts of the tree-like object
-      mAirplaneRoot->updateModelMatrix(glm::mat4(1.0f)); ///@todo: use 1 as default arg
+      mAirplaneRoot->updateModelMatrix();
    }
 }
 
 void CWin32Renderer::updateCamera()
 {
-   if (!mCameraAttached)
-   {
-      mCamera->setRotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
-      mCamera->update();
-   }
+   mCamera->setRotate(glm::vec3(mCameraAngleX, mCameraAngleY, 0.f));
+   mCamera->updateModelMatrix();
 }
 
 void CWin32Renderer::springButtons()
@@ -374,7 +371,6 @@ void CWin32Renderer::springButtons()
       if (mAngleX < 0.f)
       {
          mAngleX += rotationSpeed;
-         //mAngleX = std::min<float>(0.0f, mAngleX);
       }
    }
 
@@ -383,7 +379,6 @@ void CWin32Renderer::springButtons()
       if (mAngleX > 0.f)
       {
          mAngleX -= rotationSpeed;
-         //mAngleX = std::max<float>(0.0f, mAngleX);
       }
    }
 }
@@ -396,7 +391,7 @@ void CWin32Renderer::updateRenderables()
    if (mSphereRoot)
    {
       mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
-      mSphereRoot->updateModelMatrix(glm::mat4x4(1.0f));
+      mSphereRoot->updateModelMatrix();
    }
 
    if (mStar)
@@ -408,7 +403,7 @@ void CWin32Renderer::updateRenderables()
    if (star)
    {
       star->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
-      star->updateModelMatrix(glm::mat4x4(1.0f));
+      star->updateModelMatrix();
    }
 
    handleCollisions();
@@ -433,7 +428,7 @@ void CWin32Renderer::updateFPS(CTask * pTask)
 void CWin32Renderer::updateInput()
 {
    const float rotationSpeed = 50.f*mFrameDt;
-   const float translateSpeed = 10.f*mFrameDt;
+   const float translateSpeed = 4.f*mFrameDt;
    if (mKeyPressed)
    {
       switch (mKeyCode)
@@ -448,7 +443,7 @@ void CWin32Renderer::updateInput()
          mAngleZ -= rotationSpeed;
          mAngleZ = std::max<float>(mAngleZ, -90.f);
          break;
-
+         /// Airplane movement
       case (VK_UP) :
          if (mAirplane)
          {
@@ -461,7 +456,7 @@ void CWin32Renderer::updateInput()
                // Move upwards
                glm::vec3 position = mAirplane->getPosition();
                ///@todo: move to handle collisions
-               position.y = std::min<float>(11.5f, position.y + mAirplane->getSpeedOfFlight().y*mFrameDt);
+               position.y = std::min<float>(25.f, position.y + mAirplane->getSpeedOfFlight().y*mFrameDt);
                mAirplane->setPosition(position);
             }
          }
@@ -476,8 +471,7 @@ void CWin32Renderer::updateInput()
 
             // Move the plane downwards
             glm::vec3 position = mAirplane->getPosition();
-            ///@todo: move to handle collisions
-            position.y = std::max<float>(-11.5f, position.y - mAirplane->getSpeedOfFlight().y*mFrameDt);
+            position.y = position.y - mAirplane->getSpeedOfFlight().y*mFrameDt;
             mAirplane->setPosition(position);
          }
       }
@@ -491,14 +485,6 @@ void CWin32Renderer::updateInput()
       case (0x32) : // 2, debug mode off
          mIsDebugMode = false;
          break;
-
-      //case (0x33) : // 3, camera setup mode on
-      //   mIsSetCameraMode = true;
-      //   break;
-
-      //case (0x34) : // 4, camera setup mode on
-      //   mIsSetCameraMode = false;
-      //   break;
 
       case (VK_OEM_PLUS) : // +, zoom in
          {
@@ -617,6 +603,10 @@ void CWin32Renderer::handleCollisions()
          {
             mAirplane->resetHealthBars();
             mAirplane->setPropellerSpeed(0.0f);
+            // Restore the previous position of the plane
+            glm::vec3 newPos = mAirplane->getPosition();
+            newPos.y = newPos.y + mAirplane->getSpeedOfFlight().y*mFrameDt;
+            mAirplane->setPosition(newPos);
          }
       }
    }
@@ -696,33 +686,49 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       {
       case (0x33) : // 3, camera setup mode on
          mIsSetCameraMode = true;
+         CLog::getInstance().log("* Button 3: Setup enabled! Move camera horiz a/d, vert w/s; attach/detach Enter ");
          break;
 
       case (0x34) : // 4, camera setup mode on
          mIsSetCameraMode = false;
+         CLog::getInstance().log("* Button 4: Setup disabled! Rotate camera horiz a/d, vert w/s ");
          break;
+
       case (0x35) : // 5, reset all healthbars to some value
          if (mAirplane)
+         {
             mAirplane->resetHealthBars(0.3f);
+            CLog::getInstance().log("* Button 5: Reset all healthbars.");
+         }
          break;
+
       case (0x36) : // 6, set look at at 000
          if (mCamera)
+         {
             mCamera->resetLookAt();
+            if (mIsSetCameraMode)
+               CLog::getInstance().log("* Button 6: Set look at point to the planes cabine");
+            else
+               CLog::getInstance().log("* Button 6: Set look at point to the center of the scene");
+         }
          break;
+
       case (VK_RETURN) : // Enter, attach the camera to the airplane
          if (mIsSetCameraMode)
          {
-            /*if (!mCameraAttached)
+            if (!mCameraAttached)
             {
                mAirplaneRoot->add(mCamera.get());
                mAirplaneRoot->buildModelMatrix(glm::mat4x4(1.0f));
                mCameraAttached = true;
+               CLog::getInstance().log("* Button Enter: Camera attached to the plane");
             }
             else
             {
                mAirplaneRoot->remove(mCamera.get());
                mCameraAttached = false;
-            }*/
+               CLog::getInstance().log("* Button Enter:Camera detached from the plane");
+            }
          }
          break;
       } // end switch (wParam)

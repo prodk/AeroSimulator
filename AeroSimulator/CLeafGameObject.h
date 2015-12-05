@@ -3,15 +3,13 @@
 
 #include "CCompositeGameObject.h"
 
-///@todo: rename to CLeafGameObject
-
 namespace AeroSimulatorEngine
 {
-   class CLeafCompositeGameObject : public CCompositeGameObject
+   class CLeafGameObject : public CCompositeGameObject
    {
    public:
-      CLeafCompositeGameObject();
-      virtual ~CLeafCompositeGameObject();
+      CLeafGameObject();
+      virtual ~CLeafGameObject();
 
       virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
 
@@ -19,9 +17,8 @@ namespace AeroSimulatorEngine
       virtual void add(CCompositeGameObject* child);
       virtual void traverse(std::vector<CCompositeGameObject*>& tree);
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
-      ///@todo: probably add some timing arguments here
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
-      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
+      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
    };
 } // namespace AeroSimulatorEngine
 

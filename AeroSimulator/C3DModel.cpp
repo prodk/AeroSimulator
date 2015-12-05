@@ -85,7 +85,7 @@ C3DModel::C3DModel()
    , mAxes(numOfCubes)
    , mBillboardShader()
    , mPosition()
-   , mSpeedOfFlight(glm::vec3(0.0f, 5.0f, 0.0f))
+   , mSpeedOfFlight(glm::vec3(0.0f, 8.0f, 0.0f))
    , mBoundingBox(new CBoundingBox())
 {
    assert(mCubeGeometry);

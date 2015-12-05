@@ -1,11 +1,11 @@
 #ifndef AERO_SIMULATOR_CCOLOR_BILLBOARD_H
 #define AERO_SIMULATOR_CCOLOR_BILLBOARD_H
 
-#include "CLeafCompositeGameObject.h"
+#include "CLeafGameObject.h"
 
 namespace AeroSimulatorEngine
 {
-   class CColorBillBoard : public CLeafCompositeGameObject
+   class CColorBillBoard : public CLeafGameObject
    {
    public:
       CColorBillBoard();

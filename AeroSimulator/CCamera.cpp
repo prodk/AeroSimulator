@@ -6,7 +6,7 @@
 using namespace AeroSimulatorEngine;
 
 CCamera::CCamera()
-   : CLeafCompositeGameObject()
+   : CLeafGameObject()
    , mViewMatrix()
    , mProjectionMatrix()
    , mNonScaledViewMatrix()
@@ -22,16 +22,24 @@ void CCamera::update()
 {
    calculateModelMatrix();
 
-   ///@todo: reconsider this in the attached mode
    mViewMatrix = mModelMatrix * mLookAtMatrix;
 }
 
-
 void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
-   //CLeafCompositeGameObject::updateModelMatrix(rootModelMatrix);
-   mViewMatrix = mModelMatrix * mLookAtMatrix * mParentByLocalTRMatrix * rootModelMatrix;
+   calculateModelMatrix();
+
+   glm::vec3 translate;
+   translate.x = -mParentTRMatrix[3].x;
+   translate.y = -mParentTRMatrix[3].y;
+   translate.z = -mParentTRMatrix[3].z;
+
+   glm::mat4x4 translateParent;
+   translateParent = glm::translate(translateParent, translate);
+
+   mViewMatrix = mModelMatrix * mLookAtMatrix * translateParent;
 }
+
 glm::mat3x3 CCamera::getRotationMatrix() const
 {
    glm::mat3x3 noTranslate;

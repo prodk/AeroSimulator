@@ -102,6 +102,7 @@ bool CParentGameObject::remove(const CCompositeGameObject * child)
    auto iter = std::find(mChildren.begin(), mChildren.end(), child);
    if (iter != mChildren.end())
    {
+      (*iter)->resetParentTRMatrix();
       mChildren.erase(iter);
       result = true;
    }
