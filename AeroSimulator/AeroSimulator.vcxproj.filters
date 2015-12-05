@@ -168,6 +168,9 @@
     <ClInclude Include="CLeafGameObject.h">
       <Filter>Header Files\gameObject\composite</Filter>
     </ClInclude>
+    <ClInclude Include="src\shaders\CNormalMapSphereShader.h">
+      <Filter>Header Files\renderer\shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -283,6 +286,9 @@
     </ClCompile>
     <ClCompile Include="CLeafGameObject.cpp">
       <Filter>Source Files\gameObject\composite</Filter>
+    </ClCompile>
+    <ClCompile Include="src\shaders\CNormalMapSphereShader.cpp">
+      <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

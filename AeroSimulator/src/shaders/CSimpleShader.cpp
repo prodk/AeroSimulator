@@ -16,7 +16,7 @@ using namespace AeroSimulatorEngine;
 CSimpleShader::CSimpleShader()
    : mPositionAttributeId(0)
    , mColorAttributeId(0)
-   , mMvpAttributeId(0)
+   , mMvpUniformId(0)
 {
    mVertexShaderCode =
       "attribute vec3 aPosition;\n"
@@ -51,7 +51,7 @@ void CSimpleShader::link()
    mColorAttributeId = glGetAttribLocation(mProgramId, "aColor");
    CLog::getInstance().logGL("* CSimpleShader: glGetAttribLocation(mProgramId, aColor): ");
 
-   mMvpAttributeId = glGetUniformLocation(mProgramId, "MVP");
+   mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
    CLog::getInstance().logGL("* CSimpleShader: glGetUniformLocation(mProgramId, MVP): ");
 }
 
@@ -84,6 +84,6 @@ void CSimpleShader::setup(CRenderable & renderable)
 
    // Send the transformation to the currently bound shader in the "MVP" uniform
    glm::mat4 MVP = renderable.getMvpMatrix();
-   glUniformMatrix4fv(mMvpAttributeId, 1, GL_FALSE, &MVP[0][0]);
+   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
 }
 

@@ -10,8 +10,6 @@
 
 namespace AeroSimulatorEngine
 {
-   class CTexture;
-
    class CTextureShader : public CShader
    {
    public:
@@ -22,15 +20,10 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
 
    protected:
-      std::shared_ptr<CTexture> mTexture;
       GLint mPositionAttributeId;
       GLint mTexCoordAttributeId;
-      GLint mMvpAttributeId; ///@todo: rename to uniform id
+      GLint mMvpUniformId;
       GLint mSamplerUniformId;
-
-      void setTexture(std::shared_ptr<CTexture>& pTexture) { mTexture = pTexture; }
-      std::shared_ptr<CTexture> getTexture() const { return mTexture; }
    };
-
 } // namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CTEXTURE_SHADER_H

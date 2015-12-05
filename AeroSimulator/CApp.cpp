@@ -20,6 +20,7 @@
 #include "CTimer.h"
 #include "CAnimationBillBoard.h"
 #include "../src/shaders/CAnimationBillboardShader.h"
+#include "../src/shaders/CNormalMapSphereShader.h"
 
 #include <conio.h>
 #include <cassert>
@@ -44,6 +45,7 @@ CApp::CApp()
    , mSphere(new CSphere())
    , mBillBoards(20)
    , mStar(new CAnimationBillBoard())
+   , mNormalMapSphereShader(new CNormalMapSphereShader())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -60,6 +62,7 @@ CApp::CApp()
    assert(mAnimationBbShader);
    assert(mSphere);
    assert(mStar);
+   assert(mNormalMapSphereShader);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -246,12 +249,20 @@ void CApp::addClouds()
 
 void CApp::addSphere()
 {
-   mColorLambertianShader->link();
+   const char* filePath = "../AeroSimulator/res/smile.dds";
+   if (mSphere->loadTexture(filePath))
+   {
+      CLog::getInstance().log("* Sphere texture loaded: ", filePath);
+   }
+   //mColorLambertianShader->link();
+   mNormalMapSphereShader->link();
 
+   mSphere->createNonTexturedGeometry();
    mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
    mSphere->setScale(glm::vec3(1.f, 1.f, 1.f));
    mSphere->calculateModelMatrix();
-   mSphere->setShadersAndBuffers(mColorLambertianShader);
+   //mSphere->setShadersAndBuffers(mColorLambertianShader);
+   mSphere->setShadersAndBuffers(mNormalMapSphereShader);
    mSphere->addCustomObjects(mColorShader);
 
    std::vector<CCompositeGameObject*> tree;

@@ -33,8 +33,6 @@ CAnimationBillboardShader::CAnimationBillboardShader()
 
    // Fragment shader the same as for CTextureShader
 
-   assert(mTexture);
-
    CLog::getInstance().log("* CBillboardShader created");
 }
 

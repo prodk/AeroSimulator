@@ -9,10 +9,9 @@
 using namespace AeroSimulatorEngine;
 
 CTextureShader::CTextureShader()
-   : mTexture(new CTexture())
-   , mPositionAttributeId(0)
+   : mPositionAttributeId(0)
    , mTexCoordAttributeId(0)
-   , mMvpAttributeId(0)
+   , mMvpUniformId(0)
    , mSamplerUniformId(0)
 {
    mVertexShaderCode =
@@ -33,8 +32,6 @@ CTextureShader::CTextureShader()
       "    gl_FragColor = texture2D(sTexture, vTexCoord);\n"
       "}\n";
 
-   assert(mTexture);
-
    CLog::getInstance().log("* CTextureShader created");
 }
 
@@ -54,7 +51,7 @@ void CTextureShader::link()
       mTexCoordAttributeId = glGetAttribLocation(mProgramId, "aTexCoord");
       //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord): ");
 
-      mMvpAttributeId = glGetUniformLocation(mProgramId, "MVP");
+      mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
       //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP): ");
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
@@ -67,7 +64,6 @@ void CTextureShader::setup(CRenderable & renderable)
 {
    const CGeometry* pGeometry = renderable.getGeometry();
    assert(pGeometry);
-   assert(mTexture);
 
    CShader::setup(renderable);
 
@@ -76,12 +72,9 @@ void CTextureShader::setup(CRenderable & renderable)
    glBindTexture(GL_TEXTURE_2D, renderable.getTexture()->getId());
    glUniform1i(mSamplerUniformId, 0);
 
-   ///@todo: use mip maps later
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   ///@todo: uncomment this
-   //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
    glVertexAttribPointer(
@@ -106,5 +99,5 @@ void CTextureShader::setup(CRenderable & renderable)
 
    // Send the transformation to the currently bound shader in the "MVP" uniform
    glm::mat4 MVP = renderable.getMvpMatrix();
-   glUniformMatrix4fv(mMvpAttributeId, 1, GL_FALSE, &MVP[0][0]);
+   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
 }

@@ -71,6 +71,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mHealthbarShader;
       std::shared_ptr<CShader> mColorLambertianShader;
       std::shared_ptr<CShader> mAnimationBbShader;
+      std::shared_ptr<CShader> mNormalMapSphereShader;
 
       ///@todo: probably use the concrete types here
       tGameObjectPtr mSkyBox;

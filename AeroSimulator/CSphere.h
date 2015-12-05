@@ -24,8 +24,12 @@ namespace AeroSimulatorEngine
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
 
+      virtual bool loadTexture(const char * fileName);
+
+      void createNonTexturedGeometry(); ///@todo: probably make this private again and move to constructor
+
    private:
-      void generateSphere();
+      void generateNonTexutredSphere();
 
       typedef std::shared_ptr<CCompositeGameObject> tLine;
 

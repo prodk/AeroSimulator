@@ -85,12 +85,12 @@ void CColorLambertianShader::link()
 
 void CColorLambertianShader::setup(CRenderable & renderable)
 {
-   CColorShader::setup(renderable);
-
    CGeometry* pGeometry = renderable.getGeometry();
 
    if (pGeometry)
    {
+      CColorShader::setup(renderable);
+
       glVertexAttribPointer(
          mNormalAttributeId,
          3, // 3 coordinates per normal

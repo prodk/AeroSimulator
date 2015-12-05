@@ -182,6 +182,7 @@
     <ClInclude Include="src\shaders\CHealthbarShader.h" />
     <ClInclude Include="src\shaders\CColorLambertianShader.h" />
     <ClInclude Include="src\shaders\CColorShader.h" />
+    <ClInclude Include="src\shaders\CNormalMapSphereShader.h" />
     <ClInclude Include="src\shaders\CShader.h" />
     <ClInclude Include="src\shaders\CSimpleShader.h" />
     <ClInclude Include="src\shaders\CTextureShader.h" />
@@ -222,6 +223,7 @@
     <ClCompile Include="src\shaders\CHealthbarShader.cpp" />
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp" />
     <ClCompile Include="src\shaders\CColorShader.cpp" />
+    <ClCompile Include="src\shaders\CNormalMapSphereShader.cpp" />
     <ClCompile Include="src\shaders\CShader.cpp" />
     <ClCompile Include="src\shaders\CSimpleShader.cpp" />
     <ClCompile Include="src\shaders\CTextureShader.cpp" />

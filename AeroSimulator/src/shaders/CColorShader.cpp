@@ -50,12 +50,12 @@ void CColorShader::link()
 
 void CColorShader::setup(CRenderable & renderable)
 {
-   CShader::setup(renderable);
-
    CGeometry* pGeometry = renderable.getGeometry();
 
    if (pGeometry)
    {
+      CShader::setup(renderable);
+
       glVertexAttribPointer(
          mPositionAttributeId,
          pGeometry->getNumOfElementsPerVertex(),

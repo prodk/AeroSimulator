@@ -126,9 +126,6 @@ void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::ve
       }
 
       buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-
-      ///@todo: debug
-      //mBoundingBox->setVisible(false);
    }
 }
 

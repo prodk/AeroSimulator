@@ -4,23 +4,19 @@
 #include "CLine.h"
 #include "../src/shaders/CShader.h"
 #include "CLog.h"
+#include "CTexture.h"
 
 using namespace AeroSimulatorEngine;
 
 #include <math.h>
 #include <stdio.h>
 #include <conio.h>
+#include <cassert>
 
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace
 {
-   ///@todo: probably move to the model as is done for CCube.
-   /*GLfloat lineData[] = {
-      0.0f, 0.0f, 0.0f,
-      1.0f, 0.0f, 0.0f
-   };*/
-
    GLuint indices[] = { 0, 1 };
 }
 
@@ -33,24 +29,12 @@ CSphere::CSphere()
    , mDataNormals()
    , mScaledTRMatrix()
 {
-   generateSphere();
-
    mGeometry.reset(new CGeometry());
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(&mVertices[0]);
-      const int numOfVertices = 3 * mVertices.size();
-      mGeometry->setNumOfVertices(numOfVertices);
+   mTexture.reset(new CTexture());
 
-      mGeometry->setIndexBuffer(&mIndices[0]);
-      const int numOfIndices = mIndices.size();
-      mGeometry->setNumOfIndices(numOfIndices);
-
-      mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(6); // 3 coords, change to 6 when normals are added
-   }
-
-   setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
+   assert(mLineGeometry);
+   assert(mGeometry);
+   assert(mTexture);
 }
 
 CSphere::~CSphere()
@@ -72,7 +56,7 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
       const std::size_t numOfNormals = 0.5*mVertices.size();
 
       mNormalLine.resize(numOfNormals);          // Lines drawing normals
-      mGeometryNormals.resize(numOfNormals);  // Geometry for lines depicting normals
+      mGeometryNormals.resize(numOfNormals);     // Geometry for lines depicting normals
 
       const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
 
@@ -154,10 +138,45 @@ void CSphere::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
 }
 
-void CSphere::generateSphere()
+bool CSphere::loadTexture(const char * fileName)
+{
+   const bool result = (0 != mTexture->loadDDSTexture(fileName));
+
+   if (result && (mTexture->getWidth() != mTexture->getHeight()))
+   {
+      glGenerateTextureMipmap(mTexture->getId());
+      CLog::getInstance().log("CSphere::loadTexture(): generating mipmaps for non-square texture, height: ",
+         mTexture->getHeight());
+   }
+
+   return result;
+}
+
+void CSphere::createNonTexturedGeometry()
+{
+   generateNonTexutredSphere();
+
+   if (mGeometry)
+   {
+      mGeometry->setVertexBuffer(&mVertices[0]);
+      const int numOfVertices = 3 * mVertices.size();
+      mGeometry->setNumOfVertices(numOfVertices);
+
+      mGeometry->setIndexBuffer(&mIndices[0]);
+      const int numOfIndices = mIndices.size();
+      mGeometry->setNumOfIndices(numOfIndices);
+
+      mGeometry->setNumOfElementsPerVertex(3);
+      mGeometry->setVertexStride(6); // 6 for coords and normals
+   }
+
+   setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
+}
+
+void CSphere::generateNonTexutredSphere()
 {
    ///@todo: rename the variables and reconsider their type
-   const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
+   const int Band_Power = 4;  // 2^Band_Power = Total Points in a band.
    const int Band_Points = std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
