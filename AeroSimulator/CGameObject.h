@@ -31,7 +31,9 @@ namespace AeroSimulatorEngine
       void setRotate(const glm::vec3& rotate) { mRotate = rotate; }
       void setTranslate(const glm::vec3& translate) { mTranslate = translate; }
 
-      void calculateTRMatrix();
+      glm::vec3 getTranslate() const { return mTranslate; }
+
+      virtual void calculateTRMatrix();
       void calculateModelMatrix();
 
       void scale(const glm::vec3& scale);

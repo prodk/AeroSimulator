@@ -43,8 +43,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(20.f)
-   , mCameraAngleY(-80.f)
+   , mCameraAngleX(0.f)
+   , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
    , mSphereRoot(nullptr)
@@ -70,7 +70,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
 
    // View matrix.
    mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -16.0f));
-   mCamera->buildModelMatrix(glm::mat4x4(1.0f));
+   //mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
 CWin32Renderer::~CWin32Renderer()
@@ -434,21 +434,15 @@ void CWin32Renderer::updateFPS(CTask * pTask)
 void CWin32Renderer::updateInput()
 {
    const float rotationSpeed = 50.f*mFrameDt;
+   const float translateSpeed = 10.f*mFrameDt;
    if (mKeyPressed)
    {
       switch (mKeyCode)
       {
          /// Airplane rotations
       case (VK_LEFT) :
-         /*if (mIsSetCameraMode)
-         {
-
-         }
-         else*/
-         {
-            mAngleZ += rotationSpeed;
-            mAngleZ = std::min<float>(mAngleZ, 90.f);
-         }
+         mAngleZ += rotationSpeed;
+         mAngleZ = std::min<float>(mAngleZ, 90.f);
          break;
 
       case (VK_RIGHT) :
@@ -463,7 +457,7 @@ void CWin32Renderer::updateInput()
             if (mThirdKeyPressed && (mThirdKeyCode == VK_SPACE))
             {
                mAngleX += rotationSpeed;
-               mAngleX = std::min<float>(mAngleX, 70.f);
+               mAngleX = std::min<float>(mAngleX, 20.f);
 
                // Move upwards
                glm::vec3 position = mAirplane->getPosition();
@@ -479,7 +473,7 @@ void CWin32Renderer::updateInput()
          if (mAirplane)
          {
             mAngleX -= rotationSpeed;
-            mAngleX = std::max<float>(mAngleX, -70.f);
+            mAngleX = std::max<float>(mAngleX, -20.f);
 
             // Move the plane downwards
             glm::vec3 position = mAirplane->getPosition();
@@ -508,14 +502,42 @@ void CWin32Renderer::updateInput()
       //   break;
 
       case (VK_OEM_PLUS) : // +, zoom in
-         mCameraScale += 0.01f;
-         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
+         {
+            ///@todo: change this to using inverse matrix of the camera
+            // How it works:
+            // i) take camera direction in the world space
+            // ii) transform this direction to the camera space using the view matrix without translation
+            // iii) move the scene along the direction in camera space;
+            glm::vec3 direction = glm::cross(mCamera->getRightVector(), mCamera->getUpVector());
+            glm::mat3x3 noTranslate = mCamera->getRotationMatrix();
+
+            ///!Important: camera movement must be in camera space!
+            direction = noTranslate*direction;
+            direction = glm::normalize(direction);
+            glm::vec3 translate = mCamera->getTranslate();
+            translate += translateSpeed*direction;
+           
+            mCamera->setTranslate(translate);
+            ///@todo: remove
+            int tmp = 0;
+         }
          break;
 
       case (VK_OEM_MINUS) : // -, zoom out
-         mCameraScale -= 0.01f;
-         mCameraScale = std::max(0.1f, mCameraScale);
-         mCamera->scale(glm::vec3(mCameraScale, mCameraScale, mCameraScale));
+      {
+         glm::vec3 direction = glm::cross(mCamera->getRightVector(), mCamera->getUpVector());
+         glm::mat3x3 noTranslate = mCamera->getRotationMatrix();
+
+         ///!Important: camera movement must be in camera space!
+         direction = noTranslate*direction;
+         direction = glm::normalize(direction);
+         glm::vec3 translate = mCamera->getTranslate();
+         translate -= translateSpeed*direction;
+
+         mCamera->setTranslate(translate);
+         ///@todo: remove
+         int tmp = 0;
+      }
          break;
 
       //case (VK_RETURN) : // Enter, attach the camera to the airplane
@@ -531,23 +553,61 @@ void CWin32Renderer::updateInput()
       switch (mCameraKeyCode)
       {
       case (0x57) : // w, up
-         mCameraAngleX += rotationSpeed;
-         if (mCameraAngleX >= 360.f) mCameraAngleX = 0.f;
+         if (mIsSetCameraMode)
+         {
+            glm::vec3 translate = mCamera->getTranslate();
+            translate.y -= translateSpeed;
+            mCamera->setTranslate(translate);
+         }
+         else
+         {
+            mCameraAngleX += rotationSpeed;
+            if (mCameraAngleX >= 360.f) mCameraAngleX = 0.f;
+         }
          break;
 
       case (0x53) : // s, down
-         mCameraAngleX -= 1.f;
-         if (mCameraAngleX <= -360.f) mCameraAngleX = 0.f;
+         if (mIsSetCameraMode)
+         {
+            glm::vec3 translate = mCamera->getTranslate();
+            translate.y += translateSpeed;
+            mCamera->setTranslate(translate);
+         }
+         else
+         {
+            mCameraAngleX -= rotationSpeed;
+            if (mCameraAngleX <= -360.f) mCameraAngleX = 0.f;
+         }
          break;
 
       case (0x41) : // a, left
-         mCameraAngleY += rotationSpeed;
-         if (mCameraAngleY >= 360.f) mCameraAngleY = 0.f;
+         /// Move camera horizontally if the setup mode is on
+         if (mIsSetCameraMode)
+         {
+            glm::vec3 translate = mCamera->getTranslate();
+            translate.x += translateSpeed;
+            mCamera->setTranslate(translate);
+         }
+         else // Otherwise, rotate the camera
+         {
+            mCameraAngleY += rotationSpeed;
+            if (mCameraAngleY >= 360.f) mCameraAngleY = 0.f;
+         }
          break;
 
       case (0x44) : // d, right
-         mCameraAngleY -= rotationSpeed;
-         if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
+         /// Move camera horizontally if the setup mode is on
+         if (mIsSetCameraMode)
+         {
+            glm::vec3 translate = mCamera->getTranslate();
+            translate.x -= translateSpeed;
+            mCamera->setTranslate(translate);
+         }
+         else // Otherwise, rotate the camera
+         {
+            mCameraAngleY -= rotationSpeed;
+            if (mCameraAngleY <= -360.f) mCameraAngleY = 0.f;
+         }
          break;
       }
    }
@@ -557,6 +617,7 @@ void CWin32Renderer::handleCollisions()
 {
    ///@todo: don't do this update all the time
    ///@todo: do these checks and actions when the distance is small enough
+   ///@todo: use oct or quad trees to search for neighboring game objects
 
    /// Airplane vs land collisions
    ///@todo: put to a separate method
@@ -570,10 +631,6 @@ void CWin32Renderer::handleCollisions()
          {
             mAirplane->resetHealthBars();
             mAirplane->setPropellerSpeed(0.0f);
-         }
-         else
-         {
-            mAirplane->resetHealthBars(0.4);
          }
       }
    }
@@ -658,10 +715,14 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       case (0x34) : // 4, camera setup mode on
          mIsSetCameraMode = false;
          break;
+      case (0x35) : // 5, reset all healthbars to some value
+         if (mAirplane)
+            mAirplane->resetHealthBars(0.3f);
+         break;
       case (VK_RETURN) : // Enter, attach the camera to the airplane
          if (mIsSetCameraMode)
          {
-            if (!mCameraAttached)
+            /*if (!mCameraAttached)
             {
                mAirplaneRoot->add(mCamera.get());
                mAirplaneRoot->buildModelMatrix(glm::mat4x4(1.0f));
@@ -671,7 +732,7 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
             {
                mAirplaneRoot->remove(mCamera.get());
                mCameraAttached = false;
-            }
+            }*/
          }
          break;
       } // end switch (wParam)

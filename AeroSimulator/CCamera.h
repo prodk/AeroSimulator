@@ -9,6 +9,9 @@
 
 namespace AeroSimulatorEngine
 {
+   ///@todo: remove this comment
+   ///Important: all translations are specified as moving the scene relative to the camera in camera space.
+   ///This allows us to use camera's model matrix as a view matrix without the need to make inversions.
    class CCamera : public CLeafCompositeGameObject
    {
    public:
@@ -27,6 +30,14 @@ namespace AeroSimulatorEngine
       glm::vec3 getPositionWorldSpace() const;
 
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix);
+
+      // How it works: 
+      // i) take camera direction in the world space
+      // ii) transform this direction to the camera space using the view matrix without translation
+      // iii) move the scene along the direction in camera space;
+      glm::mat3x3 getRotationMatrix() const;
+
+      //virtual void calculateTRMatrix();
 
    private:
       glm::mat4 mViewMatrix;

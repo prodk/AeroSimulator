@@ -84,28 +84,41 @@ glm::mat4 CGameObject::getTRMatrix() const
 ///@todo: use rotation around any axis under the hood!
 void CGameObject::calculateTRMatrix()
 {
-   ///@todo: check that angles are non-zero
-   // To get a TRS sequence of matrices, act as follows: translate, rotate, scale
-   // 1) translate
-   mTRMatrix = glm::mat4x4(1);
-   mTRMatrix = glm::translate(mTRMatrix, mTranslate);
+   if (mTranslate.length() > 0.0f)
+   {
+      // To get a TRS sequence of matrices, act as follows: translate, rotate, scale
+      // 1) translate
+      mTRMatrix = glm::mat4x4(1);
+      mTRMatrix = glm::translate(mTRMatrix, mTranslate);
+   }
 
-   ///@todo add checking for non-0 angles
    // 2) rotate
+   const bool rotateX = mRotate.x != 0.0f;
    // x axis
-   const float angleX = CCommonMath::degToRad(mRotate.x);
-   glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-   mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
+   if (rotateX)
+   {
+      const float angleX = CCommonMath::degToRad(mRotate.x);
+      glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+      mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
+   }
 
    // z axis
-   const float angleZ = CCommonMath::degToRad(mRotate.z);
-   glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-   mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
+   const bool rotateZ = mRotate.z != 0.0f;
+   if (rotateZ)
+   {
+      const float angleZ = CCommonMath::degToRad(mRotate.z);
+      glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+      mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
+   }
 
    // y axis
-   const float angleY = CCommonMath::degToRad(mRotate.y);
-   glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-   mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
+   const bool rotateY = mRotate.y != 0.0f;
+   if (rotateY)
+   {
+      const float angleY = CCommonMath::degToRad(mRotate.y);
+      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+      mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
+   }
 
    // Scale is used only for the model matrix
 }
