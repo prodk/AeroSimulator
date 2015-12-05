@@ -51,7 +51,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsDebugMode(false)     // press 1
    , mIsSetCameraMode(false) // press 3
    , mCameraAttached(false)
-   , mCameraScale(1.0f)
    , mWndHandle(0)
    , mKeyPressed(false)
    , mCameraKeyPressed(false)
@@ -503,7 +502,6 @@ void CWin32Renderer::updateInput()
 
       case (VK_OEM_PLUS) : // +, zoom in
          {
-            ///@todo: change this to using inverse matrix of the camera
             // How it works:
             // i) take camera direction in the world space
             // ii) transform this direction to the camera space using the view matrix without translation
@@ -518,32 +516,23 @@ void CWin32Renderer::updateInput()
             translate += translateSpeed*direction;
            
             mCamera->setTranslate(translate);
-            ///@todo: remove
-            int tmp = 0;
          }
          break;
 
       case (VK_OEM_MINUS) : // -, zoom out
-      {
-         glm::vec3 direction = glm::cross(mCamera->getRightVector(), mCamera->getUpVector());
-         glm::mat3x3 noTranslate = mCamera->getRotationMatrix();
+         {
+            glm::vec3 direction = glm::cross(mCamera->getRightVector(), mCamera->getUpVector());
+            glm::mat3x3 noTranslate = mCamera->getRotationMatrix();
 
-         ///!Important: camera movement must be in camera space!
-         direction = noTranslate*direction;
-         direction = glm::normalize(direction);
-         glm::vec3 translate = mCamera->getTranslate();
-         translate -= translateSpeed*direction;
+            ///!Important: camera movement must be in camera space!
+            direction = noTranslate*direction;
+            direction = glm::normalize(direction);
+            glm::vec3 translate = mCamera->getTranslate();
+            translate -= translateSpeed*direction;
 
-         mCamera->setTranslate(translate);
-         ///@todo: remove
-         int tmp = 0;
-      }
+            mCamera->setTranslate(translate);
+         }
          break;
-
-      //case (VK_RETURN) : // Enter, attach the camera to the airplane
-      //   if (mIsSetCameraMode)
-      //      mAirplaneRoot->add(mCamera.get());
-      //   break;
       }
    }
 
@@ -552,12 +541,12 @@ void CWin32Renderer::updateInput()
    {
       switch (mCameraKeyCode)
       {
+         // All the shifts are in camera space
       case (0x57) : // w, up
          if (mIsSetCameraMode)
          {
-            glm::vec3 translate = mCamera->getTranslate();
-            translate.y -= translateSpeed;
-            mCamera->setTranslate(translate);
+            glm::vec3 translate(0.f, -translateSpeed, 0.f);
+            mCamera->translateLookAt(translate);
          }
          else
          {
@@ -569,9 +558,8 @@ void CWin32Renderer::updateInput()
       case (0x53) : // s, down
          if (mIsSetCameraMode)
          {
-            glm::vec3 translate = mCamera->getTranslate();
-            translate.y += translateSpeed;
-            mCamera->setTranslate(translate);
+            glm::vec3 translate(0.f, translateSpeed, 0.f);
+            mCamera->translateLookAt(translate);
          }
          else
          {
@@ -584,9 +572,8 @@ void CWin32Renderer::updateInput()
          /// Move camera horizontally if the setup mode is on
          if (mIsSetCameraMode)
          {
-            glm::vec3 translate = mCamera->getTranslate();
-            translate.x += translateSpeed;
-            mCamera->setTranslate(translate);
+            glm::vec3 translate (translateSpeed, 0.f, 0.f);
+            mCamera->translateLookAt(translate);
          }
          else // Otherwise, rotate the camera
          {
@@ -599,9 +586,8 @@ void CWin32Renderer::updateInput()
          /// Move camera horizontally if the setup mode is on
          if (mIsSetCameraMode)
          {
-            glm::vec3 translate = mCamera->getTranslate();
-            translate.x -= translateSpeed;
-            mCamera->setTranslate(translate);
+            glm::vec3 translate(-translateSpeed, 0.f, 0.f);
+            mCamera->translateLookAt(translate);
          }
          else // Otherwise, rotate the camera
          {
@@ -718,6 +704,10 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       case (0x35) : // 5, reset all healthbars to some value
          if (mAirplane)
             mAirplane->resetHealthBars(0.3f);
+         break;
+      case (0x36) : // 6, set look at at 000
+         if (mCamera)
+            mCamera->resetLookAt();
          break;
       case (VK_RETURN) : // Enter, attach the camera to the airplane
          if (mIsSetCameraMode)

@@ -31,6 +31,13 @@ namespace AeroSimulatorEngine
          out[columnId].z = in[columnId].z;
       }
 
+      static void copyColumn(int columnId, glm::mat4x4 & out, const glm::mat3x3 in)
+      {
+         out[columnId].x = in[columnId].x;
+         out[columnId].y = in[columnId].y;
+         out[columnId].z = in[columnId].z;
+      }
+
       static const float piTo180;
       static const float hundredEightyToPi;
    };

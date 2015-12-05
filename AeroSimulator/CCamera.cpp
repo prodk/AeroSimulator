@@ -10,6 +10,7 @@ CCamera::CCamera()
    , mViewMatrix()
    , mProjectionMatrix()
    , mNonScaledViewMatrix()
+   , mLookAtMatrix()
 {
 }
 
@@ -22,18 +23,14 @@ void CCamera::update()
    calculateModelMatrix();
 
    ///@todo: reconsider this in the attached mode
-   /*glm::mat4x4 m;
-   m[3] = glm::vec4(7.0f, 5.0f, 0.0f, 1.0);*/
-   mViewMatrix = mModelMatrix;
-   //mViewMatrix = glm::inverse(mModelMatrix);
+   mViewMatrix = mModelMatrix * mLookAtMatrix;
 }
 
 
 void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
-   CLeafCompositeGameObject::updateModelMatrix(rootModelMatrix);
-   mViewMatrix = mModelMatrix;
-   //mViewMatrix = glm::inverse(mModelMatrix);
+   //CLeafCompositeGameObject::updateModelMatrix(rootModelMatrix);
+   mViewMatrix = mModelMatrix * mLookAtMatrix * mParentByLocalTRMatrix * rootModelMatrix;
 }
 glm::mat3x3 CCamera::getRotationMatrix() const
 {
@@ -44,6 +41,35 @@ glm::mat3x3 CCamera::getRotationMatrix() const
 
    return noTranslate;
 }
+
+void CCamera::translateLookAt(const glm::vec3& shift)
+{
+   ///Transform the shift from camera to world space using inverse transform
+   glm::mat3x3 noTranslate;
+   CCommonMath::copyColumn(0, noTranslate, mModelMatrix);
+   CCommonMath::copyColumn(1, noTranslate, mModelMatrix);
+   CCommonMath::copyColumn(2, noTranslate, mModelMatrix);
+
+   // For orthonormal matrices inverse==transpose
+   noTranslate = glm::transpose(noTranslate);
+
+   //// Transform the translation part
+   glm::vec3 translate = noTranslate * shift;
+
+   mLookAtMatrix = glm::translate(mLookAtMatrix, translate);
+}
+
+glm::vec3 CCamera::getLookAtPosition() const
+{
+   glm::vec3 result;
+
+   result.x = mLookAtMatrix[3].x;
+   result.y = mLookAtMatrix[3].y;
+   result.z = mLookAtMatrix[3].z;
+
+   return result;
+}
+
 glm::vec3 CCamera::getRightVector() const
 {
    glm::vec3 result;
@@ -80,8 +106,8 @@ glm::vec3 CCamera::getPositionWorldSpace() const
    CCommonMath::copyColumn(1, noTranslate, mViewMatrix);
    CCommonMath::copyColumn(2, noTranslate, mViewMatrix);
 
-   ///@todo: as we do not have scale, just transpose it
-   noTranslate = glm::inverse(noTranslate);
+   /// Transpose==inverse for orthonormal matrices (rotation without scaling)
+   noTranslate = glm::transpose(noTranslate);
 
    position = noTranslate * position;
 

@@ -88,7 +88,6 @@ namespace AeroSimulatorEngine
       bool mIsDebugMode;
       bool mIsSetCameraMode;
       bool mCameraAttached;
-      float mCameraScale;
       HWND mWndHandle;
 
       bool mKeyPressed;

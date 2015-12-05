@@ -37,12 +37,17 @@ namespace AeroSimulatorEngine
       // iii) move the scene along the direction in camera space;
       glm::mat3x3 getRotationMatrix() const;
 
+      void translateLookAt(const glm::vec3& shift);
+      glm::vec3 getLookAtPosition() const;
+      void resetLookAt() { mLookAtMatrix = glm::mat4x4(1.0f); }
+
       //virtual void calculateTRMatrix();
 
    private:
       glm::mat4 mViewMatrix;
       glm::mat4 mProjectionMatrix;
       glm::mat4 mNonScaledViewMatrix;
+      glm::mat4 mLookAtMatrix;  // Translates look at point
    };
 } // namespace AeroSimulatorEngine
 
