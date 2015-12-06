@@ -44,7 +44,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
    , mCameraAngleX(30.f)
-   , mCameraAngleY(80.f)
+   , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
    , mSphereRoot(nullptr)
@@ -310,7 +310,7 @@ void CWin32Renderer::updateAirplane()
    glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
    if (mAirplane)
    {
-      mAirplaneMatrix = glm::translate(mAirplaneMatrix, glm::vec3(0.f, mAirplane->getPosition().y, 0.f));
+      mAirplaneMatrix = glm::translate(mAirplaneMatrix, mAirplane->getPosition());
    }
 
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -439,13 +439,27 @@ void CWin32Renderer::updateInput()
       {
          /// Airplane rotations
       case (VK_LEFT) :
+      {
          mAngleZ += rotationSpeed;
          mAngleZ = std::min<float>(mAngleZ, 90.f);
+
+         // Move the plane to the left
+         glm::vec3 position = mAirplane->getPosition();
+         position.x = position.x - mAirplane->getSpeedOfFlight().x*mFrameDt;
+         mAirplane->setPosition(position);
+      }
          break;
 
       case (VK_RIGHT) :
+      {
          mAngleZ -= rotationSpeed;
          mAngleZ = std::max<float>(mAngleZ, -90.f);
+
+         // Move the plane to the right
+         glm::vec3 position = mAirplane->getPosition();
+         position.x = position.x + mAirplane->getSpeedOfFlight().x*mFrameDt;
+         mAirplane->setPosition(position);
+      }
          break;
          /// Airplane movement
       case (VK_UP) :
@@ -623,16 +637,14 @@ void CWin32Renderer::handleCollisions()
       {
          const CBoundingBox* boxAirPlane = mAirplane->getBoundingBox();
          const CBoundingBox* boxStar = mStar[count]->getBoundingBox();
-         if (boxAirPlane && boxStar)
+         if (boxAirPlane && boxStar && boxStar->isVisible())
          {
             if (boxAirPlane->collidesWith(*boxStar))
             {
-               mAirplane->resetHealthBars(0.8);
+               static float health = 0.3;
+               mAirplane->resetHealthBars(std::min<float>(health, 1.0f));
                mStar[count]->setVisible(false);
-            }
-            else
-            {
-               mStar[count]->setVisible(true);
+               health += 0.1f;
             }
          }
       }

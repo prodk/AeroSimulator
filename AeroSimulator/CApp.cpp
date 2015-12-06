@@ -44,7 +44,7 @@ CApp::CApp()
    , mLand(new CLand())
    , mSphere(new CSphere())
    , mBillBoards(20)
-   , mStar(4)
+   , mStar(5)
    , mNormalMapSphereShader(new CNormalMapSphereShader())
 {
    assert(mAppWindowTask);
