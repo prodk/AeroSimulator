@@ -31,6 +31,7 @@ CRenderable::CRenderable()
    , mFrameSize()
    , mNumOfFrames()
    , mIsVisible(true)
+   , mNormalMapTexture()
 {
 }
 
@@ -50,6 +51,11 @@ void CRenderable::setEnvironment()
 }
 
 bool CRenderable::loadTexture(const char * filePath)
+{
+   return false;
+}
+
+bool CRenderable::loadNormalMapTexture(const char * filePath)
 {
    return false;
 }

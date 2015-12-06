@@ -14,6 +14,7 @@ CNormalMapSphereShader::CNormalMapSphereShader()
    , mSunDirUniformId(-1)
    , mEyePosUniformId(-1)
    , mSamplerUniformId(-1)
+   , mNormalMapUniformId(-1)
 {
    //mVertexShaderCode =
    //   "attribute vec3 aPosition;\n"
@@ -46,8 +47,11 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "varying vec3 vEyeNormal;\n"
       "varying vec3 vPos;\n"
       "void main(){\n"
-      "    vTexCoord.x = acos(aPosition.y/r)/(pi);\n"
-      "    vTexCoord.y = (atan(aPosition.x, aPosition.z) + pi)/(2.0f*pi);\n"
+      "    vTexCoord.y = acos(aPosition.y/r)/(pi);\n"
+      //"    if (aPosition.z == 0)\n"
+      //"       vTexCoord.x = 0.75;\n"
+      //"    else\n"
+      "       vTexCoord.x = (atan(aPosition.z, aPosition.x) + pi)/(2.0f*pi);\n"
       "    vEyeNormal = (uM * vec4(aNormal, 0.0)).xyz;\n"
       "    vPos = (uM * vec4(aPosition, 1.0)).xyz;\n"
       "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
@@ -59,6 +63,7 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "uniform vec3 uSunDir;\n"         // Direction from the fragment to the sun
       "uniform vec3 uEyePos;\n"         // Camera position
       "uniform sampler2D sTexture; \n"
+      "uniform sampler2D sNormalMap; \n"
       "varying vec2 vTexCoord;\n"
       "varying vec3 vEyeNormal;\n"      // Fragment normal in the world space
       "varying vec3 vPos;\n"
@@ -73,6 +78,8 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "    vec3 R = reflect(-L, N);\n"
       "    cosS = clamp(dot(cameraDir, R), 0, 1);\n"
       "    gl_FragColor = texture2D(sTexture, vTexCoord) * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
+      //"    gl_FragColor = texture2D(sNormalMap, vTexCoord) * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
+      //"    gl_FragColor = vec4(vTexCoord.x, vTexCoord.y, 0.0, 1.0);// * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
       "}\n";
 
    CLog::getInstance().log("* CNormalMapSphereShader created");
@@ -102,6 +109,9 @@ void CNormalMapSphereShader::link()
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
       CLog::getInstance().logGL("* CNormalMapSphereShader: glGetUniformLocation(mProgramId, sTexture): ");
+
+      mNormalMapUniformId = glGetUniformLocation(mProgramId, "sNormalMap");
+      CLog::getInstance().logGL("* CNormalMapSphereShader: glGetUniformLocation(mProgramId, sNormalMap): ");
 
       mIsLinked = true;
    }
@@ -142,5 +152,11 @@ void CNormalMapSphereShader::setup(CRenderable & renderable)
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+      /// Normal map
+      glActiveTexture(GL_TEXTURE1);
+      const GLint mapId = renderable.getNormalMapTexture()->getId();
+      glBindTexture(GL_TEXTURE_2D, mapId);
+      glUniform1i(mNormalMapUniformId, 1);
    }
 }

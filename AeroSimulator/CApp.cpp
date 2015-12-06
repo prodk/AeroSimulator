@@ -249,11 +249,17 @@ void CApp::addClouds()
 
 void CApp::addSphere()
 {
-   const char* filePath = "../AeroSimulator/res/smile.dds";
-   if (mSphere->loadTexture(filePath))
+   const char* texturePath = "../AeroSimulator/res/smile.dds";
+   if (mSphere->loadTexture(texturePath))
    {
-      CLog::getInstance().log("* Sphere texture loaded: ", filePath);
+      CLog::getInstance().log("* Sphere texture loaded: ", texturePath);
    }
+   const char* normalMapPath = "../AeroSimulator/res/bricks.dds";
+   if (mSphere->loadNormalMapTexture(normalMapPath))
+   {
+      CLog::getInstance().log("* Sphere normal map loaded: ", normalMapPath);
+   }
+
    //mColorLambertianShader->link();
    mNormalMapSphereShader->link();
 

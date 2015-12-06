@@ -25,23 +25,31 @@ namespace AeroSimulatorEngine
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
 
       virtual bool loadTexture(const char * fileName);
+      virtual bool loadNormalMapTexture(const char* filePath);
 
       void createNonTexturedGeometry(); ///@todo: probably make this private again and move to constructor
 
    private:
       void generateNonTexutredSphere();
+      void generateTangents();
+      void addTangents(std::shared_ptr<CShader>& pShader);
 
       typedef std::shared_ptr<CCompositeGameObject> tLine;
 
    private:
       std::vector<glm::vec3> mVertices; ///@todo: use a map to avoid repeating vertices
       std::vector<GLuint> mIndices;
-      std::vector<tLine> mNormalLine; // Lines depicting normals
-      std::shared_ptr<CGeometry> mLineGeometry;
 
-      ///@todo: remove when rotating around any axis is implemented in CGameObject
+      /// Normals
+      std::vector<tLine> mNormalLine; // Lines depicting normals
       std::vector<std::shared_ptr<CGeometry> > mGeometryNormals;
       std::vector<glm::vec3> mDataNormals;
+
+      /// Tangents
+      std::vector<tLine> mTangentLine; // Lines depicting tangents
+      std::vector<std::shared_ptr<CGeometry> > mGeometryTangents;
+      std::vector<glm::vec3> mDataTangents;
+
       glm::mat4x4 mScaledTRMatrix;
    };
 }

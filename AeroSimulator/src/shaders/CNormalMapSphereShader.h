@@ -24,6 +24,7 @@ namespace AeroSimulatorEngine
       GLint mSunDirUniformId;
       GLint mEyePosUniformId;
       GLint mSamplerUniformId;
+      GLint mNormalMapUniformId;
    };
 }
 

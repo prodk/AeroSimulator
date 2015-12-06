@@ -12,6 +12,7 @@ using namespace AeroSimulatorEngine;
 #include <stdio.h>
 #include <conio.h>
 #include <cassert>
+#include <algorithm>
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -24,17 +25,20 @@ CSphere::CSphere()
    : mVertices()
    , mIndices()
    , mNormalLine()
-   , mLineGeometry(new CGeometry())
    , mGeometryNormals()
    , mDataNormals()
+   , mTangentLine()
+   , mGeometryTangents()
+   , mDataTangents()
    , mScaledTRMatrix()
 {
    mGeometry.reset(new CGeometry());
    mTexture.reset(new CTexture());
+   mNormalMapTexture.reset(new CTexture());
 
-   assert(mLineGeometry);
    assert(mGeometry);
    assert(mTexture);
+   assert(mNormalMapTexture);
 }
 
 CSphere::~CSphere()
@@ -49,6 +53,23 @@ void CSphere::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 
 void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
 {
+   ///@todo: debug
+   // Dump texture coordinates to a file
+   /*FILE* file = fopen("dumpuv.txt", "w");
+   if (file)
+   {
+      const std::size_t numOfV = 0.5*mVertices.size();
+      for (std::size_t count = 0; count < numOfV; ++count)
+      {
+         const glm::vec3& vert = mVertices[2 * count];
+         const float u = std::acos(vert.y / 1.0f) / M_PI;
+         const float v = (std::atan(vert.z/vert.x) + M_PI) / (2.0f *M_PI);
+            fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", count, vert.x, vert.y, vert.z, u, v);
+      }
+      fclose(file);
+   }*/
+   ///@todo: end
+
    if (pShader)
    {
       pShader->link();
@@ -91,6 +112,8 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
       } // end for
    }
 
+   addTangents(pShader);
+
    buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
 }
 
@@ -106,7 +129,8 @@ void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    ///@todo: switch rotation for debugging
-   const float deltaX = 150.0f * dt;
+   //const float deltaX = 150.0f * dt;
+   const float deltaX = 0.0f * dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
@@ -153,6 +177,20 @@ bool CSphere::loadTexture(const char * fileName)
    return result;
 }
 
+bool CSphere::loadNormalMapTexture(const char * filePath)
+{
+   const bool result = (0 != mNormalMapTexture->loadDDSTexture(filePath));
+
+   if (result && (mNormalMapTexture->getWidth() != mNormalMapTexture->getHeight()))
+   {
+      glGenerateTextureMipmap(mNormalMapTexture->getId());
+      CLog::getInstance().log("CSphere::loadNormalMapTexture(): generating mipmaps for non-square texture, height: ",
+         mNormalMapTexture->getHeight());
+   }
+
+   return result;
+}
+
 void CSphere::createNonTexturedGeometry()
 {
    generateNonTexutredSphere();
@@ -168,7 +206,7 @@ void CSphere::createNonTexturedGeometry()
       mGeometry->setNumOfIndices(numOfIndices);
 
       mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(6); // 6 for coords and normals
+      mGeometry->setVertexStride(6); // 6 for coords and normals, change to 9 when tangent is added
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
@@ -177,7 +215,7 @@ void CSphere::createNonTexturedGeometry()
 void CSphere::generateNonTexutredSphere()
 {
    ///@todo: rename the variables and reconsider their type
-   const int Band_Power = 4;  // 2^Band_Power = Total Points in a band.
+   const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
    const int Band_Points = std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
@@ -190,9 +228,14 @@ void CSphere::generateNonTexutredSphere()
    float x_angle;
    float y_angle;
 
-   mVertices.resize(2*Total_Points); // vertex + normal
-   mIndices.resize(Total_Points);
+   //mVertices.resize(2*Total_Points); // vertex + normal
+   //mIndices.resize(Total_Points);
 
+   ///@todo: debug
+   FILE* file = fopen("sphere.txt", "w");
+   ///@todo: debug end
+
+   std::size_t currentId = 0;
    for (i = 0; i < Total_Points; i++)
    {
       // using last bit to alternate,+band number (which band)
@@ -208,19 +251,135 @@ void CSphere::generateNonTexutredSphere()
       x_angle *= (float)Section_Arc / 2.0f; // remember - 180° x rot not 360
       y_angle *= (float)Section_Arc;// *-1;
 
-      const int id = 2 * i;
+      /*const int id = 2 * i;
       mVertices[id].x = R*sin(x_angle)*sin(y_angle);
       mVertices[id].y = R*cos(x_angle);
-      mVertices[id].z = R*sin(x_angle)*cos(y_angle);
+      mVertices[id].z = R*sin(x_angle)*cos(y_angle);*/
+      glm::vec3 vertex;
+      vertex.x = R*sin(x_angle)*sin(y_angle);
+      vertex.y = R*cos(x_angle);
+      vertex.z = R*sin(x_angle)*cos(y_angle);
 
-      // Save the normal, it is the same as the vertex if R == 1
-      ///@todo: normalize if R != 1
-      mVertices[id + 1] = mVertices[id];
+      // Avoid duplicates
+      if (mVertices.end() == std::find(mVertices.begin(), mVertices.end(), vertex))
+      {
+         // Save position
+         mVertices.push_back(vertex);
+         // Save the normal
+         ///@todo: normalize if R != 1
+         mVertices.push_back(vertex);
 
-      glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
-      mDataNormals.push_back(v1);
-      mDataNormals.push_back(mVertices[id]);
+         ///@todo: debug
+         if (file)
+         {
+            fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", currentId, vertex.x, vertex.y, vertex.z, x_angle, y_angle);
+         }
+         ///@todo: debug end
 
-      mIndices[i] = i;
+         glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
+         mDataNormals.push_back(v1);
+         mDataNormals.push_back(vertex);
+
+         mIndices.push_back(currentId);
+         ++currentId;
+      }
+
+      /////@todo: debug
+      //if (file)
+      //{
+      //   glm::vec3 vert = mVertices[id];
+      //   fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", id, vert.x, vert.y, vert.z, x_angle, y_angle);
+      //}
+      /////@todo: debug end
+
+      //// Save the normal, it is the same as the vertex if R == 1
+      /////@todo: normalize if R != 1
+      //mVertices[id + 1] = mVertices[id];
+
+      //glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
+      //mDataNormals.push_back(v1);
+      //mDataNormals.push_back(mVertices[id]);
+
+      //mIndices[i] = i;
+   }
+
+   ///@todo: debug
+   fclose(file);
+   ///@todo: end
+}
+
+void CSphere::generateTangents()
+{
+   const std::size_t numOfV = 0.5*mVertices.size();
+   for (std::size_t count = 0; count < numOfV; ++count)
+   {
+      const glm::vec3& v = mVertices[2 * count];
+      const float theta = std::acos(v.z / 1.0f);
+      //float phi = v.y * M_PI/2.0f; ///@todo: Important: v.y is in [-1; 1]
+
+      //if (v.x >= 0.0f)
+      //{
+         float phi = std::atan(v.y / v.x) + M_PI*0.5f;
+
+         // To get tangent, rotate phi by pi/2 and take into account that cos(theta+pi/2)==sin(theta)
+         glm::vec3 tangent;
+         tangent.x = std::cos(theta) * std::cos(phi);
+         tangent.y = std::cos(theta) * std::sin(phi);
+         tangent.z = std::sin(theta);
+         glm::normalize(tangent);
+
+         mDataTangents.push_back(glm::vec3(0.f, 0.f, 0.f)); // The vertex is the starting point
+         //const float tangentLength = 0.5f;
+         const glm::vec3 v2 = tangent;
+         mDataTangents.push_back(v2);
+      //}
+   }
+}
+
+void CSphere::addTangents(std::shared_ptr<CShader>& pShader)
+{
+   if (pShader)
+   {
+      pShader->link();
+
+      generateTangents();
+
+      // Add lines for drawing tangents
+      const std::size_t numOfTangents = 0.5*mDataTangents.size();
+
+      mTangentLine.resize(numOfTangents);          // Lines drawing normals
+      mGeometryTangents.resize(numOfTangents);     // Geometry for lines depicting normals
+
+      const glm::vec4 color(1.0f, 1.0f, 0.0f, 1.0f);
+
+      for (std::size_t count = 0; count < numOfTangents; ++count)
+      {
+         mGeometryTangents[count].reset(new CGeometry());
+         ///@todo: add to a method add tangent
+         if (mGeometryTangents[count])
+         {
+            mGeometryTangents[count]->setVertexBuffer(&mDataTangents[2*count]);
+            mGeometryTangents[count]->setNumOfVertices(6);
+
+            mGeometryTangents[count]->setIndexBuffer(indices);
+            mGeometryTangents[count]->setNumOfIndices(2);
+
+            mGeometryTangents[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
+            mGeometryTangents[count]->setVertexStride(3); // 3 coords
+
+            mTangentLine[count].reset(new CLine());
+            if (mTangentLine[count])
+            {
+               const glm::vec3& v = mVertices[2 * count];
+               mTangentLine[count]->setGeometry(mGeometryTangents[count]);
+               mTangentLine[count]->setColor(color);
+               mTangentLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
+               mTangentLine[count]->setTranslate(1.25f*v);
+               add(mTangentLine[count].get());
+
+               mTangentLine[count]->setShadersAndBuffers(pShader);
+            }
+         } // end if mGeometryTangents[count]
+      } // end for
    }
 }
