@@ -26,8 +26,11 @@ namespace AeroSimulatorEngine
 
       virtual bool loadTexture(const char * fileName);
       virtual bool loadNormalMapTexture(const char* filePath);
+      virtual bool loadAnimationTexture(const char* filePath);
 
       void createNonTexturedGeometry(); ///@todo: probably make this private again and move to constructor
+
+      virtual void update(const float deltaTime);
 
    private:
       void generateNonTexutredSphere();

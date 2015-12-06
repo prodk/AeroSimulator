@@ -392,6 +392,7 @@ void CWin32Renderer::updateRenderables()
    {
       mSphereRoot->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
       mSphereRoot->updateModelMatrix();
+      mSphereRoot->update(mFrameDt);
    }
 
    if (mStar)

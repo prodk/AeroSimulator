@@ -32,6 +32,7 @@ CRenderable::CRenderable()
    , mNumOfFrames()
    , mIsVisible(true)
    , mNormalMapTexture()
+   , mAnimationTexture()
 {
 }
 
@@ -56,6 +57,11 @@ bool CRenderable::loadTexture(const char * filePath)
 }
 
 bool CRenderable::loadNormalMapTexture(const char * filePath)
+{
+   return false;
+}
+
+bool CRenderable::loadAnimationTexture(const char * filePath)
 {
    return false;
 }

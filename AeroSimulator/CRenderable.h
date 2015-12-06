@@ -31,8 +31,10 @@ namespace AeroSimulatorEngine
       /// Textures
       virtual bool loadTexture(const char* filePath);
       virtual bool loadNormalMapTexture(const char* filePath);
+      virtual bool loadAnimationTexture(const char* filePath);
       CTexture* getTexture() const { return mTexture.get(); }
       CTexture* getNormalMapTexture() const { return mNormalMapTexture.get(); }
+      CTexture* getAnimationTexture() const { return mAnimationTexture.get(); }
 
       /// Geometry
       void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
@@ -140,6 +142,7 @@ namespace AeroSimulatorEngine
       bool mIsVisible;
 
       std::shared_ptr<CTexture> mNormalMapTexture;
+      std::shared_ptr<CTexture> mAnimationTexture;
    };
 } // namespace AeroSimulatorEngine
 

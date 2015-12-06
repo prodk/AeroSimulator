@@ -250,14 +250,22 @@ void CApp::addClouds()
 void CApp::addSphere()
 {
    const char* texturePath = "../AeroSimulator/res/smile.dds";
+   const char* animationPath = "../AeroSimulator/res/lightning.dds";
+
    if (mSphere->loadTexture(texturePath))
    {
       CLog::getInstance().log("* Sphere texture loaded: ", texturePath);
    }
+
    const char* normalMapPath = "../AeroSimulator/res/bricks.dds";
    if (mSphere->loadNormalMapTexture(normalMapPath))
    {
       CLog::getInstance().log("* Sphere normal map loaded: ", normalMapPath);
+   }
+
+   if (mSphere->loadAnimationTexture(animationPath))
+   {
+      CLog::getInstance().log("* Sphere animation texture loaded: ", animationPath);
    }
 
    //mColorLambertianShader->link();
@@ -267,6 +275,7 @@ void CApp::addSphere()
    mSphere->setTranslate(glm::vec3(0.f, 0.f, -5.f));
    mSphere->setScale(glm::vec3(1.f, 1.f, 1.f));
    mSphere->calculateModelMatrix();
+   mSphere->setFrameSize(glm::vec2(1.0f / 8.0f, 1.0f));
    //mSphere->setShadersAndBuffers(mColorLambertianShader);
    mSphere->setShadersAndBuffers(mNormalMapSphereShader);
    mSphere->addCustomObjects(mColorShader);

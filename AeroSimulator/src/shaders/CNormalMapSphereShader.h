@@ -26,6 +26,9 @@ namespace AeroSimulatorEngine
       GLint mEyePosUniformId;
       GLint mSamplerUniformId;
       GLint mNormalMapUniformId;
+      GLint mAnimationUniformId;
+      GLint mCurrentFrameUniform;
+      GLint mFrameSizeUniform;
    };
 }
 

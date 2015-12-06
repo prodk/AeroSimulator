@@ -35,10 +35,12 @@ CSphere::CSphere()
    mGeometry.reset(new CGeometry());
    mTexture.reset(new CTexture());
    mNormalMapTexture.reset(new CTexture());
+   mAnimationTexture.reset(new CTexture());
 
    assert(mGeometry);
    assert(mTexture);
    assert(mNormalMapTexture);
+   assert(mAnimationTexture);
 }
 
 CSphere::~CSphere()
@@ -195,6 +197,20 @@ bool CSphere::loadNormalMapTexture(const char * filePath)
    return result;
 }
 
+bool CSphere::loadAnimationTexture(const char * filePath)
+{
+   const bool result = (0 != mAnimationTexture->loadDDSTexture(filePath));
+
+   if (result && (mAnimationTexture->getWidth() != mAnimationTexture->getHeight()))
+   {
+      glGenerateTextureMipmap(mAnimationTexture->getId());
+      CLog::getInstance().log("CSphere::loadNormalMapTexture(): generating mipmaps for non-square texture, height: ",
+         mAnimationTexture->getHeight());
+   }
+
+   return result;
+}
+
 void CSphere::createNonTexturedGeometry()
 {
    generateNonTexutredSphere();
@@ -215,6 +231,25 @@ void CSphere::createNonTexturedGeometry()
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
+}
+
+void CSphere::update(const float deltaTime)
+{
+   ///@todo: make members
+   const float animationSpeed = 5.0f; // frames per second
+   const float animationTime = 1.0f / animationSpeed;
+
+   static float timeSinceLastFrame;
+   if (timeSinceLastFrame >= animationTime)
+   {
+      timeSinceLastFrame = 0.0f;
+
+      ++mCurrentFrame;
+      mCurrentFrame.x = static_cast<int>(mCurrentFrame.x) % static_cast<int>(mNumOfFrames.x);
+      mCurrentFrame.y = static_cast<int>(mCurrentFrame.y) % static_cast<int>(mNumOfFrames.y);
+   }
+
+   timeSinceLastFrame += deltaTime;
 }
 
 void CSphere::generateNonTexutredSphere()

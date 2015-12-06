@@ -16,27 +16,10 @@ CNormalMapSphereShader::CNormalMapSphereShader()
    , mEyePosUniformId(-1)
    , mSamplerUniformId(-1)
    , mNormalMapUniformId(-1)
+   , mAnimationUniformId(-1)
+   , mCurrentFrameUniform(-1)
+   , mFrameSizeUniform(-1)
 {
-   //mVertexShaderCode =
-   //   "attribute vec3 aPosition;\n"
-   //   "uniform mat4 MVP;\n"
-   //   "varying vec2 vTexCoord;\n"
-   //   "float pi = 3.14159265f;\n"
-   //   "float r = 1.0f;\n"
-   //   "void main(){\n"
-   //   "    vTexCoord.x = acos(aPosition.y/r)/(pi);\n"
-   //   "    vTexCoord.y = (atan(aPosition.x, aPosition.z) + pi)/(2.0f*pi);\n"
-   //   "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-   //   "}\n";
-
-   //mFragmentShaderCode =
-   //   "precision highp float; \n"
-   //   "varying vec2 vTexCoord;\n"
-   //   "uniform sampler2D sTexture; \n"
-   //   "void main(){\n"
-   //   "    gl_FragColor = texture2D(sTexture, vTexCoord);\n"
-   //   //"    gl_FragColor = vec4(vTexCoord.x, vTexCoord.y, 0.0, 1.0);\n"
-   //   "}\n";
    mVertexShaderCode =
       "float pi = 3.14159265f;\n"
       "float r = 1.0f;\n"
@@ -45,7 +28,10 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "attribute vec3 aTangent;\n"
       "uniform mat4 MVP;\n"
       "uniform mat4 uM;\n"
+      "uniform vec2 uCurrentFrame;  // Current frame in the sprite \n"
+      "uniform vec2 uFrameSize;   // 1/numOfFrames in given direction\n"
       "varying vec2 vTexCoord;\n"
+      "varying vec2 vTexCoordAnim;\n"
       "varying vec3 vEyeNormal;\n"  ///@todo: remove from varyings
       "varying vec3 vPos;\n"
       "varying mat3 mTBN;\n"
@@ -57,6 +43,7 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "    vPos = (uM * vec4(aPosition, 1.0)).xyz;\n"
       "    vTexCoord.y = acos(aPosition.y/r)/(pi);\n"
       "    vTexCoord.x = (atan(aPosition.z, aPosition.x) + pi)/(2.0f*pi);\n"
+      "    vTexCoordAnim = (vTexCoord + uCurrentFrame)*uFrameSize; \n"
       "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
       "}\n";
 
@@ -67,7 +54,9 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "uniform vec3 uEyePos;\n"         // Camera position world
       "uniform sampler2D sTexture; \n"
       "uniform sampler2D sNormalMap; \n"
+      "uniform sampler2D sAnimation; \n"
       "varying vec2 vTexCoord;\n"
+      "varying vec2 vTexCoordAnim;\n"
       "varying vec3 vEyeNormal;\n"      // Fragment normal in the world space
       "varying vec3 vPos;\n"
       "varying mat3 mTBN;\n"
@@ -78,10 +67,12 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "    float cosD = clamp(dot(N, L), 0, 1);\n"
       "    // Specular;\n"
       "    float cosS = 0.0;\n"
+      "    if (cosD > 0.0) {\n"
       "    vec3 cameraDir = mTBN * normalize(uEyePos - vPos);\n"
       "    vec3 R = reflect(-L, N);\n"
       "    cosS = clamp(dot(cameraDir, R), 0, 1);\n"
-      "    gl_FragColor = texture2D(sTexture, vTexCoord) * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
+      "    }\n"
+      "    gl_FragColor = (texture2D(sTexture, vTexCoord) + texture2D(sAnimation, vTexCoordAnim)) * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
       //"    gl_FragColor = vec4(vTexCoord.x, vTexCoord.y, 0.0, 1.0);// * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
       "}\n";
 
@@ -118,6 +109,15 @@ void CNormalMapSphereShader::link()
 
       mNormalMapUniformId = glGetUniformLocation(mProgramId, "sNormalMap");
       CLog::getInstance().logGL("* CNormalMapSphereShader: glGetUniformLocation(mProgramId, sNormalMap): ");
+
+      mAnimationUniformId = glGetUniformLocation(mProgramId, "sAnimation");
+      CLog::getInstance().logGL("* CNormalMapSphereShader: glGetUniformLocation(mProgramId, sAnimation): ");
+
+      mCurrentFrameUniform = glGetUniformLocation(mProgramId, "uCurrentFrame");
+      CLog::getInstance().logGL("* CNormalMapSphereShader: glGetUniformLocation(mProgramId, uCurrentFrame): ");
+
+      mFrameSizeUniform = glGetUniformLocation(mProgramId, "uFrameSize");
+      CLog::getInstance().logGL("* CNormalMapSphereShader: glGetUniformLocation(mProgramId, uFrameSize): ");
 
       mIsLinked = true;
    }
@@ -175,5 +175,19 @@ void CNormalMapSphereShader::setup(CRenderable & renderable)
       const GLint mapId = renderable.getNormalMapTexture()->getId();
       glBindTexture(GL_TEXTURE_2D, mapId);
       glUniform1i(mNormalMapUniformId, 1);
+
+      /// Animation texture
+      glActiveTexture(GL_TEXTURE2);
+      const GLint anId = renderable.getAnimationTexture()->getId();
+      glBindTexture(GL_TEXTURE_2D, anId);
+      glUniform1i(mAnimationUniformId, 2);
+
+      // Frame number of the sprite
+      const glm::vec2 currentFrame = renderable.getCurrentFrame();
+      glUniform2fv(mCurrentFrameUniform, 1, &(currentFrame.x));
+
+      // Size of the sprite frame
+      const glm::vec2 frameSize = renderable.getFrameSize();
+      glUniform2fv(mFrameSizeUniform, 1, &(frameSize.x));
    }
 }
