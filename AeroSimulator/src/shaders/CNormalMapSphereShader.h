@@ -19,6 +19,10 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
 
    private:
+      GLint mNormalAttributeId;
+      GLint mModelMatrixUniformId;
+      GLint mSunDirUniformId;
+      GLint mEyePosUniformId;
       GLint mSamplerUniformId;
    };
 }

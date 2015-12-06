@@ -105,6 +105,7 @@ void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 
 void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
+   ///@todo: switch rotation for debugging
    const float deltaX = 150.0f * dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
