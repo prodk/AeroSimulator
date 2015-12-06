@@ -11,7 +11,7 @@ namespace AeroSimulatorEngine
       CBoundingBox();
       virtual ~CBoundingBox();
 
-      bool collidesWith(const CBoundingBox& box) const;
+      bool collidesWith(const CBoundingBox& box, bool vertical = true) const;
    };
 } // namespace AeroSimulatorEngine
 

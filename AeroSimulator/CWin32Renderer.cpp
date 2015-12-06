@@ -43,7 +43,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(30.f)
+   , mCameraAngleX(20.f)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
@@ -68,7 +68,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -13.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -16.0f));
    mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
@@ -441,7 +441,7 @@ void CWin32Renderer::updateInput()
       case (VK_LEFT) :
       {
          mAngleZ += rotationSpeed;
-         mAngleZ = std::min<float>(mAngleZ, 90.f);
+         mAngleZ = std::min<float>(mAngleZ, 70.f);
 
          // Move the plane to the left
          glm::vec3 position = mAirplane->getPosition();
@@ -453,7 +453,7 @@ void CWin32Renderer::updateInput()
       case (VK_RIGHT) :
       {
          mAngleZ -= rotationSpeed;
-         mAngleZ = std::max<float>(mAngleZ, -90.f);
+         mAngleZ = std::max<float>(mAngleZ, -70.f);
 
          // Move the plane to the right
          glm::vec3 position = mAirplane->getPosition();
@@ -639,12 +639,12 @@ void CWin32Renderer::handleCollisions()
          const CBoundingBox* boxStar = mStar[count]->getBoundingBox();
          if (boxAirPlane && boxStar && boxStar->isVisible())
          {
-            if (boxAirPlane->collidesWith(*boxStar))
+            if (boxAirPlane->collidesWith(*boxStar, false))
             {
                static float health = 0.3;
                mAirplane->resetHealthBars(std::min<float>(health, 1.0f));
                mStar[count]->setVisible(false);
-               health += 0.1f;
+               health += 0.15f;
             }
          }
       }
@@ -729,6 +729,15 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
                CLog::getInstance().log("* Button 6: Set look at point to the planes cabine");
             else
                CLog::getInstance().log("* Button 6: Set look at point to the center of the scene");
+         }
+         break;
+
+      case (0x37) : // 7, show all stars
+         CLog::getInstance().log("* Button 7: Show all stars");
+         for (auto star : mStar)
+         {
+            if (star)
+               star->setVisible(true);
          }
          break;
 
