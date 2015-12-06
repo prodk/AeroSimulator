@@ -44,7 +44,7 @@ namespace AeroSimulatorEngine
       void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
 
       void setAirplane(std::shared_ptr<C3DModel>& airplane) { mAirplane = airplane; }
-      void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { mStar = stars; }
+      void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { if(stars) mStar.push_back(stars); }
       void setLand(std::shared_ptr<CLand>& land) { mLand = land; }
 
    private:
@@ -104,8 +104,8 @@ namespace AeroSimulatorEngine
 
       ///@todo: move to the movement/collisions task when events are implemented
       std::shared_ptr<C3DModel> mAirplane;
-      std::shared_ptr<CAnimationBillBoard> mStar; ///@todo: change to the vector later
-      std::shared_ptr<CLand> mLand; ///@todo: change to the vector later
+      std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
+      std::shared_ptr<CLand> mLand;
    };
 } // namespace AeroSimulatorEngine
 

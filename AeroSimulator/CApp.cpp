@@ -44,7 +44,7 @@ CApp::CApp()
    , mLand(new CLand())
    , mSphere(new CSphere())
    , mBillBoards(20)
-   , mStar(new CAnimationBillBoard())
+   , mStar(4)
    , mNormalMapSphereShader(new CNormalMapSphereShader())
 {
    assert(mAppWindowTask);
@@ -61,7 +61,6 @@ CApp::CApp()
    assert(mColorLambertianShader);
    assert(mAnimationBbShader);
    assert(mSphere);
-   assert(mStar);
    assert(mNormalMapSphereShader);
 
    CLog::getInstance().log("* CApp created!");
@@ -79,7 +78,7 @@ CApp::~CApp()
    mBillboardShader.reset();
    mColorShader.reset();
    mSphere.reset();
-   mStar.reset();
+   //mStar.reset();
    ///@todo: reset other ptrs here
 
    CLog::getInstance().log("* CApp destroyed");
@@ -297,39 +296,49 @@ void CApp::addSphere()
 
 void CApp::addStars()
 {
-   const float width = 3.0f;
-   const float height = 3.0f;
-   const char* filePath = "../AeroSimulator/res/capguy-walk.dds";
+   const float width = 1.0f;
+   const float height = 1.0f;
+   //const char* filePath = "../AeroSimulator/res/capguy-walk.dds";
+   const char* filePath = "../AeroSimulator/res/coin.dds";
    mAnimationBbShader->link();
 
-   if (mStar->loadTexture(filePath))
+   float dx = 5.f;
+
+   for (std::size_t count = 0; count < mStar.size(); ++count)
    {
-      CLog::getInstance().log("* Billboard loaded: ", filePath);
-   }
+      mStar[count].reset(new CAnimationBillBoard());
 
-   mStar->setTranslate(glm::vec3(0.0f, -5.0f, 0.0f));
-   mStar->setBillboardHeight(width);
-   mStar->setBillboardWidth(height);
-   mStar->calculateModelMatrix();
-   mStar->setFrameSize(glm::vec2(1.0f / 8.0f, 1.0f));
-
-   mBillboardShader->link();
-   mStar->setShadersAndBuffers(mAnimationBbShader);
-   mColorShader->link();
-   const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-   mStar->setBoundingBox(mColorShader, bBoxColor);
-
-   std::vector<CCompositeGameObject*> tree;
-   mStar->traverse(tree);
-
-   for (auto * pTree : tree)
-   {
-      if (pTree)
+      if (mStar[count])
       {
-         mRendererTask->addRenderable(pTree);
-      }
-   }
+         if (mStar[count]->loadTexture(filePath))
+         {
+            CLog::getInstance().log("* Billboard loaded: ", filePath);
+         }
 
-   mRendererTask->addRenderable(mStar.get());
-   mRendererTask->setStars(mStar);
+         mStar[count]->setTranslate(glm::vec3(-10.f + count*dx, -5.0f, 0.0f));
+         mStar[count]->setBillboardHeight(width);
+         mStar[count]->setBillboardWidth(height);
+         mStar[count]->calculateModelMatrix();
+         mStar[count]->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
+
+         mStar[count]->setShadersAndBuffers(mAnimationBbShader);
+         mColorShader->link();
+         const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
+         mStar[count]->setBoundingBox(mColorShader, bBoxColor);
+
+         std::vector<CCompositeGameObject*> tree;
+         mStar[count]->traverse(tree);
+
+         for (auto * pTree : tree)
+         {
+            if (pTree)
+            {
+               mRendererTask->addRenderable(pTree);
+            }
+         }
+
+         mRendererTask->addRenderable(mStar[count].get());
+         mRendererTask->setStars(mStar[count]);
+      }
+   } // End for
 }

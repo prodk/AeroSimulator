@@ -60,7 +60,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mThirdKeyCode(0)
    , mFrameDt(0.0)
    , mAirplaneMatrix()
-   , mStar(nullptr)
+   , mStar()
    , mLand(nullptr)
 {
    assert(mCamera);
@@ -395,16 +395,19 @@ void CWin32Renderer::updateRenderables()
       mSphereRoot->update(mFrameDt);
    }
 
-   if (mStar)
+   for (std::size_t count = 0; count < mStar.size(); ++count)
    {
-      mStar->update(mFrameDt);
-   }
+      if (mStar[count])
+      {
+         mStar[count]->update(mFrameDt);
+      }
 
-   CAnimationBillBoard* star = mStar.get();
-   if (star)
-   {
-      star->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
-      star->updateModelMatrix();
+      CAnimationBillBoard* star = mStar[count].get();
+      if (star)
+      {
+         star->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
+         star->updateModelMatrix();
+      }
    }
 
    handleCollisions();
@@ -614,20 +617,23 @@ void CWin32Renderer::handleCollisions()
 
    /// Airplane vs stars collisions
    ///@todo: put to a separate method
-   if (mAirplane && mStar)
+   if (mAirplane)
    {
-      const CBoundingBox* boxAirPlane = mAirplane->getBoundingBox();
-      const CBoundingBox* boxStar = mStar->getBoundingBox();
-      if (boxAirPlane && boxStar)
+      for (std::size_t count = 0; count < mStar.size(); ++count)
       {
-         if (boxAirPlane->collidesWith(*boxStar))
+         const CBoundingBox* boxAirPlane = mAirplane->getBoundingBox();
+         const CBoundingBox* boxStar = mStar[count]->getBoundingBox();
+         if (boxAirPlane && boxStar)
          {
-            mAirplane->resetHealthBars(0.8);
-            mStar->setVisible(false);
-         }
-         else
-         {
-            mStar->setVisible(true);
+            if (boxAirPlane->collidesWith(*boxStar))
+            {
+               mAirplane->resetHealthBars(0.8);
+               mStar[count]->setVisible(false);
+            }
+            else
+            {
+               mStar[count]->setVisible(true);
+            }
          }
       }
    }

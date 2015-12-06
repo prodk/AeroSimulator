@@ -80,7 +80,8 @@ namespace AeroSimulatorEngine
 
       ///@todo: place billboards to some bridge class CClouds
       std::vector<tGameObjectPtr > mBillBoards;
-      std::shared_ptr<CAnimationBillBoard> mStar; ///@todo: change to an array
+      //std::shared_ptr<CAnimationBillBoard> mStar;
+      std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
    };
 
 } // namespace AeroSimulatorEngine

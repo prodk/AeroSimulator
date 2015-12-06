@@ -123,8 +123,9 @@ bool CBoundingBox::collidesWith(const CBoundingBox & box) const
    const glm::vec4 myTranslate = mModelMatrix[3];
 
    ///@todo: temporary, think that collision happenned if vertical distance is <=1
+   const float deltaX2 = (translate.x - myTranslate.x)*(translate.x - myTranslate.x);
    const float deltaY2 = (translate.y - myTranslate.y)*(translate.y - myTranslate.y);
-   if (std::sqrt(deltaY2) <= 2.5f)
+   if (std::sqrt(deltaX2 + deltaY2) <= 1.5f)
    {
       result = true;
    }
