@@ -58,10 +58,12 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
    /*FILE* file = fopen("dumpuv.txt", "w");
    if (file)
    {
-      const std::size_t numOfV = 0.5*mVertices.size();
+      //const std::size_t numOfV = 0.5*mVertices.size();
+      const std::size_t numOfV = mVertices.size()/3;
       for (std::size_t count = 0; count < numOfV; ++count)
       {
-         const glm::vec3& vert = mVertices[2 * count];
+         //const glm::vec3& vert = mVertices[2 * count];
+         const glm::vec3& vert = mVertices[3 * count];
          const float u = std::acos(vert.y / 1.0f) / M_PI;
          const float v = (std::atan(vert.z/vert.x) + M_PI) / (2.0f *M_PI);
             fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", count, vert.x, vert.y, vert.z, u, v);
@@ -74,7 +76,8 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
    {
       pShader->link();
 
-      const std::size_t numOfNormals = 0.5*mVertices.size();
+      //const std::size_t numOfNormals = 0.5*mVertices.size();
+      const std::size_t numOfNormals = mVertices.size()/3;
 
       mNormalLine.resize(numOfNormals);          // Lines drawing normals
       mGeometryNormals.resize(numOfNormals);     // Geometry for lines depicting normals
@@ -98,7 +101,8 @@ void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
             mNormalLine[count].reset(new CLine());
             if (mNormalLine[count])
             {
-               const glm::vec3& v = mVertices[2*count];
+               //const glm::vec3& v = mVertices[2*count];
+               const glm::vec3& v = mVertices[3 * count];
 
                mNormalLine[count]->setGeometry(mGeometryNormals[count]);
                mNormalLine[count]->setColor(color);
@@ -129,8 +133,8 @@ void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 {
    ///@todo: switch rotation for debugging
-   //const float deltaX = 150.0f * dt;
-   const float deltaX = 0.0f * dt;
+   const float deltaX = 150.0f * dt;
+   //const float deltaX = 0.0f * dt;
    calculateTRMatrix();
    mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
 
@@ -206,7 +210,8 @@ void CSphere::createNonTexturedGeometry()
       mGeometry->setNumOfIndices(numOfIndices);
 
       mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(6); // 6 for coords and normals, change to 9 when tangent is added
+      //mGeometry->setVertexStride(6); // 6 for coords and normals, change to 9 when tangent is added
+      mGeometry->setVertexStride(9);
    }
 
    setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
@@ -229,13 +234,14 @@ void CSphere::generateNonTexutredSphere()
    float y_angle;
 
    //mVertices.resize(2*Total_Points); // vertex + normal
+   //mVertices.resize(2 * Total_Points); // vertex + normal + tangent
    //mIndices.resize(Total_Points);
 
    ///@todo: debug
-   FILE* file = fopen("sphere.txt", "w");
+   //FILE* file = fopen("sphere.txt", "w");
    ///@todo: debug end
 
-   std::size_t currentId = 0;
+   //std::size_t currentId = 0;
    for (i = 0; i < Total_Points; i++)
    {
       // using last bit to alternate,+band number (which band)
@@ -251,69 +257,82 @@ void CSphere::generateNonTexutredSphere()
       x_angle *= (float)Section_Arc / 2.0f; // remember - 180° x rot not 360
       y_angle *= (float)Section_Arc;// *-1;
 
-      /*const int id = 2 * i;
-      mVertices[id].x = R*sin(x_angle)*sin(y_angle);
-      mVertices[id].y = R*cos(x_angle);
-      mVertices[id].z = R*sin(x_angle)*cos(y_angle);*/
+      //const int id = 2 * i;
       glm::vec3 vertex;
       vertex.x = R*sin(x_angle)*sin(y_angle);
       vertex.y = R*cos(x_angle);
       vertex.z = R*sin(x_angle)*cos(y_angle);
+      /*mVertices[id].x = R*sin(x_angle)*sin(y_angle);
+      mVertices[id].y = R*cos(x_angle);
+      mVertices[id].z = R*sin(x_angle)*cos(y_angle);*/
 
-      // Avoid duplicates
-      if (mVertices.end() == std::find(mVertices.begin(), mVertices.end(), vertex))
-      {
-         // Save position
-         mVertices.push_back(vertex);
-         // Save the normal
-         ///@todo: normalize if R != 1
-         mVertices.push_back(vertex);
-
-         ///@todo: debug
-         if (file)
-         {
-            fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", currentId, vertex.x, vertex.y, vertex.z, x_angle, y_angle);
-         }
-         ///@todo: debug end
-
-         glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
-         mDataNormals.push_back(v1);
-         mDataNormals.push_back(vertex);
-
-         mIndices.push_back(currentId);
-         ++currentId;
-      }
-
-      /////@todo: debug
-      //if (file)
+      ///@todo: this commented code avoids duplicates
+      //// Avoid duplicates
+      //if (mVertices.end() == std::find(mVertices.begin(), mVertices.end(), vertex))
       //{
-      //   glm::vec3 vert = mVertices[id];
-      //   fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", id, vert.x, vert.y, vert.z, x_angle, y_angle);
+      //   // Save position
+      //   mVertices.push_back(vertex);
+      //   // Save the normal
+      //   ///@todo: normalize if R != 1
+      //   mVertices.push_back(vertex);
+
+      //   ///@todo: add a place holder for tangent, later calculate tangent here
+      //   mVertices.push_back(vertex);
+
+      //   ///@todo: debug
+      //   //if (file)
+      //   //{
+      //      //fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", currentId, vertex.x, vertex.y, vertex.z, x_angle, y_angle);
+      //   //}
+      //   ///@todo: debug end
+
+      //   glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
+      //   mDataNormals.push_back(v1);
+      //   mDataNormals.push_back(vertex);
+
+      //   mIndices.push_back(currentId);
+      //   ++currentId;
       //}
-      /////@todo: debug end
 
-      //// Save the normal, it is the same as the vertex if R == 1
-      /////@todo: normalize if R != 1
-      //mVertices[id + 1] = mVertices[id];
+      ///@todo: debug
+      /*if (file)
+      {
+         glm::vec3 vert = mVertices[id];
+         fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", id, vert.x, vert.y, vert.z, x_angle, y_angle);
+      }*/
+      ///@todo: debug end
 
-      //glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
-      //mDataNormals.push_back(v1);
-      //mDataNormals.push_back(mVertices[id]);
+      // Save the normal, it is the same as the vertex if R == 1
+      ///@todo: normalize if R != 1
+      mVertices.push_back(vertex);
+      mVertices.push_back(vertex);
+      mVertices.push_back(vertex);
+
+      ///@todo: change this to calculation later
+      // Add placeholder for tangents
+      //mVertices[id + 2] = mVertices[id];
+
+      glm::vec3 v1 = glm::vec3(0.0f, 0.f, 0.f);
+      mDataNormals.push_back(v1);
+      mDataNormals.push_back(vertex);
 
       //mIndices[i] = i;
+      mIndices.push_back(i);
    }
 
    ///@todo: debug
-   fclose(file);
+   //fclose(file);
    ///@todo: end
 }
 
 void CSphere::generateTangents()
 {
-   const std::size_t numOfV = 0.5*mVertices.size();
+   //const std::size_t numOfV = 0.5*mVertices.size();
+   const std::size_t numOfV = mVertices.size()/3;
    for (std::size_t count = 0; count < numOfV; ++count)
    {
-      const glm::vec3& v = mVertices[2 * count];
+      //const glm::vec3& v = mVertices[2 * count];
+      const glm::vec3& v = mVertices[3 * count];
       const float theta = std::acos(v.z / 1.0f);
       //float phi = v.y * M_PI/2.0f; ///@todo: Important: v.y is in [-1; 1]
 
@@ -332,6 +351,10 @@ void CSphere::generateTangents()
          //const float tangentLength = 0.5f;
          const glm::vec3 v2 = tangent;
          mDataTangents.push_back(v2);
+
+         ///@todo: add to generate tangent
+         /// Save tangent for shaders
+         mVertices[3 * count + 2] = tangent;
       //}
    }
 }
@@ -370,7 +393,8 @@ void CSphere::addTangents(std::shared_ptr<CShader>& pShader)
             mTangentLine[count].reset(new CLine());
             if (mTangentLine[count])
             {
-               const glm::vec3& v = mVertices[2 * count];
+               //const glm::vec3& v = mVertices[2 * count];
+               const glm::vec3& v = mVertices[3 * count];
                mTangentLine[count]->setGeometry(mGeometryTangents[count]);
                mTangentLine[count]->setColor(color);
                mTangentLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));

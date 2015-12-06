@@ -20,6 +20,7 @@ namespace AeroSimulatorEngine
 
    private:
       GLint mNormalAttributeId;
+      GLint mTangentAttributeId;
       GLint mModelMatrixUniformId;
       GLint mSunDirUniformId;
       GLint mEyePosUniformId;
