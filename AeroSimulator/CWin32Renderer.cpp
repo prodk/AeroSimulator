@@ -641,10 +641,9 @@ void CWin32Renderer::handleCollisions()
          {
             if (boxAirPlane->collidesWith(*boxStar, false))
             {
-               static float health = 0.3;
-               mAirplane->resetHealthBars(std::min<float>(health, 1.0f));
+               float health = mAirplane->getHealth();
+               mAirplane->resetHealthBars(std::min<float>(health + 0.15f, 1.0f));
                mStar[count]->setVisible(false);
-               health += 0.15f;
             }
          }
       }

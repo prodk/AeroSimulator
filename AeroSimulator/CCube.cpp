@@ -22,8 +22,8 @@ CCube::CCube()
    , mHealthBarShift(glm::vec3(0.0f, 0.7f, 0.0f))
    , mHealthBarWidth(0.5f)
    , mHealthbarHeight(0.2f)
-   , mHealthValue(0.22f)
 {
+   mHealthValue = 0.22f;
    CLog::getInstance().log("* CCube::CCube() default: success.");
 }
 

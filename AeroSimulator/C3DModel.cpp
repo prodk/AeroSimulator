@@ -136,6 +136,11 @@ const CBoundingBox * C3DModel::getBoundingBox() const
       return 0;
 }
 
+float C3DModel::getHealth() const
+{
+   return mCubes[0].getHealthValue();
+}
+
 void  C3DModel::setupCubeGeometry()
 {
    if (mCubeGeometry)

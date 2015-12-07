@@ -49,6 +49,8 @@ namespace AeroSimulatorEngine
 
       const CBoundingBox* getBoundingBox() const;
 
+      float getHealth() const;
+
       static const std::size_t numOfCubes;
 
    private:

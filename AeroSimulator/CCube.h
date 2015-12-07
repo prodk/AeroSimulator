@@ -43,7 +43,7 @@ namespace AeroSimulatorEngine
       glm::vec3 mHealthBarShift;
       float mHealthBarWidth;
       float mHealthbarHeight;
-      float mHealthValue;
+      //float mHealthValue;
    };
 } // namespace AeroSimulatorEngine
 
