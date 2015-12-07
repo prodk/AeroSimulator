@@ -26,7 +26,7 @@ CAnimationBillboardShader::CAnimationBillboardShader()
       "uniform vec2 uFrameSize;   // 1/numOfFrames in given direction\n"
       "varying vec2 vTexCoord;\n"
       "void main(){\n"
-      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
+      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + vec3(0.0, 1.0, 0.0)*aSquad.y*uHeight;\n"
       "    gl_Position = MVP * vec4(position, 1.0);\n"
       "    vTexCoord = (aTexCoord + uCurrentFrame)*uFrameSize;\n"
       "}\n";

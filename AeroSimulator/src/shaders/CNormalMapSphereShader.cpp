@@ -62,6 +62,7 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "varying mat3 mTBN;\n"
       "void main(){\n"
       "    // Diffuse;\n"
+      ///@todo: transform into the world space because mTBN is in the world!
       "    vec3 N = normalize(texture2D( sNormalMap, vTexCoord ).rgb*2.0 - 1.0);\n"
       "    vec3 L = mTBN * normalize(uSunDir);\n"
       "    float cosD = clamp(dot(N, L), 0, 1);\n"
