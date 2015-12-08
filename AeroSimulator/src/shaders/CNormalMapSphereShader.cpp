@@ -55,6 +55,7 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "uniform sampler2D sTexture; \n"
       "uniform sampler2D sNormalMap; \n"
       "uniform sampler2D sAnimation; \n"
+      "uniform mat4 uM;\n"
       "varying vec2 vTexCoord;\n"
       "varying vec2 vTexCoordAnim;\n"
       "varying vec3 vEyeNormal;\n"      // Fragment normal in the world space
@@ -62,8 +63,8 @@ CNormalMapSphereShader::CNormalMapSphereShader()
       "varying mat3 mTBN;\n"
       "void main(){\n"
       "    // Diffuse;\n"
-      ///@todo: transform into the world space because mTBN is in the world!
-      "    vec3 N = normalize(texture2D( sNormalMap, vTexCoord ).rgb*2.0 - 1.0);\n"
+      "    vec4 Nmodel = uM * vec4(normalize(texture2D( sNormalMap, vTexCoord ).rgb*2.0 - 1.0), 0.0);\n"
+      "    vec3 N = Nmodel.xyz;\n"
       "    vec3 L = mTBN * normalize(uSunDir);\n"
       "    float cosD = clamp(dot(N, L), 0, 1);\n"
       "    // Specular;\n"
