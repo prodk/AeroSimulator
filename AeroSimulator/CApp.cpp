@@ -43,7 +43,7 @@ CApp::CApp()
    , mSkyBox(new CSkyBox())
    , mLand(new CLand())
    , mSphere(new CSphere())
-   , mBillBoards(20)
+   , mBillBoards(40)
    , mStar(5)
    , mNormalMapSphereShader(new CNormalMapSphereShader())
 {
@@ -210,17 +210,21 @@ void CApp::addAirplane()
 
 void CApp::addClouds()
 {
-   const float width = 3.0f;
-   const float height = 3.0f;
-   const float minDistance = 7.0f;
-   const float maxDistance = 13.0f;
+   const float width = 5.0f;
+   const float height = 5.0f;
+   const float minDistance = 45.0f;
+   const float minDistanceY = -10.0f;
+   const float maxDistanceY = 0.3f*mSkyBox->getScale().y;
    const char* filePath = "../AeroSimulator/res/cloud.dds";
 
    mBillboardShader->link();
 
    std::random_device rd;
-   std::mt19937 mt(rd());
-   std::uniform_real_distribution<float> dist(minDistance, maxDistance);
+   std::mt19937 mtX(rd());
+   std::mt19937 mtY(rd());
+   std::mt19937 mtZ(rd());
+   std::uniform_real_distribution<float> distX(0.0f, 0.5f*(mSkyBox->getScale().x - width));
+   std::uniform_real_distribution<float> distY(minDistanceY, maxDistanceY);
    std::uniform_real_distribution<float> sign(-1.f, 1.f);
 
    for (std::size_t count = 0; count < mBillBoards.size(); ++count)
@@ -233,9 +237,16 @@ void CApp::addClouds()
             CLog::getInstance().log("* Billboard loaded: ", filePath);
          }
 
-         mBillBoards[count]->setTranslate(glm::vec3(dist(mt)*(sign(mt) > 0. ? 1.f : -1.f),
-                                                    dist(mt)*(sign(mt) > 0. ? 1.f : -1.f),
-                                                    dist(mt)*(sign(mt) > 0. ? 1.f : -1.f) ));
+         float x = distX(mtX)*(sign(mtX) > 0. ? 1.f : -1.f);
+         float z = distX(mtZ)*(sign(mtZ) > 0. ? 1.f : -1.f);
+         while (std::sqrt(x*x + z*z) < minDistance)
+         {
+            x = distX(mtX)*(sign(mtX) > 0. ? 1.f : -1.f);
+            z = distX(mtZ)*(sign(mtZ) > 0. ? 1.f : -1.f);
+         }
+
+         mBillBoards[count]->setTranslate(glm::vec3(x, distY(mtY), z));
+
          mBillBoards[count]->setBillboardHeight(width);
          mBillBoards[count]->setBillboardWidth(height);
          mBillBoards[count]->calculateModelMatrix();
