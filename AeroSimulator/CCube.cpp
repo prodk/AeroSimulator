@@ -62,7 +62,7 @@ void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
    CParentGameObject::updateTRMatrix(trMatrix, dt);
 
    // Don't forget to change the cached scaled TR matrix
-   if (trMatrix != mParentTRMatrix)
+   //if (trMatrix != mParentTRMatrix)
    {
       mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
    }

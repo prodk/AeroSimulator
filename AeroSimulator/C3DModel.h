@@ -44,6 +44,7 @@ namespace AeroSimulatorEngine
       void resetPropellerSpeed();
 
       glm::vec3 getSpeedOfFlight() const { return mSpeedOfFlight; }
+      void setSpeedOfFlight(const glm::vec3& speed) { mSpeedOfFlight = speed; }
 
       void resetHealthBars(const float value = 0.0f);
 

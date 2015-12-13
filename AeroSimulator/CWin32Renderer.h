@@ -41,12 +41,13 @@ namespace AeroSimulatorEngine
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
-      void setAirplaneRoot(CParentGameObject* root) { if (root) mAirplaneRoot = root; }
+      void setAirplaneRoot(CParentGameObject* root);
       void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
 
       void setAirplane(std::shared_ptr<C3DModel>& airplane) { mAirplane = airplane; }
       void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { if(stars) mStar.push_back(stars); }
       void setLand(std::shared_ptr<CLand>& land) { mLand = land; }
+      void setSky(std::shared_ptr<CSkyBox>& sky) { mSky = sky; }
 
    private:
       // Override CRenderer part
@@ -107,6 +108,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<C3DModel> mAirplane;
       std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
       std::shared_ptr<CLand> mLand;
+      std::shared_ptr<CSkyBox> mSky;
    };
 } // namespace AeroSimulatorEngine
 

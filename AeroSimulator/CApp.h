@@ -23,6 +23,7 @@ namespace AeroSimulatorEngine
    class CAnimationBillBoard;
    class CSphere;
    class CLand;
+   class CSkyBox;
 
    class CApp
    {
@@ -74,7 +75,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mNormalMapSphereShader;
 
       ///@todo: probably use the concrete types here
-      tGameObjectPtr mSkyBox;
+      std::shared_ptr<CSkyBox> mSkyBox;
       std::shared_ptr<CLand> mLand;
       std::shared_ptr<CSphere> mSphere;
 

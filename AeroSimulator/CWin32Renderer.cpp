@@ -12,6 +12,7 @@
 #include "CAnimationBillBoard.h"
 #include "CLand.h"
 #include "CBoundingBox.h"
+#include "CSkyBox.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -62,6 +63,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mAirplaneMatrix()
    , mStar()
    , mLand(nullptr)
+   , mSky(nullptr)
 {
    assert(mCamera);
 
@@ -310,6 +312,40 @@ void CWin32Renderer::updateAirplane()
    glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
    if (mAirplane)
    {
+      // Translate in xz plane
+      ///@todo: use x, z components later
+      glm::vec3 position = mAirplane->getPosition();
+      position.z = position.z - mAirplane->getSpeedOfFlight().z*mFrameDt;
+
+      // Periodic boundaries
+      ///@todo: put to a method
+      const float halfLandZ = mLand->getScale().z * 0.5f;
+      const float halfLandX = mLand->getScale().x * 0.5f;
+      if (position.z > halfLandZ - 0.5f*mSky->getScale().z)
+         position.z -= 2.f*halfLandZ - 0.5f*mSky->getScale().z;
+
+      if (position.z < -halfLandZ + 0.5f*mSky->getScale().z)
+         position.z += 2.f*halfLandZ + 0.5f*mSky->getScale().z;
+
+      if (position.x > halfLandX)
+         position.x -= 2.f*halfLandX;
+
+      if (position.x < -halfLandX)
+         position.x += 2.f*halfLandX;
+
+
+      mAirplane->setPosition(position);
+
+      if (mSky)
+      {
+         glm::mat4 skyMatrix = glm::mat4(1.0f);
+         glm::vec3 skyPos = mAirplane->getPosition();
+         skyPos.y = 0.0f;
+         skyMatrix = glm::translate(skyMatrix, skyPos);
+         mSky->updateTRMatrix(skyMatrix, mFrameDt);
+         mSky->updateModelMatrix();
+      }
+
       mAirplaneMatrix = glm::translate(mAirplaneMatrix, mAirplane->getPosition());
    }
 
@@ -471,6 +507,10 @@ void CWin32Renderer::updateInput()
                mAngleX += rotationSpeed;
                mAngleX = std::min<float>(mAngleX, 20.f);
 
+               glm::vec3 speed = mAirplane->getSpeedOfFlight();
+               speed.z = 15.0f;
+               mAirplane->setSpeedOfFlight(speed);
+
                // Move upwards
                glm::vec3 position = mAirplane->getPosition();
                ///@todo: move to handle collisions
@@ -621,6 +661,9 @@ void CWin32Renderer::handleCollisions()
          {
             mAirplane->resetHealthBars();
             mAirplane->setPropellerSpeed(0.0f);
+            glm::vec3 speed = mAirplane->getSpeedOfFlight();
+            speed.z = 0.0f;
+            mAirplane->setSpeedOfFlight(speed);
             // Restore the previous position of the plane
             glm::vec3 newPos = mAirplane->getPosition();
             newPos.y = newPos.y + mAirplane->getSpeedOfFlight().y*mFrameDt;
@@ -780,4 +823,17 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
 
    // Process other messages
    return true;
+}
+
+void CWin32Renderer::setAirplaneRoot(CParentGameObject * root)
+{
+   if (root)
+   {
+      // By default, attach the camera to the plane
+      mAirplaneRoot = root;
+      mAirplaneRoot->add(mCamera.get());
+      mAirplaneRoot->buildModelMatrix(glm::mat4x4(1.0f));
+      mCameraAttached = true;
+      CLog::getInstance().log("* Button Enter: Camera attached to the plane");
+   }
 }

@@ -143,11 +143,12 @@ void CApp::addSkyBox()
       CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky.dds");
    }
 
-   mSkyBox->scale(glm::vec3(100.f, 100.f, 100.0f));
+   mSkyBox->scale(glm::vec3(200.f, 100.f, 200.0f));
 
    mTextureShader->link();
    mSkyBox->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mSkyBox.get());
+   mRendererTask->setSky(mSkyBox);
 }
 
 void CApp::addLand()
