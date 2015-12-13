@@ -17,6 +17,13 @@ namespace
       0.5f, 0.0f, -0.5f, 1.0f, 1.0f,
       0.5f, 0.0f, 0.5f, 1.0f, 0.0f
    };
+   /*GLfloat vertices[] =
+   {
+      -0.5f, 0.0f, -0.5f, 0.0f, 20.0f,
+      -0.5f, 0.0f, 0.5f, 0.0f, 0.0f,
+      0.5f, 0.0f, -0.5f, 20.0f, 20.0f,
+      0.5f, 0.0f, 0.5f, 20.0f, 0.0f
+   };*/
 
    GLuint indices[] =
    {
@@ -27,23 +34,12 @@ namespace
 CLand::CLand()
    : mScaledTRMatrix()
    , mBoundingBox()
+   , mNumOfTilesX(1)
+   , mNumOfTilesY(1)
 {
+   setRepeatTexture(true);
    mTexture.reset(new CTexture());
    mGeometry.reset(new CGeometry());
-
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(vertices);
-      const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-      mGeometry->setNumOfVertices(numOfVertices);
-
-      mGeometry->setIndexBuffer(indices);
-      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-      mGeometry->setNumOfIndices(numOfIndices);
-
-      mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(5);
-   }
 }
 
 CLand::~CLand()
@@ -52,6 +48,36 @@ CLand::~CLand()
 
 void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
+   if (mGeometry)
+   {
+      const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+      // Modify number of tiles
+      for (std::size_t count = 0; count < numOfVertices; ++count)
+      {
+         if ((count % 5) == 3)
+         {
+            vertices[count] *= mNumOfTilesX;
+         }
+         if ((count % 5) == 4)
+         {
+            vertices[count] *= mNumOfTilesY;
+         }
+      }
+
+      mGeometry->setVertexBuffer(vertices);
+      //const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+      mGeometry->setNumOfVertices(numOfVertices);
+
+      mGeometry->setIndexBuffer(indices);
+      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+      mGeometry->setNumOfIndices(numOfIndices);
+
+      mGeometry->setNumOfElementsPerVertex(3);
+      mGeometry->setVertexStride(5);
+
+      CLog::getInstance().log("\n** CLand::setupShadersAndBuffers(): Land's geometry has been setup **");
+   }
+
    CLog::getInstance().log("\n** CLand::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }

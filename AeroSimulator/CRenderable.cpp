@@ -33,6 +33,7 @@ CRenderable::CRenderable()
    , mIsVisible(true)
    , mNormalMapTexture()
    , mAnimationTexture()
+   , mRepeatTexture(false)
 {
 }
 

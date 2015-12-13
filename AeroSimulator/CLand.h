@@ -25,9 +25,19 @@ namespace AeroSimulatorEngine
       void setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec3& size, const glm::vec4& color);
       const CBoundingBox* getBoundingBox() const;
 
+      void setNumOfTiles(const GLint x, const GLint y)
+      {
+         if (x > 0)
+            mNumOfTilesX = x;
+         if (y > 0)
+            mNumOfTilesY = y;
+      }
+
    private:
       glm::mat4x4 mScaledTRMatrix;
       std::shared_ptr<CBoundingBox> mBoundingBox;
+      GLint mNumOfTilesX;
+      GLint mNumOfTilesY;
    };
 } //namespace AeroSimulatorEngine
 

@@ -143,7 +143,7 @@ void CApp::addSkyBox()
       CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky.dds");
    }
 
-   mSkyBox->scale(glm::vec3(55.f, 55.f, 55.0f));
+   mSkyBox->scale(glm::vec3(100.f, 100.f, 100.0f));
 
    mTextureShader->link();
    mSkyBox->setShadersAndBuffers(mTextureShader);
@@ -156,7 +156,8 @@ void CApp::addLand()
    {
       CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
    }
-   const glm::vec3 landSize = glm::vec3(55.f, 1.f, 55.0f);
+   const glm::vec3 landSize = glm::vec3(500.f, 1.f, 500.0f);
+   mLand->setNumOfTiles(5, 5);
    mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
    mLand->setScale(landSize);
    mLand->calculateModelMatrix();

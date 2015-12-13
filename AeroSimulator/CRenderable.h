@@ -36,6 +36,9 @@ namespace AeroSimulatorEngine
       CTexture* getNormalMapTexture() const { return mNormalMapTexture.get(); }
       CTexture* getAnimationTexture() const { return mAnimationTexture.get(); }
 
+      void setRepeatTexture(const bool repeat) { mRepeatTexture = repeat; }
+      bool isRepeatTexture() const { return mRepeatTexture; }
+
       /// Geometry
       void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
       CGeometry* getGeometry() const { return mGeometry.get(); }
@@ -143,6 +146,8 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<CTexture> mNormalMapTexture;
       std::shared_ptr<CTexture> mAnimationTexture;
+
+      bool mRepeatTexture;
    };
 } // namespace AeroSimulatorEngine
 

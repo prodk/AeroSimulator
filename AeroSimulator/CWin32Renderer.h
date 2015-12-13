@@ -19,6 +19,7 @@ namespace AeroSimulatorEngine
    class C3DModel;
    class CAnimationBillBoard;
    class CLand;
+   class CSkyBox;
 
    class CWin32Renderer : public CRenderer
    {

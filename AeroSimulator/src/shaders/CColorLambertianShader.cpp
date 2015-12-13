@@ -22,7 +22,6 @@ CColorLambertianShader::CColorLambertianShader()
       "varying vec3 vPos;\n"
       "void main(){\n"
       "    vEyeNormal = (uM * vec4(aNormal, 0.0)).xyz;\n"
-      //"    vEyeNormal = (gl_NormalMatrix * vec4(aNormal, 0.0)).xyz;\n"
       "    vPos = (uM * vec4(aPosition, 1.0)).xyz;\n"
       "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
       "}\n";
