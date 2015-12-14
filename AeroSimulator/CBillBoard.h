@@ -33,9 +33,15 @@ namespace AeroSimulatorEngine
 
       virtual void setVisible(const bool visible);
 
+      void setPosition(const glm::vec3& pos) { mPosition = pos; }
+      glm::vec3 getPosition() const { return mPosition; }
+
    private:
       glm::mat4x4 mScaledTRMatrix;
       std::shared_ptr<CBoundingBox> mBoundingBox;
+
+      // Position relative to the center of the skybox
+      glm::vec3 mPosition; ///@todo: move to CGameObject
    };
 }
 

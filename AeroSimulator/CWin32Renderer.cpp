@@ -340,18 +340,31 @@ void CWin32Renderer::updateAirplane()
 
       mAirplane->setPosition(position);
 
+      // New position of the center of the sky is the position of the airplane
+      glm::vec3 skyPos = position;
+      skyPos.y = 0.0f;
+
       if (mSky)
       {
          glm::mat4 skyMatrix = glm::mat4(1.0f);
-         glm::vec3 skyPos = mAirplane->getPosition();
-         skyPos.y = 0.0f;
          skyMatrix = glm::translate(skyMatrix, skyPos);
          mSky->updateTRMatrix(skyMatrix, mFrameDt);
          mSky->updateModelMatrix();
       }
 
-      mAirplaneMatrix = glm::translate(mAirplaneMatrix, mAirplane->getPosition());
+      /// Translate clouds together with the plane and the sky
+      for (auto cloud : mClouds)
+      {
+         if (cloud)
+         {
+            glm::mat4 cloudMatrix = glm::mat4(1.0f);
+            cloudMatrix = glm::translate(cloudMatrix, skyPos + cloud->getPosition());
+            cloud->updateTRMatrix(cloudMatrix, mFrameDt);
+            cloud->updateModelMatrix();
+         }
+      }
 
+      mAirplaneMatrix = glm::translate(mAirplaneMatrix, mAirplane->getPosition());
 
       // Rotate around y-axis
       glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -359,10 +372,6 @@ void CWin32Renderer::updateAirplane()
       if (direction.z < 0.0f)
          angleYradians = M_PI - angleYradians;
       mAirplaneMatrix = glm::rotate(mAirplaneMatrix, angleYradians, yAxis);
-
-      // Camera follows airplane rotations in the horizontal plane
-      //mCamera->setXzDirection(direction);
-      //mCamera->setRotate(glm::vec3(direction.x, direction.z, 0.f));
    }
 
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -493,7 +502,7 @@ void CWin32Renderer::updateInput()
       case (VK_LEFT) :
       {
          mAngleZ += rotationSpeed;
-         mAngleZ = std::min<float>(mAngleZ, 70.f);
+         mAngleZ = std::min<float>(mAngleZ, 50.f);
          mAirplane->rotateFlightDirection(1.0f, mFrameDt);
       }
          break;
@@ -501,7 +510,7 @@ void CWin32Renderer::updateInput()
       case (VK_RIGHT) :
       {
          mAngleZ -= rotationSpeed;
-         mAngleZ = std::max<float>(mAngleZ, -70.f);
+         mAngleZ = std::max<float>(mAngleZ, -50.f);
          mAirplane->rotateFlightDirection(-1.0f, mFrameDt);
       }
          break;
@@ -516,7 +525,7 @@ void CWin32Renderer::updateInput()
                mAngleX = std::min<float>(mAngleX, 20.f);
 
                ///@todo:make 2 members: original speed and current speed and call restore speed here to avoid magic numbers
-               mAirplane->setSpeedOfFlight(glm::vec3(8.0f, 18.0f, 8.0f));
+               mAirplane->setSpeedOfFlight(glm::vec3(3.0f, 18.0f, 3.0f));
 
                // Move upwards
                glm::vec3 position = mAirplane->getPosition();

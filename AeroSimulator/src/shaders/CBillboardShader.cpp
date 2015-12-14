@@ -26,7 +26,7 @@ CBillboardShader::CBillboardShader()
       "uniform float uHeight;  // Height of the billboard\n"
       "varying vec2 vTexCoord;\n"
       "void main(){\n"
-      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
+      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n" ///@todo: change to cross(up, right)
       "    gl_Position = MVP * vec4(position, 1.0);\n"
       "    vTexCoord = aTexCoord;\n"
       "}\n";

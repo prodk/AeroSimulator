@@ -57,7 +57,6 @@ void CColorBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
    mModelMatrix = rootModelMatrix * mParentByLocalTRMatrix;
 
    // Reset parent-related rotations - billboard rotates ONLY relatively to the camera direction
-   //mModelMatrix = glm::mat4x4();
    mModelMatrix[0].x = 1.0f;
    mModelMatrix[0].y = 0.0f;
    mModelMatrix[0].z = 0.0f;

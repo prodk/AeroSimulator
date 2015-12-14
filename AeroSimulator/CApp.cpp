@@ -247,6 +247,7 @@ void CApp::addClouds()
          }
 
          mBillBoards[count]->setTranslate(glm::vec3(x, distY(mtY), z));
+         mBillBoards[count]->setPosition(glm::vec3(x, distY(mtY), z));
 
          mBillBoards[count]->setBillboardHeight(width);
          mBillBoards[count]->setBillboardWidth(height);
@@ -257,6 +258,8 @@ void CApp::addClouds()
          mRendererTask->addRenderable(mBillBoards[count].get());
       }
    }
+
+   mRendererTask->setClouds(mBillBoards);
 }
 
 void CApp::addSphere()

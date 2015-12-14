@@ -24,6 +24,7 @@ namespace AeroSimulatorEngine
    class CSphere;
    class CLand;
    class CSkyBox;
+   class CBillBoard;
 
    class CApp
    {
@@ -80,7 +81,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CSphere> mSphere;
 
       ///@todo: place billboards to some bridge class CClouds
-      std::vector<tGameObjectPtr > mBillBoards;
+      std::vector<std::shared_ptr<CBillBoard> > mBillBoards; ///@todo: rename into mClouds
       //std::shared_ptr<CAnimationBillBoard> mStar;
       std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
    };

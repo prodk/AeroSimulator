@@ -27,6 +27,7 @@ namespace
 CBillBoard::CBillBoard()
    : mScaledTRMatrix()
    , mBoundingBox()
+   , mPosition()
 {
    mTexture.reset(new CTexture());
    mGeometry.reset(new CGeometry());

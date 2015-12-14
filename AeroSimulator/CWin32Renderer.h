@@ -20,6 +20,7 @@ namespace AeroSimulatorEngine
    class CAnimationBillBoard;
    class CLand;
    class CSkyBox;
+   class CBillBoard;
 
    class CWin32Renderer : public CRenderer
    {
@@ -48,6 +49,8 @@ namespace AeroSimulatorEngine
       void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { if(stars) mStar.push_back(stars); }
       void setLand(std::shared_ptr<CLand>& land) { mLand = land; }
       void setSky(std::shared_ptr<CSkyBox>& sky) { mSky = sky; }
+
+      void setClouds(const std::vector<std::shared_ptr<CBillBoard> >& clouds) { mClouds = clouds; }
 
    private:
       // Override CRenderer part
@@ -109,6 +112,7 @@ namespace AeroSimulatorEngine
       std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
       std::shared_ptr<CLand> mLand;
       std::shared_ptr<CSkyBox> mSky;
+      std::vector<std::shared_ptr<CBillBoard> > mClouds;
    };
 } // namespace AeroSimulatorEngine
 
