@@ -315,7 +315,11 @@ void CWin32Renderer::updateAirplane()
       // Translate in xz plane
       ///@todo: use x, z components later
       glm::vec3 position = mAirplane->getPosition();
-      position.z = position.z - mAirplane->getSpeedOfFlight().z*mFrameDt;
+      //glm::vec3 position;
+      //position.z = position.z - mAirplane->getSpeedOfFlight().z*mFrameDt;
+
+      const glm::vec3 direction = mAirplane->getDirectionOfFlight();
+      position = position - direction*mAirplane->getSpeedOfFlight()*glm::vec3(mFrameDt, 0.0f, mFrameDt);
 
       // Periodic boundaries
       ///@todo: put to a method
@@ -327,12 +331,11 @@ void CWin32Renderer::updateAirplane()
       if (position.z < -halfLandZ + 0.5f*mSky->getScale().z)
          position.z += 2.f*halfLandZ + 0.5f*mSky->getScale().z;
 
-      if (position.x > halfLandX)
-         position.x -= 2.f*halfLandX;
+      if (position.x > halfLandX - 0.5f*mSky->getScale().x)
+         position.x -= 2.f*halfLandX - 0.5f*mSky->getScale().x;
 
-      if (position.x < -halfLandX)
-         position.x += 2.f*halfLandX;
-
+      if (position.x < -halfLandX + 0.5f*mSky->getScale().x)
+         position.x += 2.f*halfLandX + 0.5f*mSky->getScale().x;
 
       mAirplane->setPosition(position);
 
@@ -347,6 +350,14 @@ void CWin32Renderer::updateAirplane()
       }
 
       mAirplaneMatrix = glm::translate(mAirplaneMatrix, mAirplane->getPosition());
+
+
+      // Rotate around y-axis
+      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+      float angleYradians = std::asin(direction.x);
+      if (direction.z < 0.0f)
+         angleYradians = M_PI - angleYradians;
+      mAirplaneMatrix = glm::rotate(mAirplaneMatrix, angleYradians, yAxis);
    }
 
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -481,8 +492,14 @@ void CWin32Renderer::updateInput()
 
          // Move the plane to the left
          glm::vec3 position = mAirplane->getPosition();
-         position.x = position.x - mAirplane->getSpeedOfFlight().x*mFrameDt;
+
+         mAirplane->rotateFlightDirection(1.0f, mFrameDt);
+         //position.x = position.x - mAirplane->getSpeedOfFlight().x*mFrameDt;
+         position = position - mAirplane->getDirectionOfFlight()*mAirplane->getSpeedOfFlight()*glm::vec3(mFrameDt, 0.0f, mFrameDt);
+         /// @todo: move skydom and clouds here
          mAirplane->setPosition(position);
+
+         //mCameraAngleX += 10.0*mFrameDt;
       }
          break;
 
@@ -493,8 +510,12 @@ void CWin32Renderer::updateInput()
 
          // Move the plane to the right
          glm::vec3 position = mAirplane->getPosition();
-         position.x = position.x + mAirplane->getSpeedOfFlight().x*mFrameDt;
+         mAirplane->rotateFlightDirection(-1.0f, mFrameDt);
+
+         //position.x = position.x + mAirplane->getSpeedOfFlight().x*mFrameDt;
+         position = position - mAirplane->getDirectionOfFlight()*mAirplane->getSpeedOfFlight()*glm::vec3(mFrameDt, 0.0f, mFrameDt);
          mAirplane->setPosition(position);
+         /// @todo: move skydom and the clouds here
       }
          break;
          /// Airplane movement
@@ -507,9 +528,8 @@ void CWin32Renderer::updateInput()
                mAngleX += rotationSpeed;
                mAngleX = std::min<float>(mAngleX, 20.f);
 
-               glm::vec3 speed = mAirplane->getSpeedOfFlight();
-               speed.z = 15.0f;
-               mAirplane->setSpeedOfFlight(speed);
+               ///@todo:make 2 members: original speed and current speed and call restore speed here to avoid magic numbers
+               mAirplane->setSpeedOfFlight(glm::vec3(8.0f, 18.0f, 8.0f));
 
                // Move upwards
                glm::vec3 position = mAirplane->getPosition();
@@ -661,9 +681,7 @@ void CWin32Renderer::handleCollisions()
          {
             mAirplane->resetHealthBars();
             mAirplane->setPropellerSpeed(0.0f);
-            glm::vec3 speed = mAirplane->getSpeedOfFlight();
-            speed.z = 0.0f;
-            mAirplane->setSpeedOfFlight(speed);
+            mAirplane->setSpeedOfFlight(glm::vec3(0.0f, 0.0f, 0.0f));
             // Restore the previous position of the plane
             glm::vec3 newPos = mAirplane->getPosition();
             newPos.y = newPos.y + mAirplane->getSpeedOfFlight().y*mFrameDt;

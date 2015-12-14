@@ -17,13 +17,6 @@ namespace
       0.5f, 0.0f, -0.5f, 1.0f, 1.0f,
       0.5f, 0.0f, 0.5f, 1.0f, 0.0f
    };
-   /*GLfloat vertices[] =
-   {
-      -0.5f, 0.0f, -0.5f, 0.0f, 20.0f,
-      -0.5f, 0.0f, 0.5f, 0.0f, 0.0f,
-      0.5f, 0.0f, -0.5f, 20.0f, 20.0f,
-      0.5f, 0.0f, 0.5f, 20.0f, 0.0f
-   };*/
 
    GLuint indices[] =
    {
@@ -130,9 +123,6 @@ void CLand::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec3& s
       }
 
       buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-
-                                           ///@todo: debug
-                                           //mBoundingBox->setVisible(false);
    }
 }
 

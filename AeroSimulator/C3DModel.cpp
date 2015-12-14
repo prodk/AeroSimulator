@@ -85,8 +85,10 @@ C3DModel::C3DModel()
    , mAxes(numOfCubes)
    , mBillboardShader()
    , mPosition()
-   , mSpeedOfFlight(glm::vec3(15.0f, 18.0f, 15.0f))
+   , mSpeedOfFlight(glm::vec3(8.0f, 18.0f, 8.0f))
    , mBoundingBox(new CBoundingBox())
+   , mXzDirection(glm::vec3(0.0f, 0.0f, 1.0f))
+   , mFlightAngle(0.0f)
 {
    assert(mCubeGeometry);
    assert(mCabine);
@@ -120,6 +122,13 @@ void C3DModel::setPropellerSpeed(const float speed)
 void C3DModel::resetPropellerSpeed()
 {
    mPropeller->setSpeed(100.f);
+}
+
+void C3DModel::rotateFlightDirection(const float da, const float dt)
+{
+   mFlightAngle += da*dt;
+   mXzDirection.x = std::sin(mFlightAngle);
+   mXzDirection.z = std::cos(mFlightAngle);
 }
 
 void C3DModel::resetHealthBars(const float value)

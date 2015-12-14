@@ -46,11 +46,17 @@ namespace AeroSimulatorEngine
       glm::vec3 getSpeedOfFlight() const { return mSpeedOfFlight; }
       void setSpeedOfFlight(const glm::vec3& speed) { mSpeedOfFlight = speed; }
 
+      glm::vec3 getDirectionOfFlight() const { return mXzDirection; }
+      void setDirectionOfFlight(const glm::vec3& dir) { mXzDirection = dir; }
+      void rotateFlightDirection(const float da, const float dt);
+
       void resetHealthBars(const float value = 0.0f);
 
       const CBoundingBox* getBoundingBox() const;
 
       float getHealth() const;
+
+      float getFlightAngle() const { return mFlightAngle; }
 
       static const std::size_t numOfCubes;
 
@@ -78,8 +84,10 @@ namespace AeroSimulatorEngine
       // Position in the world space
       glm::vec3 mPosition;
       glm::vec3 mSpeedOfFlight;
+      glm::vec3 mXzDirection; // Direction of flight in xz-plane
 
       std::shared_ptr<CBoundingBox> mBoundingBox;
+      float mFlightAngle;
    };
 } // namespace AeroSimulatorEngine
 
