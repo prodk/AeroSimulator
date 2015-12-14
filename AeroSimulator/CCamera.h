@@ -28,6 +28,8 @@ namespace AeroSimulatorEngine
       glm::vec3 getUpVector() const;
       glm::vec3 getPositionWorldSpace() const;
 
+      void setXzDirection(const glm::vec3& direction);
+
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
 
       // How it works:

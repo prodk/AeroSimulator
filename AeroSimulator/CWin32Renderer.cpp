@@ -70,7 +70,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -16.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -10.0f));
    mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
@@ -93,10 +93,11 @@ void CWin32Renderer::update(CTask* pTask)
 
       setRenderContext();
 
-      updateCamera();
       springButtons();
 
       updateRenderables();
+
+      updateCamera();
 
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -358,6 +359,10 @@ void CWin32Renderer::updateAirplane()
       if (direction.z < 0.0f)
          angleYradians = M_PI - angleYradians;
       mAirplaneMatrix = glm::rotate(mAirplaneMatrix, angleYradians, yAxis);
+
+      // Camera follows airplane rotations in the horizontal plane
+      //mCamera->setXzDirection(direction);
+      //mCamera->setRotate(glm::vec3(direction.x, direction.z, 0.f));
    }
 
    glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -478,7 +483,7 @@ void CWin32Renderer::updateFPS(CTask * pTask)
 
 void CWin32Renderer::updateInput()
 {
-   const float rotationSpeed = 50.f*mFrameDt;
+   const float rotationSpeed = 100.f*mFrameDt;
    const float translateSpeed = 4.f*mFrameDt;
    if (mKeyPressed)
    {
@@ -489,17 +494,7 @@ void CWin32Renderer::updateInput()
       {
          mAngleZ += rotationSpeed;
          mAngleZ = std::min<float>(mAngleZ, 70.f);
-
-         // Move the plane to the left
-         glm::vec3 position = mAirplane->getPosition();
-
          mAirplane->rotateFlightDirection(1.0f, mFrameDt);
-         //position.x = position.x - mAirplane->getSpeedOfFlight().x*mFrameDt;
-         position = position - mAirplane->getDirectionOfFlight()*mAirplane->getSpeedOfFlight()*glm::vec3(mFrameDt, 0.0f, mFrameDt);
-         /// @todo: move skydom and clouds here
-         mAirplane->setPosition(position);
-
-         //mCameraAngleX += 10.0*mFrameDt;
       }
          break;
 
@@ -507,15 +502,7 @@ void CWin32Renderer::updateInput()
       {
          mAngleZ -= rotationSpeed;
          mAngleZ = std::max<float>(mAngleZ, -70.f);
-
-         // Move the plane to the right
-         glm::vec3 position = mAirplane->getPosition();
          mAirplane->rotateFlightDirection(-1.0f, mFrameDt);
-
-         //position.x = position.x + mAirplane->getSpeedOfFlight().x*mFrameDt;
-         position = position - mAirplane->getDirectionOfFlight()*mAirplane->getSpeedOfFlight()*glm::vec3(mFrameDt, 0.0f, mFrameDt);
-         mAirplane->setPosition(position);
-         /// @todo: move skydom and the clouds here
       }
          break;
          /// Airplane movement

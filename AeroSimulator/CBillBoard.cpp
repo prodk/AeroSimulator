@@ -108,6 +108,19 @@ void CBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
    CParentGameObject::updateModelMatrix(rootModelMatrix);
 
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
+
+   // Reset parent-related rotations - billboard rotates ONLY relatively to the camera direction
+   mModelMatrix[0].x = 1.0f;
+   mModelMatrix[0].y = 0.0f;
+   mModelMatrix[0].z = 0.0f;
+
+   mModelMatrix[1].x = 0.0f;
+   mModelMatrix[1].y = 1.0f;
+   mModelMatrix[1].z = 0.0f;
+
+   mModelMatrix[2].x = 0.0f;
+   mModelMatrix[2].y = 0.0f;
+   mModelMatrix[2].z = 1.0f;
 }
 
 void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec4& color, const glm::vec3& size)

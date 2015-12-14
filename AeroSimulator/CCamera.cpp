@@ -29,7 +29,7 @@ void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 {
    calculateModelMatrix();
 
-   glm::vec3 translate;
+   /*glm::vec3 translate;
    translate.x = -mParentTRMatrix[3].x;
    translate.y = -mParentTRMatrix[3].y;
    translate.z = -mParentTRMatrix[3].z;
@@ -37,7 +37,11 @@ void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
    glm::mat4x4 translateParent;
    translateParent = glm::translate(translateParent, translate);
 
-   mViewMatrix = mModelMatrix * mLookAtMatrix * translateParent;
+   mViewMatrix = mModelMatrix * mLookAtMatrix * translateParent;*/
+
+   glm::mat4x4 inverseParent;
+   inverseParent = glm::inverse(mParentTRMatrix);
+   mViewMatrix = mModelMatrix * mLookAtMatrix * inverseParent;
 }
 
 glm::mat3x3 CCamera::getRotationMatrix() const
@@ -120,5 +124,12 @@ glm::vec3 CCamera::getPositionWorldSpace() const
    position = noTranslate * position;
 
    return position;
+}
+
+void CCamera::setXzDirection(const glm::vec3 & direction)
+{
+   mViewMatrix[0].z = direction.x;
+   mViewMatrix[2].z = direction.z;
+   //mViewMatrix = glm::mat4x4();
 }
 

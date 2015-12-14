@@ -45,7 +45,7 @@ void CPropeller::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
 
 void CPropeller::increaseSpeed()
 {
-   mRotationSpeed = std::min<float>(2000.0f, mRotationSpeed + 16.0f);
+   mRotationSpeed = std::min<float>(2000.0f, mRotationSpeed + 25.0f);
 }
 
 void CPropeller::decreaseSpeed()

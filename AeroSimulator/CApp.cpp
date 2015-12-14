@@ -211,9 +211,9 @@ void CApp::addAirplane()
 
 void CApp::addClouds()
 {
-   const float width = 5.0f;
-   const float height = 5.0f;
-   const float minDistance = 45.0f;
+   const float width = 20.0f;
+   const float height = 20.0f;
+   const float minDistance = 150.0f;
    const float minDistanceY = -10.0f;
    const float maxDistanceY = 0.3f*mSkyBox->getScale().y;
    const char* filePath = "../AeroSimulator/res/cloud.dds";
