@@ -20,7 +20,10 @@ void CRenderer::addRenderable(CRenderable * pRenderable)
 {
    if (pRenderable)
    {
-      mRenderables.push_back(pRenderable);
+      if (pRenderable->isTransparent())
+         mTransparentRenderables.push_back(pRenderable);
+      else
+         mRenderables.push_back(pRenderable);
    }
 }
 

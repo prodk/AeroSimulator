@@ -37,6 +37,7 @@ namespace AeroSimulatorEngine
    protected:
       typedef std::vector<CRenderable*> RenderableVector;
       RenderableVector mRenderables;
+      RenderableVector mTransparentRenderables;
    };
 } // namespace AeroSimulatorEngine
 

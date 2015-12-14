@@ -62,10 +62,7 @@ void CCube::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
    CParentGameObject::updateTRMatrix(trMatrix, dt);
 
    // Don't forget to change the cached scaled TR matrix
-   //if (trMatrix != mParentTRMatrix)
-   {
-      mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
-   }
+   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
 }
 
 void CCube::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
@@ -91,6 +88,7 @@ void CCube::setupHealthBar(std::shared_ptr<CShader>& pShader)
          mHealthBar->calculateModelMatrix();
          mHealthBar->setColor(glm::vec4(0.0f, 0.0f, 0.0f, 1.0f));
          mHealthBar->setHealthValue(mHealthValue);
+         mHealthBar->setTransparent(true); // This should be rendered last with the depth buffer switched off
 
          mHealthBar->setShadersAndBuffers(pShader);
          add(mHealthBar.get());

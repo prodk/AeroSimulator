@@ -108,6 +108,10 @@ namespace AeroSimulatorEngine
       glm::vec2 getFrameSize() const { return mFrameSize; }
 
       bool isVisible() const { return mIsVisible; }
+
+      void setTransparent(const bool flag) { mIsTransparent = flag; }
+      bool isTransparent() const { return mIsTransparent; }
+
       virtual void setVisible(const bool visible) { mIsVisible = visible; }
 
    protected:
@@ -148,6 +152,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CTexture> mAnimationTexture;
 
       bool mRepeatTexture;
+      bool mIsTransparent;
    };
 } // namespace AeroSimulatorEngine
 

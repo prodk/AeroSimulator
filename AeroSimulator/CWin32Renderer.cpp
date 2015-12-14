@@ -102,7 +102,22 @@ void CWin32Renderer::update(CTask* pTask)
       glClearColor(0.95f, 0.95f, 0.95f, 1);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+      // At first draw opaque objects
+      /// @todo: put to a method with an array as an argument
       for (auto * pRenderable : mRenderables)
+      {
+         if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
+         {
+            ///todo: think how to set the width/height of the billboard
+            pRenderable->setRightVector(mCamera->getRightVector());
+            pRenderable->setUpVector(mCamera->getUpVector());
+            pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+            draw(pRenderable);
+         }
+      }
+
+      // Then draw transparent objects (they switch the depth off)
+      for (auto * pRenderable : mTransparentRenderables)
       {
          if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
          {

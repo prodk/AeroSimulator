@@ -143,7 +143,7 @@ void CApp::addSkyBox()
       CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky.dds");
    }
 
-   mSkyBox->scale(glm::vec3(400.f, 100.f, 400.0f));
+   mSkyBox->scale(glm::vec3(400.f, 200.f, 400.0f));
 
    mTextureShader->link();
    mSkyBox->setShadersAndBuffers(mTextureShader);
@@ -246,6 +246,7 @@ void CApp::addClouds()
             z = distX(mtZ)*(sign(mtZ) > 0. ? 1.f : -1.f);
          }
 
+         mBillBoards[count]->setTransparent(true);
          mBillBoards[count]->setTranslate(glm::vec3(x, distY(mtY), z));
          mBillBoards[count]->setPosition(glm::vec3(x, distY(mtY), z));
 
