@@ -14,15 +14,7 @@ CTextureShader::CTextureShader()
    , mMvpUniformId(0)
    , mSamplerUniformId(0)
 {
-   mVertexShaderCode =
-      "attribute vec3 aPosition;\n"
-      "attribute vec2 aTexCoord;\n"
-      "uniform mat4 MVP;\n"
-      "varying vec2 vTexCoord;\n"
-      "void main(){\n"
-      "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-      "    vTexCoord = aTexCoord;\n"
-      "}\n";
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslv");
 
    mFragmentShaderCode =
       "precision highp float; \n"

@@ -10,12 +10,7 @@ CColorShader::CColorShader()
    , mMvpUniformId(0)
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/color.glslv");
-
-   mFragmentShaderCode =
-      "uniform vec4 uColor;\n"
-      "void main(){\n"
-      "    gl_FragColor = uColor;//vec4(1.0, 0.0, 0.0, 1.0); //uColor;\n"
-      "}\n";
+   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/color.glslf");
 
    CLog::getInstance().log("* CColorShader created");
 }

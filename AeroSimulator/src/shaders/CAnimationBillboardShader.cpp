@@ -30,6 +30,7 @@ CAnimationBillboardShader::CAnimationBillboardShader()
       "    gl_Position = MVP * vec4(position, 1.0);\n"
       "    vTexCoord = (aTexCoord + uCurrentFrame)*uFrameSize;\n"
       "}\n";
+   //mVertexShaderCode = readShader("../AeroSimulator/src/shaders/animationBillboard.glslv");
 
    // Fragment shader the same as for CTextureShader
 

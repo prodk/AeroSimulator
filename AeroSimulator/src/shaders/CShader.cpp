@@ -78,9 +78,11 @@ std::string CShader::readShader(const char * filePath)
       while (std::getline(fileIn, line))
       {
          result += line;
-      } // End while eof.
+      }
 
       fileIn.close();
+
+      CLog::getInstance().log("CShader: successfully read the file: ", filePath);
    }
    else
    {

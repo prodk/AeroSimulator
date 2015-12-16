@@ -1,6 +1,5 @@
-attribute vec3 aPosition;
-uniform mat4 MVP;
+uniform vec4 uColor;
 void main()
 {
-    gl_Position = MVP * vec4(aPosition, 1.0);
+    gl_FragColor = uColor;
 }
