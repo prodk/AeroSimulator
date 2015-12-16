@@ -33,6 +33,7 @@ namespace AeroSimulatorEngine
       bool mIsLinked;
 
       GLint loadShader(GLuint id, const std::string& shaderCode);
+      std::string readShader(const char* filePath);
    };
 
 } // namespace AeroSimulatorEngine

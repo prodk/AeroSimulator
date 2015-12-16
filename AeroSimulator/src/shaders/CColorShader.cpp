@@ -9,12 +9,7 @@ CColorShader::CColorShader()
    : mPositionAttributeId(0)
    , mMvpUniformId(0)
 {
-   mVertexShaderCode =
-      "attribute vec3 aPosition;\n"
-      "uniform mat4 MVP;\n"
-      "void main(){\n"
-      "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-      "}\n";
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/color.glslv");
 
    mFragmentShaderCode =
       "uniform vec4 uColor;\n"

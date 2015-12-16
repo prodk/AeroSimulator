@@ -2,6 +2,7 @@
 #include "../CRenderable.h"
 #include "../CLog.h"
 #include <iostream>
+#include <fstream>
 using namespace AeroSimulatorEngine;
 
 CShader::CShader()
@@ -63,4 +64,28 @@ GLint CShader::loadShader(GLuint id, const std::string& shaderCode)
    glGetShaderiv(id, GL_COMPILE_STATUS, &status);
 
    return status;
+}
+
+std::string CShader::readShader(const char * filePath)
+{
+   std::string result;
+
+   // Read and parse the file.
+   std::ifstream fileIn(filePath);
+   if (fileIn.good())
+   {
+      std::string line;
+      while (std::getline(fileIn, line))
+      {
+         result += line;
+      } // End while eof.
+
+      fileIn.close();
+   }
+   else
+   {
+      CLog::getInstance().log("CShader: failed to read input file: ", filePath);
+   }
+
+   return result;
 }
