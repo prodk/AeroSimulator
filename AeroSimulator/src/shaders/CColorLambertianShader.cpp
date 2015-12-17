@@ -13,7 +13,8 @@ CColorLambertianShader::CColorLambertianShader()
    , mSunDirUniformId(0)
    , mEyePosUniformId(0)
 {
-   mVertexShaderCode =
+   ///@todo: remove this code when it is tested that the version read from file is correct
+   /*mVertexShaderCode =
       "attribute vec3 aPosition;\n"
       "attribute vec3 aNormal;\n"
       "uniform mat4 MVP;\n"
@@ -24,28 +25,31 @@ CColorLambertianShader::CColorLambertianShader()
       "    vEyeNormal = (uM * vec4(aNormal, 0.0)).xyz;\n"
       "    vPos = (uM * vec4(aPosition, 1.0)).xyz;\n"
       "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-      "}\n";
+      "}\n";*/
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/colorLambertian.glslv");
 
-   mFragmentShaderCode =
-      "uniform vec4 uColor;\n"
-      "uniform vec3 uAmbient;\n"
-      "uniform vec3 uDiffuse;\n"
-      "uniform vec3 uSunDir;\n"         // Direction from the fragment to the sun
-      "uniform vec3 uEyePos;\n"         // Camera position
-      "varying vec3 vEyeNormal;\n"      // Fragment normal in the world space
-      "varying vec3 vPos;\n"
-      "void main(){\n"
-      "    // Diffuse;\n"
-      "    vec3 N = normalize(vEyeNormal);\n"
-      "    vec3 L = normalize(uSunDir);\n"
-      "    float cosD = clamp(dot(N, L), 0, 1);\n"
-      "    // Specular;\n"
-      "    float cosS = 0.0;\n"
-      "    vec3 cameraDir = normalize(uEyePos - vPos);\n"
-      "    vec3 R = reflect(-L, N);\n"
-      "    cosS = clamp(dot(cameraDir, R), 0, 1);\n"
-      "    gl_FragColor = uColor * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
-      "}\n";
+   ///@todo: remove this code when it is tested that the version read from file is correct
+   //mFragmentShaderCode =
+   //   "uniform vec4 uColor;\n"
+   //   "uniform vec3 uAmbient;\n"
+   //   "uniform vec3 uDiffuse;\n"
+   //   "uniform vec3 uSunDir;\n"         // Direction from the fragment to the sun
+   //   "uniform vec3 uEyePos;\n"         // Camera position
+   //   "varying vec3 vEyeNormal;\n"      // Fragment normal in the world space
+   //   "varying vec3 vPos;\n"
+   //   "void main(){\n"
+   //   "    // Diffuse;\n"
+   //   "    vec3 N = normalize(vEyeNormal);\n"
+   //   "    vec3 L = normalize(uSunDir);\n"
+   //   "    float cosD = clamp(dot(N, L), 0, 1);\n"
+   //   "    // Specular;\n"
+   //   "    float cosS = 0.0;\n"
+   //   "    vec3 cameraDir = normalize(uEyePos - vPos);\n"
+   //   "    vec3 R = reflect(-L, N);\n"
+   //   "    cosS = clamp(dot(cameraDir, R), 0, 1);\n"
+   //   "    gl_FragColor = uColor * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
+   //   "}\n";
+   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/colorLambertian.glslf");
 
    CLog::getInstance().log("* CColorLambertianShader created");
 }

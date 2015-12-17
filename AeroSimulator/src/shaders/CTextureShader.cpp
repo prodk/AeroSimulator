@@ -15,14 +15,7 @@ CTextureShader::CTextureShader()
    , mSamplerUniformId(0)
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslv");
-
-   mFragmentShaderCode =
-      "precision highp float; \n"
-      "varying vec2 vTexCoord;\n"
-      "uniform sampler2D sTexture; \n"
-      "void main(){\n"
-      "    gl_FragColor = texture2D(sTexture, vTexCoord);\n"
-      "}\n";
+   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslf");
 
    CLog::getInstance().log("* CTextureShader created");
 }
@@ -38,16 +31,16 @@ void CTextureShader::link()
       CShader::link();
 
       mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-      //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aPosition): ");
+      CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aPosition): ");
 
       mTexCoordAttributeId = glGetAttribLocation(mProgramId, "aTexCoord");
-      //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord): ");
+      CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord): ");
 
       mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
-      //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP): ");
+      CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP): ");
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
-      //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture): ");
+      CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture): ");
       mIsLinked = true;
    }
 }

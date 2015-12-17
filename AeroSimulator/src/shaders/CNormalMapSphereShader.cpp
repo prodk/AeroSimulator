@@ -20,63 +20,8 @@ CNormalMapSphereShader::CNormalMapSphereShader()
    , mCurrentFrameUniform(-1)
    , mFrameSizeUniform(-1)
 {
-   mVertexShaderCode =
-      "float pi = 3.14159265f;\n"
-      "float r = 1.0f;\n"
-      "attribute vec3 aPosition;\n"
-      "attribute vec3 aNormal;\n"
-      "attribute vec3 aTangent;\n"
-      "uniform mat4 MVP;\n"
-      "uniform mat4 uM;\n"
-      "uniform vec2 uCurrentFrame;  // Current frame in the sprite \n"
-      "uniform vec2 uFrameSize;   // 1/numOfFrames in given direction\n"
-      "varying vec2 vTexCoord;\n"
-      "varying vec2 vTexCoordAnim;\n"
-      "varying vec3 vEyeNormal;\n"  ///@todo: remove from varyings
-      "varying vec3 vPos;\n"
-      "varying mat3 mTBN;\n"
-      "void main(){\n"
-      "    vec3 Bworld = (uM * vec4(cross(aNormal, aTangent), 0.0)).xyz;\n"
-      "    vec3 Tworld = (uM * vec4(aTangent, 0.0)).xyz;\n"
-      "    vEyeNormal = (uM * vec4(aNormal, 0.0)).xyz;\n"
-      "    mTBN = transpose(mat3(Tworld, Bworld, vEyeNormal));\n"
-      "    vPos = (uM * vec4(aPosition, 1.0)).xyz;\n"
-      "    vTexCoord.y = acos(aPosition.y/r)/(pi);\n"
-      "    vTexCoord.x = (atan(aPosition.z, aPosition.x) + pi)/(2.0f*pi);\n"
-      "    vTexCoordAnim = (vTexCoord + uCurrentFrame)*uFrameSize; \n"
-      "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-      "}\n";
-
-   mFragmentShaderCode =
-      "vec3 uAmbient = vec3(0.3f, 0.3f, 0.3f);\n"
-      "vec3 uDiffuse = vec3(0.8f, 0.8f, 0.8f);\n"
-      "uniform vec3 uSunDir;\n"         // Direction from the fragment to the sun (world space)
-      "uniform vec3 uEyePos;\n"         // Camera position world
-      "uniform sampler2D sTexture; \n"
-      "uniform sampler2D sNormalMap; \n"
-      "uniform sampler2D sAnimation; \n"
-      "uniform mat4 uM;\n"
-      "varying vec2 vTexCoord;\n"
-      "varying vec2 vTexCoordAnim;\n"
-      "varying vec3 vEyeNormal;\n"      // Fragment normal in the world space
-      "varying vec3 vPos;\n"
-      "varying mat3 mTBN;\n"
-      "void main(){\n"
-      "    // Diffuse;\n"
-      "    vec4 Nmodel = uM * vec4(normalize(texture2D( sNormalMap, vTexCoord ).rgb*2.0 - 1.0), 0.0);\n"
-      "    vec3 N = Nmodel.xyz;\n"
-      "    vec3 L = mTBN * normalize(uSunDir);\n"
-      "    float cosD = clamp(dot(N, L), 0, 1);\n"
-      "    // Specular;\n"
-      "    float cosS = 0.0;\n"
-      "    if (cosD > 0.0) {\n"
-      "    vec3 cameraDir = mTBN * normalize(uEyePos - vPos);\n"
-      "    vec3 R = reflect(-L, N);\n"
-      "    cosS = clamp(dot(cameraDir, R), 0, 1);\n"
-      "    }\n"
-      "    gl_FragColor = (texture2D(sTexture, vTexCoord) + texture2D(sAnimation, vTexCoordAnim)) * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
-      //"    gl_FragColor = vec4(vTexCoord.x, vTexCoord.y, 0.0, 1.0);// * vec4(uAmbient + uDiffuse * cosD + uDiffuse * pow(cosS, 10), 1);\n"
-      "}\n";
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/normalMapSphere.glslv");
+   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/normalMapSphere.glslf");
 
    CLog::getInstance().log("* CNormalMapSphereShader created");
 }

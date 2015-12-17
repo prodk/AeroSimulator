@@ -15,21 +15,7 @@ CBillboardShader::CBillboardShader()
    , mWidthUniform(0)
    , mHeightUniform(0)
 {
-   mVertexShaderCode =
-      "attribute vec3 aPosition; // Center of the billboard\n"
-      "attribute vec2 aTexCoord;\n"
-      "attribute vec2 aSquad;\n"
-      "uniform mat4 MVP;\n"
-      "uniform vec3 uRight;    // Camera vector right\n"
-      "uniform vec3 uUp;       // Camera vector up\n"
-      "uniform float uWidth;   // Width of the billboard\n"
-      "uniform float uHeight;  // Height of the billboard\n"
-      "varying vec2 vTexCoord;\n"
-      "void main(){\n"
-      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n" ///@todo: change to cross(up, right)
-      "    gl_Position = MVP * vec4(position, 1.0);\n"
-      "    vTexCoord = aTexCoord;\n"
-      "}\n";
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/billboard.glslv");
 
    // Fragment shader is the same as in CTextureShader
 

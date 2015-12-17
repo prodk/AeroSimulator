@@ -18,21 +18,8 @@ CSimpleShader::CSimpleShader()
    , mColorAttributeId(0)
    , mMvpUniformId(0)
 {
-   mVertexShaderCode =
-      "attribute vec3 aPosition;\n"
-      "attribute vec3 aColor;\n"
-      "uniform mat4 MVP;\n"
-      "varying vec4 vColor;\n"
-      "void main(){\n"
-      "    gl_Position = MVP * vec4(aPosition, 1.0);\n"
-      "    vColor = vec4(aColor, 1.0f);\n"
-      "}\n";
-
-   mFragmentShaderCode =
-      "varying vec4 vColor;\n"
-      "void main(){\n"
-      "    gl_FragColor = vColor;\n"
-      "}\n";
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/simple.glslv");
+   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/simple.glslf");
 
    CLog::getInstance().log("* CSimpleShader::CSimpleShader(): created");
 }

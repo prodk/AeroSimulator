@@ -17,33 +17,8 @@ CHealthbarShader::CHealthbarShader()
    , mColorUniform(0)
    , mHealthUniform(0)
 {
-   mVertexShaderCode =
-      "attribute vec3 aPosition; // Center of the billboard\n"
-      "attribute vec2 aSquad;\n"
-      "uniform mat4 MVP;\n"
-      "uniform vec3 uRight;    // Camera vector right\n"
-      "uniform vec3 uUp;       // Camera vector up\n"
-      "uniform float uWidth;   // Width of the billboard\n"
-      "uniform float uHeight;  // Height of the billboard\n"
-      "varying vec3 vPos;  // Shifted vertex position, model space\n"
-      "void main(){\n"
-      "    vec3 position = aPosition + uRight*aSquad.x * uWidth + uUp*aSquad.y*uHeight;\n"
-      "    vPos = aPosition + vec3(aSquad.x + 0.5, aSquad.y + 0.5f, 0.f);\n"
-      "    gl_Position = MVP * vec4(position, 1.0);\n"
-      "}\n";
-
-   // Fragment shader is the same as in CTextureShader
-   mFragmentShaderCode =
-      "uniform vec4 uColor; \n"
-      "uniform float uHealth;  // Health value\n" ///@todo: probably rename
-      "varying vec3 vPos;  // Shifted vertex position, model space\n"
-      "void main(){\n"
-      //"       gl_FragDepth = 0.0; // Ensure always on top\n"
-      "    if ((vPos.x > uHealth) || (vPos.y < 0.1) || (vPos.y > 0.9))\n"
-      "       gl_FragColor = uColor;\n"
-      "    else\n"
-      "       gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);\n"
-      "}\n";
+   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/healthbar.glslv");
+   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/healthbar.glslf");
 
    CLog::getInstance().log("* CColorBillboardShader created");
 }

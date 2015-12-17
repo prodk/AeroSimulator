@@ -77,7 +77,7 @@ std::string CShader::readShader(const char * filePath)
       std::string line;
       while (std::getline(fileIn, line))
       {
-         result += line;
+         result += line + "\n";  /// Important: add new line character, otherwise big shaders are not parsed correctly by OpenGL
       }
 
       fileIn.close();
