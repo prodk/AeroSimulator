@@ -330,7 +330,7 @@ void CApp::addStars()
       {
          if (mStar[count]->loadTexture(filePath))
          {
-            CLog::getInstance().log("* Billboard loaded: ", filePath);
+            CLog::getInstance().log("* Animation billboard loaded: ", filePath);
          }
 
          mStar[count]->setTranslate(glm::vec3(-10.f + count*dx, -5.0f, 0.0f));

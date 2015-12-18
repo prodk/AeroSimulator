@@ -171,6 +171,9 @@
     <ClInclude Include="src\shaders\CNormalMapSphereShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="CParticleSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -289,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="src\shaders\CNormalMapSphereShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="CParticleSystem.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

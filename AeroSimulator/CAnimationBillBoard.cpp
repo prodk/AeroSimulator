@@ -18,7 +18,7 @@ void CAnimationBillBoard::update(const float deltaTime)
    const float animationSpeed = 16.0f; // frames per second
    const float animationTime = 1.0f / animationSpeed;
 
-   static float timeSinceLastFrame;
+   static float timeSinceLastFrame; ///@todo: make a member
    if (timeSinceLastFrame >= animationTime)
    {
       timeSinceLastFrame = 0.0f;
