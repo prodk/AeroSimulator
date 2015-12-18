@@ -328,7 +328,7 @@ void CWin32Renderer::resetRenderContext()
 void CWin32Renderer::updateAirplane()
 {
    glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
-   if (mAirplane)
+   if (mAirplane && mLand)
    {
       // Translate in xz plane
       ///@todo: use x, z components later
@@ -491,6 +491,8 @@ void CWin32Renderer::updateRenderables()
    if (mTurbineFire)
    {
       mTurbineFire->update(mFrameDt);
+      mTurbineFire->updateTRMatrix(mTurbineFire->getTRMatrix(), mFrameDt); ///@todo: Use here mAirplaneMatrix
+      mTurbineFire->updateModelMatrix();
    }
 
    handleCollisions();

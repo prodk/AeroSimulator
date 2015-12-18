@@ -130,12 +130,12 @@ void CApp::setupScene()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   addSkyBox();
-   addLand();
+   //addSkyBox();
+   //addLand();
    addAirplane();
-   addClouds();
-   addSphere();
-   addStars();
+   //addClouds();
+   //addSphere();
+   //addStars();
 
    mRendererTask->resetRenderContext();
 }
@@ -213,6 +213,7 @@ void CApp::addAirplane()
    mRendererTask->setAirplane(mAirPlane);
 
    /// Add fire
+   //std::vector<CCompositeGameObject*> tree;
    mTurbineFire->addParticle(mAnimationBbShader, mColorShader);
    tree.clear();
    mTurbineFire->traverse(tree);

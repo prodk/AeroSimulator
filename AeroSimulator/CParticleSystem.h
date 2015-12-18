@@ -14,6 +14,7 @@ namespace AeroSimulatorEngine
       glm::vec3 mPosition;
       glm::vec3 mVelocity;
       float mCurrentTime;
+      bool mIsAlive;
    };
 
    class CParticleSystem : public CParentGameObject
@@ -34,10 +35,12 @@ namespace AeroSimulatorEngine
 
    private:
       SParticle mParticle; ///@todo: change to a collection of particles
-      std::unique_ptr<CAnimationBillBoard> mBillboard;
-      float mCurrentTime;
+      std::unique_ptr<CAnimationBillBoard> mBillboard; ///@todo: probably make a member of SParticle
+      float mSystemTime;
       float mMaxLifeTime; // In seconds ///@todo: make a constant
       glm::mat4x4 mScaledTRMatrix;
+      float mEmitSpeed; // Particles per second
+      float mTimeToEmit;
    };
 } // namespace AeroSimulatorEngine
 

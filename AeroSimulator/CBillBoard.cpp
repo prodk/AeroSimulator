@@ -98,7 +98,7 @@ void CBillBoard::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
    CParentGameObject::updateTRMatrix(trMatrix, dt);
 
    // Don't forget to change the cached scaled TR matrix
-   if (trMatrix != mParentTRMatrix)
+   if (trMatrix != mParentTRMatrix) ///@todo: do not make this check to allow movement relative to the parent
    {
       mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
    }
