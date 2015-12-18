@@ -5,6 +5,7 @@ using namespace AeroSimulatorEngine;
 
 ///@todo: remove this class, it is redundant, when CGameObject contains update()
 CAnimationBillBoard::CAnimationBillBoard()
+   : mTimeSinceLastFrame(0.0f)
 {
 }
 
@@ -18,15 +19,14 @@ void CAnimationBillBoard::update(const float deltaTime)
    const float animationSpeed = 16.0f; // frames per second
    const float animationTime = 1.0f / animationSpeed;
 
-   static float timeSinceLastFrame; ///@todo: make a member
-   if (timeSinceLastFrame >= animationTime)
+   if (mTimeSinceLastFrame >= animationTime)
    {
-      timeSinceLastFrame = 0.0f;
+      mTimeSinceLastFrame = 0.0f;
 
       ++mCurrentFrame;
       mCurrentFrame.x = static_cast<int>(mCurrentFrame.x) % static_cast<int>(mNumOfFrames.x);
       mCurrentFrame.y = static_cast<int>(mCurrentFrame.y) % static_cast<int>(mNumOfFrames.y);
    }
 
-   timeSinceLastFrame += deltaTime;
+   mTimeSinceLastFrame += deltaTime;
 }

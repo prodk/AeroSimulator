@@ -21,6 +21,7 @@
 #include "CAnimationBillBoard.h"
 #include "../src/shaders/CAnimationBillboardShader.h"
 #include "../src/shaders/CNormalMapSphereShader.h"
+#include "CParticleSystem.h"
 
 #include <conio.h>
 #include <cassert>
@@ -47,6 +48,7 @@ CApp::CApp()
    , mBillBoards(40)
    , mStar(5)
    , mNormalMapSphereShader(new CNormalMapSphereShader())
+   , mTurbineFire(new CParticleSystem())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -63,6 +65,7 @@ CApp::CApp()
    assert(mAnimationBbShader);
    assert(mSphere);
    assert(mNormalMapSphereShader);
+   assert(mTurbineFire);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -208,6 +211,19 @@ void CApp::addAirplane()
    // Set the root for the renderable composite
    mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
    mRendererTask->setAirplane(mAirPlane);
+
+   /// Add fire
+   mTurbineFire->addParticle(mAnimationBbShader, mColorShader);
+   tree.clear();
+   mTurbineFire->traverse(tree);
+   for (auto * node : tree)
+   {
+      if (node)
+      {
+         mRendererTask->addRenderable(node);
+      }
+   }
+   mRendererTask->setTurbineFire(mTurbineFire);
 }
 
 void CApp::addClouds()

@@ -25,6 +25,7 @@ namespace AeroSimulatorEngine
    class CLand;
    class CSkyBox;
    class CBillBoard;
+   class CParticleSystem;
 
    class CApp
    {
@@ -84,6 +85,8 @@ namespace AeroSimulatorEngine
       std::vector<std::shared_ptr<CBillBoard> > mBillBoards; ///@todo: rename into mClouds
       //std::shared_ptr<CAnimationBillBoard> mStar;
       std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
+
+      std::shared_ptr<CParticleSystem> mTurbineFire;
    };
 
 } // namespace AeroSimulatorEngine

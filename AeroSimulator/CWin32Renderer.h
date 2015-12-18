@@ -21,6 +21,7 @@ namespace AeroSimulatorEngine
    class CLand;
    class CSkyBox;
    class CBillBoard;
+   class CParticleSystem;
 
    class CWin32Renderer : public CRenderer
    {
@@ -51,6 +52,7 @@ namespace AeroSimulatorEngine
       void setSky(std::shared_ptr<CSkyBox>& sky) { mSky = sky; }
 
       void setClouds(const std::vector<std::shared_ptr<CBillBoard> >& clouds) { mClouds = clouds; }
+      void setTurbineFire(std::shared_ptr<CParticleSystem>& fire) { mTurbineFire = fire; }
 
    private:
       // Override CRenderer part
@@ -113,6 +115,8 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CLand> mLand;
       std::shared_ptr<CSkyBox> mSky;
       std::vector<std::shared_ptr<CBillBoard> > mClouds;
+
+      std::shared_ptr<CParticleSystem> mTurbineFire;
    };
 } // namespace AeroSimulatorEngine
 

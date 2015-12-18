@@ -12,6 +12,8 @@ namespace AeroSimulatorEngine
       virtual ~CAnimationBillBoard();
 
       virtual void update(const float deltaTime);
+   private:
+      float mTimeSinceLastFrame;
    };
 } // namespace AeroSimulatorEngine
 

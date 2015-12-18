@@ -13,6 +13,7 @@
 #include "CLand.h"
 #include "CBoundingBox.h"
 #include "CSkyBox.h"
+#include "CParticleSystem.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -64,6 +65,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mStar()
    , mLand(nullptr)
    , mSky(nullptr)
+   , mTurbineFire(nullptr)
 {
    assert(mCamera);
 
@@ -484,6 +486,11 @@ void CWin32Renderer::updateRenderables()
          star->updateTRMatrix(glm::mat4x4(1.0f), mFrameDt);
          star->updateModelMatrix();
       }
+   }
+
+   if (mTurbineFire)
+   {
+      mTurbineFire->update(mFrameDt);
    }
 
    handleCollisions();
