@@ -45,6 +45,7 @@ namespace AeroSimulatorEngine
 
       glm::vec3 getSpeedOfFlight() const { return mSpeedOfFlight; }
       void setSpeedOfFlight(const glm::vec3& speed) { mSpeedOfFlight = speed; }
+      void resetSpeedOfFlight() { mSpeedOfFlight = mOriginalSpeedOfFlight; }
 
       glm::vec3 getDirectionOfFlight() const { return mXzDirection; }
       void setDirectionOfFlight(const glm::vec3& dir) { mXzDirection = dir; }
@@ -88,6 +89,7 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<CBoundingBox> mBoundingBox;
       float mFlightAngle;
+      glm::vec3 mOriginalSpeedOfFlight;
    };
 } // namespace AeroSimulatorEngine
 

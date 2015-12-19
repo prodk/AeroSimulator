@@ -566,7 +566,8 @@ void CWin32Renderer::updateInput()
                mAngleX = std::min<float>(mAngleX, 20.f);
 
                ///@todo:make 2 members: original speed and current speed and call restore speed here to avoid magic numbers
-               mAirplane->setSpeedOfFlight(glm::vec3(3.0f, 18.0f, 3.0f));
+               //mAirplane->setSpeedOfFlight(glm::vec3(3.0f, 18.0f, 3.0f));
+               mAirplane->resetSpeedOfFlight();
 
                // Move upwards
                glm::vec3 position = mAirplane->getPosition();
@@ -641,6 +642,18 @@ void CWin32Renderer::updateInput()
             translate -= translateSpeed*direction;
 
             mCamera->setTranslate(translate);
+         }
+         break;
+
+      case (0x55) : // u, accelerate
+         if (mAirplane)
+         {
+            glm::vec3 currentSpeed = mAirplane->getSpeedOfFlight();
+            currentSpeed.z += 1.0f;
+            currentSpeed.z = std::min<float>(currentSpeed.z, 30.f);
+            currentSpeed.x += 1.0f;
+            currentSpeed.x = std::min<float>(currentSpeed.x, 30.f);
+            mAirplane->setSpeedOfFlight(currentSpeed);
          }
          break;
       }
@@ -897,6 +910,11 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       if (mTurbineSmoke && ((wParam == VK_SPACE) || (wParam == VK_UP)))
       {
          mTurbineSmoke->resetEmitSpeed();
+      }
+
+      if ((wParam == 0x55) && mAirplane)
+      {
+         mAirplane->resetSpeedOfFlight();
       }
    }
    return false;

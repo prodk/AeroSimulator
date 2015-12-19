@@ -91,6 +91,7 @@ C3DModel::C3DModel()
    , mBoundingBox(new CBoundingBox())
    , mXzDirection(glm::vec3(0.0f, 0.0f, 1.0f))
    , mFlightAngle(0.0f)
+   , mOriginalSpeedOfFlight(mSpeedOfFlight)
 {
    assert(mCubeGeometry);
    assert(mCabine);
