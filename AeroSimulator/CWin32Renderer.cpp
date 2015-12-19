@@ -490,11 +490,16 @@ void CWin32Renderer::updateRenderables()
    if (mTurbineFire)
    {
       mTurbineFire->update(mFrameDt);
-      mTurbineFire->updateTRMatrix(mTurbineFire->getTRMatrix(), mFrameDt); ///@todo: Use here mAirplaneMatrix
-      mTurbineFire->updateModelMatrix();
+      mTurbineFire->updateTRMatrix(mTurbineFire->getTRMatrix(), mFrameDt);
    }
 
    updateAirplane();
+
+   // Prevent billboards from rotations with the airplane
+   if (mTurbineFire)
+   {
+      mTurbineFire->updateModelMatrix();
+   }
 
    handleCollisions();
 }

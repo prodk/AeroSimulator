@@ -36,7 +36,7 @@ namespace AeroSimulatorEngine
       void setPosition(const glm::vec3& pos) { mPosition = pos; }
       glm::vec3 getPosition() const { return mPosition; }
 
-   private:
+   protected:
       glm::mat4x4 mScaledTRMatrix;
       std::shared_ptr<CBoundingBox> mBoundingBox;
 
