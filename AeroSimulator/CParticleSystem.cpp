@@ -19,11 +19,16 @@ CParticleSystem::CParticleSystem()
    , mParticle()
    , mBillboard()
    , mSystemTime(0.0f)
-   , mMaxLifeTime(1.0f)
+   , mMaxLifeTime(0.5f)
    , mScaledTRMatrix()
-   , mEmitSpeed(1.0f)
+   , mEmitSpeed(16.0f)
    , mTimeToEmit(1.0f/mEmitSpeed)
+   , mNumOfParticles(16)
+   , mCurrentParticle(0)
+   , mAliveParticles()
 {
+   mParticle.resize(mNumOfParticles);
+   mBillboard.resize(mNumOfParticles);
 }
 
 CParticleSystem::~CParticleSystem()
@@ -36,25 +41,30 @@ bool CParticleSystem::emit(float deltaTime)
 
    mSystemTime += deltaTime;
 
-   ///@todo: change to checking alive particles in the collection of particles
-   if ((mSystemTime >= mTimeToEmit) && !mParticle.mIsAlive)// Emit a new particle if the old one is not alive
+   if (mSystemTime >= mTimeToEmit)// Emit a new particle if the old one is not alive
    {
-      mSystemTime = 0.0f;
+      mCurrentParticle %= mNumOfParticles;
+      if (!mParticle[mCurrentParticle].mIsAlive && mBillboard[mCurrentParticle])
+      {
+         mAliveParticles.insert(mCurrentParticle);
+         // Set position to the one of the parent
+         mParticle[mCurrentParticle].mPosition = getTranslate();  ///@todo: make it random within some narrow range
+         mParticle[mCurrentParticle].mVelocity = glm::vec3(0.0f, 0.0f, 4.0f);
+         mParticle[mCurrentParticle].mCurrentTime = 0.0f;
+         mParticle[mCurrentParticle].mIsAlive = true;
 
-      // Set position to the one of the parent
-      mParticle.mPosition = getTranslate();  ///@todo: make it random within some narrow range
-      mParticle.mVelocity = glm::vec3(0.0f, 0.0f, 4.0f);
-      mParticle.mCurrentTime = 0.0f;
-      mParticle.mIsAlive = true;
+         mBillboard[mCurrentParticle]->setTranslate(mParticle[mCurrentParticle].mPosition);
 
-      mBillboard->setTranslate(mParticle.mPosition);
+         calculateTRMatrix();
+         buildModelMatrix(mParentTRMatrix);
 
-      calculateTRMatrix();
-      buildModelMatrix(mParentTRMatrix);
+         mBillboard[mCurrentParticle]->setVisible(true);
 
-      mBillboard->setVisible(true);
+         result = true;
 
-      result = true;
+         mSystemTime = 0.0f;
+         ++mCurrentParticle;
+      }
    }
 
    return result;
@@ -66,31 +76,37 @@ void CParticleSystem::update(const float deltaTime)
    emit(deltaTime);
 
    // Update particles (move, animate)
-   if (mParticle.mIsAlive)
+   for (auto id : mAliveParticles)
    {
-      mParticle.mCurrentTime += deltaTime;
-      mParticle.mPosition += mParticle.mVelocity * deltaTime;
+      if (mParticle[id].mIsAlive)
+      {
+         mParticle[id].mCurrentTime += deltaTime;
 
-      mBillboard->setTranslate(mParticle.mPosition);
-      mBillboard->calculateTRMatrix();
+         if (mParticle[id].mCurrentTime >= mMaxLifeTime)
+         {
+            mParticle[id].mIsAlive = false;
+            mParticle[id].mCurrentTime = 0.0f;
+            mBillboard[id]->setVisible(false);
+            //mAliveParticles.erase(id);
+         }
+         else
+         {
+            mParticle[id].mPosition += mParticle[id].mVelocity * deltaTime;
 
-      mBillboard->update(deltaTime);
+            mBillboard[id]->setTranslate(mParticle[id].mPosition);
+            mBillboard[id]->calculateTRMatrix();
 
-      buildModelMatrix(mParentTRMatrix);
-   }
+            mBillboard[id]->update(deltaTime);
 
-   // Remove/hide dead particles
-   if (mParticle.mIsAlive && (mParticle.mCurrentTime >= mMaxLifeTime))
-   {
-      mParticle.mIsAlive = false;
-      mParticle.mCurrentTime = 0.0f;
-      //mBillboard->setVisible(false);
+            buildModelMatrix(mParentTRMatrix);
+         }
+      }
    }
 
    // Add to VBO the particles to show
 }
 
-void CParticleSystem::addParticle(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader)
+void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader)
 {
    if (pShader && pColorShader)
    {
@@ -99,44 +115,46 @@ void CParticleSystem::addParticle(std::shared_ptr<CShader>& pShader, std::shared
 
       const float width = 0.5f;
       const float height = 0.5f;
-      //const char* filePath = "../AeroSimulator/res/coin.dds";
       const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
       float dx = 5.f;
 
-      mBillboard.reset(new CAnimationBillBoard());
-
-      if (mBillboard)
+      for (std::size_t id = 0; id < mNumOfParticles; ++id)
       {
-         if (mBillboard->loadTexture(filePath))
+         mBillboard[id].reset(new CAnimationBillBoard());
+
+         if (mBillboard[id])
          {
-            CLog::getInstance().log("* Particle billboard loaded: ", filePath);
-         }
-
-         mBillboard->setBillboardHeight(width);
-         mBillboard->setBillboardWidth(height);
-         //mBillboard->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
-         mBillboard->setFrameSize(glm::vec2(1.0f / 4.0f, 1.0f / 4.0f));
-         mBillboard->setAnimationSpeed(16.0f);
-
-         mBillboard->setShadersAndBuffers(pShader);
-         const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-         mBillboard->setBoundingBox(pColorShader, bBoxColor);
-         //mBillboard->setVisible(false);
-         std::vector<CCompositeGameObject*> tree;
-         mBillboard->traverse(tree);
-
-         for (auto * pTree : tree)
-         {
-            if (pTree)
+            if (mBillboard[id]->loadTexture(filePath))
             {
-               add(pTree);
+               CLog::getInstance().log("* Particle billboard loaded: ", filePath);
             }
+
+            mBillboard[id]->setBillboardHeight(width);
+            mBillboard[id]->setBillboardWidth(height);
+            //mBillboard->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
+            mBillboard[id]->setFrameSize(glm::vec2(1.0f / 4.0f, 1.0f / 4.0f));
+            mBillboard[id]->setAnimationSpeed(32.0f);
+            mBillboard[id]->setTransparent(true);
+
+            mBillboard[id]->setShadersAndBuffers(pShader);
+            const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
+            mBillboard[id]->setBoundingBox(pColorShader, bBoxColor);
+            //mBillboard->setVisible(false);
+            std::vector<CCompositeGameObject*> tree;
+            mBillboard[id]->traverse(tree);
+
+            for (auto * pTree : tree)
+            {
+               if (pTree)
+               {
+                  add(pTree);
+               }
+            }
+
+            add(mBillboard[id].get());
          }
-
-         add(mBillboard.get());
-
-         buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-      }
+      } // End for
+      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
    }
 }
 

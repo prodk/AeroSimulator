@@ -215,7 +215,7 @@ void CApp::addAirplane()
    /// Add fire
    //std::vector<CCompositeGameObject*> tree;
    mTurbineFire->setTranslate(glm::vec3(0.0f, -0.35f, 1.70f));
-   mTurbineFire->addParticle(mAnimationBbShader, mColorShader);
+   mTurbineFire->addParticles(mAnimationBbShader, mColorShader);
    tree.clear();
    mTurbineFire->traverse(tree);
    for (auto * node : tree)
@@ -335,12 +335,10 @@ void CApp::addSphere()
 
 void CApp::addStars()
 {
+   mAnimationBbShader->link();
    const float width = 1.0f;
    const float height = 1.0f;
-   //const char* filePath = "../AeroSimulator/res/capguy-walk.dds";
    const char* filePath = "../AeroSimulator/res/coin.dds";
-   mAnimationBbShader->link();
-
    float dx = 5.f;
 
    for (std::size_t count = 0; count < mStar.size(); ++count)
@@ -359,6 +357,7 @@ void CApp::addStars()
          mStar[count]->setBillboardWidth(height);
          mStar[count]->calculateModelMatrix();
          mStar[count]->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
+         mStar[count]->setTransparent(true);
 
          mStar[count]->setShadersAndBuffers(mAnimationBbShader);
          mColorShader->link();
