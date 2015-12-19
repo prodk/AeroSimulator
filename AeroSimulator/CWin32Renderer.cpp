@@ -66,6 +66,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mLand(nullptr)
    , mSky(nullptr)
    , mTurbineFire(nullptr)
+   , mTurbineSmoke(nullptr)
 {
    assert(mCamera);
 
@@ -493,12 +494,22 @@ void CWin32Renderer::updateRenderables()
       mTurbineFire->updateTRMatrix(mTurbineFire->getTRMatrix(), mFrameDt);
    }
 
+   if (mTurbineSmoke)
+   {
+      mTurbineSmoke->update(mFrameDt);
+      mTurbineSmoke->updateTRMatrix(mTurbineSmoke->getTRMatrix(), mFrameDt);
+   }
+
    updateAirplane();
 
    // Prevent billboards from rotations with the airplane
    if (mTurbineFire)
    {
       mTurbineFire->updateModelMatrix();
+   }
+   if (mTurbineSmoke)
+   {
+      mTurbineSmoke->updateModelMatrix();
    }
 
    handleCollisions();
@@ -566,6 +577,10 @@ void CWin32Renderer::updateInput()
                if (mTurbineFire)
                {
                   mTurbineFire->setEmitSpeed(2.5f);
+               }
+               if (mTurbineSmoke)
+               {
+                  mTurbineSmoke->setEmitSpeed(2.5f);
                }
             }
          }
@@ -721,6 +736,10 @@ void CWin32Renderer::handleCollisions()
             {
                mTurbineFire->setEmitSpeed(0.0f);
             }
+            if (mTurbineSmoke)
+            {
+               mTurbineSmoke->setEmitSpeed(0.0f);
+            }
          }
       }
    }
@@ -874,6 +893,10 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
       if (mTurbineFire && ((wParam == VK_SPACE) || (wParam == VK_UP)))
       {
          mTurbineFire->resetEmitSpeed();
+      }
+      if (mTurbineSmoke && ((wParam == VK_SPACE) || (wParam == VK_UP)))
+      {
+         mTurbineSmoke->resetEmitSpeed();
       }
    }
    return false;

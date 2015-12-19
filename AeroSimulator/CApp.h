@@ -87,6 +87,7 @@ namespace AeroSimulatorEngine
       std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
 
       std::shared_ptr<CParticleSystem> mTurbineFire;
+      std::shared_ptr<CParticleSystem> mTurbineSmoke;
    };
 
 } // namespace AeroSimulatorEngine

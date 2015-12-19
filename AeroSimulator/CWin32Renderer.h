@@ -53,6 +53,7 @@ namespace AeroSimulatorEngine
 
       void setClouds(const std::vector<std::shared_ptr<CBillBoard> >& clouds) { mClouds = clouds; }
       void setTurbineFire(std::shared_ptr<CParticleSystem>& fire) { mTurbineFire = fire; }
+      void setTurbineSmoke(std::shared_ptr<CParticleSystem>& smoke) { mTurbineSmoke = smoke; }
 
    private:
       // Override CRenderer part
@@ -117,6 +118,7 @@ namespace AeroSimulatorEngine
       std::vector<std::shared_ptr<CBillBoard> > mClouds;
 
       std::shared_ptr<CParticleSystem> mTurbineFire;
+      std::shared_ptr<CParticleSystem> mTurbineSmoke;
    };
 } // namespace AeroSimulatorEngine
 

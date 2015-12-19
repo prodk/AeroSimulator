@@ -204,6 +204,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
       mAxes[count].buildModel(pShader);
       mCubes[count].add(&mAxes[count]);
       mCubes[count].setShadersAndBuffers(pShader);
+      //mCubes[count].setDrawWithLines(true);
 
       if (count != 10 && count != 11)
          mCubes[count].setupHealthBar(mBillboardShader);

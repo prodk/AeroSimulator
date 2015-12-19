@@ -19,14 +19,14 @@ CParticleSystem::CParticleSystem(float maxLifeTime, float emitSpeed, int numOfPa
    , mParticle()
    , mBillboard()
    , mSystemTime(0.0f)
-   , mMaxLifeTime(maxLifeTime)    // Add to constructor
+   , mMaxLifeTime(maxLifeTime)
    , mScaledTRMatrix()
-   , mEmitSpeed(emitSpeed)      // Add to constructor
+   , mEmitSpeed(emitSpeed)
    , mTimeToEmit(1.0f/mEmitSpeed)
-   , mNumOfParticles(numOfParticles)   // Add to constructor
+   , mNumOfParticles(numOfParticles)
    , mCurrentParticle(0)
    //, mAliveParticles()
-   , mParticleSpeed(particleSpeed) // Add to constructor
+   , mParticleSpeed(particleSpeed)
 {
    mParticle.resize(mNumOfParticles);
    mBillboard.resize(mNumOfParticles);
@@ -121,7 +121,7 @@ void CParticleSystem::setEmitSpeed(const float factor)
 }
 
 void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader,
-                                   const char* filePath, const glm::vec2 & frameSize)
+                                   const char* filePath, const glm::vec2 & frameSize, const float width, const float height)
 {
    if (pShader && pColorShader)
    {
@@ -195,17 +195,4 @@ void CParticleSystem::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 
    // Model matrix of the cube
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
-
-   //// Reset parent-related rotations - billboard rotates ONLY relatively to the camera direction
-   //mModelMatrix[0].x = 1.0f;
-   //mModelMatrix[0].y = 0.0f;
-   //mModelMatrix[0].z = 0.0f;
-
-   //mModelMatrix[1].x = 0.0f;
-   //mModelMatrix[1].y = 1.0f;
-   //mModelMatrix[1].z = 0.0f;
-
-   //mModelMatrix[2].x = 0.0f;
-   //mModelMatrix[2].y = 0.0f;
-   //mModelMatrix[2].z = 1.0f;
 }
