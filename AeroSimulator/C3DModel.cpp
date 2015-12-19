@@ -56,12 +56,12 @@ namespace
    GLuint indices[] = {
       // Stripe 1
       6, 5, 7, 4, // back
-       3, 0, // left
-       2, 1, // front
-       6, 5, // right
+      3, 0, // left
+      2, 1, // front
+      6, 5, // right
 
-      // Stripe 2
-      // bottom
+            // Stripe 2
+            // bottom
       5, 1, 4, 0,
 
       // front
@@ -70,7 +70,11 @@ namespace
 
       // top
       3, 2, 6,
-      6, 3, 7
+      6, 3, 7,
+
+      // missing lines
+      4, 5, 6, 7,
+      6, 2, 1
    };
 }
 
