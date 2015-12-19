@@ -12,8 +12,12 @@ namespace AeroSimulatorEngine
       virtual ~CAnimationBillBoard();
 
       virtual void update(const float deltaTime);
+
+      void setAnimationSpeed(const float speed) { mAnimationSpeed = speed; }
+
    private:
       float mTimeSinceLastFrame;
+      float mAnimationSpeed;
    };
 } // namespace AeroSimulatorEngine
 

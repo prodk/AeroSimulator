@@ -19,9 +19,9 @@ CParticleSystem::CParticleSystem()
    , mParticle()
    , mBillboard()
    , mSystemTime(0.0f)
-   , mMaxLifeTime(2.0f)
+   , mMaxLifeTime(1.0f)
    , mScaledTRMatrix()
-   , mEmitSpeed(0.5f)
+   , mEmitSpeed(1.0f)
    , mTimeToEmit(1.0f/mEmitSpeed)
 {
 }
@@ -41,8 +41,9 @@ bool CParticleSystem::emit(float deltaTime)
    {
       mSystemTime = 0.0f;
 
-      mParticle.mPosition = getTranslate(); // Set position to the one of the parent
-      mParticle.mVelocity = glm::vec3(-2.0f, 0.0f, 0.0f);
+      // Set position to the one of the parent
+      mParticle.mPosition = getTranslate();  ///@todo: make it random within some narrow range
+      mParticle.mVelocity = glm::vec3(0.0f, 0.0f, 4.0f);
       mParticle.mCurrentTime = 0.0f;
       mParticle.mIsAlive = true;
 
@@ -96,9 +97,10 @@ void CParticleSystem::addParticle(std::shared_ptr<CShader>& pShader, std::shared
       pShader->link();
       pColorShader->link();
 
-      const float width = 1.0f;
-      const float height = 1.0f;
-      const char* filePath = "../AeroSimulator/res/coin.dds";
+      const float width = 0.5f;
+      const float height = 0.5f;
+      //const char* filePath = "../AeroSimulator/res/coin.dds";
+      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
       float dx = 5.f;
 
       mBillboard.reset(new CAnimationBillBoard());
@@ -110,10 +112,11 @@ void CParticleSystem::addParticle(std::shared_ptr<CShader>& pShader, std::shared
             CLog::getInstance().log("* Particle billboard loaded: ", filePath);
          }
 
-         //mBillboard->setTranslate(glm::vec3(-2.f, 0.0f, 0.0f));
          mBillboard->setBillboardHeight(width);
          mBillboard->setBillboardWidth(height);
-         mBillboard->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
+         //mBillboard->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
+         mBillboard->setFrameSize(glm::vec2(1.0f / 4.0f, 1.0f / 4.0f));
+         mBillboard->setAnimationSpeed(16.0f);
 
          mBillboard->setShadersAndBuffers(pShader);
          const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);

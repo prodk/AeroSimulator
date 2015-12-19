@@ -85,8 +85,8 @@ C3DModel::C3DModel()
    , mAxes(numOfCubes)
    , mBillboardShader()
    , mPosition()
-   //, mSpeedOfFlight(glm::vec3(3.0f, 10.0f, 3.0f))
-   , mSpeedOfFlight(glm::vec3(0.0f, 10.0f, 0.0f))
+   , mSpeedOfFlight(glm::vec3(3.0f, 10.0f, 3.0f))
+   //, mSpeedOfFlight(glm::vec3(0.0f, 10.0f, 0.0f))
    , mBoundingBox(new CBoundingBox())
    , mXzDirection(glm::vec3(0.0f, 0.0f, 1.0f))
    , mFlightAngle(0.0f)
@@ -204,7 +204,8 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
       mCubes[count].add(&mAxes[count]);
       mCubes[count].setShadersAndBuffers(pShader);
 
-      mCubes[count].setupHealthBar(mBillboardShader);
+      if (count != 10 && count != 11)
+         mCubes[count].setupHealthBar(mBillboardShader);
    }
 
    // Build an airplane

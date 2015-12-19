@@ -328,13 +328,11 @@ void CWin32Renderer::resetRenderContext()
 void CWin32Renderer::updateAirplane()
 {
    glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
-   if (mAirplane && mLand)
+   if (mAirplane && mLand && mSky)
    {
       // Translate in xz plane
       ///@todo: use x, z components later
       glm::vec3 position = mAirplane->getPosition();
-      //glm::vec3 position;
-      //position.z = position.z - mAirplane->getSpeedOfFlight().z*mFrameDt;
 
       const glm::vec3 direction = mAirplane->getDirectionOfFlight();
       position = position - direction*mAirplane->getSpeedOfFlight()*glm::vec3(mFrameDt, 0.0f, mFrameDt);
@@ -463,8 +461,6 @@ void CWin32Renderer::springButtons()
 
 void CWin32Renderer::updateRenderables()
 {
-   updateAirplane();
-
    ///@todo: place to a method updateSphere
    if (mSphereRoot)
    {
@@ -494,6 +490,8 @@ void CWin32Renderer::updateRenderables()
       mTurbineFire->updateTRMatrix(mTurbineFire->getTRMatrix(), mFrameDt); ///@todo: Use here mAirplaneMatrix
       mTurbineFire->updateModelMatrix();
    }
+
+   updateAirplane();
 
    handleCollisions();
 }

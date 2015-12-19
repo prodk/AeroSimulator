@@ -131,7 +131,7 @@ void CApp::setupScene()
    mRendererTask->setRenderContext();
 
    //addSkyBox();
-   //addLand();
+   addLand();
    addAirplane();
    //addClouds();
    //addSphere();
@@ -214,6 +214,7 @@ void CApp::addAirplane()
 
    /// Add fire
    //std::vector<CCompositeGameObject*> tree;
+   mTurbineFire->setTranslate(glm::vec3(0.0f, -0.35f, 1.70f));
    mTurbineFire->addParticle(mAnimationBbShader, mColorShader);
    tree.clear();
    mTurbineFire->traverse(tree);
@@ -225,6 +226,9 @@ void CApp::addAirplane()
       }
    }
    mRendererTask->setTurbineFire(mTurbineFire);
+
+   // Add fire to the airplane
+   mAirPlane->getRoot()->add(mTurbineFire.get());
 }
 
 void CApp::addClouds()
