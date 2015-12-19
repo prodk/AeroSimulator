@@ -7,6 +7,7 @@
 #include "CBillBoard.h"
 #include "../src/shaders/CShader.h"
 #include "CBoundingBox.h"
+#include "../src/shaders/CAnimationBillboardShader.h"
 
 #include <cassert>
 
@@ -285,7 +286,7 @@ bool C3DModel::buildModel(std::shared_ptr<CShader>& pShader)
    mCubes[7].setScale(glm::vec3(0.2f, 0.25f, 0.5f));
    mCubes[7].setColor(baseColor);
 
-   mCubes[7].translateHealthBar(glm::vec3(0.0f, 0.3f, 0.0f));
+   mCubes[7].translateHealthBar(glm::vec3(0.0f, 0.6f, 0.0f));
    mPropeller->add(&mCubes[7]);
 
    mCubes[8].setTranslate(glm::vec3(0.0f, 0.75f, -0.25f));

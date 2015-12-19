@@ -48,7 +48,6 @@ CApp::CApp()
    , mBillBoards(40)
    , mStar(5)
    , mNormalMapSphereShader(new CNormalMapSphereShader())
-   , mTurbineFire(new CParticleSystem())
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -65,7 +64,7 @@ CApp::CApp()
    assert(mAnimationBbShader);
    assert(mSphere);
    assert(mNormalMapSphereShader);
-   assert(mTurbineFire);
+   //assert(mTurbineFire);
 
    CLog::getInstance().log("* CApp created!");
 }
@@ -130,7 +129,7 @@ void CApp::setupScene()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   //addSkyBox();
+   addSkyBox();
    addLand();
    addAirplane();
    //addClouds();
@@ -213,22 +212,28 @@ void CApp::addAirplane()
    mRendererTask->setAirplane(mAirPlane);
 
    /// Add fire
-   //std::vector<CCompositeGameObject*> tree;
-   mTurbineFire->setTranslate(glm::vec3(0.0f, -0.35f, 1.70f));
-   mTurbineFire->addParticles(mAnimationBbShader, mColorShader);
-   tree.clear();
-   mTurbineFire->traverse(tree);
-   for (auto * node : tree)
+   mTurbineFire.reset(new CParticleSystem(1.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 2.5f)));
+   if (mTurbineFire)
    {
-      if (node)
+      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
+      mTurbineFire->setTranslate(glm::vec3(0.0f, -0.35f, 1.75f));
+      mTurbineFire->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f));
+      tree.clear();
+      mTurbineFire->traverse(tree);
+      for (auto * node : tree)
       {
-         mRendererTask->addRenderable(node);
+         if (node)
+         {
+            mRendererTask->addRenderable(node);
+         }
       }
-   }
-   mRendererTask->setTurbineFire(mTurbineFire);
+      mRendererTask->setTurbineFire(mTurbineFire);
 
-   // Add fire to the airplane
-   mAirPlane->getRoot()->add(mTurbineFire.get());
+      // Add fire to the airplane
+      mAirPlane->getRoot()->add(mTurbineFire.get());
+   }
+
+   /// Add smoke
 }
 
 void CApp::addClouds()

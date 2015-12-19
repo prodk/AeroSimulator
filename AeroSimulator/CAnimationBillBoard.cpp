@@ -31,8 +31,6 @@ void CAnimationBillBoard::update(const float deltaTime)
          ++mCurrentFrame.y;
          mCurrentFrame.y = static_cast<int>(mCurrentFrame.y) % static_cast<int>(mNumOfFrames.y);
       }
-      //mCurrentFrame.x = static_cast<int>(mCurrentFrame.x) % static_cast<int>(mNumOfFrames.x);
-      //mCurrentFrame.y = static_cast<int>(mCurrentFrame.y) % static_cast<int>(mNumOfFrames.y);
    }
 
    mTimeSinceLastFrame += deltaTime;

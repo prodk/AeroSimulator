@@ -14,18 +14,19 @@ SParticle::SParticle()
 {
 }
 
-CParticleSystem::CParticleSystem()
+CParticleSystem::CParticleSystem(float maxLifeTime, float emitSpeed, int numOfParticles, const glm::vec3 & particleSpeed)
    : CParentGameObject()
    , mParticle()
    , mBillboard()
    , mSystemTime(0.0f)
-   , mMaxLifeTime(0.5f)
+   , mMaxLifeTime(maxLifeTime)    // Add to constructor
    , mScaledTRMatrix()
-   , mEmitSpeed(16.0f)
+   , mEmitSpeed(emitSpeed)      // Add to constructor
    , mTimeToEmit(1.0f/mEmitSpeed)
-   , mNumOfParticles(16)
+   , mNumOfParticles(numOfParticles)   // Add to constructor
    , mCurrentParticle(0)
-   , mAliveParticles()
+   //, mAliveParticles()
+   , mParticleSpeed(particleSpeed) // Add to constructor
 {
    mParticle.resize(mNumOfParticles);
    mBillboard.resize(mNumOfParticles);
@@ -46,10 +47,10 @@ bool CParticleSystem::emit(float deltaTime)
       mCurrentParticle %= mNumOfParticles;
       if (!mParticle[mCurrentParticle].mIsAlive && mBillboard[mCurrentParticle])
       {
-         mAliveParticles.insert(mCurrentParticle);
+         //mAliveParticles.insert(mCurrentParticle);
          // Set position to the one of the parent
          mParticle[mCurrentParticle].mPosition = getTranslate();  ///@todo: make it random within some narrow range
-         mParticle[mCurrentParticle].mVelocity = glm::vec3(0.0f, 0.0f, 4.0f);
+         mParticle[mCurrentParticle].mVelocity = mParticleSpeed;
          mParticle[mCurrentParticle].mCurrentTime = 0.0f;
          mParticle[mCurrentParticle].mIsAlive = true;
 
@@ -76,7 +77,7 @@ void CParticleSystem::update(const float deltaTime)
    emit(deltaTime);
 
    // Update particles (move, animate)
-   for (auto id : mAliveParticles)
+   for (std::size_t id = 0; id < mNumOfParticles; ++id)
    {
       if (mParticle[id].mIsAlive)
       {
@@ -87,6 +88,7 @@ void CParticleSystem::update(const float deltaTime)
             mParticle[id].mIsAlive = false;
             mParticle[id].mCurrentTime = 0.0f;
             mBillboard[id]->setVisible(false);
+            mBillboard[id]->resetCurrentFrame();
             //mAliveParticles.erase(id);
          }
          else
@@ -103,10 +105,23 @@ void CParticleSystem::update(const float deltaTime)
       }
    }
 
-   // Add to VBO the particles to show
+   ///@todo: Add to VBO the particles to show
 }
 
-void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader)
+void CParticleSystem::setEmitSpeed(const float factor)
+{
+   if (factor <= std::numeric_limits<float>::epsilon())
+   {
+      mTimeToEmit = 1.e8f;
+   }
+   else
+   {
+      mTimeToEmit = 1.0f / (factor * mEmitSpeed);
+   }
+}
+
+void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader,
+                                   const char* filePath, const glm::vec2 & frameSize)
 {
    if (pShader && pColorShader)
    {
@@ -115,7 +130,6 @@ void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::share
 
       const float width = 0.5f;
       const float height = 0.5f;
-      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
       float dx = 5.f;
 
       for (std::size_t id = 0; id < mNumOfParticles; ++id)
@@ -129,17 +143,17 @@ void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::share
                CLog::getInstance().log("* Particle billboard loaded: ", filePath);
             }
 
+            mBillboard[id]->setFrameSize(glm::vec2(1.0f / frameSize.x, 1.0f / frameSize.y));
+
             mBillboard[id]->setBillboardHeight(width);
             mBillboard[id]->setBillboardWidth(height);
-            //mBillboard->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
-            mBillboard[id]->setFrameSize(glm::vec2(1.0f / 4.0f, 1.0f / 4.0f));
-            mBillboard[id]->setAnimationSpeed(32.0f);
+            mBillboard[id]->setAnimationSpeed(16.0f);
             mBillboard[id]->setTransparent(true);
 
             mBillboard[id]->setShadersAndBuffers(pShader);
             const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
             mBillboard[id]->setBoundingBox(pColorShader, bBoxColor);
-            //mBillboard->setVisible(false);
+            mBillboard[id]->setVisible(false);
             std::vector<CCompositeGameObject*> tree;
             mBillboard[id]->traverse(tree);
 

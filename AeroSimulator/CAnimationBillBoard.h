@@ -14,6 +14,7 @@ namespace AeroSimulatorEngine
       virtual void update(const float deltaTime);
 
       void setAnimationSpeed(const float speed) { mAnimationSpeed = speed; }
+      void resetCurrentFrame() { mCurrentFrame = glm::vec2(); }
 
    private:
       float mTimeSinceLastFrame;

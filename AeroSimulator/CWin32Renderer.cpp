@@ -328,7 +328,7 @@ void CWin32Renderer::resetRenderContext()
 void CWin32Renderer::updateAirplane()
 {
    glm::mat4 mAirplaneMatrix = glm::mat4(1.0f);
-   if (mAirplane && mLand && mSky)
+   if (mAirplane)
    {
       // Translate in xz plane
       ///@todo: use x, z components later
@@ -339,19 +339,22 @@ void CWin32Renderer::updateAirplane()
 
       // Periodic boundaries
       ///@todo: put to a method
-      const float halfLandZ = mLand->getScale().z * 0.5f;
-      const float halfLandX = mLand->getScale().x * 0.5f;
-      if (position.z > halfLandZ - 0.5f*mSky->getScale().z)
-         position.z -= 2.f*halfLandZ - 0.5f*mSky->getScale().z;
+      if (mLand && mSky)
+      {
+         const float halfLandZ = mLand->getScale().z * 0.5f;
+         const float halfLandX = mLand->getScale().x * 0.5f;
+         if (position.z > halfLandZ - 0.5f*mSky->getScale().z)
+            position.z -= 2.f*halfLandZ - 0.5f*mSky->getScale().z;
 
-      if (position.z < -halfLandZ + 0.5f*mSky->getScale().z)
-         position.z += 2.f*halfLandZ + 0.5f*mSky->getScale().z;
+         if (position.z < -halfLandZ + 0.5f*mSky->getScale().z)
+            position.z += 2.f*halfLandZ + 0.5f*mSky->getScale().z;
 
-      if (position.x > halfLandX - 0.5f*mSky->getScale().x)
-         position.x -= 2.f*halfLandX - 0.5f*mSky->getScale().x;
+         if (position.x > halfLandX - 0.5f*mSky->getScale().x)
+            position.x -= 2.f*halfLandX - 0.5f*mSky->getScale().x;
 
-      if (position.x < -halfLandX + 0.5f*mSky->getScale().x)
-         position.x += 2.f*halfLandX + 0.5f*mSky->getScale().x;
+         if (position.x < -halfLandX + 0.5f*mSky->getScale().x)
+            position.x += 2.f*halfLandX + 0.5f*mSky->getScale().x;
+      }
 
       mAirplane->setPosition(position);
 
@@ -554,6 +557,11 @@ void CWin32Renderer::updateInput()
                ///@todo: move to handle collisions
                position.y = std::min<float>(25.f, position.y + mAirplane->getSpeedOfFlight().y*mFrameDt);
                mAirplane->setPosition(position);
+
+               if (mTurbineFire)
+               {
+                  mTurbineFire->setEmitSpeed(2.5f);
+               }
             }
          }
          break;
@@ -704,6 +712,10 @@ void CWin32Renderer::handleCollisions()
             glm::vec3 newPos = mAirplane->getPosition();
             newPos.y = newPos.y + mAirplane->getSpeedOfFlight().y*mFrameDt;
             mAirplane->setPosition(newPos);
+            if (mTurbineFire)
+            {
+               mTurbineFire->setEmitSpeed(0.0f);
+            }
          }
       }
    }
@@ -852,6 +864,11 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
 
          //if (wParam == mKeyCode)
             mKeyPressed = false;
+      }
+
+      if (mTurbineFire && ((wParam == VK_SPACE) || (wParam == VK_UP)))
+      {
+         mTurbineFire->resetEmitSpeed();
       }
    }
    return false;
