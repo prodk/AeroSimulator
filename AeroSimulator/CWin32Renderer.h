@@ -143,6 +143,7 @@ namespace AeroSimulatorEngine
 
       std::size_t mWndWidth;
       std::size_t mWndHeight;
+      bool mDepthBufferMode;  // press '8' to see the depth buffer
    };
 } // namespace AeroSimulatorEngine
 

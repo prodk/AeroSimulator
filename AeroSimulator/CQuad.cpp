@@ -67,6 +67,6 @@ bool CQuad::loadTexture(const char * fileName)
 
 void CQuad::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   CLog::getInstance().log("\n** CQuad::setupShadersAndBuffers() **");
+   //CLog::getInstance().log("\n** CQuad::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }

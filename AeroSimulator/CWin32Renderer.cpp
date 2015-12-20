@@ -49,7 +49,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(10.f)
+   , mCameraAngleX(14.f)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
@@ -79,6 +79,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mHelpFbo()
    , mWndWidth(0.0f)
    , mWndHeight(0.0f)
+   , mDepthBufferMode(false)
 {
    assert(mCamera);
    assert(mMainFboQuad);
@@ -89,7 +90,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -9.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -10.0f));
    mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
@@ -119,11 +120,14 @@ void CWin32Renderer::update(CTask* pTask)
       // Render the scene to the main frame buffer
       glBindFramebuffer(GL_FRAMEBUFFER, mMainFbo.mFramebuffer);
       glViewport(0, 0, mWndWidth, mWndHeight);
+      ///@todo: probably set textures only for some conditions to avoid doing this every frame
+      mMainFboQuad->getTexture()->setId(mMainFbo.mTexColorBuffer);
+      mMainFboQuad->setShadersAndBuffers(mFboShader);
       drawScene();
 
+      ///@todo: probably place to a separate method
       // Render the scene to the second, helper framebuffer - another view of the plane
       glBindFramebuffer(GL_FRAMEBUFFER, mHelpFbo.mFramebuffer);
-
       // Setup the camera such that we look backwards
       mCamera->setRotate(glm::vec3(30.0f, 180.0f, 0.f));
       const glm::vec3 currentTranslate = mCamera->getTranslate();
@@ -133,29 +137,24 @@ void CWin32Renderer::update(CTask* pTask)
       swapBuffers();
 
       // Restore the camera translation
-
       mCamera->setTranslate(currentTranslate);
 
       // Render the textures to the screen
       // Bind the default framebuffer and draw the texture containing the scene
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
-      glClear(GL_COLOR_BUFFER_BIT);
       glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
 
-      //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
       // Main scene
-      ///@todo: set the reqired texture/shader when a key has been pressed
-      mMainFboQuad->getTexture()->setId(mMainFbo.mTexDepthBuffer);
-      mMainFboQuad->setShadersAndBuffers(mDepthBufferShader);
+      if (mDepthBufferMode) // Display the depth buffer instead on the main scene
+      {
+         mMainFboQuad->getTexture()->setId(mMainFbo.mTexDepthBuffer);
+         mMainFboQuad->setShadersAndBuffers(mDepthBufferShader);
+      }
       draw(mMainFboQuad.get());
-      mMainFboQuad->setShadersAndBuffers(mFboShader);
 
       // Small helper scene
       glViewport(0.7f*mWndWidth, 0, 0.3f*mWndWidth, 0.3f*mWndHeight);
       draw(mHelpFboQuad.get());
-      //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
       glEnable(GL_DEPTH_TEST);
 
@@ -867,15 +866,6 @@ void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, s
    GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
    glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers); // "2" is the size of DrawBuffers
 
-   //// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-   //glGenRenderbuffers(1, &fbo.mRenderBuffer);
-   //glBindRenderbuffer(GL_RENDERBUFFER, fbo.mRenderBuffer);
-   //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use a single renderbuffer object for both a depth AND stencil buffer.
-   //glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-   //// Now actually attach it
-   //// Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-   //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, fbo.mRenderBuffer);
    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -1002,6 +992,11 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
             if (star)
                star->setVisible(true);
          }
+         break;
+
+      case (0x38) : // 8 display the depth buffer
+         mDepthBufferMode = !mDepthBufferMode;
+         CLog::getInstance().log("* Button 8: display depth buffer: ", mDepthBufferMode);
          break;
 
       case (VK_RETURN) : // Enter, attach the camera to the airplane
