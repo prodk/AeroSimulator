@@ -181,6 +181,7 @@
     <ClInclude Include="CQuad.h" />
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h" />
     <ClInclude Include="src\shaders\CBillboardShader.h" />
+    <ClInclude Include="src\shaders\CDepthBufferShader.h" />
     <ClInclude Include="src\shaders\CFboShader.h" />
     <ClInclude Include="src\shaders\CHealthbarShader.h" />
     <ClInclude Include="src\shaders\CColorLambertianShader.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="CQuad.cpp" />
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CBillboardShader.cpp" />
+    <ClCompile Include="src\shaders\CDepthBufferShader.cpp" />
     <ClCompile Include="src\shaders\CFboShader.cpp" />
     <ClCompile Include="src\shaders\CHealthbarShader.cpp" />
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp" />
@@ -241,6 +243,7 @@
     <None Include="src\shaders\color.glslv" />
     <None Include="src\shaders\colorLambertian.glslf" />
     <None Include="src\shaders\colorLambertian.glslv" />
+    <None Include="src\shaders\depthBuffer.glslf" />
     <None Include="src\shaders\fbo.glslf" />
     <None Include="src\shaders\fbo.glslv" />
     <None Include="src\shaders\healthbar.glslf" />

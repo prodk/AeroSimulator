@@ -59,6 +59,7 @@ namespace AeroSimulatorEngine
       bool mIsLeaf;
       float mArbitraryAngle;
       glm::vec3 mArbitraryAxis;
+      bool mAreShadersSetup;
    };
 } // namespace AeroSimulatorEngine
 

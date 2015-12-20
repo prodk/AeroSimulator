@@ -19,6 +19,7 @@ CGameObject::CGameObject()
    , mParentTRMatrix()
    , mParentByLocalTRMatrix()
    , mIsLeaf(false)
+   , mAreShadersSetup(false)
 {
 }
 
@@ -44,8 +45,9 @@ void CGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    assert(pShader);
    mShader = pShader;
 
-   if (mGeometry)
+   if (mGeometry && !mAreShadersSetup)
    {
+      mAreShadersSetup = true;
       // VBO
       glGenBuffers(1, &mVboId);
       glBindBuffer(GL_ARRAY_BUFFER, mVboId);

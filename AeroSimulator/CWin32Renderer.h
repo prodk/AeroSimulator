@@ -28,8 +28,9 @@ namespace AeroSimulatorEngine
    struct SFrameBuffer
    {
       GLuint mFramebuffer;
-      GLint mTexColorBuffer;
+      GLuint mTexColorBuffer;
       GLuint mRenderBuffer;
+      GLuint mTexDepthBuffer;
    };
 
    class CWin32Renderer : public CRenderer
@@ -85,7 +86,7 @@ namespace AeroSimulatorEngine
       void setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader, 
                     const GLint width, const GLint height);
 
-      GLuint generateAttachmentTexture();
+      void generateAttachmentTexture(SFrameBuffer& fbo);
 
    private:
       HDC mDC;
@@ -136,6 +137,7 @@ namespace AeroSimulatorEngine
       std::unique_ptr<CQuad> mMainFboQuad;   // Main scene
       std::unique_ptr<CQuad> mHelpFboQuad; // Helper window
       std::shared_ptr<CShader> mFboShader;
+      std::shared_ptr<CShader> mDepthBufferShader;
       SFrameBuffer mMainFbo;
       SFrameBuffer mHelpFbo;
 

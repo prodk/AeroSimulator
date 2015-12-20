@@ -180,6 +180,9 @@
     <ClInclude Include="src\shaders\CFboShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="src\shaders\CDepthBufferShader.h">
+      <Filter>Header Files\renderer\shaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -308,6 +311,9 @@
     <ClCompile Include="src\shaders\CFboShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
+    <ClCompile Include="src\shaders\CDepthBufferShader.cpp">
+      <Filter>Source Files\renderer\shaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\shaders\color.glslf">
@@ -356,6 +362,9 @@
       <Filter>Source Files\renderer\shaders</Filter>
     </None>
     <None Include="src\shaders\texture.glslv">
+      <Filter>Source Files\renderer\shaders</Filter>
+    </None>
+    <None Include="src\shaders\depthBuffer.glslf">
       <Filter>Source Files\renderer\shaders</Filter>
     </None>
   </ItemGroup>

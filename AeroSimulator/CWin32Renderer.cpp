@@ -16,6 +16,7 @@
 #include "CParticleSystem.h"
 #include "CQuad.h"
 #include "../src/shaders/CFboShader.h"
+#include "../src/shaders/CDepthBufferShader.h"
 #include "CTexture.h"
 
 #include "glm/gtc/matrix_transform.hpp"
@@ -48,13 +49,13 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(15.f)
+   , mCameraAngleX(10.f)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
    , mSphereRoot(nullptr)
-   , mIsDebugMode(false)     // press 1
-   , mIsSetCameraMode(false) // press 3
+   , mIsDebugMode(false)     // press '1' key
+   , mIsSetCameraMode(false) // press '3' key
    , mCameraAttached(false)
    , mWndHandle(0)
    , mKeyPressed(false)
@@ -73,6 +74,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mMainFboQuad(new CQuad())
    , mHelpFboQuad(new CQuad())
    , mFboShader(new CFboShader())
+   , mDepthBufferShader(new CDepthBufferShader())
    , mMainFbo()
    , mHelpFbo()
    , mWndWidth(0.0f)
@@ -82,6 +84,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    assert(mMainFboQuad);
    assert(mHelpFboQuad);
    assert(mFboShader);
+   assert(mDepthBufferShader);
 
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
@@ -143,7 +146,11 @@ void CWin32Renderer::update(CTask* pTask)
       //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
       // Main scene
+      ///@todo: set the reqired texture/shader when a key has been pressed
+      mMainFboQuad->getTexture()->setId(mMainFbo.mTexDepthBuffer);
+      mMainFboQuad->setShadersAndBuffers(mDepthBufferShader);
       draw(mMainFboQuad.get());
+      mMainFboQuad->setShadersAndBuffers(mFboShader);
 
       // Small helper scene
       glViewport(0.7f*mWndWidth, 0, 0.3f*mWndWidth, 0.3f*mWndHeight);
@@ -180,7 +187,12 @@ void CWin32Renderer::init()
       {
          setupFbo(mMainFbo, mMainFboQuad, mFboShader, mWndWidth, mWndHeight);
          setupFbo(mHelpFbo, mHelpFboQuad, mFboShader, mWndWidth, mWndHeight);
-         mHelpFboQuad->setTextureUnit(GL_TEXTURE1); // Set a different texture unit to use several textures simultaneously
+
+         if (mHelpFboQuad)
+            mHelpFboQuad->setTextureUnit(GL_TEXTURE1); // Set a different texture unit to use several textures simultaneously
+
+         if (mDepthBufferShader)
+            mDepthBufferShader->link();
       }
 
       // Go back to the window rendering context
@@ -845,18 +857,25 @@ void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, s
    glBindFramebuffer(GL_FRAMEBUFFER, fbo.mFramebuffer);
 
    // Create a color attachment texture
-   fbo.mTexColorBuffer = generateAttachmentTexture();
+   generateAttachmentTexture(fbo);
+
+   // Attach color and depth textures
    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo.mTexColorBuffer, 0);
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fbo.mTexDepthBuffer, 0);
 
-   // Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
-   glGenRenderbuffers(1, &fbo.mRenderBuffer);
-   glBindRenderbuffer(GL_RENDERBUFFER, fbo.mRenderBuffer);
-   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use a single renderbuffer object for both a depth AND stencil buffer.
-   glBindRenderbuffer(GL_RENDERBUFFER, 0);
+   // Set the list of draw buffers.
+   GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers); // "2" is the size of DrawBuffers
 
-   // Now actually attach it
-   // Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
-   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, fbo.mRenderBuffer);
+   //// Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+   //glGenRenderbuffers(1, &fbo.mRenderBuffer);
+   //glBindRenderbuffer(GL_RENDERBUFFER, fbo.mRenderBuffer);
+   //glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use a single renderbuffer object for both a depth AND stencil buffer.
+   //glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+   //// Now actually attach it
+   //// Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+   //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, fbo.mRenderBuffer);
    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
       CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -869,15 +888,14 @@ void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, s
    }
 }
 
-GLuint CWin32Renderer::generateAttachmentTexture()
+void CWin32Renderer::generateAttachmentTexture(SFrameBuffer& fbo)
 {
    // What enum to use?
    GLenum attachment_type = GL_RGB;
 
-   //Generate texture ID and load texture data 
-   GLuint textureID;
-   glGenTextures(1, &textureID);
-   glBindTexture(GL_TEXTURE_2D, textureID);
+   //Generate texture ID and load texture data for the color buffer
+   glGenTextures(1, &fbo.mTexColorBuffer);
+   glBindTexture(GL_TEXTURE_2D, fbo.mTexColorBuffer);
 
    glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, mWndWidth, mWndHeight, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
 
@@ -885,7 +903,15 @@ GLuint CWin32Renderer::generateAttachmentTexture()
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glBindTexture(GL_TEXTURE_2D, 0);
 
-   return textureID;
+   // Generate the texture for the depth buffer
+   glGenTextures(1, &fbo.mTexDepthBuffer);
+   glBindTexture(GL_TEXTURE_2D, fbo.mTexDepthBuffer);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWndWidth, mWndHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)

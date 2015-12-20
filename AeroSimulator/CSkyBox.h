@@ -18,6 +18,9 @@ namespace AeroSimulatorEngine
       CSkyBox();
       virtual ~CSkyBox();
 
+      virtual void setEnvironment();
+      virtual void resetEnvironment();
+
       // Requires RC
       bool loadTexture(const char * fileName);
    };

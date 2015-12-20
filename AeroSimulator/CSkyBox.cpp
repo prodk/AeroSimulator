@@ -81,6 +81,16 @@ CSkyBox::~CSkyBox()
 {
 }
 
+void CSkyBox::setEnvironment()
+{
+   glDepthMask(GL_FALSE);
+}
+
+void CSkyBox::resetEnvironment()
+{
+   glDepthMask(GL_TRUE);
+}
+
 bool CSkyBox::loadTexture(const char * fileName)
 {
    return (0 != mTexture->loadDDSTexture(fileName));
