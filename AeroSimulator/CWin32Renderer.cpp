@@ -48,7 +48,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    , mAngleZ(0.0f)
    , mAngleX(0.0f)
-   , mCameraAngleX(20.f)
+   , mCameraAngleX(15.f)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mAirplaneRoot(nullptr)
@@ -70,20 +70,23 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mSky(nullptr)
    , mTurbineFire(nullptr)
    , mTurbineSmoke(nullptr)
-   , mFboQuad(new CQuad())
+   , mMainFboQuad(new CQuad())
+   , mHelpFboQuad(new CQuad())
    , mFboShader(new CFboShader())
    , mMainFbo()
+   , mHelpFbo()
    , mWndWidth(0.0f)
    , mWndHeight(0.0f)
 {
    assert(mCamera);
-   assert(mFboQuad);
+   assert(mMainFboQuad);
+   assert(mHelpFboQuad);
    assert(mFboShader);
 
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
-   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -10.0f));
+   mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -9.0f));
    mCamera->buildModelMatrix(glm::mat4x4(1.0f));
 }
 
@@ -110,11 +113,27 @@ void CWin32Renderer::update(CTask* pTask)
 
       setRenderContext();
 
-      // Render the scene to the frame buffer
+      // Render the scene to the main frame buffer
       glBindFramebuffer(GL_FRAMEBUFFER, mMainFbo.mFramebuffer);
+      glViewport(0, 0, mWndWidth, mWndHeight);
+      drawScene();
+
+      // Render the scene to the second, helper framebuffer - another view of the plane
+      glBindFramebuffer(GL_FRAMEBUFFER, mHelpFbo.mFramebuffer);
+
+      // Setup the camera such that we look backwards
+      mCamera->setRotate(glm::vec3(30.0f, 180.0f, 0.f));
+      const glm::vec3 currentTranslate = mCamera->getTranslate();
+      mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.0f));
+      mCamera->updateModelMatrix();
       drawScene();
       swapBuffers();
 
+      // Restore the camera translation
+
+      mCamera->setTranslate(currentTranslate);
+
+      // Render the textures to the screen
       // Bind the default framebuffer and draw the texture containing the scene
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
       glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
@@ -122,8 +141,15 @@ void CWin32Renderer::update(CTask* pTask)
       glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
 
       //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-      draw(mFboQuad.get());
+
+      // Main scene
+      draw(mMainFboQuad.get());
+
+      // Small helper scene
+      glViewport(0.7f*mWndWidth, 0, 0.3f*mWndWidth, 0.3f*mWndHeight);
+      draw(mHelpFboQuad.get());
       //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
       glEnable(GL_DEPTH_TEST);
 
       resetRenderContext();
@@ -152,7 +178,9 @@ void CWin32Renderer::init()
 
       if (mWndWidth > 0 && mWndHeight > 0)
       {
-         setupFbo(mMainFbo, mFboQuad, mFboShader, mWndWidth, mWndHeight);
+         setupFbo(mMainFbo, mMainFboQuad, mFboShader, mWndWidth, mWndHeight);
+         setupFbo(mHelpFbo, mHelpFboQuad, mFboShader, mWndWidth, mWndHeight);
+         mHelpFboQuad->setTextureUnit(GL_TEXTURE1); // Set a different texture unit to use several textures simultaneously
       }
 
       // Go back to the window rendering context
@@ -823,7 +851,7 @@ void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, s
    // Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
    glGenRenderbuffers(1, &fbo.mRenderBuffer);
    glBindRenderbuffer(GL_RENDERBUFFER, fbo.mRenderBuffer);
-   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWndWidth, mWndHeight); // Use a single renderbuffer object for both a depth AND stencil buffer.
+   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height); // Use a single renderbuffer object for both a depth AND stencil buffer.
    glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
    // Now actually attach it
@@ -833,11 +861,11 @@ void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, s
       CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-   if (shader && mFboQuad)
+   if (shader && quad)
    {
       shader->link();
-      mFboQuad->setShadersAndBuffers(shader);
-      mFboQuad->getTexture()->setId(fbo.mTexColorBuffer);
+      quad->setShadersAndBuffers(shader);
+      quad->getTexture()->setId(fbo.mTexColorBuffer);
    }
 }
 

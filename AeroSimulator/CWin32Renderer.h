@@ -133,9 +133,11 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<CParticleSystem> mTurbineFire;
       std::shared_ptr<CParticleSystem> mTurbineSmoke;
-      std::unique_ptr<CQuad> mFboQuad;
+      std::unique_ptr<CQuad> mMainFboQuad;   // Main scene
+      std::unique_ptr<CQuad> mHelpFboQuad; // Helper window
       std::shared_ptr<CShader> mFboShader;
       SFrameBuffer mMainFbo;
+      SFrameBuffer mHelpFbo;
 
       std::size_t mWndWidth;
       std::size_t mWndHeight;

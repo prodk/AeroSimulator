@@ -114,6 +114,9 @@ namespace AeroSimulatorEngine
 
       virtual void setVisible(const bool visible) { mIsVisible = visible; }
 
+      void setTextureUnit(const GLint unit) { mTextureUnit = unit; }
+      GLint getTextureUnit() const { return mTextureUnit; }
+
    protected:
       std::shared_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
@@ -153,6 +156,7 @@ namespace AeroSimulatorEngine
 
       bool mRepeatTexture;
       bool mIsTransparent;
+      GLint mTextureUnit;
    };
 } // namespace AeroSimulatorEngine
 
