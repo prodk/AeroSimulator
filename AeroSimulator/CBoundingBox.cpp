@@ -82,10 +82,20 @@ bool CBoundingBox::collidesWith(const CBoundingBox & box, bool vertical) const
 
    ///@todo: temporary, think that collision happenned if vertical distance is <=1
    float deltaX2 = 0.0f;
+   float deltaZ2 = 0.0f;
    if (!vertical)
-      deltaX2 = (translate.x - myTranslate.x)*(translate.x - myTranslate.x);
-   const float deltaY2 = (translate.y - myTranslate.y)*(translate.y - myTranslate.y);
-   if (std::sqrt(deltaX2 + deltaY2) <= 1.5f)
+   {
+      const float dX = translate.x - myTranslate.x;
+      deltaX2 = dX*dX;
+
+      const float dZ = translate.z - myTranslate.z;
+      deltaZ2 = dZ*dZ;
+   }
+   
+   const float dY = translate.y - myTranslate.y;
+   const float deltaY2 = dY*dY;
+
+   if (std::sqrt(deltaX2 + deltaY2 + deltaZ2) <= 2.0f)
    {
       result = true;
    }

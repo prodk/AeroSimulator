@@ -22,6 +22,15 @@ namespace AeroSimulatorEngine
    class CSkyBox;
    class CBillBoard;
    class CParticleSystem;
+   class CQuad;
+   class CShader;
+
+   struct SFrameBuffer
+   {
+      GLuint mFramebuffer;
+      GLint mTexColorBuffer;
+      GLuint mRenderBuffer;
+   };
 
    class CWin32Renderer : public CRenderer
    {
@@ -61,6 +70,7 @@ namespace AeroSimulatorEngine
       virtual void destroy();
       virtual void draw(CRenderable* pRenderable);
       virtual void swapBuffers();
+      void drawScene();
 
    private:
       bool createRenderContext();
@@ -72,6 +82,10 @@ namespace AeroSimulatorEngine
 
       void updateInput(); ///@todo: move to CWin32Window or a separate handler when events are implemented
       void handleCollisions(); ///@todo; move to a special task when events are implemented
+      void setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader, 
+                    const GLint width, const GLint height);
+
+      GLuint generateAttachmentTexture();
 
    private:
       HDC mDC;
@@ -119,6 +133,12 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<CParticleSystem> mTurbineFire;
       std::shared_ptr<CParticleSystem> mTurbineSmoke;
+      std::unique_ptr<CQuad> mFboQuad;
+      std::shared_ptr<CShader> mFboShader;
+      SFrameBuffer mMainFbo;
+
+      std::size_t mWndWidth;
+      std::size_t mWndHeight;
    };
 } // namespace AeroSimulatorEngine
 

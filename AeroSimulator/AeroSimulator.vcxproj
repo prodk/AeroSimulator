@@ -178,8 +178,10 @@
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
     <ClInclude Include="CLeafGameObject.h" />
+    <ClInclude Include="CQuad.h" />
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h" />
     <ClInclude Include="src\shaders\CBillboardShader.h" />
+    <ClInclude Include="src\shaders\CFboShader.h" />
     <ClInclude Include="src\shaders\CHealthbarShader.h" />
     <ClInclude Include="src\shaders\CColorLambertianShader.h" />
     <ClInclude Include="src\shaders\CColorShader.h" />
@@ -220,8 +222,10 @@
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
     <ClCompile Include="CLeafGameObject.cpp" />
+    <ClCompile Include="CQuad.cpp" />
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CBillboardShader.cpp" />
+    <ClCompile Include="src\shaders\CFboShader.cpp" />
     <ClCompile Include="src\shaders\CHealthbarShader.cpp" />
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp" />
     <ClCompile Include="src\shaders\CColorShader.cpp" />
@@ -229,6 +233,24 @@
     <ClCompile Include="src\shaders\CShader.cpp" />
     <ClCompile Include="src\shaders\CSimpleShader.cpp" />
     <ClCompile Include="src\shaders\CTextureShader.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\animationBillboard.glslv" />
+    <None Include="src\shaders\billboard.glslv" />
+    <None Include="src\shaders\color.glslf" />
+    <None Include="src\shaders\color.glslv" />
+    <None Include="src\shaders\colorLambertian.glslf" />
+    <None Include="src\shaders\colorLambertian.glslv" />
+    <None Include="src\shaders\fbo.glslf" />
+    <None Include="src\shaders\fbo.glslv" />
+    <None Include="src\shaders\healthbar.glslf" />
+    <None Include="src\shaders\healthbar.glslv" />
+    <None Include="src\shaders\normalMapSphere.glslf" />
+    <None Include="src\shaders\normalMapSphere.glslv" />
+    <None Include="src\shaders\simple.glslf" />
+    <None Include="src\shaders\simple.glslv" />
+    <None Include="src\shaders\texture.glslf" />
+    <None Include="src\shaders\texture.glslv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

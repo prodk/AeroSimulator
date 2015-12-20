@@ -60,8 +60,8 @@ namespace
       2, 1, // front
       6, 5, // right
 
-            // Stripe 2
-            // bottom
+      // Stripe 2
+      // bottom
       5, 1, 4, 0,
 
       // front

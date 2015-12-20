@@ -15,6 +15,9 @@ namespace AeroSimulatorEngine
       explicit CAppWindow(ePriority prio);
       virtual ~CAppWindow() = 0;
 
+      std::size_t getWidth() const { return mWidth; }
+      std::size_t getHeight() const { return mHeight; }
+
       static bool isClosing() { return mIsClosing; }
       static void resetIsClosing() { mIsClosing = false; }
 

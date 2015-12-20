@@ -20,6 +20,7 @@ namespace AeroSimulatorEngine
       GLint getId() const { return mId; }
       GLint getWidth() const { return mWidth; }
       GLint getHeight() const { return mHeight; }
+      void setId(const GLint id) { mId = id; }
 
    private:
       GLuint mId;

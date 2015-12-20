@@ -14,6 +14,9 @@
 #include "CBoundingBox.h"
 #include "CSkyBox.h"
 #include "CParticleSystem.h"
+#include "CQuad.h"
+#include "../src/shaders/CFboShader.h"
+#include "CTexture.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -67,8 +70,15 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mSky(nullptr)
    , mTurbineFire(nullptr)
    , mTurbineSmoke(nullptr)
+   , mFboQuad(new CQuad())
+   , mFboShader(new CFboShader())
+   , mMainFbo()
+   , mWndWidth(0.0f)
+   , mWndHeight(0.0f)
 {
    assert(mCamera);
+   assert(mFboQuad);
+   assert(mFboShader);
 
    mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
@@ -93,46 +103,28 @@ void CWin32Renderer::update(CTask* pTask)
    {
       updateFPS(pTask);
       updateInput();    // Handle keyboard events
-
-      setRenderContext();
-
       springButtons();
 
       updateRenderables();
-
       updateCamera();
 
-      glClearColor(0.95f, 0.95f, 0.95f, 1);
-      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+      setRenderContext();
 
-      // At first draw opaque objects
-      /// @todo: put to a method with an array as an argument
-      for (auto * pRenderable : mRenderables)
-      {
-         if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
-         {
-            ///todo: think how to set the width/height of the billboard
-            pRenderable->setRightVector(mCamera->getRightVector());
-            pRenderable->setUpVector(mCamera->getUpVector());
-            pRenderable->setEyePos(mCamera->getPositionWorldSpace());
-            draw(pRenderable);
-         }
-      }
-
-      // Then draw transparent objects (they switch the depth off)
-      for (auto * pRenderable : mTransparentRenderables)
-      {
-         if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
-         {
-            ///todo: think how to set the width/height of the billboard
-            pRenderable->setRightVector(mCamera->getRightVector());
-            pRenderable->setUpVector(mCamera->getUpVector());
-            pRenderable->setEyePos(mCamera->getPositionWorldSpace());
-            draw(pRenderable);
-         }
-      }
-
+      // Render the scene to the frame buffer
+      glBindFramebuffer(GL_FRAMEBUFFER, mMainFbo.mFramebuffer);
+      drawScene();
       swapBuffers();
+
+      // Bind the default framebuffer and draw the texture containing the scene
+      glBindFramebuffer(GL_FRAMEBUFFER, 0);
+      glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // Set clear color to white (not really necessery actually, since we won't be able to see behind the quad anyways)
+      glClear(GL_COLOR_BUFFER_BIT);
+      glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
+
+      //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      draw(mFboQuad.get());
+      //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glEnable(GL_DEPTH_TEST);
 
       resetRenderContext();
    }
@@ -157,6 +149,11 @@ void CWin32Renderer::init()
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+      if (mWndWidth > 0 && mWndHeight > 0)
+      {
+         setupFbo(mMainFbo, mFboQuad, mFboShader, mWndWidth, mWndHeight);
+      }
 
       // Go back to the window rendering context
       resetRenderContext();
@@ -226,10 +223,45 @@ void CWin32Renderer::swapBuffers()
    ::SwapBuffers(mDC);
 }
 
+void CWin32Renderer::drawScene()
+{
+   glClearColor(0.95f, 0.95f, 0.95f, 1);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+   // At first draw opaque objects
+   /// @todo: put to a method with an array as an argument
+   for (auto * pRenderable : mRenderables)
+   {
+      if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
+      {
+         ///todo: think how to set the width/height of the billboard
+         pRenderable->setRightVector(mCamera->getRightVector());
+         pRenderable->setUpVector(mCamera->getUpVector());
+         pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+         draw(pRenderable);
+      }
+   }
+
+   // Then draw transparent objects (they switch the depth off)
+   for (auto * pRenderable : mTransparentRenderables)
+   {
+      if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
+      {
+         ///todo: think how to set the width/height of the billboard
+         pRenderable->setRightVector(mCamera->getRightVector());
+         pRenderable->setUpVector(mCamera->getUpVector());
+         pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+         draw(pRenderable);
+      }
+   }
+}
+
 void CWin32Renderer::init(const CWin32Window & window)
 {
    mDC = window.getDC();
    mIsFullScreen = window.isFullScreen();
+   mWndWidth = window.getWidth();
+   mWndHeight = window.getHeight();
    init();
 }
 
@@ -776,6 +808,56 @@ void CWin32Renderer::handleCollisions()
          }
       }
    }
+}
+
+void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader,
+                              const GLint width, const GLint height)
+{
+   glGenFramebuffers(1, &fbo.mFramebuffer);
+   glBindFramebuffer(GL_FRAMEBUFFER, fbo.mFramebuffer);
+
+   // Create a color attachment texture
+   fbo.mTexColorBuffer = generateAttachmentTexture();
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo.mTexColorBuffer, 0);
+
+   // Create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
+   glGenRenderbuffers(1, &fbo.mRenderBuffer);
+   glBindRenderbuffer(GL_RENDERBUFFER, fbo.mRenderBuffer);
+   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, mWndWidth, mWndHeight); // Use a single renderbuffer object for both a depth AND stencil buffer.
+   glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+   // Now actually attach it
+   // Now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, fbo.mRenderBuffer);
+   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+   if (shader && mFboQuad)
+   {
+      shader->link();
+      mFboQuad->setShadersAndBuffers(shader);
+      mFboQuad->getTexture()->setId(fbo.mTexColorBuffer);
+   }
+}
+
+GLuint CWin32Renderer::generateAttachmentTexture()
+{
+   // What enum to use?
+   GLenum attachment_type = GL_RGB;
+
+   //Generate texture ID and load texture data 
+   GLuint textureID;
+   glGenTextures(1, &textureID);
+   glBindTexture(GL_TEXTURE_2D, textureID);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, mWndWidth, mWndHeight, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glBindTexture(GL_TEXTURE_2D, 0);
+
+   return textureID;
 }
 
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
