@@ -128,8 +128,6 @@ void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::share
       pShader->link();
       pColorShader->link();
 
-      const float width = 0.5f;
-      const float height = 0.5f;
       float dx = 5.f;
 
       for (std::size_t id = 0; id < mNumOfParticles; ++id)
@@ -195,4 +193,12 @@ void CParticleSystem::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
 
    // Model matrix of the cube
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
+}
+
+void CParticleSystem::showParticles(const bool factor)
+{
+   for (std::size_t count = 0; count < mNumOfParticles; ++count)
+   {
+      mBillboard[count]->setVisible(factor);
+   }
 }

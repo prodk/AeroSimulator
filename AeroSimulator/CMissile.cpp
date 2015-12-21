@@ -1,5 +1,8 @@
 #include "CMissile.h"
 #include "CGeometry.h"
+#include "CParticleSystem.h"
+#include "CWin32Renderer.h"
+#include "CCommonMath.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -56,7 +59,9 @@ namespace
 CMissile::CMissile()
    : mIsDetached(false)
    , mFlightDirection()
-   , mSpeed(glm::vec3(50.0f, 240.0f, 50.0f))
+   , mSpeed(glm::vec3(30.0f, 500.0f, 30.0f))
+   //, mSpeed(glm::vec3(10.0f, 100.0f, 10.0f))
+   , mFire(nullptr)
 {
    mGeometry.reset(new CGeometry());
 
@@ -89,4 +94,44 @@ void CMissile::update(float dt)
    currentPos -= mFlightDirection * mSpeed *glm::vec3(dt, 0.0f, dt);
    currentPos.y -= mSpeed.y * dt * dt; // Gravity
    setTranslate(currentPos);
+
+   calculateModelMatrix();
+
+   mFire->update(dt);
+   mFire->resetParentTRMatrix();
+
+   mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.5f));
+   mFire->buildModelMatrix(getModelMatrix());
+}
+
+void CMissile::addParticles(std::shared_ptr<CShader>& pShader, 
+                            std::shared_ptr<CShader>& pColorShader,
+                            const char * filePath, const glm::vec2 & frameSize, const float width, const float height)
+{
+   mFire.reset(new CParticleSystem(1.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 2.5f)));
+   if (mFire)
+   {
+      mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.1f));
+      mFire->addParticles(pShader, pColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.5f, 0.5f);
+
+      // Add fire to the airplane
+      add(mFire.get());
+
+      buildModelMatrix(glm::mat4x4(1.0f));
+   }
+}
+
+void CMissile::setEmitSpeed(const float factor)
+{
+   mFire->setEmitSpeed(factor);
+}
+
+void CMissile::resetEmitSpeed()
+{
+   mFire->resetEmitSpeed();
+}
+
+void CMissile::setFireVisible(const bool visible)
+{
+   mFire->showParticles(visible);
 }

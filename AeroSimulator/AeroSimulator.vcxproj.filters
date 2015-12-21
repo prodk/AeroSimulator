@@ -184,7 +184,7 @@
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
     <ClInclude Include="CMissile.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\gameObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -318,7 +318,7 @@
       <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
     <ClCompile Include="CMissile.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\gameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

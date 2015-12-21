@@ -216,6 +216,7 @@ void CApp::addAirplane()
    mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
    mRendererTask->setAirplane(mAirPlane);
 
+   ///@todo: do not traverse the tree in addFire, smoke, missile, just traverse the airplane tree after these method calls
    /// Jet fire
    addFire();
 
@@ -407,6 +408,7 @@ void CApp::addSmoke()
    {
       const char* filePath = "../AeroSimulator/res/smoke.dds";
       mTurbineSmoke->setTranslate(glm::vec3(0.0f, -0.35f, 1.75f));
+      //mTurbineSmoke->setTranslate(glm::vec3(0.0f, 0.0f, 0.5f));
       mTurbineSmoke->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.75f, 0.75f);
 
       std::vector<CCompositeGameObject*> tree;
@@ -430,6 +432,7 @@ void CApp::addMissiles()
    mRightMissile.reset(new CMissile());
    if (mRightMissile)
    {
+      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
       mRightMissile->setTranslate(glm::vec3(2.0f, -1.0f, 1.0f));
       mRightMissile->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
@@ -437,11 +440,22 @@ void CApp::addMissiles()
       mRightMissile->setColor(color);
       mColorShader->link();
       mRightMissile->setShadersAndBuffers(mColorShader);
-      mRightMissile->buildModelMatrix(glm::mat4x4());
+
+      mRightMissile->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.5f, 0.5f);
+
+      //mRightMissile->buildModelMatrix(glm::mat4x4());
+      std::vector<CCompositeGameObject*> tree;
+      mRightMissile->traverse(tree);
+      for (auto * pTree : tree)
+      {
+         if (pTree)
+         {
+            mRendererTask->addRenderable(pTree);
+         }
+      }
 
       ///Add missile to the renderer
       mRendererTask->setRightMissile(mRightMissile);
-
       mRendererTask->addRenderable(mRightMissile.get());
 
       // Add missilee to the airplane
@@ -490,7 +504,6 @@ void CApp::addMissiles()
       }
 
       mRendererTask->addRenderable(mExplosion.get());
-      //mAirPlane->getRoot()->add(mExplosion.get());
       mRendererTask->setExplosion(mExplosion);
    }
 

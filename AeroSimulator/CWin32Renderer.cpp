@@ -590,7 +590,6 @@ void CWin32Renderer::updateRenderables()
    if (mRightMissile && mRightMissile->isDetached())
    {
       mRightMissile->update(mFrameDt);
-      mRightMissile->calculateModelMatrix();
    }
 
    if (mExplosion)
@@ -885,6 +884,7 @@ void CWin32Renderer::handleCollisions()
 
          mRightMissile->buildModelMatrix(mAirplaneRoot->getTRMatrix());
          mAirplaneRoot->add(mRightMissile.get());
+         mRightMissile->setFireVisible(false);
       }
    }
 }
@@ -1067,9 +1067,8 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
             // Set the position in the world space and all actions are in the world space
             glm::vec3 positionWorld = mAirplane->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f);
             mRightMissile->setTranslate(positionWorld);
-            mRightMissile->resetParentTRMatrix();
-            mRightMissile->setRotate(glm::vec3(0.0f, 0.0f, 0.0f));
             mRightMissile->setFlightDirection(mAirplane->getFlightDirection());
+            //mRightMissile->setFireVisible(true);
          }
          break;
       } // end switch (wParam)

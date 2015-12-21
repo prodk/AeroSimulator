@@ -37,6 +37,8 @@ namespace AeroSimulatorEngine
       virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
       virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
 
+      void showParticles(const bool factor);
+
    private:
       std::vector<SParticle> mParticle; ///@todo: change to a collection of particles
       std::vector<std::unique_ptr<CAnimationBillBoard> > mBillboard; ///@todo: probably make a member of SParticle
