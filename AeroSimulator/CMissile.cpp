@@ -56,7 +56,7 @@ namespace
 CMissile::CMissile()
    : mIsDetached(false)
    , mFlightDirection()
-   , mSpeed(glm::vec3(20.0f, 140.0f, 20.0f))
+   , mSpeed(glm::vec3(50.0f, 240.0f, 50.0f))
 {
    mGeometry.reset(new CGeometry());
 
@@ -84,6 +84,7 @@ CMissile::~CMissile()
 
 void CMissile::update(float dt)
 {
+   ///@todo: it is much better to introduce a position in the world space and use it here
    glm::vec3 currentPos = getTranslate();
    currentPos -= mFlightDirection * mSpeed *glm::vec3(dt, 0.0f, dt);
    currentPos.y -= mSpeed.y * dt * dt; // Gravity

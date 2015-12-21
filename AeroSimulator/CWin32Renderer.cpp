@@ -589,7 +589,7 @@ void CWin32Renderer::updateRenderables()
    if (mRightMissile && mRightMissile->isDetached())
    {
       mRightMissile->update(mFrameDt);
-      //mRightMissile->updateTRMatrix(glm::mat4x4(), mFrameDt);
+      //mRightMissile->calculateTRMatrix();
       mRightMissile->calculateModelMatrix();
    }
 
@@ -737,15 +737,6 @@ void CWin32Renderer::updateInput()
             mAirplane->setSpeedOfFlight(currentSpeed);
          }
          break;
-
-      case (VK_SPACE) : // Space, shot the missile
-         if (!mThirdKeyPressed)
-         {
-            mAirplaneRoot->remove(mRightMissile.get());
-            mRightMissile->setDetached(true);
-            mRightMissile->setFlightDirection(mAirplane->getFlightDirection());
-         }
-         break;
       }
    }
 
@@ -874,13 +865,14 @@ void CWin32Renderer::handleCollisions()
       glm::vec3 currentPos = mRightMissile->getTranslate();
       if (currentPos.y <= mLand->getTranslate().y)
       {
-         glm::vec3 cabinePos = mAirplane->getPosition();
-         currentPos = cabinePos + glm::vec3(2.0f, -1.0f, 1.0f);///@todo: do not use magic numbers
+         mRightMissile->setDetached(false);
+         currentPos = glm::vec3(2.0f, -1.0f, 1.0f);///@todo: do not use magic numbers
+
+         mRightMissile->setRotate(glm::vec3(0.0f, 0.0f, 0.0f));
          mRightMissile->setTranslate(currentPos);
 
+         mRightMissile->buildModelMatrix(mAirplaneRoot->getTRMatrix());
          mAirplaneRoot->add(mRightMissile.get());
-         mRightMissile->buildModelMatrix(glm::mat4x4());
-         mRightMissile->setDetached(false);
       }
    }
 }
@@ -1051,6 +1043,21 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
                mCameraAttached = false;
                CLog::getInstance().log("* Button Enter:Camera detached from the plane");
             }
+         }
+         break;
+
+      case (VK_SPACE) : // Space, shot the missile
+         if (!mThirdKeyPressed)
+         {
+            mAirplaneRoot->remove(mRightMissile.get());
+            mRightMissile->setDetached(true);
+
+            // Set the position in the world space and all actions are in the world space
+            glm::vec3 positionWorld = mAirplane->getPosition() + glm::vec3(0.0f, 0.0f, 0.0f);
+            mRightMissile->setTranslate(positionWorld);
+            mRightMissile->resetParentTRMatrix();
+            mRightMissile->setRotate(glm::vec3(0.0f, 0.0f, 0.0f));
+            mRightMissile->setFlightDirection(mAirplane->getFlightDirection());
          }
          break;
       } // end switch (wParam)
