@@ -24,6 +24,7 @@ namespace AeroSimulatorEngine
    class CParticleSystem;
    class CQuad;
    class CShader;
+   class CMissile;
 
    struct SFrameBuffer
    {
@@ -64,6 +65,8 @@ namespace AeroSimulatorEngine
       void setClouds(const std::vector<std::shared_ptr<CBillBoard> >& clouds) { mClouds = clouds; }
       void setTurbineFire(std::shared_ptr<CParticleSystem>& fire) { mTurbineFire = fire; }
       void setTurbineSmoke(std::shared_ptr<CParticleSystem>& smoke) { mTurbineSmoke = smoke; }
+
+      void setRightMissile(std::shared_ptr<CMissile>& missile) { mRightMissile = missile; }
 
    private:
       // Override CRenderer part
@@ -144,6 +147,7 @@ namespace AeroSimulatorEngine
       std::size_t mWndWidth;
       std::size_t mWndHeight;
       bool mDepthBufferMode;  // press '8' to see the depth buffer
+      std::shared_ptr<CMissile> mRightMissile;
    };
 } // namespace AeroSimulatorEngine
 

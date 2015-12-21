@@ -59,6 +59,8 @@ namespace AeroSimulatorEngine
 
       float getFlightAngle() const { return mFlightAngle; }
 
+      glm::vec3 getFlightDirection() const { return mXzDirection; }
+
       static const std::size_t numOfCubes;
 
    private:

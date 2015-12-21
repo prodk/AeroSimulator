@@ -438,8 +438,8 @@ void CApp::addMissiles()
       mRightMissile->setShadersAndBuffers(mColorShader);
       mRightMissile->buildModelMatrix(glm::mat4x4());
 
-      ///@todo: add missile to the renderer
-      //mRendererTask->setLeftMissile(mRightMissile);
+      ///Add missile to the renderer
+      mRendererTask->setRightMissile(mRightMissile);
 
       mRendererTask->addRenderable(mRightMissile.get());
 

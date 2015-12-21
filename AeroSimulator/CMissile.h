@@ -14,8 +14,13 @@ namespace AeroSimulatorEngine
       bool isDetached() const { return mIsDetached; }
       void setDetached(const bool detach) { mIsDetached = detach; }
 
+      void setFlightDirection(const glm::vec3& dir) { mFlightDirection = dir; }
+      void update(float dt);
+
    private:
       bool mIsDetached;
+      glm::vec3 mFlightDirection;
+      glm::vec3 mSpeed;
    };
 } // namespace AeroSimulatorEngine
 

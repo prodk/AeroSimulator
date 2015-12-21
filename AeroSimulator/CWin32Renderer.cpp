@@ -18,6 +18,7 @@
 #include "../src/shaders/CFboShader.h"
 #include "../src/shaders/CDepthBufferShader.h"
 #include "CTexture.h"
+#include "CMissile.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -80,6 +81,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mWndWidth(0.0f)
    , mWndHeight(0.0f)
    , mDepthBufferMode(false)
+   , mRightMissile(nullptr)
 {
    assert(mCamera);
    assert(mMainFboQuad);
@@ -578,9 +580,17 @@ void CWin32Renderer::updateRenderables()
    {
       mTurbineFire->updateModelMatrix();
    }
+
    if (mTurbineSmoke)
    {
       mTurbineSmoke->updateModelMatrix();
+   }
+
+   if (mRightMissile && mRightMissile->isDetached())
+   {
+      mRightMissile->update(mFrameDt);
+      //mRightMissile->updateTRMatrix(glm::mat4x4(), mFrameDt);
+      mRightMissile->calculateModelMatrix();
    }
 
    handleCollisions();
@@ -727,6 +737,15 @@ void CWin32Renderer::updateInput()
             mAirplane->setSpeedOfFlight(currentSpeed);
          }
          break;
+
+      case (VK_SPACE) : // Space, shot the missile
+         if (!mThirdKeyPressed)
+         {
+            mAirplaneRoot->remove(mRightMissile.get());
+            mRightMissile->setDetached(true);
+            mRightMissile->setFlightDirection(mAirplane->getFlightDirection());
+         }
+         break;
       }
    }
 
@@ -845,6 +864,23 @@ void CWin32Renderer::handleCollisions()
                mStar[count]->setVisible(false);
             }
          }
+      }
+   }
+
+   ///@todo: add bounding box to the missile later
+   // Missiles and land
+   if (mLand && mRightMissile && mRightMissile->isDetached() && mAirplaneRoot)
+   {
+      glm::vec3 currentPos = mRightMissile->getTranslate();
+      if (currentPos.y <= mLand->getTranslate().y)
+      {
+         glm::vec3 cabinePos = mAirplane->getPosition();
+         currentPos = cabinePos + glm::vec3(2.0f, -1.0f, 1.0f);///@todo: do not use magic numbers
+         mRightMissile->setTranslate(currentPos);
+
+         mAirplaneRoot->add(mRightMissile.get());
+         mRightMissile->buildModelMatrix(glm::mat4x4());
+         mRightMissile->setDetached(false);
       }
    }
 }
