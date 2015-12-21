@@ -68,6 +68,8 @@ namespace AeroSimulatorEngine
 
       void setRightMissile(std::shared_ptr<CMissile>& missile) { mRightMissile = missile; }
 
+      void setExplosion(std::shared_ptr<CAnimationBillBoard>& expl) { mExplosion = expl; }
+
    private:
       // Override CRenderer part
       virtual void init();
@@ -148,6 +150,7 @@ namespace AeroSimulatorEngine
       std::size_t mWndHeight;
       bool mDepthBufferMode;  // press '8' to see the depth buffer
       std::shared_ptr<CMissile> mRightMissile;
+      std::shared_ptr<CAnimationBillBoard> mExplosion;
    };
 } // namespace AeroSimulatorEngine
 

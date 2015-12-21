@@ -52,6 +52,7 @@ CApp::CApp()
    , mTurbineFire()
    , mTurbineSmoke()
    , mRightMissile()
+   , mExplosion()
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -446,4 +447,51 @@ void CApp::addMissiles()
       // Add missilee to the airplane
       mAirPlane->getRoot()->add(mRightMissile.get());
    }
+
+   // Add explosion
+   //mExplosion
+   mAnimationBbShader->link();
+   const float width = 1.0f;
+   const float height = 1.0f;
+   const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
+
+   mExplosion.reset(new CAnimationBillBoard());
+
+   if (mExplosion)
+   {
+      if (mExplosion->loadTexture(filePath))
+      {
+         CLog::getInstance().log("* Explosion loaded: ", filePath);
+      }
+
+      mExplosion->setTranslate(glm::vec3(0.0f, 1.0f, 0.0f));
+      mExplosion->setBillboardHeight(width);
+      mExplosion->setBillboardWidth(height);
+      mExplosion->calculateModelMatrix();
+      mExplosion->setFrameSize(glm::vec2(1.0f / 4.0f, 1.0f / 4.0f));
+      //mExplosion->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
+      mExplosion->setTransparent(true);
+      mExplosion->setVisible(false); // Initially invisible
+
+      mExplosion->setShadersAndBuffers(mAnimationBbShader);
+      mColorShader->link();
+      const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
+      mExplosion->setBoundingBox(mColorShader, bBoxColor);
+
+      std::vector<CCompositeGameObject*> tree;
+      mExplosion->traverse(tree);
+
+      for (auto * pTree : tree)
+      {
+         if (pTree)
+         {
+            mRendererTask->addRenderable(pTree);
+         }
+      }
+
+      mRendererTask->addRenderable(mExplosion.get());
+      //mAirPlane->getRoot()->add(mExplosion.get());
+      mRendererTask->setExplosion(mExplosion);
+   }
+
 }

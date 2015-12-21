@@ -93,6 +93,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CParticleSystem> mTurbineFire;
       std::shared_ptr<CParticleSystem> mTurbineSmoke;
       std::shared_ptr<CMissile> mRightMissile;
+      std::shared_ptr<CAnimationBillBoard> mExplosion;
    };
 
 } // namespace AeroSimulatorEngine

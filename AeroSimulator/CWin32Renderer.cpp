@@ -82,6 +82,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mWndHeight(0.0f)
    , mDepthBufferMode(false)
    , mRightMissile(nullptr)
+   , mExplosion(nullptr)
 {
    assert(mCamera);
    assert(mMainFboQuad);
@@ -589,8 +590,13 @@ void CWin32Renderer::updateRenderables()
    if (mRightMissile && mRightMissile->isDetached())
    {
       mRightMissile->update(mFrameDt);
-      //mRightMissile->calculateTRMatrix();
       mRightMissile->calculateModelMatrix();
+   }
+
+   if (mExplosion)
+   {
+      mExplosion->update(mFrameDt);
+      mExplosion->calculateModelMatrix();
    }
 
    handleCollisions();
@@ -865,6 +871,12 @@ void CWin32Renderer::handleCollisions()
       glm::vec3 currentPos = mRightMissile->getTranslate();
       if (currentPos.y <= mLand->getTranslate().y)
       {
+         if (mExplosion)
+         {
+            const glm::vec3 explosionPos = glm::vec3(currentPos.x, mLand->getTranslate().y + 1.0f, currentPos.z);
+            mExplosion->setTranslate(explosionPos);
+            mExplosion->setVisible(true);
+         }
          mRightMissile->setDetached(false);
          currentPos = glm::vec3(2.0f, -1.0f, 1.0f);///@todo: do not use magic numbers
 
