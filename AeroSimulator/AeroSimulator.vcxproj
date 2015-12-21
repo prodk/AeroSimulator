@@ -164,6 +164,7 @@
     <ClInclude Include="CLine.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CColorBillBoard.h" />
+    <ClInclude Include="CMissile.h" />
     <ClInclude Include="CParentGameObject.h" />
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CPropeller.h" />
@@ -209,6 +210,7 @@
     <ClCompile Include="CLine.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CColorBillBoard.cpp" />
+    <ClCompile Include="CMissile.cpp" />
     <ClCompile Include="CParentGameObject.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CPropeller.cpp" />

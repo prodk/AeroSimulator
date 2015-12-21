@@ -1,13 +1,9 @@
-#include "CSkyBox.h"
+#include "CMissile.h"
 #include "CGeometry.h"
-#include "CCube.h"
-#include "CTexture.h"
-
-#include <cassert>
 
 using namespace AeroSimulatorEngine;
 
-///@todo: add geometry to CCube
+///@todo: add geometry to CCube, remove from C3DModel
 namespace
 {
    GLfloat vertices[] =
@@ -57,13 +53,11 @@ namespace
    };
 }
 
-CSkyBox::CSkyBox()
-   : CCube()
+CMissile::CMissile()
+   : mIsDetached(false)
 {
-   mTexture.reset(new CTexture());
    mGeometry.reset(new CGeometry());
 
-   assert(mTexture);
    assert(mGeometry);
 
    if (mGeometry)
@@ -82,22 +76,6 @@ CSkyBox::CSkyBox()
    }
 }
 
-CSkyBox::~CSkyBox()
+CMissile::~CMissile()
 {
 }
-
-void CSkyBox::setEnvironment()
-{
-   glDepthMask(GL_FALSE);
-}
-
-void CSkyBox::resetEnvironment()
-{
-   glDepthMask(GL_TRUE);
-}
-
-bool CSkyBox::loadTexture(const char * fileName)
-{
-   return (0 != mTexture->loadDDSTexture(fileName));
-}
-

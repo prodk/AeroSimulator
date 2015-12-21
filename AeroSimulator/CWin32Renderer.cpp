@@ -131,7 +131,7 @@ void CWin32Renderer::update(CTask* pTask)
       // Setup the camera such that we look backwards
       mCamera->setRotate(glm::vec3(30.0f, 180.0f, 0.f));
       const glm::vec3 currentTranslate = mCamera->getTranslate();
-      mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.0f));
+      mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));
       mCamera->updateModelMatrix();
       drawScene();
       swapBuffers();

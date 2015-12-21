@@ -26,6 +26,7 @@ namespace AeroSimulatorEngine
    class CSkyBox;
    class CBillBoard;
    class CParticleSystem;
+   class CMissile;
 
    class CApp
    {
@@ -56,6 +57,9 @@ namespace AeroSimulatorEngine
       void addClouds();
       void addSphere();
       void addStars();
+      void addFire();
+      void addSmoke();
+      void addMissiles();
 
    private:
       typedef std::shared_ptr<CGameObject> tGameObjectPtr;
@@ -88,6 +92,7 @@ namespace AeroSimulatorEngine
 
       std::shared_ptr<CParticleSystem> mTurbineFire;
       std::shared_ptr<CParticleSystem> mTurbineSmoke;
+      std::shared_ptr<CMissile> mRightMissile;
    };
 
 } // namespace AeroSimulatorEngine

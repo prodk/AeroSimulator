@@ -183,6 +183,9 @@
     <ClInclude Include="src\shaders\CDepthBufferShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
+    <ClInclude Include="CMissile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -313,6 +316,9 @@
     </ClCompile>
     <ClCompile Include="src\shaders\CDepthBufferShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
+    </ClCompile>
+    <ClCompile Include="CMissile.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,6 +22,7 @@
 #include "../src/shaders/CAnimationBillboardShader.h"
 #include "../src/shaders/CNormalMapSphereShader.h"
 #include "CParticleSystem.h"
+#include "CMissile.h"
 
 #include <conio.h>
 #include <cassert>
@@ -50,6 +51,7 @@ CApp::CApp()
    , mNormalMapSphereShader(new CNormalMapSphereShader())
    , mTurbineFire()
    , mTurbineSmoke()
+   , mRightMissile()
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
@@ -213,49 +215,13 @@ void CApp::addAirplane()
    mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
    mRendererTask->setAirplane(mAirPlane);
 
-   /// Add fire
-   mTurbineFire.reset(new CParticleSystem(1.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 2.5f)));
-   if (mTurbineFire)
-   {
-      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
-      mTurbineFire->setTranslate(glm::vec3(0.0f, -0.35f, 1.75f));
-      mTurbineFire->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.5f, 0.5f);
-      tree.clear();
-      mTurbineFire->traverse(tree);
-      for (auto * node : tree)
-      {
-         if (node)
-         {
-            mRendererTask->addRenderable(node);
-         }
-      }
-      mRendererTask->setTurbineFire(mTurbineFire);
+   /// Jet fire
+   addFire();
 
-      // Add fire to the airplane
-      mAirPlane->getRoot()->add(mTurbineFire.get());
-   }
+   /// Jet smoke
+   addSmoke();
 
-   /// Add smoke
-   mTurbineSmoke.reset(new CParticleSystem(1.0f, 1.0f, 8, glm::vec3(0.0f, 0.5f, 2.5f)));
-   if (mTurbineSmoke)
-   {
-      const char* filePath = "../AeroSimulator/res/smoke.dds";
-      mTurbineSmoke->setTranslate(glm::vec3(0.0f, -0.35f, 1.75f));
-      mTurbineSmoke->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.75f, 0.75f);
-      tree.clear();
-      mTurbineSmoke->traverse(tree);
-      for (auto * node : tree)
-      {
-         if (node)
-         {
-            mRendererTask->addRenderable(node);
-         }
-      }
-      mRendererTask->setTurbineSmoke(mTurbineSmoke);
-
-      // Add fire to the airplane
-      mAirPlane->getRoot()->add(mTurbineSmoke.get());
-   }
+   addMissiles();
 }
 
 void CApp::addClouds()
@@ -406,4 +372,78 @@ void CApp::addStars()
          mRendererTask->setStars(mStar[count]);
       }
    } // End for
+}
+
+void CApp::addFire()
+{
+   mTurbineFire.reset(new CParticleSystem(1.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 2.5f)));
+   if (mTurbineFire)
+   {
+      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
+      mTurbineFire->setTranslate(glm::vec3(0.0f, -0.35f, 1.75f));
+      mTurbineFire->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.5f, 0.5f);
+
+      std::vector<CCompositeGameObject*> tree;
+      mTurbineFire->traverse(tree);
+      for (auto * node : tree)
+      {
+         if (node)
+         {
+            mRendererTask->addRenderable(node);
+         }
+      }
+      mRendererTask->setTurbineFire(mTurbineFire);
+
+      // Add fire to the airplane
+      mAirPlane->getRoot()->add(mTurbineFire.get());
+   }
+}
+
+void CApp::addSmoke()
+{
+   mTurbineSmoke.reset(new CParticleSystem(1.0f, 1.0f, 8, glm::vec3(0.0f, 0.5f, 2.5f)));
+   if (mTurbineSmoke)
+   {
+      const char* filePath = "../AeroSimulator/res/smoke.dds";
+      mTurbineSmoke->setTranslate(glm::vec3(0.0f, -0.35f, 1.75f));
+      mTurbineSmoke->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.75f, 0.75f);
+
+      std::vector<CCompositeGameObject*> tree;
+      mTurbineSmoke->traverse(tree);
+      for (auto * node : tree)
+      {
+         if (node)
+         {
+            mRendererTask->addRenderable(node);
+         }
+      }
+      mRendererTask->setTurbineSmoke(mTurbineSmoke);
+
+      // Add fire to the airplane
+      mAirPlane->getRoot()->add(mTurbineSmoke.get());
+   }
+}
+
+void CApp::addMissiles()
+{
+   mRightMissile.reset(new CMissile());
+   if (mRightMissile)
+   {
+      mRightMissile->setTranslate(glm::vec3(2.0f, -1.0f, 1.0f));
+      mRightMissile->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+
+      const glm::vec4 color(0.0f, 1.0f, 0.0f, 1.0f);
+      mRightMissile->setColor(color);
+      mColorShader->link();
+      mRightMissile->setShadersAndBuffers(mColorShader);
+      mRightMissile->buildModelMatrix(glm::mat4x4());
+
+      ///@todo: add missile to the renderer
+      //mRendererTask->setLeftMissile(mRightMissile);
+
+      mRendererTask->addRenderable(mRightMissile.get());
+
+      // Add missilee to the airplane
+      mAirPlane->getRoot()->add(mRightMissile.get());
+   }
 }
