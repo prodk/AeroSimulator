@@ -4,14 +4,12 @@
 #define AERO_SIMULATOR_CWIN32WINDOW_H
 
 #include "CAppWindow.h"
-#include "CTask.h"
+#include "CWin32InputHandler.h"
 #include <Windows.h>
 #include <iostream>
 
 namespace AeroSimulatorEngine
 {
-   class CWin32Renderer;
-
    class CWin32Window : public CAppWindow
    {
    public:
@@ -22,14 +20,14 @@ namespace AeroSimulatorEngine
       bool create(const std::string& title, std::size_t width, std::size_t height);
 
       // Override CTask part
-      virtual bool start();
-      virtual void update(CTask* pTask);
-      virtual void stop();
+      virtual bool start() override;
+      virtual void update(CTask* pTask) override;
+      virtual void stop() override;
 
       HDC getDC() const { return mDC; }
       bool isFullScreen() const { return (mWidth == 0u || mHeight == 0u) ? true : false; }
 
-      bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
+      const CWin32InputHandler& getInputHandler() { return mInputHandler; }
 
    private:
       void show(bool toShow);
@@ -39,8 +37,8 @@ namespace AeroSimulatorEngine
       HWND mWnd;
       HDC mDC;
       DEVMODE mScreenSettings;
+      CWin32InputHandler mInputHandler;
    };
-
 } // namespace AeroSimulatorEngine
 
 #endif // AERO_SIMULATOR_CWIN32WINDOW_H

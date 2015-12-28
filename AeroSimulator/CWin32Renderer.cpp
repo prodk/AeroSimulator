@@ -209,9 +209,13 @@ void CWin32Renderer::destroy()
    if (mRenderContext)
    {
       if (wglDeleteContext(mRenderContext))
+      {
          CLog::getInstance().log("* render context was destroyed");
+      }
       else
+      {
          CLog::getInstance().log("* ERROR: render context wasn't destroyed");
+      }
       mRenderContext = NULL;
    }
 }
@@ -944,6 +948,7 @@ void CWin32Renderer::generateAttachmentTexture(SFrameBuffer& fbo)
    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
+///@todo: remove this method when all the game-related stuff is moved to CGame
 bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
    switch (uMessage)
@@ -1120,4 +1125,8 @@ void CWin32Renderer::setAirplaneRoot(CParentGameObject * root)
       mCameraAttached = true;
       CLog::getInstance().log("* Button Enter: Camera attached to the plane");
    }
+}
+
+void CWin32Renderer::handleEvent(CAppEvent * pEvent)
+{
 }

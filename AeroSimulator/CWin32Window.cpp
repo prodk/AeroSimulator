@@ -1,8 +1,10 @@
 // CWin32Window.cpp - implementation of the class for the Win32 window
 
 #include "CWin32Window.h"
+#include "CEventManager.h"
+#include "CApp.h"
 #include "CLog.h"
-#include "CWin32Renderer.h"
+
 #include <memory>
 
 using namespace AeroSimulatorEngine;
@@ -36,7 +38,7 @@ LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM l
    }
 
    // Invoke the non-default message handler for the existing window
-   if (window && !window->windowProc(hWnd, uMessage, wParam, lParam))
+   if (window && !window->getInputHandler().windowProc(hWnd, uMessage, wParam, lParam))
    {
       return 0; // The message has been processed by the non-default win proc
    }
@@ -174,13 +176,28 @@ void CWin32Window::show(bool toShow)
    // Set the highest priority
    ::SetForegroundWindow(mWnd);
    if (toShow)
+   {
       ::ShowWindow(mWnd, SW_SHOW);
+   }
    else
+   {
       ::ShowWindow(mWnd, SW_HIDE);
+   }
 }
 
 bool CWin32Window::start()
 {
+   ///@todo: probably place to a separate method
+   if (CEventManager::getInstance().registerEvent(CApp::KEYDOWN_EVENT))
+   {
+      CLog::getInstance().log("CApp::KEYDOWN_EVENT registered");
+   }
+
+   if (CEventManager::getInstance().registerEvent(CApp::KEYUP_EVENT))
+   {
+      CLog::getInstance().log("CApp::KEYUP_EVENT registered");
+   }
+
    show(true);
 
    return true;
@@ -240,23 +257,3 @@ void CWin32Window::stop()
    }
 }
 
-bool CWin32Window::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
-{
-   switch (uMessage)
-   {
-   case WM_KEYDOWN:
-   {
-      switch (wParam)
-      {
-         case (0x38) : // 8 display the depth buffer
-         {
-            CLog::getInstance().log("Key 8 pressed!");
-         }
-         break;
-      }
-   }
-   return false; // WM_KEYDOWN has been processed, no need to call the default window proc
-   }
-
-   return true; // Process other messages
-}

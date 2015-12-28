@@ -13,6 +13,8 @@
 
 namespace AeroSimulatorEngine
 {
+   class CAppEvent;
+   ///@todo: move these classes to CGame
    class CCamera;
    class CCompositeGameObject;
    class CParentGameObject;
@@ -41,9 +43,12 @@ namespace AeroSimulatorEngine
       virtual ~CWin32Renderer();
 
       // Override CTask part
-      virtual bool start();
-      virtual void update(CTask* pTask);
-      virtual void stop();
+      virtual bool start() override;
+      virtual void update(CTask* pTask) override;
+      virtual void stop() override;
+
+      // CEventHandler part
+      virtual void handleEvent(CAppEvent *pEvent) override;
 
       bool isInitialized() const { return mIsInitialized; }
 
@@ -52,8 +57,10 @@ namespace AeroSimulatorEngine
       bool setRenderContext();
       void resetRenderContext();
 
+      ///@todo: remove this method when all the game-related stuff is moved to CGame
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
+      ///@todo: move all these set methods to CGame
       void setAirplaneRoot(CParentGameObject* root);
       void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
 

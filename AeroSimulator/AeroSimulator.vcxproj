@@ -179,6 +179,7 @@
     <ClInclude Include="CTaskManager.h" />
     <ClInclude Include="CTexture.h" />
     <ClInclude Include="CTimer.h" />
+    <ClInclude Include="CWin32InputHandler.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
     <ClInclude Include="CLeafGameObject.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="CTaskManager.cpp" />
     <ClCompile Include="CTexture.cpp" />
     <ClCompile Include="CTimer.cpp" />
+    <ClCompile Include="CWin32InputHandler.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
     <ClCompile Include="CLeafGameObject.cpp" />

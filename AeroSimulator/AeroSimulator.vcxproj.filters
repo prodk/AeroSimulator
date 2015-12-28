@@ -195,6 +195,9 @@
     <ClInclude Include="CEventManager.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
+    <ClInclude Include="CWin32InputHandler.h">
+      <Filter>Header Files\app</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -336,6 +339,9 @@
       <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="CEventManager.cpp">
+      <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="CWin32InputHandler.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
   </ItemGroup>

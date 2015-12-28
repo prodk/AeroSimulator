@@ -4,6 +4,7 @@
 #define AERO_SIMULATOR_CRENDERER_H
 
 #include "CTask.h"
+#include "CEventHandler.h"
 
 #include "../AeroSimulator/include/glew.h"
 #include "../AeroSimulator/include/wglew.h"
@@ -16,7 +17,7 @@ namespace AeroSimulatorEngine
 {
    class CRenderable; // Forward declarations should be inside the same namespace
 
-   class CRenderer : public CTask
+   class CRenderer : public CTask, public CEventHandler
    {
    public:
       explicit CRenderer(ePriority prio);
