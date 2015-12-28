@@ -13,6 +13,8 @@ namespace AeroSimulatorEngine
 {
    class CWin32Window;
    class CWin32Renderer;
+
+   ///@todo: all these forward declarations move to CGame in Test.cpp
    class CShader;
    class CGeometry;
    class C3DModel;
@@ -52,6 +54,7 @@ namespace AeroSimulatorEngine
       CApp(const CApp&) = delete;
       void operator=(const CApp&) = delete;
 
+      ///@todo: all these methods move to CGame
       void setupScene();
       void addSkyBox();
       void addLand();

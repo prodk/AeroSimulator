@@ -7,10 +7,16 @@
 
 namespace AeroSimulatorEngine
 {
+   // This is a singleton
    class CEventManager
    {
    public:
-      CEventManager();
+      static CEventManager& getInstance()
+      {
+         static CEventManager instance;
+         return instance;
+      }
+
       ~CEventManager();
 
       void broadcastEvent(EventID eventId);
@@ -20,6 +26,11 @@ namespace AeroSimulatorEngine
       void detachEvent(EventID eventId, CEventHandler& handler);
 
    private:
+      CEventManager();
+      // Disable the copy constructor and copy assignment operator for Singleton
+      CEventManager(const CEventManager&) = delete;
+      void operator=(const CEventManager&) = delete;
+
       std::unordered_map<EventID, std::shared_ptr<CAppEvent> > mEventMap; ///@todo: think whether shared ptr is OK, maybe unique would be OK too
    };
 }

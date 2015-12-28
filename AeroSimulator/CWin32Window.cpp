@@ -10,33 +10,36 @@ using namespace AeroSimulatorEngine;
 // Windows procedure
 LRESULT CALLBACK GlobalWndProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
 {
-   CWin32Renderer* renderer = NULL;
+   CWin32Window* window = NULL;
    switch (uMessage)
    {
-   case WM_CREATE:
-   {
-      // Get the data that was saved in the CreateWindowEx as its last parameter
-      LPCREATESTRUCT lpcs = (LPCREATESTRUCT)lParam;
-      renderer = (CWin32Renderer*)(lpcs->lpCreateParams);
-      // place the pointer to the window "user data"
-      SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)renderer);
-   }
-   break;
+      case WM_CREATE:
+      {
+         // Get the data that was saved in the CreateWindowEx as its last parameter
+         LPCREATESTRUCT lpcs = (LPCREATESTRUCT)lParam;
+         window = (CWin32Window*)(lpcs->lpCreateParams);
+         // place the pointer to the window "user data"
+         SetWindowLong(hWnd, GWLP_USERDATA, (LONG)(LONG_PTR)window);
+      }
+      break;
 
-   case WM_CLOSE:
-      ::ShowWindow(hWnd, SW_HIDE);
-      PostQuitMessage(0);
-      return 0;
-   default:
-   {
-      // Extract the window pointer from the "user data"
-      renderer = (CWin32Renderer*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
-   }
+      case WM_CLOSE:
+         ::ShowWindow(hWnd, SW_HIDE);
+         PostQuitMessage(0);
+         return 0;
+
+      default:
+      {
+         // Extract the window pointer from the "user data"
+         window = (CWin32Window*)(LONG_PTR)GetWindowLongPtr(hWnd, GWLP_USERDATA);
+      }
    }
 
-   // Invoke the message handler for the existing window
-   if (renderer && !renderer->windowProc(hWnd, uMessage, wParam, lParam))
-      return 0;
+   // Invoke the non-default message handler for the existing window
+   if (window && !window->windowProc(hWnd, uMessage, wParam, lParam))
+   {
+      return 0; // The message has been processed by the non-default win proc
+   }
 
    // Invoke the standard message handler for unprocessed messages
    return ::DefWindowProc(hWnd, uMessage, wParam, lParam);
@@ -65,7 +68,7 @@ CWin32Window::~CWin32Window()
    stop();
 }
 
-bool CWin32Window::create(const std::string& title, std::size_t width, std::size_t height, CWin32Renderer* renderer)
+bool CWin32Window::create(const std::string& title, std::size_t width, std::size_t height)
 {
    mInstance = GetModuleHandle(NULL);
    mWidth = width;
@@ -140,15 +143,13 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
       NULL,
       NULL,
       mInstance,
-      renderer)))
+      this)))
    {
       CLog::getInstance().log("* window was created");
    }
    else
    {
       CLog::getInstance().log("* Error: window wasn't created");
-
-
       return false;
    }
 
@@ -162,7 +163,6 @@ bool CWin32Window::create(const std::string& title, std::size_t width, std::size
    else
    {
       CLog::getInstance().log("* Error: device context for window wasn't obtained");
-
       return false;
    }
 
@@ -210,16 +210,24 @@ void CWin32Window::stop()
       if (mDC)
       {
          if (ReleaseDC(mWnd, mDC))
+         {
             CLog::getInstance().log("* device context was destroyed");
+         }
          else
+         {
             CLog::getInstance().log("* ERROR: device context wasn't destroyed");
+         }
          mDC = NULL;
       }
 
       if (DestroyWindow(mWnd))
+      {
          CLog::getInstance().log("* window was destroyed");
+      }
       else
+      {
          CLog::getInstance().log("* ERROR: window wasn't destroyed");
+      }
       mWnd = NULL;
 
       UnregisterClass(L"AERO_SIMULATOR_WINDOW", mInstance);
@@ -232,3 +240,23 @@ void CWin32Window::stop()
    }
 }
 
+bool CWin32Window::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
+{
+   switch (uMessage)
+   {
+   case WM_KEYDOWN:
+   {
+      switch (wParam)
+      {
+         case (0x38) : // 8 display the depth buffer
+         {
+            CLog::getInstance().log("Key 8 pressed!");
+         }
+         break;
+      }
+   }
+   return false; // WM_KEYDOWN has been processed, no need to call the default window proc
+   }
+
+   return true; // Process other messages
+}

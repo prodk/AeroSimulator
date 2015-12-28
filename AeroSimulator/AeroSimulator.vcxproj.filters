@@ -193,7 +193,7 @@
       <Filter>Header Files\app</Filter>
     </ClInclude>
     <ClInclude Include="CEventManager.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -336,7 +336,7 @@
       <Filter>Source Files\app</Filter>
     </ClCompile>
     <ClCompile Include="CEventManager.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

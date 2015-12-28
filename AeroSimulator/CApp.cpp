@@ -96,12 +96,13 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
 {
    // Create and init the app window and window's renderer
    bool result = false;
-   if (mAppWindowTask && mAppWindowTask->create(name, width, height, mRendererTask.get()))
+   if (mAppWindowTask && mAppWindowTask->create(name, width, height))
    {
       result = true;
 
       mRendererTask->init(*mAppWindowTask);
 
+      ///@todo: move to CGame
       // Setup the renderable and set it to the renderer
       setupScene();
    }
@@ -515,5 +516,4 @@ void CApp::addMissiles()
       mRendererTask->addRenderable(mExplosion.get());
       mRendererTask->setExplosion(mExplosion);
    }
-
 }
