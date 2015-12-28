@@ -48,9 +48,6 @@ namespace AeroSimulatorEngine
 
       void addTask(CTask *pTask);
 
-   public:
-      enum {KEYDOWN_EVENT, KEYUP_EVENT};
-
    private:
       CApp();
       // Disable the copy constructor and copy assignment operator

@@ -187,17 +187,6 @@ void CWin32Window::show(bool toShow)
 
 bool CWin32Window::start()
 {
-   ///@todo: probably place to a separate method
-   if (CEventManager::getInstance().registerEvent(CApp::KEYDOWN_EVENT))
-   {
-      CLog::getInstance().log("CApp::KEYDOWN_EVENT registered");
-   }
-
-   if (CEventManager::getInstance().registerEvent(CApp::KEYUP_EVENT))
-   {
-      CLog::getInstance().log("CApp::KEYUP_EVENT registered");
-   }
-
    show(true);
 
    return true;

@@ -1,5 +1,8 @@
 #include "CWin32Renderer.h"
 #include "CRenderable.h"
+#include "CEventManager.h"
+#include "../Test/CGame.h" ///@todo: probably remove this when event declaration moved to other place, renderer should not refer to game
+
 #include "../src/shaders/CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
@@ -104,6 +107,13 @@ CWin32Renderer::~CWin32Renderer()
 
 bool CWin32Renderer::start()
 {
+   if (CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT))
+   {
+      CLog::getInstance().log("DEPTHBUF_EVENT attached");
+   }
+
+   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
+
    return isInitialized();
 }
 
@@ -953,32 +963,6 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
 {
    switch (uMessage)
    {
-   case WM_CREATE:
-   {
-      mWndHandle = hWnd;
-      SetWindowText(hWnd, L"Hi there!");
-   }
-      // Stubs for system commands
-   case WM_SYSCOMMAND:
-   {
-      switch (wParam)
-      {
-         // Screensaver is trying to start
-      case SC_SCREENSAVE:
-         // The display is trying to switch off
-      case SC_MONITORPOWER:
-         return false;
-      }
-      break;
-   }
-   return false;
-
-   // System keystrokes stubs
-   case WM_SYSKEYDOWN:
-   case WM_SYSKEYUP:
-   {}
-   return false;
-
    // Keyboard is pressed
    case WM_KEYDOWN:
    {
@@ -1039,10 +1023,11 @@ bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM 
          }
          break;
 
-      case (0x38) : // 8 display the depth buffer
-         mDepthBufferMode = !mDepthBufferMode;
-         CLog::getInstance().log("* Button 8: display depth buffer: ", mDepthBufferMode);
-         break;
+         ///@todo: remove commented
+      //case (0x38) : // 8 display the depth buffer
+      //   mDepthBufferMode = !mDepthBufferMode;
+      //   CLog::getInstance().log("* Button 8: display depth buffer: ", mDepthBufferMode);
+      //   break;
 
       case (VK_RETURN) : // Enter, attach the camera to the airplane
          if (mIsSetCameraMode)
@@ -1129,4 +1114,14 @@ void CWin32Renderer::setAirplaneRoot(CParentGameObject * root)
 
 void CWin32Renderer::handleEvent(CAppEvent * pEvent)
 {
+   if (pEvent)
+   {
+      switch (pEvent->getId())
+      {
+      case CGame::DEPTHBUF_EVENT:
+         mDepthBufferMode = !mDepthBufferMode;
+         CLog::getInstance().log("* Display depth buffer: ", mDepthBufferMode);
+         break;
+      }
+   } // End if
 }

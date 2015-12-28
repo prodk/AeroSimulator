@@ -13,9 +13,11 @@ namespace AeroSimulatorEngine
 
       explicit CGame(ePriority prio);
 
-      virtual bool start();
-      virtual void update(CTask* pTask);
-      virtual void stop();
+      virtual bool start() override;
+      virtual void update(CTask* pTask) override;
+      virtual void stop() override;
+
+      enum {DEPTHBUF_EVENT}; ///@todo: probably move renderable-specific messages to other place
    };
 }
 

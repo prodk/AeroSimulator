@@ -1,5 +1,7 @@
 #include "CWin32InputHandler.h"
 #include "CLog.h"
+#include "CEventManager.h"
+#include "../Test/CGame.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -21,7 +23,8 @@ bool CWin32InputHandler::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPA
       {
          case (0x38) : // 8 display the depth buffer
          {
-            CLog::getInstance().log("Key 8 pressed!");
+            CLog::getInstance().log("Key 8 pressed");
+            CEventManager::getInstance().broadcastEvent(CGame::DEPTHBUF_EVENT);
          }
          break;
       }
