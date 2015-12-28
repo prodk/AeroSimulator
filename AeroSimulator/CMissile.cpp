@@ -108,11 +108,11 @@ void CMissile::addParticles(std::shared_ptr<CShader>& pShader,
                             std::shared_ptr<CShader>& pColorShader,
                             const char * filePath, const glm::vec2 & frameSize, const float width, const float height)
 {
-   mFire.reset(new CParticleSystem(1.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 2.5f)));
+   mFire.reset(new CParticleSystem(2.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 3.5f)));
    if (mFire)
    {
       mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.1f));
-      mFire->addParticles(pShader, pColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.5f, 0.5f);
+      mFire->addParticles(pShader, pColorShader, filePath, glm::vec2(4.0f, 4.0f), 1.0f, 1.0f);
 
       // Add fire to the airplane
       add(mFire.get());

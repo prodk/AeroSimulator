@@ -4,7 +4,7 @@
 #define AERO_SIMULATOR_CLOG_H
 
 #include <iostream>
-#include "glew.h"
+#include "../AeroSimulator/include/glew.h"
 
 namespace AeroSimulatorEngine
 {

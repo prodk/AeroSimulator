@@ -129,6 +129,15 @@ int CApp::exit()
    return 0;
 }
 
+void CApp::addTask(CTask *pTask)
+{
+   if (pTask)
+   {
+      mTaskManager.addTask(pTask);
+   }
+}
+
+///@todo: move to CGameTask
 void CApp::setupScene()
 {
    /// We need a valid RC to setup VBOs and shaders

@@ -44,6 +44,8 @@ namespace AeroSimulatorEngine
       void run();
       int exit();
 
+      void addTask(CTask *pTask);
+
    private:
       CApp();
       // Disable the copy constructor and copy assignment operator
