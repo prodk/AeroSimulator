@@ -150,6 +150,7 @@
     <ClInclude Include="C3DModel.h" />
     <ClInclude Include="CAnimationBillBoard.h" />
     <ClInclude Include="CApp.h" />
+    <ClInclude Include="CAppEvent.h" />
     <ClInclude Include="CAppWindow.h" />
     <ClInclude Include="CAxesFrame.h" />
     <ClInclude Include="CBillBoard.h" />
@@ -158,6 +159,7 @@
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CCube.h" />
+    <ClInclude Include="CEventHandler.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
     <ClInclude Include="CLand.h" />
@@ -196,6 +198,7 @@
     <ClCompile Include="C3DModel.cpp" />
     <ClCompile Include="CAnimationBillBoard.cpp" />
     <ClCompile Include="CApp.cpp" />
+    <ClCompile Include="CAppEvent.cpp" />
     <ClCompile Include="CAppWindow.cpp" />
     <ClCompile Include="CAxesFrame.cpp" />
     <ClCompile Include="CBillBoard.cpp" />
@@ -204,6 +207,7 @@
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CCube.cpp" />
+    <ClCompile Include="CEventHandler.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />
     <ClCompile Include="CLand.cpp" />
