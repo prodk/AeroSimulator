@@ -313,6 +313,7 @@ void CWin32Renderer::init(const CWin32Window & window)
    mIsFullScreen = window.isFullScreen();
    mWndWidth = window.getWidth();
    mWndHeight = window.getHeight();
+   mWndHandle = window.getWindowHandle();
    init();
 }
 
@@ -1107,6 +1108,21 @@ void CWin32Renderer::setAirplaneRoot(CParentGameObject * root)
    }
 }
 
+void CWin32Renderer::setupEvents()
+{
+   bool status = false;
+
+   // Debug mode on/off
+   status = CEventManager::getInstance().registerEvent(CGame::DEBUG_MODE_EVENT);
+   CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
+   CEventManager::getInstance().attachEvent(CGame::DEBUG_MODE_EVENT, *this);
+
+   // Depth buffer on/off
+   status = CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT);
+   CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
+   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
+}
+
 void CWin32Renderer::handleEvent(CAppEvent * pEvent)
 {
    if (pEvent)
@@ -1126,17 +1142,3 @@ void CWin32Renderer::handleEvent(CAppEvent * pEvent)
    } // End if
 }
 
-void CWin32Renderer::setupEvents()
-{
-   bool status = false;
-
-   // Debug mode on/off
-   status = CEventManager::getInstance().registerEvent(CGame::DEBUG_MODE_EVENT);
-   CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(CGame::DEBUG_MODE_EVENT, *this);
-
-   // Depth buffer on/off
-   status = CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT);
-   CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
-}

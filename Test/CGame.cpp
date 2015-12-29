@@ -30,3 +30,7 @@ void CGame::update(CTask * pTask)
 void CGame::stop()
 {
 }
+
+void CGame::handleEvent(CAppEvent * pEvent)
+{
+}

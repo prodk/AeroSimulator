@@ -29,6 +29,8 @@ namespace AeroSimulatorEngine
 
       const CWin32InputHandler& getInputHandler() { return mInputHandler; }
 
+      HWND getWindowHandle() const { return mWnd; }
+
    private:
       void show(bool toShow);
 
