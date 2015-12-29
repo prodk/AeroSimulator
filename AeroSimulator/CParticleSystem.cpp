@@ -138,7 +138,8 @@ void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::share
          {
             if (mBillboard[id]->loadTexture(filePath))
             {
-               CLog::getInstance().log("* Particle billboard loaded: ", filePath);
+               ///@todo: log this only to a file, not to stdout
+               //CLog::getInstance().log("* Particle billboard loaded: ", filePath);
             }
 
             mBillboard[id]->setFrameSize(glm::vec2(1.0f / frameSize.x, 1.0f / frameSize.y));

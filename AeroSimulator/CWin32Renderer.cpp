@@ -107,12 +107,7 @@ CWin32Renderer::~CWin32Renderer()
 
 bool CWin32Renderer::start()
 {
-   if (CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT))
-   {
-      CLog::getInstance().log("DEPTHBUF_EVENT attached");
-   }
-
-   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
+   setupEvents();
 
    return isInitialized();
 }
@@ -703,13 +698,13 @@ void CWin32Renderer::updateInput()
          break;
 
          /// System changes in reaction to the keyboard
-      case (0x31) : // 1, debug mode on
-         mIsDebugMode = true;
-         break;
+      //case (0x31) : // 1, debug mode on
+      //   mIsDebugMode = true;
+      //   break;
 
-      case (0x32) : // 2, debug mode off
-         mIsDebugMode = false;
-         break;
+      //case (0x32) : // 2, debug mode off
+      //   mIsDebugMode = false;
+      //   break;
 
       case (VK_OEM_PLUS) : // +, zoom in
          {
@@ -1118,10 +1113,30 @@ void CWin32Renderer::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
+      case CGame::DEBUG_MODE_EVENT:
+         mIsDebugMode = !mIsDebugMode;
+         CLog::getInstance().log("* Debug mode on: ", mIsDebugMode);
+         break;
+
       case CGame::DEPTHBUF_EVENT:
          mDepthBufferMode = !mDepthBufferMode;
          CLog::getInstance().log("* Display depth buffer: ", mDepthBufferMode);
          break;
       }
    } // End if
+}
+
+void CWin32Renderer::setupEvents()
+{
+   bool status = false;
+
+   // Debug mode on/off
+   status = CEventManager::getInstance().registerEvent(CGame::DEBUG_MODE_EVENT);
+   CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
+   CEventManager::getInstance().attachEvent(CGame::DEBUG_MODE_EVENT, *this);
+
+   // Depth buffer on/off
+   status = CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT);
+   CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
+   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
 }

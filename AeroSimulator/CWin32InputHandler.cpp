@@ -21,6 +21,13 @@ bool CWin32InputHandler::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPA
    {
       switch (wParam)
       {
+         case (0x31) : // 1 debug mode
+         {
+            CLog::getInstance().log("Key 1 pressed");
+            CEventManager::getInstance().broadcastEvent(CGame::DEBUG_MODE_EVENT);
+         }
+         break;
+
          case (0x38) : // 8 display the depth buffer
          {
             CLog::getInstance().log("Key 8 pressed");

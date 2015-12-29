@@ -80,7 +80,8 @@ bool CBillBoard::loadTexture(const char * fileName)
 
 void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
+   ///@todo: think about the necessity of this log, probably remove it
+   //CLog::getInstance().log("\n** CBillBoard::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }
 

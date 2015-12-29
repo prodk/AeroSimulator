@@ -17,7 +17,7 @@ namespace AeroSimulatorEngine
       virtual void update(CTask* pTask) override;
       virtual void stop() override;
 
-      enum {DEPTHBUF_EVENT}; ///@todo: probably move renderable-specific messages to other place
+      enum {DEBUG_MODE_EVENT, DEPTHBUF_EVENT}; ///@todo: probably move renderer-specific messages to other place
    };
 }
 

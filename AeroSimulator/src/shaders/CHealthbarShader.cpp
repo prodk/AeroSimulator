@@ -34,32 +34,32 @@ void CHealthbarShader::link()
       CShader::link();
 
       mPositionAttribute = glGetAttribLocation(mProgramId, "aPosition");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetAttribLocation(mProgramId, aPosition): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetAttribLocation(mProgramId, aPosition): ");
       // Add uniform names here
       mSquadAttribute = glGetAttribLocation(mProgramId, "aSquad");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetAttribLocation(mProgramId, aSquad): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetAttribLocation(mProgramId, aSquad): ");
 
       mRightUniform = glGetUniformLocation(mProgramId, "uRight");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uRight): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uRight): ");
 
       mUpUniform = glGetUniformLocation(mProgramId, "uUp");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uUp): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uUp): ");
 
       mWidthUniform = glGetUniformLocation(mProgramId, "uWidth");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uWidth): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uWidth): ");
 
       mHeightUniform = glGetUniformLocation(mProgramId, "uHeight");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uHeight): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uHeight): ");
 
       mColorUniform = glGetUniformLocation(mProgramId, "uColor");
-      CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uColor): ");
+      //CLog::getInstance().logGL("* CColorBillboardShader: glGetUniformLocation(mProgramId, uColor): ");
 
       mMvpUniform = glGetUniformLocation(mProgramId, "MVP");
-      CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
+      //CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
 
       ///@todo: remove
       mHealthUniform = glGetUniformLocation(mProgramId, "uHealth");
-      CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, uHealth): ");
+      //CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, uHealth): ");
 
       mIsLinked = true;
    }

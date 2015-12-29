@@ -63,7 +63,9 @@ CBoundingBox::CBoundingBox()
 
       mGeometry->setNumOfElementsPerVertex(CCube::mNumOfElementsPerVertex);
       mGeometry->setVertexStride(3); // 3 coords and nothing else
-      CLog::getInstance().log("CBoundingBox geometry has been setup.");
+
+      ///@todo: remove this log
+      //CLog::getInstance().log("CBoundingBox geometry has been setup.");
    }
 }
 

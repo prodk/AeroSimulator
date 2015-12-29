@@ -7,7 +7,7 @@ using namespace AeroSimulatorEngine;
 
 int main()
 {
-   CGame gameTask(CTask::MEDIUM_PRIO);
+   CGame gameTask(CTask::HIGH_PRIO); // game is updated before the renderer
    ///@todo: add non-default CApp constructor which initializes the app from some state.
    if (CApp::getInstance().init("AeroSimulator", 1280, 720))
    {

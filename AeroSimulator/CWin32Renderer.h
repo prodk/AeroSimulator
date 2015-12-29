@@ -50,6 +50,8 @@ namespace AeroSimulatorEngine
       // CEventHandler part
       virtual void handleEvent(CAppEvent *pEvent) override;
 
+      void setupEvents();
+
       bool isInitialized() const { return mIsInitialized; }
 
       void init(const CWin32Window& window);

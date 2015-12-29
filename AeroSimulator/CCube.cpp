@@ -24,7 +24,8 @@ CCube::CCube()
    , mHealthbarHeight(0.2f)
 {
    mHealthValue = 0.22f;
-   CLog::getInstance().log("* CCube::CCube() default: success.");
+   ///@todo: log this only to the log file, not to stdout
+   //CLog::getInstance().log("* CCube::CCube() default: success.");
 }
 
 CCube::~CCube()
@@ -44,7 +45,8 @@ CCube::CCube(const glm::vec3 & scale,
 
 void CCube::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
 {
-   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
+   ///@todo: think about the necessity of this log, probably remove it
+   //CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }
 

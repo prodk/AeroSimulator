@@ -32,7 +32,7 @@ using namespace AeroSimulatorEngine;
 CApp::CApp()
    : mTaskManager()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO_1))
-   , mRendererTask(new CWin32Renderer(CTask::HIGH_PRIO))
+   , mRendererTask(new CWin32Renderer(CTask::MEDIUM_PRIO))
    , mTimerTask(new CTimer(CTask::HIGHEST_PRIO_0))
    , mAirPlane(new C3DModel())
    , mSimpleShader (new CSimpleShader())  ///@todo: probably remove this
@@ -262,7 +262,8 @@ void CApp::addClouds()
       {
          if (mBillBoards[count]->loadTexture(filePath))
          {
-            CLog::getInstance().log("* Billboard loaded: ", filePath);
+            ///@todo: probably log this only to the log file
+            //CLog::getInstance().log("* Billboard loaded: ", filePath);
          }
 
          float x = distX(mtX)*(sign(mtX) > 0. ? 1.f : -1.f);
@@ -354,7 +355,8 @@ void CApp::addStars()
       {
          if (mStar[count]->loadTexture(filePath))
          {
-            CLog::getInstance().log("* Animation billboard loaded: ", filePath);
+            ///@todo: probably log this only to the log file
+            //CLog::getInstance().log("* Animation billboard loaded: ", filePath);
          }
 
          mStar[count]->setTranslate(glm::vec3(-10.f + count*dx, -5.0f, 0.0f));

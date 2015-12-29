@@ -13,7 +13,7 @@ CShader::CShader()
    , mFragmentShaderCode()
    , mIsLinked(false)
 {
-   CLog::getInstance().log("CShader::CShader()");
+   //CLog::getInstance().log("CShader::CShader()");
 }
 
 CShader::~CShader()
@@ -82,7 +82,8 @@ std::string CShader::readShader(const char * filePath)
 
       fileIn.close();
 
-      CLog::getInstance().log("CShader: successfully read the file: ", filePath);
+      ///@todo: probably dump this only in the log file
+      //CLog::getInstance().log("CShader: successfully read the file: ", filePath);
    }
    else
    {
