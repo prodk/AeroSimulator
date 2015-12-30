@@ -16,6 +16,7 @@
 namespace AeroSimulatorEngine
 {
    class CRenderable; // Forward declarations should be inside the same namespace
+   class CCompositeGameObject;
 
    class CRenderer : public CTask, public CEventHandler
    {
@@ -27,6 +28,12 @@ namespace AeroSimulatorEngine
       void removeRenderable(CRenderable* pRenderable);
 
       bool loadOpenGLExtensions();
+
+      void addGameObjectAndItsChildren(CCompositeGameObject* pObject);
+
+      ///@todo: probably no need to make them pure, change when CAndroidRenderer is implemented
+      virtual bool setRenderContext() = 0;
+      virtual void resetRenderContext() = 0;
 
    protected:
       // Methods to override

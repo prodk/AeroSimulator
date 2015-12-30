@@ -23,7 +23,7 @@ bool CTaskManager::addTask(CTask * pTask)
    {
       result = true;
       mTasks.insert(pTask);
-      CLog::getInstance().log("Task added.");
+      CLog::getInstance().log("Task added: ", mTasks.size());
    }
 
    return result;

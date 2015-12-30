@@ -4,9 +4,9 @@
 #define AERO_SIMULATOR_CRENDERABLE_H
 
 #include "../AeroSimulator/include/glew.h"
-#include "glm/mat4x4.hpp"
-#include "glm/vec3.hpp"
-#include "glm/vec2.hpp"
+#include "../AeroSimulator/include/glm/mat4x4.hpp"
+#include "../AeroSimulator/include/glm/vec3.hpp"
+#include "../AeroSimulator/include/glm/vec2.hpp"
 #include <memory>
 
 namespace AeroSimulatorEngine

@@ -3,11 +3,15 @@
 
 #include "CTask.h"
 #include "CEventHandler.h"
+#include <memory>
 
 namespace AeroSimulatorEngine
 {
    class CAppEvent;
+   class CLand;
 
+   ///@todo: probably later do not make it a handler, move all event responses to the components:
+   /// movement component, collision component
    class CGame : public CTask, public CEventHandler
    {
    public:
@@ -25,6 +29,14 @@ namespace AeroSimulatorEngine
       virtual void handleEvent(CAppEvent *pEvent) override;
 
       enum {DEBUG_MODE_EVENT, DEPTHBUF_EVENT}; ///@todo: probably move renderer-specific messages to other place
+
+   private:
+      void setupScene();
+
+      void addLand();
+
+   private:
+      std::unique_ptr<CLand> mLand;
    };
 }
 

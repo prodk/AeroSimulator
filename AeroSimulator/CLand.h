@@ -3,6 +3,8 @@
 
 #include "CParentGameObject.h"
 
+///@todo: move CLand and other game objects to Test project
+
 namespace AeroSimulatorEngine
 {
    class CBoundingBox;

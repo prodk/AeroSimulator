@@ -2,6 +2,7 @@
 #include "CRenderer.h"
 #include "CRenderable.h"
 #include "CLog.h"
+#include "CCompositeGameObject.h"
 
 #include <algorithm>
 
@@ -58,4 +59,21 @@ bool CRenderer::loadOpenGLExtensions()
    CLog::getInstance().log("\n");
 
    return result;
+}
+
+void CRenderer::addGameObjectAndItsChildren(CCompositeGameObject * pObject)
+{
+   if (pObject)
+   {
+      std::vector<CCompositeGameObject*> tree;
+      pObject->traverse(tree);
+
+      for (auto * pNode : tree)
+      {
+         if (pNode)
+         {
+            addRenderable(pNode);
+         }
+      }
+   }
 }

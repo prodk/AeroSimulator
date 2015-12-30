@@ -2,7 +2,7 @@
 #define AERO_SIMULATOR_CGAME_OBJECT_H
 
 #include "CRenderable.h"
-#include "glm/vec3.hpp"
+#include "../AeroSimulator/include/glm/vec3.hpp"
 
 #include <vector>
 

@@ -13,6 +13,7 @@ namespace AeroSimulatorEngine
 {
    class CWin32Window;
    class CWin32Renderer;
+   class CRenderer;
 
    ///@todo: all these forward declarations move to CGame in Test.cpp
    class CShader;
@@ -24,7 +25,7 @@ namespace AeroSimulatorEngine
    class CTimer;
    class CAnimationBillBoard;
    class CSphere;
-   class CLand;
+   class CLand; ///@todo: remove
    class CSkyBox;
    class CBillBoard;
    class CParticleSystem;
@@ -47,6 +48,9 @@ namespace AeroSimulatorEngine
       int exit();
 
       void addTask(CTask *pTask);
+
+      ///@todo: think how to avoid exposing a private member
+      CRenderer* getRenderer() const;
 
    private:
       CApp();
@@ -76,7 +80,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CTimer> mTimerTask;
 
       std::shared_ptr<C3DModel> mAirPlane;
-      std::shared_ptr<CShader> mSimpleShader; ///@todo: probably remove this
+
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CShader> mBillboardShader;
       std::shared_ptr<CShader> mColorShader;

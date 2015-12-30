@@ -56,8 +56,8 @@ namespace AeroSimulatorEngine
 
       void init(const CWin32Window& window);
 
-      bool setRenderContext();
-      void resetRenderContext();
+      virtual bool setRenderContext() override;
+      virtual void resetRenderContext() override;
 
       ///@todo: remove this method when all the game-related stuff is moved to CGame
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
@@ -142,7 +142,7 @@ namespace AeroSimulatorEngine
       ///@todo: move to the movement/collisions task when events are implemented
       std::shared_ptr<C3DModel> mAirplane;
       std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
-      std::shared_ptr<CLand> mLand;
+      std::shared_ptr<CLand> mLand; ///@todo: remove
       std::shared_ptr<CSkyBox> mSky;
       std::vector<std::shared_ptr<CBillBoard> > mClouds;
 

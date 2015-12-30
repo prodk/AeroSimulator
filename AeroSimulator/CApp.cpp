@@ -4,7 +4,6 @@
 #include "CWin32Renderer.h"
 #include "CRenderable.h"
 #include "CGeometry.h"
-#include "../AeroSimulator/src/shaders/CSimpleShader.h"  ///@todo: probably remove this
 #include "CGameObject.h"
 #include "CLog.h"
 #include "C3DModel.h"
@@ -35,7 +34,6 @@ CApp::CApp()
    , mRendererTask(new CWin32Renderer(CTask::MEDIUM_PRIO))
    , mTimerTask(new CTimer(CTask::HIGHEST_PRIO_0))
    , mAirPlane(new C3DModel())
-   , mSimpleShader (new CSimpleShader())  ///@todo: probably remove this
    , mTextureShader(new CTextureShader())
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
@@ -58,7 +56,6 @@ CApp::CApp()
    assert(mRendererTask);
    assert(mTimerTask);
    assert(mAirPlane);
-   assert(mSimpleShader);
    assert(mTextureShader);
    assert(mSkyBox);
    assert(mLand);
@@ -79,7 +76,6 @@ CApp::~CApp()
    mRendererTask.reset();
    mAppWindowTask.reset();
    mAirPlane.reset();
-   mSimpleShader.reset();
    mTextureShader.reset();
    mSkyBox.reset();
    mLand.reset();
@@ -136,6 +132,11 @@ void CApp::addTask(CTask *pTask)
    {
       mTaskManager.addTask(pTask);
    }
+}
+
+CRenderer* CApp::getRenderer() const
+{
+   return mRendererTask.get();
 }
 
 ///@todo: move to CGameTask
