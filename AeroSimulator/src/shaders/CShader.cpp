@@ -1,6 +1,15 @@
 #include "CShader.h"
 #include "../CRenderable.h"
 #include "../CLog.h"
+
+//#include <glew.h> //"../include/glew.h"
+//#include "../include/wglew.h"
+
+///@todo: change these paths when moved to Test project
+//#include <glew.h>
+//#include <wglew.h>
+//#include <gl/GL.h>
+//#include <glext.h>
 #include <iostream>
 #include <fstream>
 using namespace AeroSimulatorEngine;

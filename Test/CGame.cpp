@@ -1,8 +1,10 @@
 #include "CGame.h"
-#include "CLog.h"
-#include "CRenderer.h"
-#include "CApp.h"
-#include "CLand.h"
+#include "../CLog.h"
+#include "../CRenderer.h"
+#include "../CApp.h"
+#include "../CLand.h"
+#include "../AeroSimulator/src/shaders/CTextureShader.h"
+#include "../AeroSimulator/src/shaders/CColorShader.h"
 
 #include <cassert>
 
@@ -18,6 +20,7 @@ namespace
 
 CGame::CGame()
    : mLand()
+   , mShaders()
 {
 }
 
@@ -29,6 +32,7 @@ CGame::~CGame()
 CGame::CGame(ePriority prio)
    : CTask(prio)
    , mLand()
+   , mShaders(LAST_SHADER)
 {
 }
 
@@ -39,6 +43,7 @@ bool CGame::start()
    // Setting up the scene, requires a valid rendering context
    if (renderer()->setRenderContext())
    {
+      createShaders();
       setupScene();
 
       renderer()->resetRenderContext();
@@ -66,6 +71,18 @@ void CGame::handleEvent(CAppEvent * pEvent)
 {
 }
 
+void CGame::createShaders()
+{
+   mShaders[TEXTURE_SHADER].reset(new CTextureShader());
+   mShaders[COLOR_SHADER].reset(new CColorShader());
+
+   for (int count = 0; count < mShaders.size(); ++count)
+   {
+      assert(mShaders[count]);
+      mShaders[count]->link();
+   }
+}
+
 void CGame::setupScene()
 {
    addLand();
@@ -89,14 +106,11 @@ void CGame::addLand()
       mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
       mLand->setScale(landSize);
       mLand->calculateModelMatrix();
+      mLand->setShadersAndBuffers(mShaders[TEXTURE_SHADER]);
 
-      //mTextureShader->link(); ///@todo: no need to link shaders each time. Link them once after creation
-      mLand->setShadersAndBuffers(mTextureShader);
-      
-
-      //mColorShader->link();
+      // Bounding box of the land
       const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-      mLand->setBoundingBox(mColorShader, landSize, bBoxColor);
+      mLand->setBoundingBox(mShaders[COLOR_SHADER], landSize, bBoxColor);
 
       renderer()->addGameObjectAndItsChildren(mLand.get());
    }

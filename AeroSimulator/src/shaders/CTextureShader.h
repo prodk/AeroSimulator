@@ -3,8 +3,8 @@
 
 #include "CShader.h"
 
-#include "../include/glew.h"
-#include <gl/GL.h>
+//#include "../include/glew.h"
+//#include <gl/GL.h>
 
 #include <memory>
 

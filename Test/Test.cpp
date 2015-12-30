@@ -1,9 +1,9 @@
 // Test.cpp : Defines the entry point for the console application.
 
 #include "stdafx.h"
-#include "CApp.h"
+#include "../CApp.h"
 #include "CGame.h"
-#include "CLog.h"
+#include "../CLog.h"
 
 #include <Windows.h>
 using namespace AeroSimulatorEngine;

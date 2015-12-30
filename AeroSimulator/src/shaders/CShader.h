@@ -3,10 +3,15 @@
 #ifndef AERO_SIMULATOR_CSHADER_H
 #define AERO_SIMULATOR_CSHADER_H
 
-#include "../include/glew.h"
-#include "../include/wglew.h"
+#include "glew.h"//<glew.h> //"../include/glew.h"
+////#include "../include/wglew.h"
+//
+/////@todo: change these paths when moved to Test project
+////#include <glew.h>
+////#include <wglew.h>
+
 #include <gl/GL.h>
-#include "../include/glext.h"
+#include <glext.h>//"../include/glext.h"
 
 #include <string>
 
