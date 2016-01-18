@@ -1,8 +1,7 @@
 #include "CLand.h"
-#include "CGeometry.h"
-#include "CLog.h"
-#include "CTexture.h"
-#include "CBoundingBox.h"
+#include "../CGeometry.h"
+#include "../CLog.h"
+#include "../CTexture.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -65,10 +64,9 @@ void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
       mGeometry->setNumOfElementsPerVertex(3);
       mGeometry->setVertexStride(5);
 
-      CLog::getInstance().log("\n** CLand::setupShadersAndBuffers(): Land's geometry has been setup **");
+      CLog::getInstance().log("* CLand::setupShadersAndBuffers(): Land's geometry has been setup **");
    }
 
-   CLog::getInstance().log("\n** CLand::setupShadersAndBuffers() **");
    CGameObject::setShadersAndBuffers(pShader);
 }
 

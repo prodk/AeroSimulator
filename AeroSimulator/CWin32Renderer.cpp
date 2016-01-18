@@ -13,7 +13,7 @@
 #include "C3DModel.h"
 #include "CSphere.h"
 #include "CAnimationBillBoard.h"
-#include "CLand.h"
+#include "../Test/CLand.h"
 #include "CBoundingBox.h"
 #include "CSkyBox.h"
 #include "CParticleSystem.h"
@@ -68,8 +68,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mDepthBufferShader(new CDepthBufferShader())
    , mMainFbo()
    , mHelpFbo()
-   , mWndWidth(0.0f)
-   , mWndHeight(0.0f)
+   , mWndWidth(0)
+   , mWndHeight(0)
    , mDepthBufferMode(false)
    , mRightMissile(nullptr)
    , mExplosion(nullptr)
@@ -169,13 +169,15 @@ void CWin32Renderer::init()
 
       // Enable OpenGL stuff needed by the app
       glEnable(GL_DEPTH_TEST);
-      CLog::getInstance().logGL("Depth test enabled: ");
+      CLog::getInstance().logGL("* Depth test enabled: ");
 
       glEnable(GL_TEXTURE_2D);
-      CLog::getInstance().logGL("Textures enabled: ");
+      CLog::getInstance().logGL("* Textures enabled: ");
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+      CLog::getInstance().logGL("* Blending enabled, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA): ");
+      CLog::getInstance().log("");
 
       if (mWndWidth > 0 && mWndHeight > 0)
       {
@@ -460,7 +462,7 @@ void CWin32Renderer::updateAirplane()
       glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
       float angleYradians = std::asin(direction.x);
       if (direction.z < 0.0f)
-         angleYradians = M_PI - angleYradians;
+         angleYradians = static_cast<float>(M_PI) - angleYradians;
       mAirplaneMatrix = glm::rotate(mAirplaneMatrix, angleYradians, yAxis);
    }
 

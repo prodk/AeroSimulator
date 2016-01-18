@@ -64,7 +64,8 @@ CApp::CApp()
    assert(mNormalMapSphereShader);
    //assert(mTurbineFire);
 
-   CLog::getInstance().log("* CApp created!");
+   CLog::getInstance().log("\n*******************");
+   CLog::getInstance().log("** CApp created! **\n");
 }
 
 CApp::~CApp()
@@ -77,10 +78,9 @@ CApp::~CApp()
    mBillboardShader.reset();
    mColorShader.reset();
    mSphere.reset();
-   //mStar.reset();
    ///@todo: reset other ptrs here
 
-   CLog::getInstance().log("* CApp destroyed");
+   CLog::getInstance().log("\n** CApp destroyed **\n");
 }
 
 bool CApp::init(const char* name, unsigned int width, unsigned int height)
@@ -95,7 +95,7 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
 
       ///@todo: move to CGame
       // Setup the renderable and set it to the renderer
-      setupScene();
+      //setupScene();
    }
 
    return result;

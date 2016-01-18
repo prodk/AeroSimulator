@@ -163,7 +163,6 @@
     <ClInclude Include="CEventManager.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
-    <ClInclude Include="CLand.h" />
     <ClInclude Include="CLine.h" />
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CColorBillBoard.h" />
@@ -213,7 +212,6 @@
     <ClCompile Include="CEventManager.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />
-    <ClCompile Include="CLand.cpp" />
     <ClCompile Include="CLine.cpp" />
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CColorBillBoard.cpp" />

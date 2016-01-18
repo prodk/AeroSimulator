@@ -1,7 +1,7 @@
 #ifndef AERO_SIMULATOR_CLAND_H
 #define AERO_SIMULATOR_CLAND_H
 
-#include "CParentGameObject.h"
+#include "../CParentGameObject.h"
 
 ///@todo: move CLand and other game objects to Test project
 

@@ -126,9 +126,6 @@
     <ClInclude Include="CGeometry.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
-    <ClInclude Include="CLand.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
     <ClInclude Include="CLine.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
@@ -270,9 +267,6 @@
       <Filter>Source Files\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="CGeometry.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CLand.cpp">
       <Filter>Source Files\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="CLine.cpp">

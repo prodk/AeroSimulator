@@ -133,7 +133,7 @@ namespace AeroSimulatorEngine
       WPARAM mKeyCode;
       WPARAM mCameraKeyCode;
       WPARAM mThirdKeyCode;
-      double mFrameDt;
+      float mFrameDt;
 
       ///@todo: when the event framwork is setup, 
       ///@todo: transfer moving objects and collisions to a separaete task

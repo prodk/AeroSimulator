@@ -213,6 +213,8 @@ void CWin32Window::stop()
 {
    if (mWnd)
    {
+      CLog::getInstance().log("");
+
       if (mDC)
       {
          if (ReleaseDC(mWnd, mDC))

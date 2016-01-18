@@ -2,7 +2,7 @@
 #include "../CLog.h"
 #include "../CRenderer.h"
 #include "../CApp.h"
-#include "../CLand.h"
+#include "CLand.h"
 #include "../AeroSimulator/src/shaders/CTextureShader.h"
 #include "../AeroSimulator/src/shaders/CColorShader.h"
 
@@ -51,10 +51,10 @@ bool CGame::start()
    }
    else
    {
-      CLog::getInstance().log("CGame::start(): Render context is not setup");
+      CLog::getInstance().log("** CGame::start(): Render context is not setup **");
    }
 
-   CLog::getInstance().logGL("CGame::start() ", result);
+   CLog::getInstance().logGL("\n** CGame::start() ", result);
    return result;
 }
 
@@ -85,6 +85,9 @@ void CGame::createShaders()
 
 void CGame::setupScene()
 {
+   CLog::getInstance().log("");
+   CLog::getInstance().log("** CGame::setupScene() **");
+
    addLand();
 }
 
