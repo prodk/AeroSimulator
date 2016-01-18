@@ -6,6 +6,8 @@
 
 #include <vector>
 
+///@todo: remove this file when completely migrated to the new CGameObject in Test
+
 namespace AeroSimulatorEngine
 {
    /// Any game object can in principle be rendered

@@ -10,6 +10,8 @@
 
 using namespace AeroSimulatorEngine;
 
+///@todo: remove this file when completely migrated to the new CGameObject in Test
+
 CGameObject::CGameObject()
    : CRenderable()
    , mScale(glm::vec3(1.0f, 1.0f, 1.0f))

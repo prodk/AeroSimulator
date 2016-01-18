@@ -17,6 +17,7 @@ namespace AeroSimulatorEngine
       virtual bool start() = 0;
       virtual void update(CTask* pTask) = 0;
       virtual void stop() = 0;
+      ///@todo: add pausing a task later
 
       void setCanKill(bool canKill);
       bool getCanKill() const { return mCanKill; }
