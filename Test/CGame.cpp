@@ -3,6 +3,7 @@
 #include "../CLog.h"
 #include "../CRenderer.h"
 #include "../CApp.h"
+#include "../AeroSimulator/src/shaders/CShader.h"
 #include "../AeroSimulator/src/shaders/CTextureShader.h"
 #include "../AeroSimulator/src/shaders/CColorShader.h"
 
@@ -26,6 +27,11 @@ CGame::CGame()
 
 CGame::~CGame()
 {
+   for (std::size_t count = 0; count < mShaders.size(); ++count)
+   {
+      mShaders[count].reset();
+   }
+
    mLand.reset();
 }
 

@@ -6,15 +6,15 @@
 ///@todo: move to namespace AeroSimulatorEngine when the old CGameObject is removed
 //using namespace AeroSimulatorEngine;
 
-Game::CGameObject::CGameObject()
+NGame::CGameObject::CGameObject()
 {
 }
 
-Game::CGameObject::~CGameObject()
+NGame::CGameObject::~CGameObject()
 {
 }
 
-Game::CComponent * Game::CGameObject::getComponent(unsigned int id)
+NGame::CComponent * NGame::CGameObject::getComponent(unsigned int id)
 {
    auto result = mComponents.find(id);
 

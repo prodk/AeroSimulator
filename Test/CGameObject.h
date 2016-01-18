@@ -6,7 +6,7 @@
 ///@todo: move this file to AeroSimulatorEngine when the old CGameObject is removed
 
 ///@todo: move to namespace AeroSimulatorEngine when the old CGameObject is removed
-namespace Game
+namespace NGame
 {
    class CComponent;
 

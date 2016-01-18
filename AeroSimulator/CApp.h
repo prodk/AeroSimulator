@@ -9,6 +9,7 @@
 #include <memory>
 #include <vector>
 
+///@todo: rename to NAeroSimulatorEngine
 namespace AeroSimulatorEngine
 {
    class CWin32Window;
