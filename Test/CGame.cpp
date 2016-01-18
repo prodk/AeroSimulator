@@ -76,7 +76,7 @@ void CGame::createShaders()
    mShaders[TEXTURE_SHADER].reset(new CTextureShader());
    mShaders[COLOR_SHADER].reset(new CColorShader());
 
-   for (int count = 0; count < mShaders.size(); ++count)
+   for (std::size_t count = 0; count < mShaders.size(); ++count)
    {
       assert(mShaders[count]);
       mShaders[count]->link();
@@ -105,12 +105,8 @@ void CGame::addLand()
       mLand->setNumOfTiles(10, 10);
       mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
       mLand->setScale(landSize);
-      mLand->calculateModelMatrix();
+      mLand->calculateModelMatrix(); ///@todo: place this somewhere such that no need to call it manually
       mLand->setShadersAndBuffers(mShaders[TEXTURE_SHADER]);
-
-      // Bounding box of the land
-      const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-      mLand->setBoundingBox(mShaders[COLOR_SHADER], landSize, bBoxColor);
 
       renderer()->addGameObjectAndItsChildren(mLand.get());
    }

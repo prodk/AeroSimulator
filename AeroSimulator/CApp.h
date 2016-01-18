@@ -61,7 +61,6 @@ namespace AeroSimulatorEngine
       ///@todo: all these methods move to CGame
       void setupScene();
       void addSkyBox();
-      void addLand();
       void addAirplane();
       void addClouds();
       void addSphere();
@@ -91,7 +90,6 @@ namespace AeroSimulatorEngine
 
       ///@todo: probably use the concrete types here
       std::shared_ptr<CSkyBox> mSkyBox;
-      std::shared_ptr<CLand> mLand;
       std::shared_ptr<CSphere> mSphere;
 
       ///@todo: place billboards to some bridge class CClouds

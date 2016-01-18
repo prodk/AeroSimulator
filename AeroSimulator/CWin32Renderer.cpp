@@ -29,19 +29,6 @@
 #include <algorithm>
 using namespace AeroSimulatorEngine;
 
-// Comparator for sorting renderables
-//struct SCompareRenderables
-//{
-//   bool operator()(CRenderable* lhs, CRenderable* rhs)
-//   {
-//      if (lhs && rhs)
-//      {
-//         // get the distance to camera and return lhsDist < rhsDist;
-//            return a < b;
-//      }
-//   }
-//};
-
 ///@todo: move non-Win32 code to the base class
 
 CWin32Renderer::CWin32Renderer(ePriority prio)
@@ -829,7 +816,7 @@ void CWin32Renderer::handleCollisions()
    if (mAirplane && mLand)
    {
       const CBoundingBox* boxAirPlane = mAirplane->getBoundingBox();
-      const CBoundingBox* boxLand = mLand->getBoundingBox();
+      const CBoundingBox* boxLand = 0; // mLand->getBoundingBox();
       if (boxAirPlane && boxLand)
       {
          if (boxAirPlane->collidesWith(*boxLand))

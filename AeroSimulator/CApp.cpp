@@ -9,7 +9,6 @@
 #include "C3DModel.h"
 #include "../AeroSimulator/src/shaders/CTextureShader.h"
 #include "CSkyBox.h"
-#include "CLand.h"
 #include "CBillBoard.h"
 #include "../AeroSimulator/src/shaders/CBillboardShader.h"
 #include "../AeroSimulator/src/shaders/CColorShader.h"
@@ -37,12 +36,10 @@ CApp::CApp()
    , mTextureShader(new CTextureShader())
    , mBillboardShader(new CBillboardShader())
    , mColorShader(new CColorShader())
-   //, mColorShader(new CColorLambertianShader())
    , mHealthbarShader(new CHealthbarShader())
    , mColorLambertianShader(new CColorLambertianShader())
    , mAnimationBbShader(new CAnimationBillboardShader())
    , mSkyBox(new CSkyBox())
-   , mLand(new CLand())
    , mSphere(new CSphere())
    , mBillBoards(40)
    , mStar(5)
@@ -58,7 +55,6 @@ CApp::CApp()
    assert(mAirPlane);
    assert(mTextureShader);
    assert(mSkyBox);
-   assert(mLand);
    assert(mBillboardShader);
    assert(mColorShader);
    assert(mHealthbarShader);
@@ -78,7 +74,6 @@ CApp::~CApp()
    mAirPlane.reset();
    mTextureShader.reset();
    mSkyBox.reset();
-   mLand.reset();
    mBillboardShader.reset();
    mColorShader.reset();
    mSphere.reset();
@@ -145,12 +140,12 @@ void CApp::setupScene()
    /// We need a valid RC to setup VBOs and shaders
    mRendererTask->setRenderContext();
 
-   addSkyBox();
-   addLand();
-   addAirplane();
-   addClouds();
-   addSphere();
-   addStars();
+   //addSkyBox();
+   //addLand();
+   //addAirplane();
+   //addClouds();
+   //addSphere();
+   //addStars();
 
    mRendererTask->resetRenderContext();
 }
@@ -168,40 +163,6 @@ void CApp::addSkyBox()
    mSkyBox->setShadersAndBuffers(mTextureShader);
    mRendererTask->addRenderable(mSkyBox.get());
    mRendererTask->setSky(mSkyBox);
-}
-
-void CApp::addLand()
-{
-   if (mLand->loadTexture("../AeroSimulator/res/land.dds"))
-   {
-      CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
-   }
-   const glm::vec3 landSize = glm::vec3(1000.f, 1.f, 1000.0f);
-   mLand->setNumOfTiles(10, 10);
-   mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
-   mLand->setScale(landSize);
-   mLand->calculateModelMatrix();
-
-   mTextureShader->link();
-   mLand->setShadersAndBuffers(mTextureShader);
-   mRendererTask->addRenderable(mLand.get());
-
-   mColorShader->link();
-   const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-   mLand->setBoundingBox(mColorShader, landSize, bBoxColor);
-
-   std::vector<CCompositeGameObject*> tree;
-   mLand->traverse(tree);
-
-   for (auto * pTree : tree)
-   {
-      if (pTree)
-      {
-         mRendererTask->addRenderable(pTree);
-      }
-   }
-
-   mRendererTask->setLand(mLand);
 }
 
 void CApp::addAirplane()

@@ -20,26 +20,15 @@ namespace AeroSimulatorEngine
       bool loadTexture(const char * fileName);
 
       /// Composite-related methods - override only some of them
-      virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
-      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
-      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
+      virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix) override;
+      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt) override;
+      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f)) override;
 
-      void setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec3& size, const glm::vec4& color);
-      const CBoundingBox* getBoundingBox() const;
-
-      void setNumOfTiles(const GLint x, const GLint y)
-      {
-         if (x > 0)
-            mNumOfTilesX = x;
-         if (y > 0)
-            mNumOfTilesY = y;
-      }
+      void setNumOfTiles(const GLint x, const GLint y);
 
    private:
       glm::mat4x4 mScaledTRMatrix;
-      std::shared_ptr<CBoundingBox> mBoundingBox;
-      GLint mNumOfTilesX;
-      GLint mNumOfTilesY;
+      glm::vec2 mNumOfTiles;
    };
 } //namespace AeroSimulatorEngine
 

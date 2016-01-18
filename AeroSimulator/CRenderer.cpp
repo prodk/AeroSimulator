@@ -65,6 +65,9 @@ void CRenderer::addGameObjectAndItsChildren(CCompositeGameObject * pObject)
 {
    if (pObject)
    {
+      ///@todo: if add route object if it is parent
+      //addRenderable(pObject);
+
       std::vector<CCompositeGameObject*> tree;
       pObject->traverse(tree);
 

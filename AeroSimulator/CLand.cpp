@@ -26,9 +26,7 @@ namespace
 
 CLand::CLand()
    : mScaledTRMatrix()
-   , mBoundingBox()
-   , mNumOfTilesX(1)
-   , mNumOfTilesY(1)
+   , mNumOfTiles(glm::vec2(1, 1))
 {
    setRepeatTexture(true);
    mTexture.reset(new CTexture());
@@ -49,16 +47,15 @@ void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
       {
          if ((count % 5) == 3)
          {
-            vertices[count] *= mNumOfTilesX;
+            vertices[count] *= mNumOfTiles.x;
          }
          if ((count % 5) == 4)
          {
-            vertices[count] *= mNumOfTilesY;
+            vertices[count] *= mNumOfTiles.y;
          }
       }
 
       mGeometry->setVertexBuffer(vertices);
-      //const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
       mGeometry->setNumOfVertices(numOfVertices);
 
       mGeometry->setIndexBuffer(indices);
@@ -107,29 +104,8 @@ void CLand::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
    mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
 }
 
-void CLand::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec3& size, const glm::vec4& color)
+void CLand::setNumOfTiles(const GLint x, const GLint y)
 {
-   if (pShader)
-   {
-      mBoundingBox.reset(new CBoundingBox());
-      if (mBoundingBox)
-      {
-         mBoundingBox->setColor(color);
-         mBoundingBox->setScale(size);
-         mBoundingBox->calculateModelMatrix();
-
-         mBoundingBox->setShadersAndBuffers(pShader);
-         add(mBoundingBox.get());
-      }
-
-      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-   }
-}
-
-const CBoundingBox * CLand::getBoundingBox() const
-{
-   if (mBoundingBox)
-      return mBoundingBox.get();
-   else
-      return 0;
+   mNumOfTiles.x = (x > 0) ? x : 1;
+   mNumOfTiles.y = (y > 0) ? y : 1;
 }

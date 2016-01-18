@@ -41,6 +41,8 @@ void CParentGameObject::add(CCompositeGameObject * child)
 
 void CParentGameObject::traverse(std::vector<CCompositeGameObject*>& tree)
 {
+   tree.push_back(this);
+
    const std::size_t numOfChildren = mChildren.size();
    for (std::size_t count = 0; count < numOfChildren; ++count)
    {

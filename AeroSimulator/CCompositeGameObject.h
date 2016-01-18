@@ -16,7 +16,7 @@ namespace AeroSimulatorEngine
       /// Composite-related methods to be overridden by children
       virtual void add(CCompositeGameObject* child) = 0;
 
-      /// Saves elements to the provided array
+      /// Saves the elements to the provided array
       virtual void traverse(std::vector<CCompositeGameObject*>& tree) = 0;
 
       /// Rendering related composite methods

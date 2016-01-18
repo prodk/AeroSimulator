@@ -26,6 +26,7 @@ namespace AeroSimulatorEngine
 
       ///Composite-related overrides
       virtual void add(CCompositeGameObject* child);
+      // Saves the parent and its children to the tree
       virtual void traverse(std::vector<CCompositeGameObject*>& tree);
 
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
