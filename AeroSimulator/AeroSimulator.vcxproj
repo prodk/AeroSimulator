@@ -157,6 +157,7 @@
     <ClInclude Include="CBoundingBox.h" />
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCommonMath.h" />
+    <ClInclude Include="CComponent.h" />
     <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CCube.h" />
     <ClInclude Include="CEventHandler.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CPropeller.h" />
     <ClInclude Include="CRenderable.h" />
+    <ClInclude Include="CRenderableComponent.h" />
     <ClInclude Include="CRenderer.h" />
     <ClInclude Include="CSkyBox.h" />
     <ClInclude Include="CSphere.h" />
@@ -206,6 +208,7 @@
     <ClCompile Include="CBoundingBox.cpp" />
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
+    <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CCube.cpp" />
     <ClCompile Include="CEventHandler.cpp" />
@@ -220,6 +223,7 @@
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CPropeller.cpp" />
     <ClCompile Include="CRenderable.cpp" />
+    <ClCompile Include="CRenderableComponent.cpp" />
     <ClCompile Include="CRenderer.cpp" />
     <ClCompile Include="CSkyBox.cpp" />
     <ClCompile Include="CSphere.cpp" />

@@ -1,27 +1,12 @@
 #include "CGameObject.h"
-#include "CCommonMath.h"
-#include "CGeometry.h"
-#include "../src/shaders/CShader.h"
-#include "CLog.h"
+#include "CComponent.h"
 
-#include <gl/GL.h>
+///@todo: move this file to AeroSimulatorEngine when the old CGameObject is removed
 
-#include "glm/gtc/matrix_transform.hpp"
-
+///@todo: move to namespace AeroSimulatorEngine when the old CGameObject is removed
 using namespace AeroSimulatorEngine;
 
-///@todo: remove this file when completely migrated to the new CGameObject in Test
-
 CGameObject::CGameObject()
-   : CRenderable()
-   , mScale(glm::vec3(1.0f, 1.0f, 1.0f))
-   , mRotate(glm::vec3(0.0f, 0.0f, 0.0f))
-   , mTranslate(glm::vec3(0.0f, 0.0f, 0.0f))
-   , mTRMatrix()
-   , mParentTRMatrix()
-   , mParentByLocalTRMatrix()
-   , mIsLeaf(false)
-   , mAreShadersSetup(false)
 {
 }
 
@@ -29,120 +14,11 @@ CGameObject::~CGameObject()
 {
 }
 
-CGameObject::CGameObject(const glm::vec3 & scale,
-                         const glm::vec3 & rotate,
-                         const glm::vec3 & translate)
-   : CRenderable()
-   , mScale(scale)
-   , mRotate(rotate)
-   , mTranslate(translate)
-   , mParentTRMatrix()
-   , mIsLeaf(false)
+CComponent * CGameObject::getComponent(unsigned int id)
 {
-}
+   auto result = mComponents.find(id);
 
-void CGameObject::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
-{
-   // Shader setup
-   assert(pShader);
-   mShader = pShader;
-
-   if (mGeometry && !mAreShadersSetup)
-   {
-      mAreShadersSetup = true;
-      // VBO
-      glGenBuffers(1, &mVboId);
-      glBindBuffer(GL_ARRAY_BUFFER, mVboId);
-      //CLog::getInstance().logGL("* glBindBuffer() VBO: ");
-
-      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
-      glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
-
-      // Index buffer
-      glGenBuffers(1, &mIboId);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mIboId);
-      //CLog::getInstance().logGL("* glBindBuffer() index buffer: ");
-
-      GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
-      glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
-
-      // Reset VBOs
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-   }
-}
-
-void CGameObject::addCustomObjects(std::shared_ptr<CShader>& pShader)
-{
-}
-
-void CGameObject::update(const float deltaTime)
-{
-}
-
-glm::mat4 CGameObject::getTRMatrix() const
-{
-   return mTRMatrix;
-}
-
-///@todo: use rotation around any axis under the hood!
-void CGameObject::calculateTRMatrix()
-{
-   if (mTranslate.length() > 0.0f)
-   {
-      // To get a TRS sequence of matrices, act as follows: translate, rotate, scale
-      // 1) translate
-      mTRMatrix = glm::mat4x4(1);
-      mTRMatrix = glm::translate(mTRMatrix, mTranslate);
-   }
-
-   // 2) rotate
-   const bool rotateX = mRotate.x != 0.0f;
-   // x axis
-   if (rotateX)
-   {
-      const float angleX = CCommonMath::degToRad(mRotate.x);
-      glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-      mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
-   }
-
-   // z axis
-   const bool rotateZ = mRotate.z != 0.0f;
-   if (rotateZ)
-   {
-      const float angleZ = CCommonMath::degToRad(mRotate.z);
-      glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-      mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
-   }
-
-   // y axis
-   const bool rotateY = mRotate.y != 0.0f;
-   if (rotateY)
-   {
-      const float angleY = CCommonMath::degToRad(mRotate.y);
-      glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-      mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
-   }
-
-   // Scale is used only for the model matrix
-}
-
-void CGameObject::calculateModelMatrix()
-{
-   calculateTRMatrix();
-
-   mModelMatrix = glm::scale(mTRMatrix, mScale);
-}
-
-void CGameObject::scale(const glm::vec3& scale)
-{
-   mScale = scale;
-   mModelMatrix = glm::scale(mModelMatrix, scale);
-}
-
-void CGameObject::translate(const glm::vec3& translate)
-{
-   mTranslate = translate;
-
-   mTRMatrix = glm::translate(mTRMatrix, translate);
+   return result == mComponents.end()
+      ? nullptr
+      : result->second.get();
 }

@@ -1,68 +1,63 @@
-#ifndef AERO_SIMULATOR_CGAME_OBJECT_H
-#define AERO_SIMULATOR_CGAME_OBJECT_H
+#ifndef AERO_SIMULATOR_CGAME_OBJECT_NEW_H
+#define AERO_SIMULATOR_CGAME_OBJECT_NEW_H
 
-#include "CRenderable.h"
-#include "../AeroSimulator/include/glm/vec3.hpp"
-
-#include <vector>
-
-///@todo: remove this file when completely migrated to the new CGameObject in Test
+#include <unordered_map>
+#include <memory>
 
 namespace AeroSimulatorEngine
 {
-   /// Any game object can in principle be rendered
-   class CGameObject : public CRenderable
+   class CComponent;
+
+   class CGameObject
    {
    public:
       CGameObject();
       virtual ~CGameObject();
 
-      CGameObject(const glm::vec3& scale,
-                  const glm::vec3& rotate,
-                  const glm::vec3& translate);
+      /// Add a component to the object
+      template <typename T> bool addComponent();
 
-      /// Rendering-related methods
-      ///@todo: probably do not make it pure virtual and remove from CCube, CBillBoard and CLine
-      virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader) = 0;
+   private:
+      // Get the component of type T from the specified (by reference) object
+      template <typename T>
+      friend T* componentCast(CGameObject& object);
 
-      virtual void addCustomObjects(std::shared_ptr<CShader>& pShader);
+      // Returns a pointer to the component using the type of the component
+      template<typename T>
+      T* getComponent() { return static_cast<T*>(getComponent(T::getId())); }
 
-      virtual void update(const float deltaTime);
+      // Returns a pointer to the component using its id
+      CComponent* getComponent(unsigned int id);
 
-      void setScale(const glm::vec3& scale) { mScale = scale; }
-      void setRotate(const glm::vec3& rotate) { mRotate = rotate; }
-      void setTranslate(const glm::vec3& translate) { mTranslate = translate; }
-
-      glm::vec3 getScale() const { return mScale; }
-      glm::vec3 getTranslate() const { return mTranslate; }
-
-      virtual void calculateTRMatrix();
-      void calculateModelMatrix();
-
-      void scale(const glm::vec3& scale);
-      void translate(const glm::vec3& translate);
-
-      glm::mat4 getTRMatrix() const;
-
-      bool isLeaf() const { return mIsLeaf; }
-
-      void resetParentTRMatrix() { mParentTRMatrix = glm::mat4x4(1.0f); }
-
-   protected:
-      ///@todo: probably move this to a separate CTransform class/component
-      glm::vec3 mScale;       // Scale factors along the parent object axes
-      glm::vec3 mRotate;      // Rotation angles in degrees around the parent axes
-      glm::vec3 mTranslate;   // Translate along the parent axes
-
-      glm::mat4 mTRMatrix;    // A local translate+rotate matrix
-      glm::mat4 mParentTRMatrix; // Product of translate-rotate matrices of all the predecessors
-      glm::mat4 mParentByLocalTRMatrix; // Avoid multiplying static matrices
-
-      bool mIsLeaf;
-      float mArbitraryAngle;
-      glm::vec3 mArbitraryAxis;
-      bool mAreShadersSetup;
+   private:
+      std::unordered_map<unsigned int, std::unique_ptr<CComponent> > mComponents;
    };
-} // namespace AeroSimulatorEngine
 
-#endif // AERO_SIMULATOR_CGAME_OBJECT_H
+   template<typename T>
+   T * componentCast(CGameObject & object)
+   {
+      return object.getComponent<T>();
+   }
+
+   template<typename T>
+   inline bool CGameObject::addComponent()
+   {
+      bool added = false;
+
+      auto result = mComponents.find(id);
+      if (mComponents.end() == result)
+      {
+         std::unique_ptr<CComponent> pComponent(new T(this));
+         if (pComponent)
+         {
+            std::pair<unsigned int, std::unique_ptr<CComponent> >
+            newComponent(T::getId(), pComponent);
+            added = mComponents.insert(newComponent).second;
+         }
+      }
+
+      return added;
+   }
+} // namespace
+
+#endif // AERO_SIMULATOR_CGAME_OBJECT_NEW_H
