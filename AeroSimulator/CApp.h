@@ -15,22 +15,21 @@ namespace AeroSimulatorEngine
    class CWin32Window;
    class CWin32Renderer;
    class CRenderer;
+   class CTimer;
 
    ///@todo: all these forward declarations move to CGame in Test.cpp
-   class CShader;
-   class CGeometry;
-   class C3DModel;
-   class CTextureShader;
-   class CGameObject;
-   class CCompositeGameObject;
-   class CTimer;
-   class CAnimationBillBoard;
-   class CSphere;
-   class CLand; ///@todo: remove
-   class CSkyBox;
-   class CBillBoard;
-   class CParticleSystem;
-   class CMissile;
+   //class CShader;
+   //class CGeometry;
+   //class C3DModel;
+   //class CTextureShader;
+   //class CGameObject;
+   //class CCompositeGameObject;
+   //class CAnimationBillBoard;
+   //class CSphere;
+   //class CSkyBox;
+   //class CBillBoard;
+   //class CParticleSystem;
+   //class CMissile;
 
    class CApp
    {
@@ -60,7 +59,7 @@ namespace AeroSimulatorEngine
       void operator=(const CApp&) = delete;
 
       ///@todo: all these methods move to CGame
-      void setupScene();
+      /*void setupScene();
       void addSkyBox();
       void addAirplane();
       void addClouds();
@@ -68,10 +67,10 @@ namespace AeroSimulatorEngine
       void addStars();
       void addFire();
       void addSmoke();
-      void addMissiles();
+      void addMissiles();*/
 
    private:
-      typedef std::shared_ptr<CGameObject> tGameObjectPtr;
+      //typedef std::shared_ptr<CGameObject> tGameObjectPtr;
 
       ///@todo: introduce a Bridge pattern and place Win32-specific code there
       CTaskManager mTaskManager;
@@ -79,7 +78,7 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CWin32Renderer> mRendererTask;
       std::shared_ptr<CTimer> mTimerTask;
 
-      std::shared_ptr<C3DModel> mAirPlane;
+      /*std::shared_ptr<C3DModel> mAirPlane;
 
       std::shared_ptr<CShader> mTextureShader;
       std::shared_ptr<CShader> mBillboardShader;
@@ -87,21 +86,21 @@ namespace AeroSimulatorEngine
       std::shared_ptr<CShader> mHealthbarShader;
       std::shared_ptr<CShader> mColorLambertianShader;
       std::shared_ptr<CShader> mAnimationBbShader;
-      std::shared_ptr<CShader> mNormalMapSphereShader;
+      std::shared_ptr<CShader> mNormalMapSphereShader;*/
 
       ///@todo: probably use the concrete types here
-      std::shared_ptr<CSkyBox> mSkyBox;
-      std::shared_ptr<CSphere> mSphere;
+      //std::shared_ptr<CSkyBox> mSkyBox;
+      //std::shared_ptr<CSphere> mSphere;
 
       ///@todo: place billboards to some bridge class CClouds
-      std::vector<std::shared_ptr<CBillBoard> > mBillBoards; ///@todo: rename into mClouds
+      //std::vector<std::shared_ptr<CBillBoard> > mBillBoards; ///@todo: rename into mClouds
       //std::shared_ptr<CAnimationBillBoard> mStar;
-      std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
+      //std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
 
-      std::shared_ptr<CParticleSystem> mTurbineFire;
-      std::shared_ptr<CParticleSystem> mTurbineSmoke;
-      std::shared_ptr<CMissile> mRightMissile;
-      std::shared_ptr<CAnimationBillBoard> mExplosion;
+      //std::shared_ptr<CParticleSystem> mTurbineFire;
+      //std::shared_ptr<CParticleSystem> mTurbineSmoke;
+      //std::shared_ptr<CMissile> mRightMissile;
+      //std::shared_ptr<CAnimationBillBoard> mExplosion;
    };
 
 } // namespace AeroSimulatorEngine
