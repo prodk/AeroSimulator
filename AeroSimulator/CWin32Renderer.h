@@ -16,17 +16,17 @@ namespace AeroSimulatorEngine
    class CAppEvent;
    ///@todo: move these classes to CGame
    class CCamera;
-   class CCompositeGameObject;
-   class CParentGameObject;
-   class C3DModel;
-   class CAnimationBillBoard;
-   class CLand;
-   class CSkyBox;
-   class CBillBoard;
-   class CParticleSystem;
+   //class CCompositeGameObject;
+   //class CParentGameObject;
+   //class C3DModel;
+   //class CAnimationBillBoard;
+   //class CLand;
+   //class CSkyBox;
+   //class CBillBoard;
+   //class CParticleSystem;
    class CQuad;
-   class CShader;
-   class CMissile;
+   //class CShader;
+   //class CMissile;
 
    struct SFrameBuffer
    {
@@ -60,24 +60,24 @@ namespace AeroSimulatorEngine
       virtual void resetRenderContext() override;
 
       ///@todo: remove this method when all the game-related stuff is moved to CGame
-      bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
+      //bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
 
       ///@todo: move all these set methods to CGame
-      void setAirplaneRoot(CParentGameObject* root);
-      void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
+      //void setAirplaneRoot(CParentGameObject* root);
+      //void setSphereRoot(CParentGameObject* root) { if (root) mSphereRoot = root; }
 
-      void setAirplane(std::shared_ptr<C3DModel>& airplane) { mAirplane = airplane; }
-      void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { if(stars) mStar.push_back(stars); }
-      void setLand(std::shared_ptr<CLand>& land) { mLand = land; }
-      void setSky(std::shared_ptr<CSkyBox>& sky) { mSky = sky; }
+      //void setAirplane(std::shared_ptr<C3DModel>& airplane) { mAirplane = airplane; }
+      //void setStars(std::shared_ptr<CAnimationBillBoard>& stars) { if(stars) mStar.push_back(stars); }
+      ////void setLand(std::shared_ptr<CLand>& land) { mLand = land; }
+      //void setSky(std::shared_ptr<CSkyBox>& sky) { mSky = sky; }
 
-      void setClouds(const std::vector<std::shared_ptr<CBillBoard> >& clouds) { mClouds = clouds; }
-      void setTurbineFire(std::shared_ptr<CParticleSystem>& fire) { mTurbineFire = fire; }
-      void setTurbineSmoke(std::shared_ptr<CParticleSystem>& smoke) { mTurbineSmoke = smoke; }
+      //void setClouds(const std::vector<std::shared_ptr<CBillBoard> >& clouds) { mClouds = clouds; }
+      //void setTurbineFire(std::shared_ptr<CParticleSystem>& fire) { mTurbineFire = fire; }
+      //void setTurbineSmoke(std::shared_ptr<CParticleSystem>& smoke) { mTurbineSmoke = smoke; }
 
-      void setRightMissile(std::shared_ptr<CMissile>& missile) { mRightMissile = missile; }
+      //void setRightMissile(std::shared_ptr<CMissile>& missile) { mRightMissile = missile; }
 
-      void setExplosion(std::shared_ptr<CAnimationBillBoard>& expl) { mExplosion = expl; }
+      //void setExplosion(std::shared_ptr<CAnimationBillBoard>& expl) { mExplosion = expl; }
 
    private:
       // Override CRenderer part
@@ -89,14 +89,14 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
-      void updateAirplane();
-      void updateCamera();
-      void springButtons();
-      void updateRenderables();
+      //void updateAirplane();
+      //void updateCamera();
+      //void springButtons();
+      //void updateRenderables();
       void updateFPS(CTask* pTask);
 
-      void updateInput(); ///@todo: move to CWin32Window or a separate handler when events are implemented
-      void handleCollisions(); ///@todo; move to a special task when events are implemented
+      //void updateInput(); ///@todo: move to CWin32Window or a separate handler when events are implemented
+      //void handleCollisions(); ///@todo; move to a special task when events are implemented
       void setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader, 
                     const GLint width, const GLint height);
 
@@ -110,8 +110,8 @@ namespace AeroSimulatorEngine
       bool mIsFullScreen;
 
       ///@todo: reconsider the approach to spring buttons
-      float mAngleZ; // Angle of rotating around the z-axis of the air plane
-      float mAngleX;
+      //float mAngleZ; // Angle of rotating around the z-axis of the air plane
+      //float mAngleX;
 
       float mCameraAngleX; // up 'w', down 's'
       float mCameraAngleY; // left 'a', right 'd'
@@ -119,35 +119,35 @@ namespace AeroSimulatorEngine
       ///@todo: probably create an array of cameras later
       std::shared_ptr<CCamera> mCamera;
 
-      CParentGameObject* mAirplaneRoot;
-      CParentGameObject* mSphereRoot;
+      //CParentGameObject* mAirplaneRoot;
+      //CParentGameObject* mSphereRoot;
 
       bool mIsDebugMode;
       bool mIsSetCameraMode;
       bool mCameraAttached;
       HWND mWndHandle;
 
-      bool mKeyPressed;
-      bool mCameraKeyPressed;
-      bool mThirdKeyPressed;
-      WPARAM mKeyCode;
-      WPARAM mCameraKeyCode;
-      WPARAM mThirdKeyCode;
+      //bool mKeyPressed;
+      //bool mCameraKeyPressed;
+      //bool mThirdKeyPressed;
+      //WPARAM mKeyCode;
+      //WPARAM mCameraKeyCode;
+      //WPARAM mThirdKeyCode;
       float mFrameDt;
 
       ///@todo: when the event framwork is setup, 
       ///@todo: transfer moving objects and collisions to a separaete task
-      glm::mat4x4 mAirplaneMatrix;
+      //glm::mat4x4 mAirplaneMatrix;
 
       ///@todo: move to the movement/collisions task when events are implemented
-      std::shared_ptr<C3DModel> mAirplane;
-      std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
-      std::shared_ptr<CLand> mLand; ///@todo: remove
-      std::shared_ptr<CSkyBox> mSky;
-      std::vector<std::shared_ptr<CBillBoard> > mClouds;
+      //std::shared_ptr<C3DModel> mAirplane;
+      //std::vector<std::shared_ptr<CAnimationBillBoard> > mStar;
+      //std::shared_ptr<CLand> mLand; ///@todo: remove
+      //std::shared_ptr<CSkyBox> mSky;
+      //std::vector<std::shared_ptr<CBillBoard> > mClouds;
 
-      std::shared_ptr<CParticleSystem> mTurbineFire;
-      std::shared_ptr<CParticleSystem> mTurbineSmoke;
+      //std::shared_ptr<CParticleSystem> mTurbineFire;
+      //std::shared_ptr<CParticleSystem> mTurbineSmoke;
       std::unique_ptr<CQuad> mMainFboQuad;   // Main scene
       std::unique_ptr<CQuad> mHelpFboQuad; // Helper window
       std::shared_ptr<CShader> mFboShader;
@@ -158,8 +158,8 @@ namespace AeroSimulatorEngine
       std::size_t mWndWidth;
       std::size_t mWndHeight;
       bool mDepthBufferMode;  // press '8' to see the depth buffer
-      std::shared_ptr<CMissile> mRightMissile;
-      std::shared_ptr<CAnimationBillBoard> mExplosion;
+      //std::shared_ptr<CMissile> mRightMissile;
+      //std::shared_ptr<CAnimationBillBoard> mExplosion;
    };
 } // namespace AeroSimulatorEngine
 

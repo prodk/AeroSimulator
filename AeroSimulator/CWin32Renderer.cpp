@@ -4,24 +4,24 @@
 #include "../Test/CGame.h" ///@todo: probably remove this when event declaration moved to other place, renderer should not refer to game
 
 #include "../src/shaders/CShader.h"
-#include "CGeometry.h"
+//#include "CGeometry.h"
 #include "CLog.h"
 #include "CCommonMath.h" ///@todo: remove this, we can use glm::radians
 #include "CCamera.h"
-#include "CCompositeGameObject.h"
+//#include "CCompositeGameObject.h"
 #include "CTimer.h"
-#include "C3DModel.h"
-#include "CSphere.h"
-#include "CAnimationBillBoard.h"
-#include "../Test/CLand.h"
-#include "CBoundingBox.h"
-#include "CSkyBox.h"
-#include "CParticleSystem.h"
+//#include "C3DModel.h"
+//#include "CSphere.h"
+//#include "CAnimationBillBoard.h"
+//#include "../Test/CLand.h"
+//#include "CBoundingBox.h"
+//#include "CSkyBox.h"
+//#include "CParticleSystem.h"
 #include "CQuad.h"
 #include "../src/shaders/CFboShader.h"
 #include "../src/shaders/CDepthBufferShader.h"
-#include "CTexture.h"
-#include "CMissile.h"
+//#include "CTexture.h"
+//#include "CMissile.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -38,30 +38,30 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mRenderContext(0)
    , mOldRenderContext(0)
    , mIsFullScreen(false)
-   , mAngleZ(0.0f)
-   , mAngleX(0.0f)
+   //, mAngleZ(0.0f)
+   //, mAngleX(0.0f)
    , mCameraAngleX(14.f)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
-   , mAirplaneRoot(nullptr)
-   , mSphereRoot(nullptr)
+   //, mAirplaneRoot(nullptr)
+   //, mSphereRoot(nullptr)
    , mIsDebugMode(false)     // press '1' key
    , mIsSetCameraMode(false) // press '3' key
    , mCameraAttached(false)
    , mWndHandle(0)
-   , mKeyPressed(false)
-   , mCameraKeyPressed(false)
-   , mThirdKeyPressed(false)
-   , mKeyCode(0)
-   , mCameraKeyCode(0)
-   , mThirdKeyCode(0)
+   //, mKeyPressed(false)
+   //, mCameraKeyPressed(false)
+   //, mThirdKeyPressed(false)
+   //, mKeyCode(0)
+   //, mCameraKeyCode(0)
+   //, mThirdKeyCode(0)
    , mFrameDt(0.0)
-   , mAirplaneMatrix()
-   , mStar()
-   , mLand(nullptr)
-   , mSky(nullptr)
-   , mTurbineFire(nullptr)
-   , mTurbineSmoke(nullptr)
+   //, mAirplaneMatrix()
+   //, mStar()
+   //, mLand(nullptr)
+   //, mSky(nullptr)
+   //, mTurbineFire(nullptr)
+   //, mTurbineSmoke(nullptr)
    , mMainFboQuad(new CQuad())
    , mHelpFboQuad(new CQuad())
    , mFboShader(new CFboShader())
@@ -71,8 +71,8 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mWndWidth(0)
    , mWndHeight(0)
    , mDepthBufferMode(false)
-   , mRightMissile(nullptr)
-   , mExplosion(nullptr)
+   //, mRightMissile(nullptr)
+   //, mExplosion(nullptr)
 {
    assert(mCamera);
    assert(mMainFboQuad);
