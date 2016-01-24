@@ -4,7 +4,7 @@
 #include "../Test/CGame.h" ///@todo: probably remove this when event declaration moved to other place, renderer should not refer to game
 
 #include "../src/shaders/CShader.h"
-//#include "CGeometry.h"
+#include "CGeometry.h"
 #include "CLog.h"
 #include "CCommonMath.h" ///@todo: remove this, we can use glm::radians
 #include "CCamera.h"
@@ -104,11 +104,11 @@ void CWin32Renderer::update(CTask* pTask)
    if (mIsInitialized)
    {
       updateFPS(pTask);
-      updateInput();    // Handle keyboard events
-      springButtons();
+      //updateInput();    // Handle keyboard events
+      //springButtons();
 
-      updateRenderables();
-      updateCamera();
+      //updateRenderables();
+      //updateCamera();
 
       setRenderContext();
 

@@ -25,7 +25,7 @@ namespace AeroSimulatorEngine
    //class CBillBoard;
    //class CParticleSystem;
    class CQuad;
-   //class CShader;
+   class CShader;
    //class CMissile;
 
    struct SFrameBuffer

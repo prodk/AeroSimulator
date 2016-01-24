@@ -201,6 +201,12 @@
     <ClInclude Include="CRenderableComponent.h">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
+    <ClInclude Include="CTransformComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -349,6 +355,12 @@
     </ClCompile>
     <ClCompile Include="CComponent.cpp">
       <Filter>Source Files\gameObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransformComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

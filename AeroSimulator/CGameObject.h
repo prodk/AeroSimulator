@@ -8,6 +8,8 @@ namespace AeroSimulatorEngine
 {
    class CComponent;
 
+   ///@todo: any GO can be a parent or a child in any tree.
+   ///@todo: foresee such a possibility in this class, including all the necessary transform stuff
    class CGameObject
    {
    public:
@@ -27,7 +29,7 @@ namespace AeroSimulatorEngine
       T* getComponent() { return static_cast<T*>(getComponent(T::getId())); }
 
       // Returns a pointer to the component using its id
-      CComponent* getComponent(unsigned int id);
+      CComponent* getComponent(const unsigned int id) const;
 
    private:
       std::unordered_map<unsigned int, std::unique_ptr<CComponent> > mComponents;
