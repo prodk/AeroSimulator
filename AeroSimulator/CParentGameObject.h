@@ -5,8 +5,6 @@
 
 namespace AeroSimulatorEngine
 {
-   class CCube;
-
    // A node in the Composite which can have children.
    // Differences between a parent and a child node: 
    // i) parent contains children; ii) parent may not have valid geometry;
@@ -17,22 +15,22 @@ namespace AeroSimulatorEngine
       CParentGameObject();
       virtual ~CParentGameObject();
 
-      CParentGameObject(const glm::vec3& scale,
+      /*CParentGameObject(const glm::vec3& scale,
                         const glm::vec3& rotate,
-                        const glm::vec3& translate);
+                        const glm::vec3& translate);*/
 
       /// Render-related override, does nothing
-      virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
+      //virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
 
       ///Composite-related overrides
       virtual void add(CCompositeGameObject* child);
       // Saves the parent and its children to the tree
       virtual void traverse(std::vector<CCompositeGameObject*>& tree);
 
-      virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
+      //virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);
       ///@todo: probably add some timing arguments here
-      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
-      virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
+      //virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt);
+      //virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
       bool remove(const CCompositeGameObject* child);
 
    protected:

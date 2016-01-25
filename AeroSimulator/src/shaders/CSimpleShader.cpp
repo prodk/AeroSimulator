@@ -70,7 +70,7 @@ void CSimpleShader::setup(CRenderable & renderable)
    glEnableVertexAttribArray(mColorAttributeId);
 
    // Send the transformation to the currently bound shader in the "MVP" uniform
-   glm::mat4 MVP = renderable.getMvpMatrix();
-   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
+   /*glm::mat4 MVP = renderable.getMvpMatrix();
+   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);*/
 }
 

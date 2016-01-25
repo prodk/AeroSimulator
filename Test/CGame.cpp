@@ -104,7 +104,7 @@ void CGame::addLand()
 
    if (mLand)
    {
-      if (mLand->loadTexture("../AeroSimulator/res/land.dds"))
+      /*if (mLand->loadTexture("../AeroSimulator/res/land.dds"))
       {
          CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
       }
@@ -117,6 +117,6 @@ void CGame::addLand()
       mLand->calculateModelMatrix(); ///@todo: place this somewhere such that no need to call it manually
       mLand->setShadersAndBuffers(mShaders[TEXTURE_SHADER]);
 
-      renderer()->addGameObjectAndItsChildren(mLand.get());
+      renderer()->addGameObjectAndItsChildren(mLand.get());*/
    }
 }

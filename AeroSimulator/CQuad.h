@@ -11,9 +11,9 @@ namespace AeroSimulatorEngine
       CQuad();
       virtual ~CQuad();
       ///@todo: remove this method
-      virtual bool loadTexture(const char* filePath);
+      //virtual bool loadTexture(const char* filePath);
 
-      virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
+      //virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader);
    };
 } // namespace AeroSimulatorEngine
 

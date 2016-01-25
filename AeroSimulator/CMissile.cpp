@@ -63,24 +63,24 @@ CMissile::CMissile()
    //, mSpeed(glm::vec3(10.0f, 100.0f, 10.0f))
    , mFire(nullptr)
 {
-   mGeometry.reset(new CGeometry());
+   //mGeometry.reset(new CGeometry());
 
-   assert(mGeometry);
+   //assert(mGeometry);
 
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(vertices);
-      const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-      mGeometry->setNumOfVertices(numOfVertices);
+   //if (mGeometry)
+   //{
+   //   mGeometry->setVertexBuffer(vertices);
+   //   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+   //   mGeometry->setNumOfVertices(numOfVertices);
 
-      mGeometry->setIndexBuffer(indices);
-      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-      mGeometry->setNumOfIndices(numOfIndices);
+   //   mGeometry->setIndexBuffer(indices);
+   //   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+   //   mGeometry->setNumOfIndices(numOfIndices);
 
-      ///@todo: get rid of the magic numbers
-      mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(5); // Vertex + texture coordinates
-   }
+   //   ///@todo: get rid of the magic numbers
+   //   mGeometry->setNumOfElementsPerVertex(3);
+   //   mGeometry->setVertexStride(5); // Vertex + texture coordinates
+   //}
 }
 
 CMissile::~CMissile()
@@ -90,18 +90,18 @@ CMissile::~CMissile()
 void CMissile::update(float dt)
 {
    ///@todo: it is much better to introduce a position in the world space and use it here
-   glm::vec3 currentPos = getTranslate();
-   currentPos -= mFlightDirection * mSpeed *glm::vec3(dt, 0.0f, dt);
-   currentPos.y -= mSpeed.y * dt * dt; // Gravity
-   setTranslate(currentPos);
+   //glm::vec3 currentPos = getTranslate();
+   //currentPos -= mFlightDirection * mSpeed *glm::vec3(dt, 0.0f, dt);
+   //currentPos.y -= mSpeed.y * dt * dt; // Gravity
+   //setTranslate(currentPos);
 
-   calculateModelMatrix();
+   //calculateModelMatrix();
 
-   mFire->update(dt);
-   mFire->resetParentTRMatrix();
+   //mFire->update(dt);
+   //mFire->resetParentTRMatrix();
 
-   mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.5f));
-   mFire->buildModelMatrix(getModelMatrix());
+   //mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.5f));
+   //mFire->buildModelMatrix(getModelMatrix());
 }
 
 void CMissile::addParticles(std::shared_ptr<CShader>& pShader, 
@@ -109,16 +109,16 @@ void CMissile::addParticles(std::shared_ptr<CShader>& pShader,
                             const char * filePath, const glm::vec2 & frameSize, const float width, const float height)
 {
    mFire.reset(new CParticleSystem(2.0f, 4.0f, 16, glm::vec3(0.0f, 0.0f, 3.5f)));
-   if (mFire)
-   {
-      mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.1f));
-      mFire->addParticles(pShader, pColorShader, filePath, glm::vec2(4.0f, 4.0f), 1.0f, 1.0f);
+   //if (mFire)
+   //{
+   //   mFire->setTranslate(glm::vec3(0.0f, 0.0f, 0.1f));
+   //   mFire->addParticles(pShader, pColorShader, filePath, glm::vec2(4.0f, 4.0f), 1.0f, 1.0f);
 
-      // Add fire to the airplane
-      add(mFire.get());
+   //   // Add fire to the airplane
+   //   add(mFire.get());
 
-      buildModelMatrix(glm::mat4x4(1.0f));
-   }
+   //   buildModelMatrix(glm::mat4x4(1.0f));
+   //}
 }
 
 void CMissile::setEmitSpeed(const float factor)

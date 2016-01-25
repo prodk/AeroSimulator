@@ -71,12 +71,12 @@ void CRenderer::addGameObjectAndItsChildren(CCompositeGameObject * pObject)
       std::vector<CCompositeGameObject*> tree;
       pObject->traverse(tree);
 
-      for (auto * pNode : tree)
+      /*for (auto * pNode : tree)
       {
          if (pNode)
          {
             addRenderable(pNode);
          }
-      }
+      }*/
    }
 }

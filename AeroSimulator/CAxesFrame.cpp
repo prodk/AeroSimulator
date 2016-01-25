@@ -20,14 +20,14 @@ namespace
 
 CAxesFrame::CAxesFrame()
    : mLineGeometry(new CGeometry())
-   , mAxisX(new CLine())
+   /*, mAxisX(new CLine())
    , mAxisY(new CLine())
-   , mAxisZ(new CLine())
+   , mAxisZ(new CLine())*/
 {
    assert(mLineGeometry);
-   assert(mAxisX);
+   /*assert(mAxisX);
    assert(mAxisY);
-   assert(mAxisZ);
+   assert(mAxisZ);*/
 }
 
 CAxesFrame::~CAxesFrame()
@@ -51,34 +51,34 @@ void CAxesFrame::buildModel(std::shared_ptr<CShader>& pShader)
       mLineGeometry->setVertexStride(3);
 
       // Set the geometry
-      mAxisX->setGeometry(mLineGeometry);
+     /* mAxisX->setGeometry(mLineGeometry);
       mAxisY->setGeometry(mLineGeometry);
-      mAxisZ->setGeometry(mLineGeometry);
+      mAxisZ->setGeometry(mLineGeometry);*/
    }
 
    // Add the axes
    // x
-   glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
-   mAxisX->setColor(color);
-   add(mAxisX.get());
+   //glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
+   //mAxisX->setColor(color);
+   //add(mAxisX.get());
 
-   // y
-   color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
-   mAxisY->setColor(color);
-   mAxisY->setRotate(glm::vec3(0.0f, 0.0f, 90.0f));
-   add(mAxisY.get());
+   //// y
+   //color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f);
+   //mAxisY->setColor(color);
+   //mAxisY->setRotate(glm::vec3(0.0f, 0.0f, 90.0f));
+   //add(mAxisY.get());
 
-   // z
-   color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
-   mAxisZ->setColor(color);
-   mAxisZ->setRotate(glm::vec3(0.0f, 90.0f, 0.0f));
-   add(mAxisZ.get());
+   //// z
+   //color = glm::vec4(0.0f, 0.0f, 1.0f, 1.0f);
+   //mAxisZ->setColor(color);
+   //mAxisZ->setRotate(glm::vec3(0.0f, 90.0f, 0.0f));
+   //add(mAxisZ.get());
 
-   if (pShader)
-   {
-      pShader->link(); // Just in case
-      mAxisX->setShadersAndBuffers(pShader);
-      mAxisY->setShadersAndBuffers(pShader);
-      mAxisZ->setShadersAndBuffers(pShader);
-   }
+   //if (pShader)
+   //{
+   //   pShader->link(); // Just in case
+   //   mAxisX->setShadersAndBuffers(pShader);
+   //   mAxisY->setShadersAndBuffers(pShader);
+   //   mAxisZ->setShadersAndBuffers(pShader);
+   //}
 }

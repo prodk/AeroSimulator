@@ -24,213 +24,213 @@ namespace
 CSphere::CSphere()
    : mVertices()
    , mIndices()
-   , mNormalLine()
+   //, mNormalLine()
    , mGeometryNormals()
    , mDataNormals()
-   , mTangentLine()
+   //, mTangentLine()
    , mGeometryTangents()
    , mDataTangents()
    , mScaledTRMatrix()
 {
-   mGeometry.reset(new CGeometry());
-   mTexture.reset(new CTexture());
-   mNormalMapTexture.reset(new CTexture());
-   mAnimationTexture.reset(new CTexture());
+   //mGeometry.reset(new CGeometry());
+   //mTexture.reset(new CTexture());
+   //mNormalMapTexture.reset(new CTexture());
+   //mAnimationTexture.reset(new CTexture());
 
-   assert(mGeometry);
+  /* assert(mGeometry);
    assert(mTexture);
    assert(mNormalMapTexture);
-   assert(mAnimationTexture);
+   assert(mAnimationTexture);*/
 }
 
 CSphere::~CSphere()
 {
 }
 
-void CSphere::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
-{
-   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
-   CGameObject::setShadersAndBuffers(pShader);
-}
-
-void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
-{
-   ///@todo: debug
-   // Dump texture coordinates to a file
-   /*FILE* file = fopen("dumpuv.txt", "w");
-   if (file)
-   {
-      //const std::size_t numOfV = 0.5*mVertices.size();
-      const std::size_t numOfV = mVertices.size()/3;
-      for (std::size_t count = 0; count < numOfV; ++count)
-      {
-         //const glm::vec3& vert = mVertices[2 * count];
-         const glm::vec3& vert = mVertices[3 * count];
-         const float u = std::acos(vert.y / 1.0f) / M_PI;
-         const float v = (std::atan(vert.z/vert.x) + M_PI) / (2.0f *M_PI);
-            fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", count, vert.x, vert.y, vert.z, u, v);
-      }
-      fclose(file);
-   }*/
-   ///@todo: end
-
-   if (pShader)
-   {
-      pShader->link();
-
-      //const std::size_t numOfNormals = 0.5*mVertices.size();
-      const std::size_t numOfNormals = mVertices.size()/3;
-
-      mNormalLine.resize(numOfNormals);          // Lines drawing normals
-      mGeometryNormals.resize(numOfNormals);     // Geometry for lines depicting normals
-
-      const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
-
-      for (std::size_t count = 0; count < numOfNormals; ++count)
-      {
-         mGeometryNormals[count].reset(new CGeometry());
-         if (mGeometryNormals[count])
-         {
-            mGeometryNormals[count]->setVertexBuffer(&mDataNormals[2*count]);
-            mGeometryNormals[count]->setNumOfVertices(6);
-
-            mGeometryNormals[count]->setIndexBuffer(indices);
-            mGeometryNormals[count]->setNumOfIndices(2);
-
-            mGeometryNormals[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
-            mGeometryNormals[count]->setVertexStride(3); // 3 coords
-
-            mNormalLine[count].reset(new CLine());
-            if (mNormalLine[count])
-            {
-               //const glm::vec3& v = mVertices[2*count];
-               const glm::vec3& v = mVertices[3 * count];
-
-               mNormalLine[count]->setGeometry(mGeometryNormals[count]);
-               mNormalLine[count]->setColor(color);
-               mNormalLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
-               mNormalLine[count]->setTranslate(v);
-               add(mNormalLine[count].get());
-
-               mNormalLine[count]->setShadersAndBuffers(pShader);
-            }
-         } // end if mGeometryNormals[count]
-      } // end for
-   }
-
-   addTangents(pShader);
-
-   buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-}
-
-void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
-{
-   CParentGameObject::buildModelMatrix(parentTRMatrix);
-
-   // For the cube we need to calculate the model matrix
-   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
-   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
-}
-
-void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
-{
-   ///@todo: switch rotation for debugging
-   const float deltaX = 150.0f * dt;
-   //const float deltaX = 0.0f * dt;
-   calculateTRMatrix();
-   mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
-
-   mRotate.x += deltaX;
-
-   if (trMatrix != mParentTRMatrix)
-   {
-      mParentTRMatrix = trMatrix;
-      mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
-   }
-
-   for (auto * pChild : mChildren)
-   {
-      if (pChild)
-      {
-         pChild->updateTRMatrix(mParentByLocalTRMatrix, dt); /// Avoid recalculation on every frame
-
-         ///@todo: probably incorrect, think about it
-         if ((mScale.x != 1.0) || (mScale.y != 1.0) || (mScale.z != 1.0))
-            pChild->setScale(mScale);
-      }
-   }
-}
-
-void CSphere::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
-{
-   CParentGameObject::updateModelMatrix(rootModelMatrix);
-
-   // Model matrix of the cube
-   mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
-}
-
-bool CSphere::loadTexture(const char * fileName)
-{
-   const bool result = (0 != mTexture->loadDDSTexture(fileName));
-
-   if (result && (mTexture->getWidth() != mTexture->getHeight()))
-   {
-      glGenerateTextureMipmap(mTexture->getId());
-      CLog::getInstance().log("CSphere::loadTexture(): generating mipmaps for non-square texture, height: ",
-         mTexture->getHeight());
-   }
-
-   return result;
-}
-
-bool CSphere::loadNormalMapTexture(const char * filePath)
-{
-   const bool result = (0 != mNormalMapTexture->loadDDSTexture(filePath));
-
-   if (result && (mNormalMapTexture->getWidth() != mNormalMapTexture->getHeight()))
-   {
-      glGenerateTextureMipmap(mNormalMapTexture->getId());
-      CLog::getInstance().log("CSphere::loadNormalMapTexture(): generating mipmaps for non-square texture, height: ",
-         mNormalMapTexture->getHeight());
-   }
-
-   return result;
-}
-
-bool CSphere::loadAnimationTexture(const char * filePath)
-{
-   const bool result = (0 != mAnimationTexture->loadDDSTexture(filePath));
-
-   if (result && (mAnimationTexture->getWidth() != mAnimationTexture->getHeight()))
-   {
-      glGenerateTextureMipmap(mAnimationTexture->getId());
-      CLog::getInstance().log("CSphere::loadNormalMapTexture(): generating mipmaps for non-square texture, height: ",
-         mAnimationTexture->getHeight());
-   }
-
-   return result;
-}
+//void CSphere::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+//{
+//   CLog::getInstance().log("\n** CCube::setupShadersAndBuffers() **");
+//   CGameObject::setShadersAndBuffers(pShader);
+//}
+//
+//void CSphere::addCustomObjects(std::shared_ptr<CShader>& pShader)
+//{
+//   ///@todo: debug
+//   // Dump texture coordinates to a file
+//   /*FILE* file = fopen("dumpuv.txt", "w");
+//   if (file)
+//   {
+//      //const std::size_t numOfV = 0.5*mVertices.size();
+//      const std::size_t numOfV = mVertices.size()/3;
+//      for (std::size_t count = 0; count < numOfV; ++count)
+//      {
+//         //const glm::vec3& vert = mVertices[2 * count];
+//         const glm::vec3& vert = mVertices[3 * count];
+//         const float u = std::acos(vert.y / 1.0f) / M_PI;
+//         const float v = (std::atan(vert.z/vert.x) + M_PI) / (2.0f *M_PI);
+//            fprintf(file, "%d    %lf %lf %lf    %lf %lf\n", count, vert.x, vert.y, vert.z, u, v);
+//      }
+//      fclose(file);
+//   }*/
+//   ///@todo: end
+//
+//   if (pShader)
+//   {
+//      pShader->link();
+//
+//      //const std::size_t numOfNormals = 0.5*mVertices.size();
+//      const std::size_t numOfNormals = mVertices.size()/3;
+//
+//      mNormalLine.resize(numOfNormals);          // Lines drawing normals
+//      mGeometryNormals.resize(numOfNormals);     // Geometry for lines depicting normals
+//
+//      const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
+//
+//      for (std::size_t count = 0; count < numOfNormals; ++count)
+//      {
+//         mGeometryNormals[count].reset(new CGeometry());
+//         if (mGeometryNormals[count])
+//         {
+//            mGeometryNormals[count]->setVertexBuffer(&mDataNormals[2*count]);
+//            mGeometryNormals[count]->setNumOfVertices(6);
+//
+//            mGeometryNormals[count]->setIndexBuffer(indices);
+//            mGeometryNormals[count]->setNumOfIndices(2);
+//
+//            mGeometryNormals[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
+//            mGeometryNormals[count]->setVertexStride(3); // 3 coords
+//
+//            mNormalLine[count].reset(new CLine());
+//            if (mNormalLine[count])
+//            {
+//               //const glm::vec3& v = mVertices[2*count];
+//               const glm::vec3& v = mVertices[3 * count];
+//
+//               mNormalLine[count]->setGeometry(mGeometryNormals[count]);
+//               mNormalLine[count]->setColor(color);
+//               mNormalLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
+//               mNormalLine[count]->setTranslate(v);
+//               add(mNormalLine[count].get());
+//
+//               mNormalLine[count]->setShadersAndBuffers(pShader);
+//            }
+//         } // end if mGeometryNormals[count]
+//      } // end for
+//   }
+//
+//   addTangents(pShader);
+//
+//   buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
+//}
+//
+//void CSphere::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
+//{
+//   CParentGameObject::buildModelMatrix(parentTRMatrix);
+//
+//   // For the cube we need to calculate the model matrix
+//   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+//   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
+//}
+//
+//void CSphere::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
+//{
+//   ///@todo: switch rotation for debugging
+//   const float deltaX = 150.0f * dt;
+//   //const float deltaX = 0.0f * dt;
+//   calculateTRMatrix();
+//   mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
+//
+//   mRotate.x += deltaX;
+//
+//   if (trMatrix != mParentTRMatrix)
+//   {
+//      mParentTRMatrix = trMatrix;
+//      mParentByLocalTRMatrix = mParentTRMatrix * mTRMatrix;
+//   }
+//
+//   for (auto * pChild : mChildren)
+//   {
+//      if (pChild)
+//      {
+//         pChild->updateTRMatrix(mParentByLocalTRMatrix, dt); /// Avoid recalculation on every frame
+//
+//         ///@todo: probably incorrect, think about it
+//         if ((mScale.x != 1.0) || (mScale.y != 1.0) || (mScale.z != 1.0))
+//            pChild->setScale(mScale);
+//      }
+//   }
+//}
+//
+//void CSphere::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+//{
+//   CParentGameObject::updateModelMatrix(rootModelMatrix);
+//
+//   // Model matrix of the cube
+//   mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
+//}
+//
+//bool CSphere::loadTexture(const char * fileName)
+//{
+//   const bool result = (0 != mTexture->loadDDSTexture(fileName));
+//
+//   if (result && (mTexture->getWidth() != mTexture->getHeight()))
+//   {
+//      glGenerateTextureMipmap(mTexture->getId());
+//      CLog::getInstance().log("CSphere::loadTexture(): generating mipmaps for non-square texture, height: ",
+//         mTexture->getHeight());
+//   }
+//
+//   return result;
+//}
+//
+//bool CSphere::loadNormalMapTexture(const char * filePath)
+//{
+//   const bool result = (0 != mNormalMapTexture->loadDDSTexture(filePath));
+//
+//   if (result && (mNormalMapTexture->getWidth() != mNormalMapTexture->getHeight()))
+//   {
+//      glGenerateTextureMipmap(mNormalMapTexture->getId());
+//      CLog::getInstance().log("CSphere::loadNormalMapTexture(): generating mipmaps for non-square texture, height: ",
+//         mNormalMapTexture->getHeight());
+//   }
+//
+//   return result;
+//}
+//
+//bool CSphere::loadAnimationTexture(const char * filePath)
+//{
+//   const bool result = (0 != mAnimationTexture->loadDDSTexture(filePath));
+//
+//   if (result && (mAnimationTexture->getWidth() != mAnimationTexture->getHeight()))
+//   {
+//      glGenerateTextureMipmap(mAnimationTexture->getId());
+//      CLog::getInstance().log("CSphere::loadNormalMapTexture(): generating mipmaps for non-square texture, height: ",
+//         mAnimationTexture->getHeight());
+//   }
+//
+//   return result;
+//}
 
 void CSphere::createNonTexturedGeometry()
 {
-   generateNonTexutredSphere();
+   //generateNonTexutredSphere();
 
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(&mVertices[0]);
-      const int numOfVertices = 3 * mVertices.size();
-      mGeometry->setNumOfVertices(numOfVertices);
+   //if (mGeometry)
+   //{
+   //   mGeometry->setVertexBuffer(&mVertices[0]);
+   //   const int numOfVertices = 3 * mVertices.size();
+   //   mGeometry->setNumOfVertices(numOfVertices);
 
-      mGeometry->setIndexBuffer(&mIndices[0]);
-      const int numOfIndices = mIndices.size();
-      mGeometry->setNumOfIndices(numOfIndices);
+   //   mGeometry->setIndexBuffer(&mIndices[0]);
+   //   const int numOfIndices = mIndices.size();
+   //   mGeometry->setNumOfIndices(numOfIndices);
 
-      mGeometry->setNumOfElementsPerVertex(3);
-      //mGeometry->setVertexStride(6); // 6 for coords and normals, change to 9 when tangent is added
-      mGeometry->setVertexStride(9);
-   }
+   //   mGeometry->setNumOfElementsPerVertex(3);
+   //   //mGeometry->setVertexStride(6); // 6 for coords and normals, change to 9 when tangent is added
+   //   mGeometry->setVertexStride(9);
+   //}
 
-   setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
+   //setColor(glm::vec4(0.f, 1.0f, 1.0f, 1.0f));
 }
 
 void CSphere::update(const float deltaTime)
@@ -239,7 +239,7 @@ void CSphere::update(const float deltaTime)
    const float animationSpeed = 5.0f; // frames per second
    const float animationTime = 1.0f / animationSpeed;
 
-   static float timeSinceLastFrame;
+   /*static float timeSinceLastFrame;
    if (timeSinceLastFrame >= animationTime)
    {
       timeSinceLastFrame = 0.0f;
@@ -247,9 +247,9 @@ void CSphere::update(const float deltaTime)
       ++mCurrentFrame;
       mCurrentFrame.x = static_cast<int>(mCurrentFrame.x) % static_cast<int>(mNumOfFrames.x);
       mCurrentFrame.y = static_cast<int>(mCurrentFrame.y) % static_cast<int>(mNumOfFrames.y);
-   }
+   }*/
 
-   timeSinceLastFrame += deltaTime;
+   //timeSinceLastFrame += deltaTime;
 }
 
 void CSphere::generateNonTexutredSphere()
@@ -396,49 +396,49 @@ void CSphere::generateTangents()
 
 void CSphere::addTangents(std::shared_ptr<CShader>& pShader)
 {
-   if (pShader)
-   {
-      pShader->link();
+   //if (pShader)
+   //{
+   //   pShader->link();
 
-      generateTangents();
+   //   generateTangents();
 
-      // Add lines for drawing tangents
-      const std::size_t numOfTangents = 0.5*mDataTangents.size();
+   //   // Add lines for drawing tangents
+   //   const std::size_t numOfTangents = 0.5*mDataTangents.size();
 
-      mTangentLine.resize(numOfTangents);          // Lines drawing normals
-      mGeometryTangents.resize(numOfTangents);     // Geometry for lines depicting normals
+   //   mTangentLine.resize(numOfTangents);          // Lines drawing normals
+   //   mGeometryTangents.resize(numOfTangents);     // Geometry for lines depicting normals
 
-      const glm::vec4 color(1.0f, 1.0f, 0.0f, 1.0f);
+   //   const glm::vec4 color(1.0f, 1.0f, 0.0f, 1.0f);
 
-      for (std::size_t count = 0; count < numOfTangents; ++count)
-      {
-         mGeometryTangents[count].reset(new CGeometry());
-         ///@todo: add to a method add tangent
-         if (mGeometryTangents[count])
-         {
-            mGeometryTangents[count]->setVertexBuffer(&mDataTangents[2*count]);
-            mGeometryTangents[count]->setNumOfVertices(6);
+   //   for (std::size_t count = 0; count < numOfTangents; ++count)
+   //   {
+   //      mGeometryTangents[count].reset(new CGeometry());
+   //      ///@todo: add to a method add tangent
+   //      if (mGeometryTangents[count])
+   //      {
+   //         mGeometryTangents[count]->setVertexBuffer(&mDataTangents[2*count]);
+   //         mGeometryTangents[count]->setNumOfVertices(6);
 
-            mGeometryTangents[count]->setIndexBuffer(indices);
-            mGeometryTangents[count]->setNumOfIndices(2);
+   //         mGeometryTangents[count]->setIndexBuffer(indices);
+   //         mGeometryTangents[count]->setNumOfIndices(2);
 
-            mGeometryTangents[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
-            mGeometryTangents[count]->setVertexStride(3); // 3 coords
+   //         mGeometryTangents[count]->setNumOfElementsPerVertex(3); ///@todo: probably remove this
+   //         mGeometryTangents[count]->setVertexStride(3); // 3 coords
 
-            mTangentLine[count].reset(new CLine());
-            if (mTangentLine[count])
-            {
-               //const glm::vec3& v = mVertices[2 * count];
-               const glm::vec3& v = mVertices[3 * count];
-               mTangentLine[count]->setGeometry(mGeometryTangents[count]);
-               mTangentLine[count]->setColor(color);
-               mTangentLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
-               mTangentLine[count]->setTranslate(1.25f*v);
-               add(mTangentLine[count].get());
+   //         mTangentLine[count].reset(new CLine());
+   //         if (mTangentLine[count])
+   //         {
+   //            //const glm::vec3& v = mVertices[2 * count];
+   //            const glm::vec3& v = mVertices[3 * count];
+   //            mTangentLine[count]->setGeometry(mGeometryTangents[count]);
+   //            mTangentLine[count]->setColor(color);
+   //            mTangentLine[count]->setScale(glm::vec3(0.25f, 0.25f, 0.25f));
+   //            mTangentLine[count]->setTranslate(1.25f*v);
+   //            add(mTangentLine[count].get());
 
-               mTangentLine[count]->setShadersAndBuffers(pShader);
-            }
-         } // end if mGeometryTangents[count]
-      } // end for
-   }
+   //            mTangentLine[count]->setShadersAndBuffers(pShader);
+   //         }
+   //      } // end if mGeometryTangents[count]
+   //   } // end for
+   //}
 }

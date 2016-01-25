@@ -2,10 +2,10 @@
 
 using namespace AeroSimulatorEngine;
 
-CLine::CLine() : CLeafGameObject()
+CLine::CLine() : CGameObject() //CLeafGameObject()
 {
-   mIsLeaf = true;
-   mDrawWithLines = true;
+  /* mIsLeaf = true;
+   mDrawWithLines = true;*/
 }
 
 CLine::~CLine()

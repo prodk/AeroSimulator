@@ -38,10 +38,10 @@ void CAnimationBillboardShader::setup(CRenderable & renderable)
    CBillboardShader::setup(renderable);
 
    // Frame number of the sprite
-   const glm::vec2 currentFrame = renderable.getCurrentFrame();
-   glUniform2fv(mCurrentFrameUniform, 1, &(currentFrame.x));
+   //const glm::vec2 currentFrame = renderable.getCurrentFrame();
+   //glUniform2fv(mCurrentFrameUniform, 1, &(currentFrame.x));
 
-   // Size of the sprite frame
-   const glm::vec2 frameSize = renderable.getFrameSize();
-   glUniform2fv(mFrameSizeUniform, 1, &(frameSize.x));
+   //// Size of the sprite frame
+   //const glm::vec2 frameSize = renderable.getFrameSize();
+   //glUniform2fv(mFrameSizeUniform, 1, &(frameSize.x));
 }

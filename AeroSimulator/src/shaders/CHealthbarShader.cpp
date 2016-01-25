@@ -94,30 +94,30 @@ void CHealthbarShader::setup(CRenderable & renderable)
       glEnableVertexAttribArray(mSquadAttribute);
    }
 
-   /// uRightUniform
-   const glm::vec3 right = renderable.getRightVector();
-   glUniform3fv(mRightUniform, 1, &(right.x));
+   ///// uRightUniform
+   //const glm::vec3 right = renderable.getRightVector();
+   //glUniform3fv(mRightUniform, 1, &(right.x));
 
-   /// mUpUniform
-   const glm::vec3 up = renderable.getUpVector();
-   glUniform3fv(mUpUniform, 1, &(up.x));
+   ///// mUpUniform
+   //const glm::vec3 up = renderable.getUpVector();
+   //glUniform3fv(mUpUniform, 1, &(up.x));
 
-   /// mWidthUniform
-   const GLfloat width = renderable.getBillboardWidth();
-   glUniform1f(mWidthUniform, width);
+   ///// mWidthUniform
+   //const GLfloat width = renderable.getBillboardWidth();
+   //glUniform1f(mWidthUniform, width);
 
-   /// mHeightUniform
-   const GLfloat height = renderable.getBillboardHeight();
-   glUniform1f(mHeightUniform, height);
+   ///// mHeightUniform
+   //const GLfloat height = renderable.getBillboardHeight();
+   //glUniform1f(mHeightUniform, height);
 
-   const glm::vec4 color = renderable.getColor();
-   glUniform4fv(mColorUniform, 1, &color[0]);
+   //const glm::vec4 color = renderable.getColor();
+   //glUniform4fv(mColorUniform, 1, &color[0]);
 
-   // Send the transformation to the currently bound shader in the "MVP" uniform
-   const glm::mat4 MVP = renderable.getMvpMatrix();
-   glUniformMatrix4fv(mMvpUniform, 1, GL_FALSE, &MVP[0][0]);
+   //// Send the transformation to the currently bound shader in the "MVP" uniform
+   //const glm::mat4 MVP = renderable.getMvpMatrix();
+   //glUniformMatrix4fv(mMvpUniform, 1, GL_FALSE, &MVP[0][0]);
 
-   ///@todo: remove
-   const float health = renderable.getHealthValue();
-   glUniform1f(mHealthUniform, health);
+   /////@todo: remove
+   //const float health = renderable.getHealthValue();
+   //glUniform1f(mHealthUniform, health);
 }

@@ -27,12 +27,12 @@ namespace AeroSimulatorEngine
       bool buildModel(std::shared_ptr<CShader>& pShader);
       void getTree(std::vector<CCompositeGameObject*>& tree) const;
 
-      CParentGameObject* getRoot() const { return mCabine.get(); }
+      /*CParentGameObject* getRoot() const { return mCabine.get(); }
 
       void setBillboardShader(std::shared_ptr<CShader>& pShader)
       {
          if (pShader) mBillboardShader = pShader;
-      }
+      }*/
 
       /// Airplane's in the game
       void setPosition(const glm::vec3& pos) { mPosition = pos; }

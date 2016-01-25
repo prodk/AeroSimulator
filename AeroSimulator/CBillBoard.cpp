@@ -25,29 +25,29 @@ namespace
 }
 
 CBillBoard::CBillBoard()
-   : mScaledTRMatrix()
-   , mBoundingBox()
-   , mPosition()
+   //: mScaledTRMatrix()
+   //, mBoundingBox()
+   //, mPosition()
 {
-   mTexture.reset(new CTexture());
-   mGeometry.reset(new CGeometry());
+   //mTexture.reset(new CTexture());
+   //mGeometry.reset(new CGeometry());
 
-   assert(mTexture);
-   assert(mGeometry);
+   //assert(mTexture);
+   //assert(mGeometry);
 
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(vertices);
-      const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-      mGeometry->setNumOfVertices(numOfVertices);
+   //if (mGeometry)
+   //{
+   //   mGeometry->setVertexBuffer(vertices);
+   //   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+   //   mGeometry->setNumOfVertices(numOfVertices);
 
-      mGeometry->setIndexBuffer(indices);
-      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-      mGeometry->setNumOfIndices(numOfIndices);
+   //   mGeometry->setIndexBuffer(indices);
+   //   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+   //   mGeometry->setNumOfIndices(numOfIndices);
 
-      mGeometry->setNumOfElementsPerVertex(3); ///@todo: probably remove this
-      mGeometry->setVertexStride(7); // 3 coords + 2 tex coords + 2 squad
-   }
+   //   mGeometry->setNumOfElementsPerVertex(3); ///@todo: probably remove this
+   //   mGeometry->setVertexStride(7); // 3 coords + 2 tex coords + 2 squad
+   //}
 }
 
 CBillBoard::~CBillBoard()
@@ -66,7 +66,7 @@ void CBillBoard::resetEnvironment()
 
 bool CBillBoard::loadTexture(const char * fileName)
 {
-   const bool result = (0 != mTexture->loadDDSTexture(fileName));
+   /*const bool result = (0 != mTexture->loadDDSTexture(fileName));
 
    if (result && (mTexture->getWidth() != mTexture->getHeight()))
    {
@@ -75,74 +75,75 @@ bool CBillBoard::loadTexture(const char * fileName)
          mTexture->getHeight());
    }
 
-   return result;
+   return result;*/
+   return false;
 }
 
-void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
-{
-   ///@todo: think about the necessity of this log, probably remove it
-   //CLog::getInstance().log("\n** CBillBoard::setupShadersAndBuffers() **");
-   CGameObject::setShadersAndBuffers(pShader);
-}
+//void CBillBoard::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+//{
+//   ///@todo: think about the necessity of this log, probably remove it
+//   //CLog::getInstance().log("\n** CBillBoard::setupShadersAndBuffers() **");
+//   CGameObject::setShadersAndBuffers(pShader);
+//}
+//
+//void CBillBoard::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
+//{
+//   CParentGameObject::buildModelMatrix(parentTRMatrix);
+//
+//   // We need to calculate the model matrix for the node
+//   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+//   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
+//}
 
-void CBillBoard::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
-{
-   CParentGameObject::buildModelMatrix(parentTRMatrix);
+//void CBillBoard::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
+//{
+   //CParentGameObject::updateTRMatrix(trMatrix, dt);
 
-   // We need to calculate the model matrix for the node
-   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
-   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
-}
+   //// Don't forget to change the cached scaled TR matrix
+   //if (trMatrix != mParentTRMatrix) ///@todo: do not make this check to allow movement relative to the parent
+   //{
+   //   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
+   //}
+//}
 
-void CBillBoard::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
-{
-   CParentGameObject::updateTRMatrix(trMatrix, dt);
+//void CBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+//{
+   //CParentGameObject::updateModelMatrix(rootModelMatrix);
 
-   // Don't forget to change the cached scaled TR matrix
-   if (trMatrix != mParentTRMatrix) ///@todo: do not make this check to allow movement relative to the parent
-   {
-      mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
-   }
-}
+   //mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
 
-void CBillBoard::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
-{
-   CParentGameObject::updateModelMatrix(rootModelMatrix);
+   //// Reset parent-related rotations - billboard rotates ONLY relatively to the camera direction
+   //mModelMatrix[0].x = 1.0f;
+   //mModelMatrix[0].y = 0.0f;
+   //mModelMatrix[0].z = 0.0f;
 
-   mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
+   //mModelMatrix[1].x = 0.0f;
+   //mModelMatrix[1].y = 1.0f;
+   //mModelMatrix[1].z = 0.0f;
 
-   // Reset parent-related rotations - billboard rotates ONLY relatively to the camera direction
-   mModelMatrix[0].x = 1.0f;
-   mModelMatrix[0].y = 0.0f;
-   mModelMatrix[0].z = 0.0f;
+   //mModelMatrix[2].x = 0.0f;
+   //mModelMatrix[2].y = 0.0f;
+   //mModelMatrix[2].z = 1.0f;
+//}
 
-   mModelMatrix[1].x = 0.0f;
-   mModelMatrix[1].y = 1.0f;
-   mModelMatrix[1].z = 0.0f;
-
-   mModelMatrix[2].x = 0.0f;
-   mModelMatrix[2].y = 0.0f;
-   mModelMatrix[2].z = 1.0f;
-}
-
-void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec4& color, const glm::vec3& size)
-{
-   if (pShader)
-   {
-      mBoundingBox.reset(new CBoundingBox());
-      if (mBoundingBox)
-      {
-         mBoundingBox->setColor(color);
-         mBoundingBox->setScale(glm::vec3(mBillboardWidth, mBillboardHeight, mBillboardWidth));
-         mBoundingBox->calculateModelMatrix();
-
-         mBoundingBox->setShadersAndBuffers(pShader);
-         add(mBoundingBox.get());
-      }
-
-      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-   }
-}
+//void CBillBoard::setBoundingBox(std::shared_ptr<CShader>& pShader, const glm::vec4& color, const glm::vec3& size)
+//{
+//   if (pShader)
+//   {
+//      mBoundingBox.reset(new CBoundingBox());
+//      if (mBoundingBox)
+//      {
+//         mBoundingBox->setColor(color);
+//         mBoundingBox->setScale(glm::vec3(mBillboardWidth, mBillboardHeight, mBillboardWidth));
+//         mBoundingBox->calculateModelMatrix();
+//
+//         mBoundingBox->setShadersAndBuffers(pShader);
+//         add(mBoundingBox.get());
+//      }
+//
+//      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
+//   }
+//}
 
 const CBoundingBox * CBillBoard::getBoundingBox() const
 {
@@ -154,7 +155,7 @@ const CBoundingBox * CBillBoard::getBoundingBox() const
 
 void CBillBoard::setVisible(const bool visible)
 {
-   mIsVisible = visible;
+   /*mIsVisible = visible;
    if (mBoundingBox)
-      mBoundingBox->setVisible(visible);
+      mBoundingBox->setVisible(visible);*/
 }

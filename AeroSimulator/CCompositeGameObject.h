@@ -10,7 +10,7 @@ namespace AeroSimulatorEngine
    {
    public:
       CCompositeGameObject();
-      CCompositeGameObject(const glm::vec3& scale, const glm::vec3& rotate, const glm::vec3& translate);
+      //CCompositeGameObject(const glm::vec3& scale, const glm::vec3& rotate, const glm::vec3& translate);
       virtual ~CCompositeGameObject();
 
       /// Composite-related methods to be overridden by children
@@ -20,10 +20,10 @@ namespace AeroSimulatorEngine
       virtual void traverse(std::vector<CCompositeGameObject*>& tree) = 0;
 
       /// Rendering related composite methods
-      virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix) = 0;
-      virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt) = 0;
+      //virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix) = 0;
+      //virtual void updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt) = 0;
       ///@todo: make unitary matrix a default parameter
-      virtual void updateModelMatrix(const glm::mat4x4 & modelMatrix) = 0;
+      //virtual void updateModelMatrix(const glm::mat4x4 & modelMatrix) = 0;
    };
 } // namespace AeroSimulatorEngine
 

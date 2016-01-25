@@ -117,7 +117,8 @@ namespace AeroSimulatorEngine
       float mCameraAngleY; // left 'a', right 'd'
 
       ///@todo: probably create an array of cameras later
-      std::shared_ptr<CCamera> mCamera;
+      //std::shared_ptr<CCamera> mCamera;
+      std::unique_ptr<CCamera> mCamera;
 
       //CParentGameObject* mAirplaneRoot;
       //CParentGameObject* mSphereRoot;

@@ -57,7 +57,7 @@ void CTextureShader::setup(CRenderable & renderable)
    glBindTexture(GL_TEXTURE_2D, renderable.getTexture()->getId());
    glUniform1i(mSamplerUniformId, 0);
 
-   if (renderable.isRepeatTexture())
+   /*if (renderable.isRepeatTexture())
    {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -66,7 +66,7 @@ void CTextureShader::setup(CRenderable & renderable)
    {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-   }
+   }*/
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
@@ -91,6 +91,6 @@ void CTextureShader::setup(CRenderable & renderable)
    glEnableVertexAttribArray(mTexCoordAttributeId);
 
    // Send the transformation to the currently bound shader in the "MVP" uniform
-   glm::mat4 MVP = renderable.getMvpMatrix();
-   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
+  /* glm::mat4 MVP = renderable.getMvpMatrix();
+   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);*/
 }

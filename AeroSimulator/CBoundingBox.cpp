@@ -47,26 +47,26 @@ namespace
 
 CBoundingBox::CBoundingBox()
 {
-   setDrawWithLines(true);
+   //setDrawWithLines(true);
 
-   mGeometry.reset(new CGeometry());
+   //mGeometry.reset(new CGeometry());
 
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(colorCubeData);
-      const int numOfVertices = sizeof(colorCubeData) / sizeof(colorCubeData[0]);
-      mGeometry->setNumOfVertices(numOfVertices);
+   //if (mGeometry)
+   //{
+   //   mGeometry->setVertexBuffer(colorCubeData);
+   //   const int numOfVertices = sizeof(colorCubeData) / sizeof(colorCubeData[0]);
+   //   mGeometry->setNumOfVertices(numOfVertices);
 
-      mGeometry->setIndexBuffer(indices);
-      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-      mGeometry->setNumOfIndices(numOfIndices);
+   //   mGeometry->setIndexBuffer(indices);
+   //   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+   //   mGeometry->setNumOfIndices(numOfIndices);
 
-      mGeometry->setNumOfElementsPerVertex(CCube::mNumOfElementsPerVertex);
-      mGeometry->setVertexStride(3); // 3 coords and nothing else
+   //   mGeometry->setNumOfElementsPerVertex(CCube::mNumOfElementsPerVertex);
+   //   mGeometry->setVertexStride(3); // 3 coords and nothing else
 
-      ///@todo: remove this log
-      //CLog::getInstance().log("CBoundingBox geometry has been setup.");
-   }
+   //   ///@todo: remove this log
+   //   //CLog::getInstance().log("CBoundingBox geometry has been setup.");
+   //}
 }
 
 CBoundingBox::~CBoundingBox()
@@ -77,7 +77,7 @@ bool CBoundingBox::collidesWith(const CBoundingBox & box, bool vertical) const
 {
    bool result = false;
 
-   const glm::mat4x4 boxModel = box.getModelMatrix();
+   /*const glm::mat4x4 boxModel = box.getModelMatrix();
    const glm::vec4 translate = boxModel[3];
 
    const glm::vec4 myTranslate = mModelMatrix[3];
@@ -100,7 +100,7 @@ bool CBoundingBox::collidesWith(const CBoundingBox & box, bool vertical) const
    if (std::sqrt(deltaX2 + deltaY2 + deltaZ2) <= 2.0f)
    {
       result = true;
-   }
+   }*/
 
    return result;
 }

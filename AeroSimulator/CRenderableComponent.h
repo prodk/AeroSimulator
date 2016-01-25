@@ -6,16 +6,16 @@
 
 namespace AeroSimulatorEngine ///@todo: fix this namespace mess when the old CGameObject is removed
 {
-   class NGame::CGameObject;
+   class CGameObject;
    class CRenderable;
 
    ///@todo: probably make it also a CEventHandler
-   class CRenderableComponent : public NGame::CComponent
+   class CRenderableComponent : public CComponent
    {
    public:
       static unsigned int getId() { return mId; }
 
-      explicit CRenderableComponent(NGame::CGameObject* pOwner);
+      explicit CRenderableComponent(CGameObject* pOwner);
       virtual ~CRenderableComponent();
 
       virtual void init() override;
@@ -23,7 +23,7 @@ namespace AeroSimulatorEngine ///@todo: fix this namespace mess when the old CGa
       CRenderable & getRenderable() const { return *mRenderable; }
 
    private:
-      static const unsigned int mId = 1u;    ///@todo: probably use enum to avoid magic numbers
+      static const unsigned int mId = CComponent::RENDERABLE;
 
       std::unique_ptr<CRenderable> mRenderable;
    };

@@ -60,26 +60,26 @@ namespace
 CSkyBox::CSkyBox()
    : CCube()
 {
-   mTexture.reset(new CTexture());
-   mGeometry.reset(new CGeometry());
+   //mTexture.reset(new CTexture());
+   //mGeometry.reset(new CGeometry());
 
-   assert(mTexture);
-   assert(mGeometry);
+   //assert(mTexture);
+   //assert(mGeometry);
 
-   if (mGeometry)
-   {
-      mGeometry->setVertexBuffer(vertices);
-      const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-      mGeometry->setNumOfVertices(numOfVertices);
+   //if (mGeometry)
+   //{
+   //   mGeometry->setVertexBuffer(vertices);
+   //   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+   //   mGeometry->setNumOfVertices(numOfVertices);
 
-      mGeometry->setIndexBuffer(indices);
-      const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-      mGeometry->setNumOfIndices(numOfIndices);
+   //   mGeometry->setIndexBuffer(indices);
+   //   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
+   //   mGeometry->setNumOfIndices(numOfIndices);
 
-      ///@todo: get rid of the magic numbers
-      mGeometry->setNumOfElementsPerVertex(3);
-      mGeometry->setVertexStride(5); // Vertex + texture coordinates
-   }
+   //   ///@todo: get rid of the magic numbers
+   //   mGeometry->setNumOfElementsPerVertex(3);
+   //   mGeometry->setVertexStride(5); // Vertex + texture coordinates
+   //}
 }
 
 CSkyBox::~CSkyBox()
@@ -96,8 +96,8 @@ void CSkyBox::resetEnvironment()
    glDepthMask(GL_TRUE);
 }
 
-bool CSkyBox::loadTexture(const char * fileName)
-{
-   return (0 != mTexture->loadDDSTexture(fileName));
-}
+//bool CSkyBox::loadTexture(const char * fileName)
+//{
+//   return (0 != mTexture->loadDDSTexture(fileName));
+//}
 

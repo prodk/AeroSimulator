@@ -8,6 +8,7 @@ namespace AeroSimulatorEngine
    class CComponent
    {
    public:
+      static enum {TRAHSFORM, RENDERABLE, MOVEMENT};
       explicit CComponent(CGameObject* pOwner);
       virtual ~CComponent();
 

@@ -22,7 +22,7 @@ namespace AeroSimulatorEngine
       virtual void resetEnvironment();
 
       // Requires RC
-      bool loadTexture(const char * fileName);
+      //bool loadTexture(const char * fileName);
    };
 
 } // namespace AeroSimulatorEngine

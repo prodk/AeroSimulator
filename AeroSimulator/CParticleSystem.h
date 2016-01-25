@@ -1,7 +1,8 @@
 #ifndef AERO_SIMULATOR_CPARTICLE_SYSTEM_H
 #define AERO_SIMULATOR_CPARTICLE_SYSTEM_H
 
-#include "CParentGameObject.h"
+//#include "CParentGameObject.h"
+#include "CGameObject.h"
 #include <set>
 
 namespace AeroSimulatorEngine
@@ -18,7 +19,8 @@ namespace AeroSimulatorEngine
       bool mIsAlive;
    };
 
-   class CParticleSystem : public CParentGameObject
+   //class CParticleSystem : public CParentGameObject
+   class CParticleSystem : public CGameObject
    {
    public:
       CParticleSystem(float maxLifeTime, float emitSpeed, int numOfParticles, const glm::vec3 & particleSpeed);

@@ -103,8 +103,8 @@ void CColorLambertianShader::setup(CRenderable & renderable)
          (const void*)(3 * sizeof(float))); // Important!! Shift relative to the first array element
       glEnableVertexAttribArray(mNormalAttributeId);
 
-      const glm::mat4 uM = renderable.getModelMatrix();
-      glUniformMatrix4fv(mModelMatrixUniformId, 1, GL_FALSE, &uM[0][0]);
+      /*const glm::mat4 uM = renderable.getModelMatrix();
+      glUniformMatrix4fv(mModelMatrixUniformId, 1, GL_FALSE, &uM[0][0]);*/
 
       const glm::vec3 ambientColor(0.2f, 0.1f, 0.0f);
       glUniform3fv(mAmbientUniformId, 1, &(ambientColor.r));
@@ -115,7 +115,7 @@ void CColorLambertianShader::setup(CRenderable & renderable)
       const glm::vec3 sunDirection(0.0f, 1.0f, 1.0f);
       glUniform3fv(mSunDirUniformId, 1, &(sunDirection.x));
 
-      const glm::vec3 eyePos = renderable.getEyePos();
-      glUniform3fv(mEyePosUniformId, 1, &eyePos.x);
+      /*const glm::vec3 eyePos = renderable.getEyePos();
+      glUniform3fv(mEyePosUniformId, 1, &eyePos.x);*/
    }
 }

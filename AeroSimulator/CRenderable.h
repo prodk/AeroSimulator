@@ -22,6 +22,7 @@ namespace
    enum eShaderVector4Params { COLOR };
    enum eShaderMatrix3Params { NORMAL_MATRIX };
    enum eShaderMatrix4Params { MODEL_MATRIX, MVP_MATRIX, VIEW_MATRIX };
+   enum eEnvironment { DEPTH };
 }
 
 

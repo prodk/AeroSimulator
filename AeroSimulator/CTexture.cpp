@@ -41,7 +41,6 @@ GLuint CTexture::loadBmpTexture(const char * filePath)
    if (header[0] != 'B' || header[1] != 'M') {
       printf("Not a correct BMP file\n");
       return 0;
-
    }
 
    // Read ints from the byte array
@@ -54,8 +53,7 @@ GLuint CTexture::loadBmpTexture(const char * filePath)
    if (imageSize == 0)    imageSize = width*height * 3; // 3 : one byte for each Red, Green and Blue component
    if (dataPos == 0)      dataPos = 54; // The BMP header is done that way
 
-   ///@todo: probably the buffer should be created/hosted in CApp
-                                        // Create a buffer
+   // Create a buffer
    std::shared_ptr<unsigned char> data;
    data.reset(new unsigned char[imageSize]);
 
@@ -100,7 +98,6 @@ GLuint CTexture::loadDDSTexture(const char * filePath)
    if (strncmp(filecode, "DDS ", 4) != 0) {
       fclose(fp);
       return 0;
-
    }
 
    /* get the surface desc */
@@ -123,7 +120,7 @@ GLuint CTexture::loadDDSTexture(const char * filePath)
    /* close the file pointer */
    fclose(fp);
 
-   //We need to convert the 'fourCC' flag into a value that OpenGL understands
+   // We need to convert the 'fourCC' flag into a value that OpenGL understands
    unsigned int components = (fourCC == FOURCC_DXT1) ? 3 : 4;
    unsigned int format;
    switch (fourCC)

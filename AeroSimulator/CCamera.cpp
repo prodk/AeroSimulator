@@ -6,7 +6,8 @@
 using namespace AeroSimulatorEngine;
 
 CCamera::CCamera()
-   : CLeafGameObject()
+   //: CLeafGameObject()
+   : CGameObject()
    , mViewMatrix()
    , mProjectionMatrix()
    , mNonScaledViewMatrix()
@@ -20,29 +21,29 @@ CCamera::~CCamera()
 
 void CCamera::update()
 {
-   calculateModelMatrix();
+   //calculateModelMatrix();
 
-   mViewMatrix = mModelMatrix * mLookAtMatrix;
+   //mViewMatrix = mModelMatrix * mLookAtMatrix;
 }
 
-void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
-{
-   calculateModelMatrix();
-
-   /*glm::vec3 translate;
-   translate.x = -mParentTRMatrix[3].x;
-   translate.y = -mParentTRMatrix[3].y;
-   translate.z = -mParentTRMatrix[3].z;
-
-   glm::mat4x4 translateParent;
-   translateParent = glm::translate(translateParent, translate);
-
-   mViewMatrix = mModelMatrix * mLookAtMatrix * translateParent;*/
-
-   glm::mat4x4 inverseParent;
-   inverseParent = glm::inverse(mParentTRMatrix);
-   mViewMatrix = mModelMatrix * mLookAtMatrix * inverseParent;
-}
+//void CCamera::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
+//{
+//   calculateModelMatrix();
+//
+//   /*glm::vec3 translate;
+//   translate.x = -mParentTRMatrix[3].x;
+//   translate.y = -mParentTRMatrix[3].y;
+//   translate.z = -mParentTRMatrix[3].z;
+//
+//   glm::mat4x4 translateParent;
+//   translateParent = glm::translate(translateParent, translate);
+//
+//   mViewMatrix = mModelMatrix * mLookAtMatrix * translateParent;*/
+//
+//   glm::mat4x4 inverseParent;
+//   inverseParent = glm::inverse(mParentTRMatrix);
+//   mViewMatrix = mModelMatrix * mLookAtMatrix * inverseParent;
+//}
 
 glm::mat3x3 CCamera::getRotationMatrix() const
 {
@@ -57,18 +58,18 @@ glm::mat3x3 CCamera::getRotationMatrix() const
 void CCamera::translateLookAt(const glm::vec3& shift)
 {
    ///Transform the shift from camera to world space using inverse transform
-   glm::mat3x3 noTranslate;
-   CCommonMath::copyColumn(0, noTranslate, mModelMatrix);
-   CCommonMath::copyColumn(1, noTranslate, mModelMatrix);
-   CCommonMath::copyColumn(2, noTranslate, mModelMatrix);
+   //glm::mat3x3 noTranslate;
+   //CCommonMath::copyColumn(0, noTranslate, mModelMatrix);
+   //CCommonMath::copyColumn(1, noTranslate, mModelMatrix);
+   //CCommonMath::copyColumn(2, noTranslate, mModelMatrix);
 
-   // For orthonormal matrices inverse==transpose
-   noTranslate = glm::transpose(noTranslate);
+   //// For orthonormal matrices inverse==transpose
+   //noTranslate = glm::transpose(noTranslate);
 
-   //// Transform the translation part
-   glm::vec3 translate = noTranslate * shift;
+   ////// Transform the translation part
+   //glm::vec3 translate = noTranslate * shift;
 
-   mLookAtMatrix = glm::translate(mLookAtMatrix, translate);
+   //mLookAtMatrix = glm::translate(mLookAtMatrix, translate);
 }
 
 glm::vec3 CCamera::getLookAtPosition() const

@@ -5,7 +5,7 @@
 
 using namespace AeroSimulatorEngine;
 
-CRenderableComponent::CRenderableComponent(NGame::CGameObject * pOwner)
+CRenderableComponent::CRenderableComponent(CGameObject * pOwner)
    : CComponent(pOwner)
    , mRenderable(new AeroSimulatorEngine::CRenderable())
 {

@@ -68,7 +68,7 @@ void CBillboardShader::setup(CRenderable & renderable)
    }
 
    /// uRightUniform
-   const glm::vec3 right = renderable.getRightVector();
+   /*const glm::vec3 right = renderable.getRightVector();
    glUniform3fv(mRightUniform, 1, &(right.x));
 
    /// mUpUniform
@@ -81,5 +81,5 @@ void CBillboardShader::setup(CRenderable & renderable)
 
    /// mHeightUniform
    const GLfloat height = renderable.getBillboardHeight();
-   glUniform1f(mHeightUniform, height);
+   glUniform1f(mHeightUniform, height);*/
 }

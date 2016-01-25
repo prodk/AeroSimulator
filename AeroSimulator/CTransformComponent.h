@@ -22,7 +22,7 @@ namespace AeroSimulatorEngine
 
    private:
       /// Id of the component
-      static const unsigned int mId = 0;
+      static const unsigned int mId = CComponent::TRAHSFORM;
 
       CTransform mTransform;
    };

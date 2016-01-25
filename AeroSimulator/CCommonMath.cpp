@@ -1,5 +1,6 @@
 #include "CCommonMath.h"
 
+///@todo: remove this class/file: we can use glm::radians
 using namespace AeroSimulatorEngine;
 
 const float CCommonMath::piTo180 = static_cast<float>(M_PI) / 180.f;
