@@ -34,7 +34,7 @@ CRenderable::CRenderable()
    , mAnimationTexture()
    //, mRepeatTexture(false)
    //, mIsTransparent(false)
-   , mTextureUnit(GL_TEXTURE0)
+   //, mTextureUnit(GL_TEXTURE0)
 {
 }
 

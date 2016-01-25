@@ -121,56 +121,56 @@ void CParticleSystem::setEmitSpeed(const float factor)
    }
 }
 
-void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader,
-                                   const char* filePath, const glm::vec2 & frameSize, const float width, const float height)
-{
-   if (pShader && pColorShader)
-   {
-      pShader->link();
-      pColorShader->link();
-
-      float dx = 5.f;
-
-      for (std::size_t id = 0; id < mNumOfParticles; ++id)
-      {
-         mBillboard[id].reset(new CAnimationBillBoard());
-
-         //if (mBillboard[id])
-         //{
-         //   if (mBillboard[id]->loadTexture(filePath))
-         //   {
-         //      ///@todo: log this only to a file, not to stdout
-         //      //CLog::getInstance().log("* Particle billboard loaded: ", filePath);
-         //   }
-
-         //   mBillboard[id]->setFrameSize(glm::vec2(1.0f / frameSize.x, 1.0f / frameSize.y));
-
-         //   mBillboard[id]->setBillboardHeight(width);
-         //   mBillboard[id]->setBillboardWidth(height);
-         //   mBillboard[id]->setAnimationSpeed(16.0f);
-         //   mBillboard[id]->setTransparent(true);
-
-         //   mBillboard[id]->setShadersAndBuffers(pShader);
-         //   const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-         //   mBillboard[id]->setBoundingBox(pColorShader, bBoxColor);
-         //   mBillboard[id]->setVisible(false);
-         //   std::vector<CCompositeGameObject*> tree;
-         //   mBillboard[id]->traverse(tree);
-
-         //   for (auto * pTree : tree)
-         //   {
-         //      if (pTree)
-         //      {
-         //         add(pTree);
-         //      }
-         //   }
-
-         //   add(mBillboard[id].get());
-         //}
-      } // End for
-      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
-   }
-}
+//void CParticleSystem::addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader,
+//                                   const char* filePath, const glm::vec2 & frameSize, const float width, const float height)
+//{
+//   if (pShader && pColorShader)
+//   {
+//      pShader->link();
+//      pColorShader->link();
+//
+//      float dx = 5.f;
+//
+//      for (std::size_t id = 0; id < mNumOfParticles; ++id)
+//      {
+//         mBillboard[id].reset(new CAnimationBillBoard());
+//
+//         //if (mBillboard[id])
+//         //{
+//         //   if (mBillboard[id]->loadTexture(filePath))
+//         //   {
+//         //      ///@todo: log this only to a file, not to stdout
+//         //      //CLog::getInstance().log("* Particle billboard loaded: ", filePath);
+//         //   }
+//
+//         //   mBillboard[id]->setFrameSize(glm::vec2(1.0f / frameSize.x, 1.0f / frameSize.y));
+//
+//         //   mBillboard[id]->setBillboardHeight(width);
+//         //   mBillboard[id]->setBillboardWidth(height);
+//         //   mBillboard[id]->setAnimationSpeed(16.0f);
+//         //   mBillboard[id]->setTransparent(true);
+//
+//         //   mBillboard[id]->setShadersAndBuffers(pShader);
+//         //   const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
+//         //   mBillboard[id]->setBoundingBox(pColorShader, bBoxColor);
+//         //   mBillboard[id]->setVisible(false);
+//         //   std::vector<CCompositeGameObject*> tree;
+//         //   mBillboard[id]->traverse(tree);
+//
+//         //   for (auto * pTree : tree)
+//         //   {
+//         //      if (pTree)
+//         //      {
+//         //         add(pTree);
+//         //      }
+//         //   }
+//
+//         //   add(mBillboard[id].get());
+//         //}
+//      } // End for
+//      buildModelMatrix(glm::mat4x4(1.0f)); // Bind children positions to the root
+//   }
+//}
 
 void CParticleSystem::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
 {

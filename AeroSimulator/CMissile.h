@@ -3,10 +3,13 @@
 
 #include "CCube.h"
 
+#include "../AeroSimulator/include/glm/vec3.hpp"
+
 namespace AeroSimulatorEngine
 {
    class CParticleSystem;
    class CWin32Renderer;
+   class CShader;
 
    class CMissile : public CCube
    {
@@ -17,11 +20,11 @@ namespace AeroSimulatorEngine
       bool isDetached() const { return mIsDetached; }
       void setDetached(const bool detach) { mIsDetached = detach; }
 
-      void setFlightDirection(const glm::vec3& dir) { mFlightDirection = dir; }
+      //void setFlightDirection(const glm::vec3& dir) { mFlightDirection = dir; }
       void update(float dt);
 
-      void addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader,
-                        const char* filePath, const glm::vec2 & frameSize, const float width, const float height);
+      /*void addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader,
+                        const char* filePath, const glm::vec2 & frameSize, const float width, const float height);*/
 
       void setEmitSpeed(const float factor);
       void resetEmitSpeed();

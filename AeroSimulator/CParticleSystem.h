@@ -4,10 +4,13 @@
 //#include "CParentGameObject.h"
 #include "CGameObject.h"
 #include <set>
+#include "../AeroSimulator/include/glm/vec3.hpp"
+#include "../AeroSimulator/include/glm/mat4x4.hpp"
 
 namespace AeroSimulatorEngine
 {
    class CAnimationBillBoard;
+   class CShader;
 
    struct SParticle
    {
@@ -30,8 +33,8 @@ namespace AeroSimulatorEngine
       virtual void update(const float deltaTime);
       void setEmitSpeed(const float factor);
       void resetEmitSpeed() { mTimeToEmit = 1.0f / mEmitSpeed; }
-      void addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader, 
-                        const char* filePath, const glm::vec2 & frameSize, const float width, const float height);
+      /*void addParticles(std::shared_ptr<CShader>& pShader, std::shared_ptr<CShader>& pColorShader, 
+                        const char* filePath, const glm::vec2 & frameSize, const float width, const float height);*/
 
       /// Composite-related methods - override only some of them
       virtual void buildModelMatrix(const glm::mat4x4 & parentTRMatrix);

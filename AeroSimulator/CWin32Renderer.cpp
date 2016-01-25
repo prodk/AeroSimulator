@@ -148,7 +148,7 @@ void CWin32Renderer::update(CTask* pTask)
       //draw(mMainFboQuad.get());
 
       // Small helper scene
-      glViewport(0.7f*mWndWidth, 0, 0.3f*mWndWidth, 0.3f*mWndHeight);
+      glViewport(static_cast<GLint>(0.7f*mWndWidth), 0, static_cast<GLsizei>(0.3f*mWndWidth), static_cast<GLsizei>(0.3f*mWndHeight));
       //draw(mHelpFboQuad.get());
 
       glEnable(GL_DEPTH_TEST);

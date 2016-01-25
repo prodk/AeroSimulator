@@ -31,7 +31,7 @@ namespace AeroSimulatorEngine
 
       //void setupHealthBar(std::shared_ptr<CShader>& pShader);
       //virtual bool loadTexture(const char * fileName);
-      void translateHealthBar(const glm::vec3& shift);
+      //void translateHealthBar(const glm::vec3& shift);
       void setHealth(float health);
 
    public:
@@ -41,8 +41,8 @@ namespace AeroSimulatorEngine
 
    private:
       //glm::mat4x4 mScaledTRMatrix;
-      std::shared_ptr<CCompositeGameObject> mHealthBar;
-      glm::vec3 mHealthBarShift;
+      //std::shared_ptr<CCompositeGameObject> mHealthBar;
+      //glm::vec3 mHealthBarShift;
       float mHealthBarWidth;
       float mHealthbarHeight;
       //float mHealthValue;

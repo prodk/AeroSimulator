@@ -16,9 +16,10 @@ const int CCube::mNumOfElementsPerVertex = 3; // 3 coordinates/color components 
 const int CCube::mStride = 6;                 // stride of 6 for 3 coordinates and 3 colors
 
 CCube::CCube()
-   : CParentGameObject()
+   //: CParentGameObject()
+   : CGameObject()
    //, mScaledTRMatrix()
-   , mHealthBar()
+   //, mHealthBar()
    //, mHealthBarShift(glm::vec3(0.0f, 0.7f, 0.0f))
    , mHealthBarWidth(0.5f)
    , mHealthbarHeight(0.2f)

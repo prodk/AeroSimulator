@@ -23,14 +23,14 @@ namespace
 
 CSphere::CSphere()
    : mVertices()
-   , mIndices()
+   //, mIndices()
    //, mNormalLine()
    , mGeometryNormals()
    , mDataNormals()
    //, mTangentLine()
    , mGeometryTangents()
    , mDataTangents()
-   , mScaledTRMatrix()
+   //, mScaledTRMatrix()
 {
    //mGeometry.reset(new CGeometry());
    //mTexture.reset(new CTexture());
@@ -256,12 +256,12 @@ void CSphere::generateNonTexutredSphere()
 {
    ///@todo: rename the variables and reconsider their type
    const int Band_Power = 5;  // 2^Band_Power = Total Points in a band.
-   const int Band_Points = std::powl(2, Band_Power); // 2^Band_Power
+   const int Band_Points = (int)std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
    const int Total_Points = Sections_In_Band*Band_Points;
    // remember - for each section in a band, we have a band
-   const float Section_Arc = 2 * M_PI / Sections_In_Band;
+   const float Section_Arc = 2.0f * (float)M_PI / Sections_In_Band;
    const float R = -1.f; // radius
 
    int i;
@@ -352,7 +352,7 @@ void CSphere::generateNonTexutredSphere()
       mDataNormals.push_back(vertex);
 
       //mIndices[i] = i;
-      mIndices.push_back(i);
+      //mIndices.push_back(i);
    }
 
    ///@todo: debug
@@ -373,7 +373,7 @@ void CSphere::generateTangents()
 
       //if (v.x >= 0.0f)
       //{
-         float phi = std::atan(v.y / v.x) + M_PI*0.5f;
+         float phi = std::atan(v.y / v.x) + (float)M_PI*0.5f;
 
          // To get tangent, rotate phi by pi/2 and take into account that cos(theta+pi/2)==sin(theta)
          glm::vec3 tangent;

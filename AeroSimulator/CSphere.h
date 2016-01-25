@@ -5,10 +5,14 @@
 #include "CGameObject.h"
 
 #include "glm/vec3.hpp"
+#include "../AeroSimulator/include/glm/mat4x4.hpp"
 #include <vector>
 
 namespace AeroSimulatorEngine
 {
+   class CShader;
+   class CGeometry;
+
    //class CSphere : public CParentGameObject
    class CSphere : public CGameObject
    {
@@ -43,7 +47,7 @@ namespace AeroSimulatorEngine
 
    private:
       std::vector<glm::vec3> mVertices; ///@todo: use a map to avoid repeating vertices
-      std::vector<GLuint> mIndices;
+      //std::vector<GLuint> mIndices;
 
       /// Normals
       //std::vector<tLine> mNormalLine; // Lines depicting normals
@@ -55,7 +59,7 @@ namespace AeroSimulatorEngine
       std::vector<std::shared_ptr<CGeometry> > mGeometryTangents;
       std::vector<glm::vec3> mDataTangents;
 
-      glm::mat4x4 mScaledTRMatrix;
+      //glm::mat4x4 mScaledTRMatrix;
    };
 }
 

@@ -6,6 +6,7 @@
 //#include "../AeroSimulator/include/glew.h"
 #include <memory>
 #include <map>
+//#include <gl/GL.h>
 
 #include "../AeroSimulator/include/glm/vec2.hpp"
 #include "../AeroSimulator/include/glm/vec3.hpp"
@@ -150,8 +151,8 @@ namespace AeroSimulatorEngine
 
       //virtual void setVisible(const bool visible) { mIsVisible = visible; }
 
-      void setTextureUnit(const GLint unit) { mTextureUnit = unit; }
-      GLint getTextureUnit() const { return mTextureUnit; }
+      //void setTextureUnit(const GLint unit) { mTextureUnit = unit; }
+      //GLint getTextureUnit() const { return mTextureUnit; }
 
    private:
       template <typename T>
@@ -199,7 +200,7 @@ namespace AeroSimulatorEngine
 
       //bool mRepeatTexture;
       //bool mIsTransparent;
-      GLint mTextureUnit;
+      //GLint mTextureUnit;
 
       // The maps contain flags and parameters used mainly in shaders as uniform values.
       // A shader gives the name of the parameter and gets its value

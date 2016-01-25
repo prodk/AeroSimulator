@@ -20,7 +20,7 @@ namespace AeroSimulatorEngine
 
       bool loadTexture(const char * fileName);
 
-      void setNumOfTiles(const GLint x, const GLint y);
+      //void setNumOfTiles(const GLint x, const GLint y);
 
    private:
       glm::vec2 mNumOfTiles;
