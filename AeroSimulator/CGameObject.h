@@ -32,11 +32,13 @@ namespace AeroSimulatorEngine
       CComponent* getComponent(const unsigned int id) const;
 
    protected:
-      std::unordered_map<unsigned int, std::unique_ptr<CComponent> > mComponents;
+      //std::unordered_map<unsigned int, std::unique_ptr<CComponent> > mComponents;
+      std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
 
       ///@todo: add a list of children here and probably some reference to the parent;
    };
 
+   // Template methods implementation
    template<typename T>
    T * componentCast(CGameObject & object)
    {
@@ -48,13 +50,13 @@ namespace AeroSimulatorEngine
    {
       bool added = false;
 
-      auto result = mComponents.find(id);
+      auto result = mComponents.find(T::getId());
       if (mComponents.end() == result)
       {
-         std::unique_ptr<CComponent> pComponent(new T(this));
+         std::shared_ptr<CComponent> pComponent(new T(this));
          if (pComponent)
          {
-            std::pair<unsigned int, std::unique_ptr<CComponent> >
+            std::pair<unsigned int, std::shared_ptr<CComponent> >
             newComponent(T::getId(), pComponent);
             added = mComponents.insert(newComponent).second;
          }

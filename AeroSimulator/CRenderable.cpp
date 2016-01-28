@@ -10,38 +10,7 @@
 
 using namespace AeroSimulatorEngine;
 
-//CRenderable::CRenderable()
-//   : mGeometry()
-//   , mShader()
-//   , mTextures(LAST_TEXTURE)
-//   /*, mTexture()
-//   , mNormalMapTexture()
-//   , mAnimationTexture()*/
-//   /*, mModelMatrix()
-//   , mMvpMatrix()*/   
-//   //, mVboId(0)
-//   //, mIboId(0)
-//   //, mRightVector()
-//   //, mUpVector()
-//   //, mBillboardWidth(1.0f)
-//   //, mBillboardHeight(1.0f)
-//   //, mDrawWithLines(false)
-//   //, mColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
-//   //, mLineWidth(2.0f)
-//   //, mHealthValue(0.0f)
-//   //, mViewMatrix()
-//   //, mEyePos()
-//   //, mCurrentFrame()
-//   //, mFrameSize()
-//   //, mNumOfFrames()
-//   //, mIsVisible(true)
-//   //, mRepeatTexture(false)
-//   //, mIsTransparent(false)
-//   //, mTextureUnit(GL_TEXTURE0)
-//{
-//}
-
-CRenderable::CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char * mainTextureFilePath)
+CRenderable::CRenderable()
    : mGeometry()
    , mShader()
    , mTextures(eTextures::LAST_TEXTURE)
@@ -53,17 +22,29 @@ CRenderable::CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<C
    , mMatrix3Params()
    , mMatrix4Params()
 {
-   setGeometry(pVertices, pIndices);
-   setupVbo();
-
-   mShader = pShader;
-   assert(pShader);
-
-   if ((0 != mainTextureFilePath) && loadTexture(MAIN_TEXTURE, mainTextureFilePath, DDS))
-   {
-      LOG(("* CRenderable: texture loaded, filePath: ", mainTextureFilePath));
-   }
 }
+
+//CRenderable::CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char * mainTextureFilePath)
+//   : mGeometry()
+//   , mShader(pShader)
+//   , mTextures(eTextures::LAST_TEXTURE)
+//   , mFlags()
+//   , m1DParams()
+//   , mVector2Params()
+//   , mVector3Params()
+//   , mVector4Params()
+//   , mMatrix3Params()
+//   , mMatrix4Params()
+//{
+//   setGeometry(pVertices, pIndices);
+//   createTexture(MAIN_TEXTURE);
+//   if ((0 != mainTextureFilePath) && loadTexture(MAIN_TEXTURE, mainTextureFilePath, DDS))
+//   {
+//      LOG(("* CRenderable: texture loaded, filePath: ", mainTextureFilePath));
+//   }
+//
+//   assert(mShader);
+//}
 
 CRenderable::~CRenderable()
 {
@@ -264,15 +245,8 @@ glm::mat4 CRenderable::getMatrix4Param(const int id) const
 bool CRenderable::loadTexture(const int id, const char * filePath, const int fmt)
 {
    bool result = false;
-   if (id < static_cast<int>(mTextures.size()))
+   if (id < static_cast<int>(mTextures.size()) && mTextures[id])
    {
-      if (nullptr == mTextures[id])
-      {
-         mTextures[id].reset(new CTexture());
-         assert(mTextures[id]);
-         LOG("* CRenderable: Texture created, its type is ", id);
-      }
-
       switch (fmt)
       {
       case eTextureFileFormat::BMP:
@@ -292,6 +266,14 @@ bool CRenderable::loadTexture(const int id, const char * filePath, const int fmt
    }
 
    return result;
+}
+
+void CRenderable::setShader(std::shared_ptr<CShader>& pShader)
+{
+   if (pShader)
+   {
+      mShader = pShader;
+   }
 }
 
 void CRenderable::setGeometry(GLfloat* vertices, GLuint* indices)
@@ -315,6 +297,9 @@ void CRenderable::setGeometry(GLfloat* vertices, GLuint* indices)
          ///@todo: add these to the function args, probably through pOwner
          mGeometry->setNumOfElementsPerVertex(2);
          mGeometry->setVertexStride(4); // 2 coords + 2 tex coords
+
+         // Can be called only when the correct geometry has been setup
+         setupVbo();
       }
    }
 }
@@ -354,6 +339,25 @@ void CRenderable::setupVbo()
       // Reset VBOs
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
+}
+
+void CRenderable::createTexture(const int id)
+{
+   if (id < static_cast<int>(mTextures.size()))
+   {
+      mTextures[id].reset(new CTexture());
+      assert(mTextures[id]);
+      LOG("* CRenderable: Texture created, its type is ", id);
+   }
+}
+
+void CRenderable::createAndLoadTexture(const int id, const char * filePath, const int fmt)
+{
+   createTexture(id);
+   if ((0 != filePath) && loadTexture(id, filePath, fmt))
+   {
+      LOG(("* CRenderable: texture loaded, filePath: ", filePath));
    }
 }
 

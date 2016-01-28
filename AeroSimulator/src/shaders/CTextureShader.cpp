@@ -41,6 +41,7 @@ void CTextureShader::link()
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
       //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture): ");
+
       mIsLinked = true;
    }
 }

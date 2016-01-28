@@ -18,7 +18,7 @@ namespace
 {
    // Global constants for setting rendering flags and shader uniforms.
    enum eShaderFlags { REPEAT_TEXTURE, DRAW_LINES, IS_VISIBLE, IS_TRANSPARENT };
-   enum eShader1DParams { VBO0_ID, IBO0_ID, BILLBOARD_WIDTH, BILLBOARD_HEIGHT, LINE_WIDTH, HEALTH };
+   enum eShader1DParams { VBO0_ID, IBO0_ID, BILLBOARD_WIDTH, BILLBOARD_HEIGHT, LINE_WIDTH, HEALTH, TEXTURE_UNIT };
    enum eShaderVector2Params { CURRENT_FRAME, FRAME_SIZE, NUM_OF_FRAMES };
    enum eShaderVector3Params { EYE_POSITION, RIGHT_VECTOR, UP_VECTOR };
    enum eShaderVector4Params { COLOR };
@@ -40,8 +40,8 @@ namespace AeroSimulatorEngine
    class CRenderable
    {
    public:
-      //CRenderable();
-      CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char* mainTextureFilePath = 0);
+      CRenderable();
+      //CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char* mainTextureFilePath = 0);
       virtual ~CRenderable();
 
       /// General
@@ -49,7 +49,6 @@ namespace AeroSimulatorEngine
       virtual void resetEnvironment();
       bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
 
-      ///@todo: probably make these setters private
       // Setters for shader params
       void setFlag(const int id, const bool value);
       void set1DParam(const int id, const float value);
@@ -68,12 +67,17 @@ namespace AeroSimulatorEngine
       glm::mat3 getMatrix3Param(const int id) const;
       glm::mat4 getMatrix4Param(const int id) const;
 
-      /// Textures
-      bool loadTexture(const int id, const char* filePath, const int fmt);
 
       CGeometry* getGeometry() const { return mGeometry.get(); }
       CShader* getShader() const { return mShader.get(); }
       CTexture* getTexture() const { return mTextures[MAIN_TEXTURE].get(); }
+
+      ///@todo: add numOfElements and stride to the function args, probably through pOwner
+      void setGeometry(GLfloat* vertices, GLuint* indices);
+      void setShader(std::shared_ptr<CShader>& pShader);
+      bool loadTexture(const int id, const char* filePath, const int fmt);
+      void createTexture(const int id);
+      void createAndLoadTexture(const int id, const char* filePath, const int fmt);
 
 
       //bool loadNormalMapTexture(const char* filePath);
@@ -167,8 +171,6 @@ namespace AeroSimulatorEngine
       template <typename T>
       T findValueInMap(const std::map<int, T>& sourceMap, const int key, const char* msg) const;
 
-      ///@todo: add numOfElements and stride to the function args, probably through pOwner
-      void setGeometry(GLfloat* vertices, GLuint* indices);
       void setupVbo();
 
    //protected:

@@ -26,11 +26,16 @@ CAnimationBillboardShader::~CAnimationBillboardShader()
 
 void CAnimationBillboardShader::link()
 {
-   CBillboardShader::link();
+   if (!mIsLinked)
+   {
+      CBillboardShader::link();
 
-   mCurrentFrameUniform = glGetUniformLocation(mProgramId, "uCurrentFrame");
+      mCurrentFrameUniform = glGetUniformLocation(mProgramId, "uCurrentFrame");
 
-   mFrameSizeUniform = glGetUniformLocation(mProgramId, "uFrameSize");
+      mFrameSizeUniform = glGetUniformLocation(mProgramId, "uFrameSize");
+
+      mIsLinked = true;
+   }
 }
 
 void CAnimationBillboardShader::setup(CRenderable & renderable)

@@ -33,6 +33,7 @@ void CFboShader::link()
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
       CLog::getInstance().logGL("* CFboShader: glGetUniformLocation(mProgramId, sTexture): ");
+
       mIsLinked = true;
    }
 }

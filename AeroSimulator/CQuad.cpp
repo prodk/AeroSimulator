@@ -3,6 +3,7 @@
 #include "CGeometry.h"
 #include "CLog.h"
 #include "CRenderable.h"
+#include "CRenderableComponent.h"
 #include "../src/shaders/CShader.h"
 
 using namespace AeroSimulatorEngine;
@@ -26,47 +27,40 @@ namespace
 
 CQuad::CQuad()
 {
-   //mTexture.reset(new CTexture());
-   //mGeometry.reset(new CGeometry());
-
-   //assert(mTexture);
-   //assert(mGeometry);
-
-   //if (mGeometry)
-   //{
-   //   mGeometry->setVertexBuffer(vertices);
-   //   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-   //   mGeometry->setNumOfVertices(numOfVertices);
-
-   //   mGeometry->setIndexBuffer(indices);
-   //   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-   //   mGeometry->setNumOfIndices(numOfIndices);
-
-   //   mGeometry->setNumOfElementsPerVertex(2); ///@todo: probably remove this
-   //   mGeometry->setVertexStride(4); // 2 coords + 2 tex coords
-   //}
+   // A quad has only a renderable component
+   addComponent<CRenderableComponent>();
 }
 
 CQuad::~CQuad()
 {
 }
 
-//bool CQuad::loadTexture(const char * fileName)
-//{
-//   const bool result = (0 != mTexture->loadDDSTexture(fileName));
-//
-//   if (result && (mTexture->getWidth() != mTexture->getHeight()))
-//   {
-//      glGenerateTextureMipmap(mTexture->getId());
-//      CLog::getInstance().log("Quad::loadTexture(): generating mipmaps for non-square texture, height: ",
-//         mTexture->getHeight());
-//   }
-//
-//   return result;
-//}
+void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader)
+{
+   getRenderable().setGeometry(vertices, indices);
+   getRenderable().createTexture(MAIN_TEXTURE);
 
-//void CQuad::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
-//{
-//   //CLog::getInstance().log("\n** CQuad::setupShadersAndBuffers() **");
-//   CGameObject::setShadersAndBuffers(pShader);
-//}
+   if (pShader)
+   {
+      getRenderable().setShader(pShader);
+   }
+}
+
+void CQuad::setShader(std::shared_ptr<CShader>& pShader)
+{
+   getRenderable().setShader(pShader);
+}
+
+void CQuad::setTextureUnit(const GLint unit)
+{
+   getRenderable().set1DParam(TEXTURE_UNIT, unit);
+}
+
+CRenderable & CQuad::getRenderable()
+{
+   CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*this);
+   if (pRenderableComp)
+   {
+      return pRenderableComp->getRenderable();
+   }
+}
