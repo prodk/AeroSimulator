@@ -6,22 +6,13 @@
 #include "../src/shaders/CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
-//#include "CCommonMath.h" ///@todo: remove this, we can use glm::radians
-#include "CCamera.h"
-//#include "CCompositeGameObject.h"
 #include "CTimer.h"
-//#include "C3DModel.h"
-//#include "CSphere.h"
-//#include "CAnimationBillBoard.h"
-//#include "../Test/CLand.h"
-//#include "CBoundingBox.h"
-//#include "CSkyBox.h"
-//#include "CParticleSystem.h"
+
+#include "CCamera.h"
+
 #include "CQuad.h"
 #include "../src/shaders/CFboShader.h"
 #include "../src/shaders/CDepthBufferShader.h"
-//#include "CTexture.h"
-//#include "CMissile.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -43,8 +34,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mCameraAngleX(14.f)
    , mCameraAngleY(0.f)
    , mCamera(new CCamera())
-   //, mAirplaneRoot(nullptr)
-   //, mSphereRoot(nullptr)
    , mIsDebugMode(false)     // press '1' key
    , mIsSetCameraMode(false) // press '3' key
    , mCameraAttached(false)
@@ -57,13 +46,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    //, mThirdKeyCode(0)
    , mFrameDt(0.0)
    //, mAirplaneMatrix()
-   //, mStar()
-   //, mLand(nullptr)
-   //, mSky(nullptr)
-   //, mTurbineFire(nullptr)
-   //, mTurbineSmoke(nullptr)
-   //, mMainFboQuad(new CQuad())
-   //, mHelpFboQuad(new CQuad())
    , mMainFboQuad(new CQuad())
    , mHelpFboQuad(new CQuad())
    , mFboShader(new CFboShader())
@@ -73,8 +55,6 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mWndWidth(0)
    , mWndHeight(0)
    , mDepthBufferMode(false)
-   //, mRightMissile(nullptr)
-   //, mExplosion(nullptr)
 {
    assert(mCamera);
    assert(mMainFboQuad);
@@ -403,6 +383,110 @@ void CWin32Renderer::resetRenderContext()
       wglMakeCurrent(NULL, NULL);
 }
 
+void CWin32Renderer::updateFPS(CTask * pTask)
+{
+   if (pTask)
+   {
+      CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
+
+      const int fps = pTimer->getFPS();
+      mFrameDt = pTimer->getDtFrame();
+      const double simDt = pTimer->getDtSim();
+
+      wchar_t buf[256];
+      swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, mFrameDt, simDt);
+      SetWindowText(mWndHandle, buf);
+   }
+}
+
+void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader,
+   const GLint width, const GLint height)
+{
+   glGenFramebuffers(1, &fbo.mFramebuffer);
+   glBindFramebuffer(GL_FRAMEBUFFER, fbo.mFramebuffer);
+
+   // Create a color attachment texture
+   generateAttachmentTexture(fbo);
+
+   // Attach color and depth textures
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo.mTexColorBuffer, 0);
+   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fbo.mTexDepthBuffer, 0);
+
+   // Set the list of draw buffers.
+   GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
+   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers); // "2" is the size of DrawBuffers
+
+   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
+      CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+   /*if (shader && quad)
+   {
+   shader->link();
+   quad->setShadersAndBuffers(shader);
+   quad->getTexture()->setId(fbo.mTexColorBuffer);
+   }*/
+}
+
+void CWin32Renderer::generateAttachmentTexture(SFrameBuffer& fbo)
+{
+   // What enum to use?
+   GLenum attachment_type = GL_RGB;
+
+   //Generate texture ID and load texture data for the color buffer
+   glGenTextures(1, &fbo.mTexColorBuffer);
+   glBindTexture(GL_TEXTURE_2D, fbo.mTexColorBuffer);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, mWndWidth, mWndHeight, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glBindTexture(GL_TEXTURE_2D, 0);
+
+   // Generate the texture for the depth buffer
+   glGenTextures(1, &fbo.mTexDepthBuffer);
+   glBindTexture(GL_TEXTURE_2D, fbo.mTexDepthBuffer);
+
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWndWidth, mWndHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+   glBindTexture(GL_TEXTURE_2D, 0);
+}
+
+void CWin32Renderer::setupEvents()
+{
+   bool status = false;
+
+   // Debug mode on/off
+   status = CEventManager::getInstance().registerEvent(CGame::DEBUG_MODE_EVENT);
+   CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
+   CEventManager::getInstance().attachEvent(CGame::DEBUG_MODE_EVENT, *this);
+
+   // Depth buffer on/off
+   status = CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT);
+   CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
+   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
+}
+
+void CWin32Renderer::handleEvent(CAppEvent * pEvent)
+{
+   if (pEvent)
+   {
+      switch (pEvent->getId())
+      {
+      case CGame::DEBUG_MODE_EVENT:
+         mIsDebugMode = !mIsDebugMode;
+         CLog::getInstance().log("* Debug mode on: ", mIsDebugMode);
+         break;
+
+      case CGame::DEPTHBUF_EVENT:
+         mDepthBufferMode = !mDepthBufferMode;
+         CLog::getInstance().log("* Display depth buffer: ", mDepthBufferMode);
+         break;
+      }
+   } // End if
+}
 //
 
 //void CWin32Renderer::updateCamera()
@@ -522,21 +606,7 @@ void CWin32Renderer::resetRenderContext()
 //   handleCollisions();
 //}
 
-void CWin32Renderer::updateFPS(CTask * pTask)
-{
-   if (pTask)
-   {
-      CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
 
-      const int fps = pTimer->getFPS();
-      mFrameDt = pTimer->getDtFrame();
-      const double simDt = pTimer->getDtSim();
-
-      wchar_t buf[256];
-      swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, mFrameDt, simDt);
-      SetWindowText(mWndHandle, buf);
-   }
-}
 
 //void CWin32Renderer::updateInput()
 //{
@@ -810,60 +880,6 @@ void CWin32Renderer::updateFPS(CTask * pTask)
 //   }
 //}
 
-void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader,
-                              const GLint width, const GLint height)
-{
-   glGenFramebuffers(1, &fbo.mFramebuffer);
-   glBindFramebuffer(GL_FRAMEBUFFER, fbo.mFramebuffer);
-
-   // Create a color attachment texture
-   generateAttachmentTexture(fbo);
-
-   // Attach color and depth textures
-   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo.mTexColorBuffer, 0);
-   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fbo.mTexDepthBuffer, 0);
-
-   // Set the list of draw buffers.
-   GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
-   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers); // "2" is the size of DrawBuffers
-
-   if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
-   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-   /*if (shader && quad)
-   {
-      shader->link();
-      quad->setShadersAndBuffers(shader);
-      quad->getTexture()->setId(fbo.mTexColorBuffer);
-   }*/
-}
-
-void CWin32Renderer::generateAttachmentTexture(SFrameBuffer& fbo)
-{
-   // What enum to use?
-   GLenum attachment_type = GL_RGB;
-
-   //Generate texture ID and load texture data for the color buffer
-   glGenTextures(1, &fbo.mTexColorBuffer);
-   glBindTexture(GL_TEXTURE_2D, fbo.mTexColorBuffer);
-
-   glTexImage2D(GL_TEXTURE_2D, 0, attachment_type, mWndWidth, mWndHeight, 0, attachment_type, GL_UNSIGNED_BYTE, NULL);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glBindTexture(GL_TEXTURE_2D, 0);
-
-   // Generate the texture for the depth buffer
-   glGenTextures(1, &fbo.mTexDepthBuffer);
-   glBindTexture(GL_TEXTURE_2D, fbo.mTexDepthBuffer);
-
-   glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, mWndWidth, mWndHeight, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-   glBindTexture(GL_TEXTURE_2D, 0);
-}
 
 ///@todo: remove this method when all the game-related stuff is moved to CGame
 //bool CWin32Renderer::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam)
@@ -1018,38 +1034,3 @@ void CWin32Renderer::generateAttachmentTexture(SFrameBuffer& fbo)
 //      CLog::getInstance().log("* Button Enter: Camera attached to the plane");
 //   }
 //}
-
-void CWin32Renderer::setupEvents()
-{
-   bool status = false;
-
-   // Debug mode on/off
-   status = CEventManager::getInstance().registerEvent(CGame::DEBUG_MODE_EVENT);
-   CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(CGame::DEBUG_MODE_EVENT, *this);
-
-   // Depth buffer on/off
-   status = CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT);
-   CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
-}
-
-void CWin32Renderer::handleEvent(CAppEvent * pEvent)
-{
-   if (pEvent)
-   {
-      switch (pEvent->getId())
-      {
-      case CGame::DEBUG_MODE_EVENT:
-         mIsDebugMode = !mIsDebugMode;
-         CLog::getInstance().log("* Debug mode on: ", mIsDebugMode);
-         break;
-
-      case CGame::DEPTHBUF_EVENT:
-         mDepthBufferMode = !mDepthBufferMode;
-         CLog::getInstance().log("* Display depth buffer: ", mDepthBufferMode);
-         break;
-      }
-   } // End if
-}
-

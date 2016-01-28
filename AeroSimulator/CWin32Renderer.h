@@ -89,18 +89,20 @@ namespace AeroSimulatorEngine
 
    private:
       bool createRenderContext();
+      void updateFPS(CTask* pTask);
+
+      void setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader,
+         const GLint width, const GLint height);
+
+      void generateAttachmentTexture(SFrameBuffer& fbo);
+
       //void updateAirplane();
       //void updateCamera();
       //void springButtons();
       //void updateRenderables();
-      void updateFPS(CTask* pTask);
 
       //void updateInput(); ///@todo: move to CWin32Window or a separate handler when events are implemented
       //void handleCollisions(); ///@todo; move to a special task when events are implemented
-      void setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader, 
-                    const GLint width, const GLint height);
-
-      void generateAttachmentTexture(SFrameBuffer& fbo);
 
    private:
       HDC mDC;
@@ -109,32 +111,43 @@ namespace AeroSimulatorEngine
       HGLRC mOldRenderContext;
       bool mIsFullScreen;
 
-      ///@todo: reconsider the approach to spring buttons
-      //float mAngleZ; // Angle of rotating around the z-axis of the air plane
-      //float mAngleX;
-
+      ///@todo: move all the camera-related stugg to CGame
       float mCameraAngleX; // up 'w', down 's'
       float mCameraAngleY; // left 'a', right 'd'
-
       ///@todo: probably create an array of cameras later
       //std::shared_ptr<CCamera> mCamera;
       std::unique_ptr<CCamera> mCamera;
-
-      //CParentGameObject* mAirplaneRoot;
-      //CParentGameObject* mSphereRoot;
 
       bool mIsDebugMode;
       bool mIsSetCameraMode;
       bool mCameraAttached;
       HWND mWndHandle;
 
+      float mFrameDt;
+
+      std::unique_ptr<CQuad> mMainFboQuad;   // Main scene
+      std::unique_ptr<CQuad> mHelpFboQuad;   // Helper window
+      std::shared_ptr<CShader> mFboShader;
+      std::shared_ptr<CShader> mDepthBufferShader;
+      SFrameBuffer mMainFbo;
+      SFrameBuffer mHelpFbo;
+
+      std::size_t mWndWidth;
+      std::size_t mWndHeight;
+      bool mDepthBufferMode;  // press '8' to see the depth buffer
+
+      ///@todo: reconsider the approach to spring buttons
+      //float mAngleZ; // Angle of rotating around the z-axis of the air plane
+      //float mAngleX;
+
+      //CParentGameObject* mAirplaneRoot;
+      //CParentGameObject* mSphereRoot;
       //bool mKeyPressed;
       //bool mCameraKeyPressed;
       //bool mThirdKeyPressed;
       //WPARAM mKeyCode;
       //WPARAM mCameraKeyCode;
       //WPARAM mThirdKeyCode;
-      float mFrameDt;
 
       ///@todo: when the event framwork is setup, 
       ///@todo: transfer moving objects and collisions to a separaete task
@@ -149,16 +162,6 @@ namespace AeroSimulatorEngine
 
       //std::shared_ptr<CParticleSystem> mTurbineFire;
       //std::shared_ptr<CParticleSystem> mTurbineSmoke;
-      std::unique_ptr<CQuad> mMainFboQuad;   // Main scene
-      std::unique_ptr<CQuad> mHelpFboQuad; // Helper window
-      std::shared_ptr<CShader> mFboShader;
-      std::shared_ptr<CShader> mDepthBufferShader;
-      SFrameBuffer mMainFbo;
-      SFrameBuffer mHelpFbo;
-
-      std::size_t mWndWidth;
-      std::size_t mWndHeight;
-      bool mDepthBufferMode;  // press '8' to see the depth buffer
       //std::shared_ptr<CMissile> mRightMissile;
       //std::shared_ptr<CAnimationBillBoard> mExplosion;
    };

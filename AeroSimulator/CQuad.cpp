@@ -51,6 +51,11 @@ void CQuad::setShader(std::shared_ptr<CShader>& pShader)
    getRenderable().setShader(pShader);
 }
 
+void CQuad::setTextureId(const GLuint id)
+{
+   getRenderable().getTexture()->setId(id);
+}
+
 void CQuad::setTextureUnit(const GLint unit)
 {
    getRenderable().set1DParam(TEXTURE_UNIT, unit);
