@@ -17,6 +17,11 @@ void CLog::log(const char * msg, const char * value, std::ostream & file)
    file << msg << value << std::endl;
 }
 
+void CLog::log(const char* msg1, const char* msg2, int value, std::ostream& file)
+{
+   file << msg1 << msg2 << value << std::endl;
+}
+
 CLog::CLog()
 {
 }
@@ -38,4 +43,15 @@ void CLog::logGL(const char * msg, GLint status, std::ostream & file)
    char str[256];
    sprintf_s(str, "%s", (GL_TRUE == status) ? "success" : "failed");
    file << msg << str << std::endl;
+}
+
+void CLog::checkGL(const char * msg, std::ostream & file)
+{
+   const GLenum err = glGetError();
+   if (GL_NO_ERROR != err)
+   {
+      char str[256];
+      sprintf_s(str, "%s", glewGetErrorString(err));
+      file << msg << str << std::endl;
+   }
 }

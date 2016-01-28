@@ -36,8 +36,8 @@ CLand::~CLand()
 {
 }
 
-void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
-{
+//void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
+//{
    //if (mGeometry)
    //{
    //   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
@@ -68,7 +68,7 @@ void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
    //}
 
    //CGameObject::setShadersAndBuffers(pShader);
-}
+//}
 
 //bool CLand::loadTexture(const char * fileName)
 //{

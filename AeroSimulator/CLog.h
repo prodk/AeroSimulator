@@ -6,6 +6,10 @@
 #include <iostream>
 #include "../AeroSimulator/include/glew.h"
 
+#define LOG CLog::getInstance().log
+#define LOGGL CLog::getInstance().logGL
+#define CHECKGL CLog::getInstance().checkGL
+
 namespace AeroSimulatorEngine
 {
    class CLog
@@ -23,9 +27,11 @@ namespace AeroSimulatorEngine
       void log(const char* msg, std::ostream& file = std::cout);
       void log(const char* msg, unsigned int value, std::ostream& file = std::cout);
       void log(const char* msg, const char* value, std::ostream& file = std::cout);
+      void log(const char* msg1, const char* msg2, int value, std::ostream& file = std::cout);
 
       void logGL(const char* msg, std::ostream& file = std::cout);
       void logGL(const char* msg, GLint status, std::ostream& file = std::cout);
+      void checkGL(const char* msg, std::ostream& file = std::cout);
 
    private:
       CLog();

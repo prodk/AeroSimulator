@@ -21,6 +21,9 @@ namespace AeroSimulatorEngine
       void setTranlate(const glm::vec3& translate);
       glm::vec3 getTranslate() const { return mTranslate; }
 
+      // glm::mat4 getModelMatrix();
+      // glm::mat4 getInverseModelMatrix();
+
 
    private:
       glm::vec3 mScale;       // Scale factors along the parent object axiss

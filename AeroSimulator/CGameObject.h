@@ -19,7 +19,7 @@ namespace AeroSimulatorEngine
       /// Add a component to the object
       template <typename T> bool addComponent();
 
-   private:
+   protected:
       // Get the component of type T from the specified (by reference) object
       template <typename T>
       friend T* componentCast(CGameObject& object);
@@ -31,8 +31,10 @@ namespace AeroSimulatorEngine
       // Returns a pointer to the component using its id
       CComponent* getComponent(const unsigned int id) const;
 
-   private:
+   protected:
       std::unordered_map<unsigned int, std::unique_ptr<CComponent> > mComponents;
+
+      ///@todo: add a list of children here and probably some reference to the parent;
    };
 
    template<typename T>

@@ -29,6 +29,7 @@ GLuint CTexture::loadBmpTexture(const char * filePath)
    unsigned int width, height;
    unsigned int imageSize;   // = width*height*3
 
+   ///@todo: use fopen_s
    // Open the file
    FILE * file = fopen(filePath, "rb");
    if (!file) { printf("Image could not be opened\n"); return 0; }
@@ -88,6 +89,7 @@ GLuint CTexture::loadDDSTexture(const char * filePath)
    FILE *fp;
 
    /* try to open the file */
+   ///@todo: use fopen_s
    fp = fopen(filePath, "rb");
    if (fp == NULL)
       return 0;

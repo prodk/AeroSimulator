@@ -16,9 +16,9 @@ namespace AeroSimulatorEngine
       virtual ~CLand();
 
       ///@todo: probably move this to CRenderable
-      virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
+      //virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
 
-      bool loadTexture(const char * fileName);
+      //bool loadTexture(const char * fileName);
 
       //void setNumOfTiles(const GLint x, const GLint y);
 

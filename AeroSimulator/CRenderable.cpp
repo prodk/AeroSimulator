@@ -1,48 +1,80 @@
 #include "CRenderable.h"
 #include "CGeometry.h"
 #include "../src/shaders/CShader.h"
-#include "CLog.h"
+#include "CTexture.h"
+//#include "CLog.h"
 //#include "CCommonMath.h"
 
 //#include "glm/gtc/matrix_transform.hpp"
+#include <cassert>
 
 using namespace AeroSimulatorEngine;
 
-CRenderable::CRenderable()
+//CRenderable::CRenderable()
+//   : mGeometry()
+//   , mShader()
+//   , mTextures(LAST_TEXTURE)
+//   /*, mTexture()
+//   , mNormalMapTexture()
+//   , mAnimationTexture()*/
+//   /*, mModelMatrix()
+//   , mMvpMatrix()*/   
+//   //, mVboId(0)
+//   //, mIboId(0)
+//   //, mRightVector()
+//   //, mUpVector()
+//   //, mBillboardWidth(1.0f)
+//   //, mBillboardHeight(1.0f)
+//   //, mDrawWithLines(false)
+//   //, mColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
+//   //, mLineWidth(2.0f)
+//   //, mHealthValue(0.0f)
+//   //, mViewMatrix()
+//   //, mEyePos()
+//   //, mCurrentFrame()
+//   //, mFrameSize()
+//   //, mNumOfFrames()
+//   //, mIsVisible(true)
+//   //, mRepeatTexture(false)
+//   //, mIsTransparent(false)
+//   //, mTextureUnit(GL_TEXTURE0)
+//{
+//}
+
+CRenderable::CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char * mainTextureFilePath)
    : mGeometry()
    , mShader()
-   /*, mModelMatrix()
-   , mMvpMatrix()*/
-   , mTexture()
-   //, mVboId(0)
-   //, mIboId(0)
-   //, mRightVector()
-   //, mUpVector()
-   //, mBillboardWidth(1.0f)
-   //, mBillboardHeight(1.0f)
-   //, mDrawWithLines(false)
-   //, mColor(glm::vec4(1.0f, 1.0f, 1.0f, 1.0f))
-   //, mLineWidth(2.0f)
-   //, mHealthValue(0.0f)
-   //, mViewMatrix()
-   //, mEyePos()
-   //, mCurrentFrame()
-   //, mFrameSize()
-   //, mNumOfFrames()
-   //, mIsVisible(true)
-   , mNormalMapTexture()
-   , mAnimationTexture()
-   //, mRepeatTexture(false)
-   //, mIsTransparent(false)
-   //, mTextureUnit(GL_TEXTURE0)
+   , mTextures(eTextures::LAST_TEXTURE)
+   , mFlags()
+   , m1DParams()
+   , mVector2Params()
+   , mVector3Params()
+   , mVector4Params()
+   , mMatrix3Params()
+   , mMatrix4Params()
 {
+   setGeometry(pVertices, pIndices);
+   setupVbo();
+
+   mShader = pShader;
+   assert(pShader);
+
+   if ((0 != mainTextureFilePath) && loadTexture(MAIN_TEXTURE, mainTextureFilePath, DDS))
+   {
+      LOG(("* CRenderable: texture loaded, filePath: ", mainTextureFilePath));
+   }
 }
 
 CRenderable::~CRenderable()
 {
    mGeometry.reset();
    mShader.reset();
-   mTexture.reset();
+
+   for (std::size_t id = 0; id < mTextures.size(); ++id)
+   {
+      mTextures[id].reset();
+   }
+   //mTexture.reset();
 }
 
 void CRenderable::resetEnvironment()
@@ -97,7 +129,6 @@ void CRenderable::setMatrix4Param(const int id, const glm::mat4& value)
 
 bool CRenderable::getFlag(const int id) const
 {
-   ///@todo: try when compiles findValueInMap<bool>(mFlags, id)
    auto result = false;
 
    auto iter = mFlags.find(id);
@@ -107,7 +138,7 @@ bool CRenderable::getFlag(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find a flag: ", id);
+      LOG("* CRenderable: Failed to find a flag: ", id);
    }
 
    return result;
@@ -115,7 +146,6 @@ bool CRenderable::getFlag(const int id) const
 
 float CRenderable::get1DParam(const int id) const
 {
-   ///@todo: try when compiles return findValueInMap<float>(m1DParams, id);
    auto result = 0.0f;
 
    auto iter = m1DParams.find(id);
@@ -125,7 +155,7 @@ float CRenderable::get1DParam(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find 1D param: ", id);
+      LOG("* CRenderable: Failed to find 1D param: ", id);
    }
 
    return result;
@@ -133,9 +163,10 @@ float CRenderable::get1DParam(const int id) const
 
 glm::vec2 CRenderable::getVector2Param(const int id) const
 {
-   ///@todo: when compiles try:
-   //return findValueInMap<glm::vec2>(m2DParams, id);
-   auto result = glm::vec2();
+   return findValueInMap<glm::vec2>(mVector2Params, id, " vector 2D, key ");
+
+   ///@todo: remove commented code when tested
+   /*auto result = glm::vec2();
 
    auto iter = mVector2Params.find(id);
    if (mVector2Params.end() != iter)
@@ -144,17 +175,18 @@ glm::vec2 CRenderable::getVector2Param(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find vector 2D: ", id);
+      LOG("* CRenderable: Failed to find vector 2D: ", id);
    }
 
-   return result;
+   return result;*/
 }
 
 glm::vec3 CRenderable::getVector3Param(const int id) const
 {
-   ///@todo: when compiles try:
-   //return findValueInMap<glm::vec3>(m3DParams, id);
-   auto result = glm::vec3();
+   return findValueInMap<glm::vec3>(mVector3Params, id, " vector 3D, key ");
+
+   ///@todo: remove commented code when tested
+   /*auto result = glm::vec3();
 
    auto iter = mVector3Params.find(id);
    if (mVector3Params.end() != iter)
@@ -163,17 +195,18 @@ glm::vec3 CRenderable::getVector3Param(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find vector 3D: ", id);
+      LOG("* CRenderable: Failed to find vector 3D: ", id);
    }
 
-   return result;
+   return result;*/
 }
 
 glm::vec4 CRenderable::getVector4Param(const int id) const
 {
-   ///@todo: when compiles try:
-   //return findValueInMap<glm::vec4>(mVector4Params, id);
-   auto result = glm::vec4();
+   return findValueInMap<glm::vec4>(mVector4Params, id, " vector 4D, key ");
+
+   ///@todo: remove when tested
+   /*auto result = glm::vec4();
 
    auto iter = mVector4Params.find(id);
    if (mVector4Params.end() != iter)
@@ -182,17 +215,18 @@ glm::vec4 CRenderable::getVector4Param(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find vector 4D: ", id);
+      LOG("* CRenderable: Failed to find vector 4D: ", id);
    }
 
-   return result;
+   return result;*/
 }
 
 glm::mat3 CRenderable::getMatrix3Param(const int id) const
 {
-   ///@todo: when compiles try:
-   //return findValueInMap<glm::mat4>(m4DParams, id);
-   auto result = glm::mat3();
+   return findValueInMap<glm::mat3>(mMatrix3Params, id, " matrix 3x3, key ");
+
+   ///@todo: remove when tested
+  /* auto result = glm::mat3();
 
    auto iter = mMatrix3Params.find(id);
    if (mMatrix3Params.end() != iter)
@@ -201,17 +235,18 @@ glm::mat3 CRenderable::getMatrix3Param(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find matrix 3D: ", id);
+      LOG("* CRenderable: Failed to find matrix 3D: ", id);
    }
 
-   return result;
+   return result;*/
 }
 
 glm::mat4 CRenderable::getMatrix4Param(const int id) const
 {
-   ///@todo: when compiles try:
-   //return findValueInMap<glm::mat4>(m4DParams, id);
-   auto result = glm::mat4();
+   return findValueInMap<glm::mat4>(mMatrix4Params, id, " matrix 4x4, key ");
+
+   ///@todo: remove when tested
+   /*auto result = glm::mat4();
 
    auto iter = mMatrix4Params.find(id);
    if (mMatrix4Params.end() != iter)
@@ -220,26 +255,117 @@ glm::mat4 CRenderable::getMatrix4Param(const int id) const
    }
    else
    {
-      CLog::getInstance().log("Failed to find matrix 4D: ", id);
+      LOG("* CRenderable: Failed to find matrix 4D: ", id);
+   }
+
+   return result;*/
+}
+
+bool CRenderable::loadTexture(const int id, const char * filePath, const int fmt)
+{
+   bool result = false;
+   if (id < static_cast<int>(mTextures.size()))
+   {
+      if (nullptr == mTextures[id])
+      {
+         mTextures[id].reset(new CTexture());
+         assert(mTextures[id]);
+         LOG("* CRenderable: Texture created, its type is ", id);
+      }
+
+      switch (fmt)
+      {
+      case eTextureFileFormat::BMP:
+         result = (0 != mTextures[id]->loadBmpTexture(filePath));
+         break;
+      default:
+         result = (0 != mTextures[id]->loadDDSTexture(filePath));
+         break;
+      }
+
+      if (result && (mTextures[id]->getWidth() != mTextures[id]->getHeight()))
+      {
+         glGenerateTextureMipmap(mTextures[id]->getId());
+         CHECKGL("* CRenderable: glGenerateTextureMipmap() failed with error ");
+         LOG("* CRenderable:: generating mipmaps for non-square texture, height: ", mTextures[id]->getHeight());
+      }
    }
 
    return result;
 }
 
-bool CRenderable::loadTexture(const char * filePath)
+void CRenderable::setGeometry(GLfloat* vertices, GLuint* indices)
 {
-   return false;
+   if (vertices && indices)
+   {
+      const std::size_t numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+      const std::size_t numOfIndices = sizeof(indices) / sizeof(indices[0]);
+
+      if ((numOfVertices >0) && (numOfIndices > 0))
+      {
+         mGeometry.reset(new CGeometry());
+         assert(mGeometry);
+
+         mGeometry->setVertexBuffer(vertices);
+         mGeometry->setNumOfVertices(numOfVertices);
+
+         mGeometry->setIndexBuffer(indices);
+         mGeometry->setNumOfIndices(numOfIndices);
+
+         ///@todo: add these to the function args, probably through pOwner
+         mGeometry->setNumOfElementsPerVertex(2);
+         mGeometry->setVertexStride(4); // 2 coords + 2 tex coords
+      }
+   }
 }
 
-bool CRenderable::loadNormalMapTexture(const char * filePath)
+void CRenderable::setupVbo()
 {
-   return false;
+   if (mGeometry) ///@todo: probably check that it has not been setup yet
+   {
+      // VBO
+      GLuint vboid = 0;
+      glGenBuffers(1, &vboid);
+      CHECKGL("* CRenderable: glGenBuffers(1, &vboId) failed ");
+
+      set1DParam(VBO0_ID, static_cast<float>(vboid));
+
+      glBindBuffer(GL_ARRAY_BUFFER, vboid);
+      CHECKGL("* CRenderable: glBindBuffer(GL_ARRAY_BUFFER, vboid) failed ");
+
+      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
+      glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
+      CHECKGL("* CRenderable: glBufferData(GL_ARRAY_BUFFER) failed ");
+
+      // Index buffer
+      GLuint iboid = 0;
+      glGenBuffers(1, &iboid);
+      CHECKGL("* CRenderable: glGenBuffers(1, &iboid) failed ");
+
+      set1DParam(IBO0_ID, static_cast<float>(iboid));
+
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboid);
+      CHECKGL("* CRenderable: glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboid) failed ");
+
+      GLuint* indices = (GLuint*)mGeometry->getIndexBuffer();
+      glBufferData(GL_ELEMENT_ARRAY_BUFFER, mGeometry->getNumOfIndices()* sizeof(GLuint), indices, GL_STATIC_DRAW);
+      CHECKGL("* CRenderable: glBufferData(GL_ELEMENT_ARRAY_BUFFER) failed ");
+
+      // Reset VBOs
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+   }
 }
 
-bool CRenderable::loadAnimationTexture(const char * filePath)
-{
-   return false;
-}
+//bool CRenderable::loadNormalMapTexture(const char * filePath)
+//{
+//   return false;
+//}
+//
+//bool CRenderable::loadAnimationTexture(const char * filePath)
+//{
+//   return false;
+//}
 
 //glm::mat3 CRenderable::getNormalMatrix() const
 //{

@@ -3,10 +3,11 @@
 #ifndef AERO_SIMULATOR_CRENDERABLE_H
 #define AERO_SIMULATOR_CRENDERABLE_H
 
-//#include "../AeroSimulator/include/glew.h"
+#include "CLog.h"
+#include "../AeroSimulator/include/glew.h"
 #include <memory>
+#include <vector>
 #include <map>
-//#include <gl/GL.h>
 
 #include "../AeroSimulator/include/glm/vec2.hpp"
 #include "../AeroSimulator/include/glm/vec3.hpp"
@@ -24,8 +25,9 @@ namespace
    enum eShaderMatrix3Params { NORMAL_MATRIX };
    enum eShaderMatrix4Params { MODEL_MATRIX, MVP_MATRIX, VIEW_MATRIX };
    enum eEnvironment { DEPTH };
+   enum eTextures { MAIN_TEXTURE, NORMAL_MAP_TEXTURE, ANIMATION_TEXTURE, LAST_TEXTURE };
+   enum eTextureFileFormat { DDS, BMP };
 }
-
 
 namespace AeroSimulatorEngine
 {
@@ -38,7 +40,8 @@ namespace AeroSimulatorEngine
    class CRenderable
    {
    public:
-      CRenderable();
+      //CRenderable();
+      CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char* mainTextureFilePath = 0);
       virtual ~CRenderable();
 
       /// General
@@ -46,6 +49,7 @@ namespace AeroSimulatorEngine
       virtual void resetEnvironment();
       bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
 
+      ///@todo: probably make these setters private
       // Setters for shader params
       void setFlag(const int id, const bool value);
       void set1DParam(const int id, const float value);
@@ -65,29 +69,34 @@ namespace AeroSimulatorEngine
       glm::mat4 getMatrix4Param(const int id) const;
 
       /// Textures
-      ///@todo: probably remove load texture methods, it should be invoked via textures
-      virtual bool loadTexture(const char* filePath);
-      virtual bool loadNormalMapTexture(const char* filePath);
-      virtual bool loadAnimationTexture(const char* filePath);
-      CTexture* getTexture() const { return mTexture.get(); }
-      CTexture* getNormalMapTexture() const { return mNormalMapTexture.get(); }
-      CTexture* getAnimationTexture() const { return mAnimationTexture.get(); }
+      bool loadTexture(const int id, const char* filePath, const int fmt);
+
+      CGeometry* getGeometry() const { return mGeometry.get(); }
+      CShader* getShader() const { return mShader.get(); }
+      CTexture* getTexture() const { return mTextures[MAIN_TEXTURE].get(); }
+
+
+      //bool loadNormalMapTexture(const char* filePath);
+      //bool loadAnimationTexture(const char* filePath);
+      //CTexture* getTexture() const { return mTexture.get(); }
+      //CTexture* getNormalMapTexture() const { return mNormalMapTexture.get(); }
+      //CTexture* getAnimationTexture() const { return mAnimationTexture.get(); }
+
+      /// Geometry
+      //void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
+      //CGeometry* getGeometry() const { return mGeometry.get(); }
+
+      /// Shaders
+      //void setShader(CShader* pShader) { mShader.reset(pShader); }
+      //CShader* getShader() const { return mShader.get(); }
+
+      //void setTexture(std::shared_ptr<CTexture>& pTexture) { mTexture = pTexture; }
 
       //void setRepeatTexture(const bool repeat) { mRepeatTexture = repeat; }
       //bool isRepeatTexture() const { return mRepeatTexture; }
 
-      /// Geometry
-      void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
-      CGeometry* getGeometry() const { return mGeometry.get(); }
-
-      /// Shaders
-      void setShader(CShader* pShader) { mShader.reset(pShader); }
-      CShader* getShader() const { return mShader.get(); }
-
       //GLuint getVboId() const { return mVboId; }
       //GLuint getIboId() const { return mIboId; }
-
-      void setTexture(std::shared_ptr<CTexture>& pTexture) { mTexture = pTexture; }
 
       /// Matrices
       //void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
@@ -156,17 +165,35 @@ namespace AeroSimulatorEngine
 
    private:
       template <typename T>
-      T findValueInMap(std::map<int, T>& sourceMap, const int key);
+      T findValueInMap(const std::map<int, T>& sourceMap, const int key, const char* msg) const;
+
+      ///@todo: add numOfElements and stride to the function args, probably through pOwner
+      void setGeometry(GLfloat* vertices, GLuint* indices);
+      void setupVbo();
 
    //protected:
    private:
       ///@todo: rearrange this params as well as in the initialization list
-      std::shared_ptr<CGeometry> mGeometry;
+      std::unique_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
+      std::vector<std::unique_ptr<CTexture> > mTextures;
+
+      std::map<int, bool> mFlags;              // Flags, e.g. drawWithLines, isVisible, repeat texture, isTransparent
+      std::map<int, float> m1DParams;          // 1D parameters ints and floats, ints are saved as floats
+      std::map<int, glm::vec2> mVector2Params; // 2D vectors
+      std::map<int, glm::vec3> mVector3Params; // 3D vectors
+      std::map<int, glm::vec4> mVector4Params; // 4D vectors
+      std::map<int, glm::mat3> mMatrix3Params; // 3x3 matrices
+      std::map<int, glm::mat4> mMatrix4Params;// 4x4 matrices
+
+      ///@todo: add an enum with texture IDs {USUAL, NORAML_MAP, ANIMATION}, then add textures to a vector or a map, see shaders in CGame
+      /*std::shared_ptr<CTexture> mTexture;
+      std::shared_ptr<CTexture> mNormalMapTexture;
+      std::shared_ptr<CTexture> mAnimationTexture;*/
+
+
       //glm::mat4 mModelMatrix;
       //glm::mat4 mMvpMatrix;
-      ///@todo: add an enum with texture IDs {USUAL, NORAML_MAP, ANIMATION}, then add textures to a vector or a map, see shaders in CGame
-      std::shared_ptr<CTexture> mTexture;
       //GLuint mVboId;
       //GLuint mIboId;
 
@@ -194,10 +221,6 @@ namespace AeroSimulatorEngine
       //glm::vec2 mNumOfFrames;
 
       //bool mIsVisible;
-
-      std::shared_ptr<CTexture> mNormalMapTexture;
-      std::shared_ptr<CTexture> mAnimationTexture;
-
       //bool mRepeatTexture;
       //bool mIsTransparent;
       //GLint mTextureUnit;
@@ -205,32 +228,10 @@ namespace AeroSimulatorEngine
       // The maps contain flags and parameters used mainly in shaders as uniform values.
       // A shader gives the name of the parameter and gets its value
       // In this way we avoid hardcodig unnecessary values in every instance of this class.
-
-      ///@todo: add to initializing list these maps
-      // Flags, e.g. drawWithLines, isVisible, repeat texture, isTransparent
-      std::map<int, bool> mFlags;
-
-      // 1D parameters ints and floats, ints are saved as floats
-      std::map<int, float> m1DParams;
-
-      // 2D vectors
-      std::map<int, glm::vec2> mVector2Params;
-
-      // 3D vectors
-      std::map<int, glm::vec3> mVector3Params;
-
-      // 4D vectors
-      std::map<int, glm::vec4> mVector4Params;
-
-      // 3x3 matrices
-      std::map<int, glm::mat3> mMatrix3Params;
-
-      // 4x4 matrices
-      std::map<int, glm::mat4> mMatrix4Params;
    };
 
    template <typename T>
-   T CRenderable::findValueInMap(std::map<int, T>& sourceMap, const int key)
+   T CRenderable::findValueInMap(const std::map<int, T>& sourceMap, const int key, const char* msg) const
    {
       T result = T();
 
@@ -239,11 +240,10 @@ namespace AeroSimulatorEngine
       {
          result = iter->second;
       }
-      ///@todo: uncomment when compiles
-      /*else
+      else
       {
-         CLog::getInstance().log("Failed to find: ", key);
-      }*/
+         LOG("Failed to find ", msg, key);
+      }
 
       return result;
    }

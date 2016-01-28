@@ -64,8 +64,8 @@ CApp::CApp()
    assert(mNormalMapSphereShader);*/
    //assert(mTurbineFire);
 
-   CLog::getInstance().log("\n*******************");
-   CLog::getInstance().log("** CApp created! **\n");
+   LOG("\n*******************");
+   LOG("** CApp created! **\n");
 }
 
 CApp::~CApp()
