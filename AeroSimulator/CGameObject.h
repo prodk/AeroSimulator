@@ -35,6 +35,8 @@ namespace AeroSimulatorEngine
       // We have to shared_ptr as unique_ptr refuses to work
       std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
 
+      int mId;
+
       ///@todo: add a list of children here and probably some reference to the parent;
    };
 

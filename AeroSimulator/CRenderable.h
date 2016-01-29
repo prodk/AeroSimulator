@@ -55,9 +55,20 @@ namespace AeroSimulatorEngine
       virtual ~CRenderable();
 
       /// General
-      virtual void setEnvironment();
-      virtual void resetEnvironment();
       bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
+
+      CGeometry* getGeometry() const { return mGeometry.get(); }
+      CShader* getShader() const { return mShader.get(); }
+      CTexture* getTexture() const { return mTextures[MAIN_TEXTURE].get(); }
+
+      void setGeometry(const SGeometryData& data);
+      void setShader(std::shared_ptr<CShader>& pShader);
+      bool loadTexture(const int id, const char* filePath, const int fmt);
+      void createTexture(const int id);
+      void createAndLoadTexture(const int id, const char* filePath, const int fmt);
+
+      void setEnvironment();
+      void resetEnvironment();
 
       // Setters for shader params
       void setFlag(const int id, const bool value);
@@ -76,19 +87,6 @@ namespace AeroSimulatorEngine
       glm::vec4 getVector4Param(const int id) const;
       glm::mat3 getMatrix3Param(const int id) const;
       glm::mat4 getMatrix4Param(const int id) const;
-
-
-      CGeometry* getGeometry() const { return mGeometry.get(); }
-      CShader* getShader() const { return mShader.get(); }
-      CTexture* getTexture() const { return mTextures[MAIN_TEXTURE].get(); }
-
-      ///@todo: add numOfElements and stride to the function args, probably through pOwner
-      //void setGeometry(GLfloat* vertices, GLuint* indices);
-      void setGeometry(const SGeometryData& data);
-      void setShader(std::shared_ptr<CShader>& pShader);
-      bool loadTexture(const int id, const char* filePath, const int fmt);
-      void createTexture(const int id);
-      void createAndLoadTexture(const int id, const char* filePath, const int fmt);
 
 
       //bool loadNormalMapTexture(const char* filePath);
@@ -197,14 +195,12 @@ namespace AeroSimulatorEngine
       std::map<int, glm::vec3> mVector3Params; // 3D vectors
       std::map<int, glm::vec4> mVector4Params; // 4D vectors
       std::map<int, glm::mat3> mMatrix3Params; // 3x3 matrices
-      std::map<int, glm::mat4> mMatrix4Params;// 4x4 matrices
+      std::map<int, glm::mat4> mMatrix4Params; // 4x4 matrices
 
       ///@todo: add an enum with texture IDs {USUAL, NORAML_MAP, ANIMATION}, then add textures to a vector or a map, see shaders in CGame
       /*std::shared_ptr<CTexture> mTexture;
       std::shared_ptr<CTexture> mNormalMapTexture;
       std::shared_ptr<CTexture> mAnimationTexture;*/
-
-
       //glm::mat4 mModelMatrix;
       //glm::mat4 mMvpMatrix;
       //GLuint mVboId;

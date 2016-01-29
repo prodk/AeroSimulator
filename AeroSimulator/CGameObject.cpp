@@ -4,6 +4,8 @@
 using namespace AeroSimulatorEngine;
 
 CGameObject::CGameObject()
+   : mComponents()
+   , mId(-1)
 {
 }
 

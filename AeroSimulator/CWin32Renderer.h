@@ -36,6 +36,8 @@ namespace AeroSimulatorEngine
       GLuint mTexDepthBuffer;
    };
 
+   enum eRendererEvents { DEBUG_MODE_EVENT, DEPTHBUF_EVENT };
+
    class CWin32Renderer : public CRenderer
    {
    public:
@@ -85,9 +87,12 @@ namespace AeroSimulatorEngine
       virtual void destroy();
       virtual void draw(CRenderable* pRenderable);
       virtual void swapBuffers();
+
+      void renderSceneToFBOs();
+      void renderFBOs();
+
       void drawScene();
 
-   private:
       bool createRenderContext();
       void updateFPS(CTask* pTask);
 

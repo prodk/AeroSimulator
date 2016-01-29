@@ -1,20 +1,17 @@
 #include "CWin32Renderer.h"
 #include "CRenderable.h"
 #include "CEventManager.h"
-#include "../Test/CGame.h" ///@todo: probably remove this when event declaration moved to other place, renderer should not refer to game
-
-#include "../src/shaders/CShader.h"
 #include "CGeometry.h"
 #include "CLog.h"
 #include "CTimer.h"
+#include "../src/shaders/CShader.h"
+#include "../src/shaders/CFboShader.h"
+#include "../src/shaders/CDepthBufferShader.h"
+#include "CQuad.h"
 
 #include "CCamera.h"
 
-#include "CQuad.h"
-#include "../src/shaders/CFboShader.h"
-#include "../src/shaders/CDepthBufferShader.h"
-
-#include "glm/gtc/matrix_transform.hpp"
+//#include "glm/gtc/matrix_transform.hpp"
 
 #include <cassert>
 #include <algorithm>
@@ -62,7 +59,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    assert(mFboShader);
    assert(mDepthBufferShader);
 
-   mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
+   //mCamera->setProjectionMatrix(glm::perspective(45.0f, 16.0f / 9.0f, 0.1f, 500.0f));
 
    // View matrix.
    //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -10.0f));
@@ -94,46 +91,9 @@ void CWin32Renderer::update(CTask* pTask)
 
       setRenderContext();
 
-      // Render the scene to the main frame buffer
-      glBindFramebuffer(GL_FRAMEBUFFER, mMainFbo.mFramebuffer);
-      glViewport(0, 0, mWndWidth, mWndHeight);
-      ///@todo: probably set textures only for some conditions to avoid doing this every frame
-      //mMainFboQuad->getTexture()->setId(mMainFbo.mTexColorBuffer);
-      //mMainFboQuad->setShadersAndBuffers(mFboShader);
-      drawScene();
+      renderSceneToFBOs();
 
-      ///@todo: probably place to a separate method
-      // Render the scene to the second, helper framebuffer - another view of the plane
-      glBindFramebuffer(GL_FRAMEBUFFER, mHelpFbo.mFramebuffer);
-      // Setup the camera such that we look backwards
-      //mCamera->setRotate(glm::vec3(30.0f, 180.0f, 0.f));
-      //const glm::vec3 currentTranslate = mCamera->getTranslate();
-      //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));
-      //mCamera->updateModelMatrix();
-      drawScene();
-      swapBuffers();
-
-      // Restore the camera translation
-      //mCamera->setTranslate(currentTranslate);
-
-      // Render the textures to the screen
-      // Bind the default framebuffer and draw the texture containing the scene
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-      glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
-
-      // Main scene
-      if (mDepthBufferMode) // Display the depth buffer instead on the main scene
-      {
-         //mMainFboQuad->getTexture()->setId(mMainFbo.mTexDepthBuffer);
-         //mMainFboQuad->setShadersAndBuffers(mDepthBufferShader);
-      }
-      //draw(mMainFboQuad.get());
-
-      // Small helper scene
-      glViewport(static_cast<GLint>(0.7f*mWndWidth), 0, static_cast<GLsizei>(0.3f*mWndWidth), static_cast<GLsizei>(0.3f*mWndHeight));
-      //draw(mHelpFboQuad.get());
-
-      glEnable(GL_DEPTH_TEST);
+      renderFBOs();
 
       resetRenderContext();
    }
@@ -198,53 +158,88 @@ void CWin32Renderer::destroy()
 
 void CWin32Renderer::draw(CRenderable* pRenderable)
 {
-   //const GLuint vboId = pRenderable->getVboId();
-   //const GLuint iboId = pRenderable->getIboId();
-   const GLuint vboId = 0;
-   const GLuint iboId = 0;
-   if (pRenderable && pRenderable->canBeRendered() && vboId && iboId)
+   if (pRenderable && pRenderable->canBeRendered())
    {
-      glBindBuffer(GL_ARRAY_BUFFER, vboId);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
-
-      pRenderable->setEnvironment(); /// Renderable-specific changes of the OpenGL environment: switch depth on/off etc.
-
-      CGeometry* pGeometry = pRenderable->getGeometry();
-      CShader* pShader = pRenderable->getShader();
-      assert(pShader && pGeometry);
-
-      // Calculate and set the final MVP matrix used in the shader
-      //glm::mat4 modelMatrix = pRenderable->getModelMatrix();
-      //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
-      //pRenderable->setMvpMatrix(MVP);
-
-      // Set shader attributes/uniforms
-      pShader->setup(*pRenderable);
-
-      //if (mIsDebugMode && pRenderable->getDrawWithLines())
+      const GLuint vboId = (GLuint)pRenderable->get1DParam(VBO0_ID);
+      const GLuint iboId = (GLuint)pRenderable->get1DParam(IBO0_ID);
+      if (vboId && iboId)
       {
-         //glLineWidth(pRenderable->getLineWidth());
-         //glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+         glBindBuffer(GL_ARRAY_BUFFER, vboId);
+         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboId);
+
+         ///@todo: implement in renderable, add the argument that defines the environment
+         pRenderable->setEnvironment(); // Renderable-specific changes of the OpenGL environment: switch depth on/off etc.
+
+         CGeometry* pGeometry = pRenderable->getGeometry();
+         CShader* pShader = pRenderable->getShader();
+         if (pGeometry && pShader)
+         {
+            pShader->setup(*pRenderable);
+            //if (mIsDebugMode && pRenderable->getDrawWithLines())
+            {
+               //glLineWidth(pRenderable->getLineWidth());
+               //glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+            }
+            //else if (!pRenderable->getDrawWithLines())
+            glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+         }
+
+         // Return to the initial OpenGL state.
+         pRenderable->resetEnvironment();
+
+         glBindBuffer(GL_ARRAY_BUFFER, 0);
+         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+         glBindTexture(GL_TEXTURE_2D, 0);
       }
-      //else if (!pRenderable->getDrawWithLines())
-         glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
-
-      // Return to the initial OpenGL state.
-      pRenderable->resetEnvironment();
-
-      // Unbind the buffers
-      ///@todo: probably place to a separate method
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-      // Unbind the texture
-      glBindTexture(GL_TEXTURE_2D, 0);
    }
 }
 
 void CWin32Renderer::swapBuffers()
 {
    ::SwapBuffers(mDC);
+}
+
+void CWin32Renderer::renderSceneToFBOs()
+{
+   glBindFramebuffer(GL_FRAMEBUFFER, mMainFbo.mFramebuffer);
+   glViewport(0, 0, mWndWidth, mWndHeight);
+   ///@todo: probably set textures only for some conditions to avoid doing this every frame
+   //mMainFboQuad->getTexture()->setId(mMainFbo.mTexColorBuffer);
+   //mMainFboQuad->setShadersAndBuffers(mFboShader);
+   drawScene();
+
+   // Render the scene to the second, helper framebuffer - another view of the plane
+   glBindFramebuffer(GL_FRAMEBUFFER, mHelpFbo.mFramebuffer);
+   // Setup the camera such that we look backwards
+   //mCamera->setRotate(glm::vec3(30.0f, 180.0f, 0.f));
+   //const glm::vec3 currentTranslate = mCamera->getTranslate();
+   //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));
+   //mCamera->updateModelMatrix();
+   drawScene();
+   swapBuffers();
+
+   // Restore the camera translation
+   //mCamera->setTranslate(currentTranslate);
+}
+
+void AeroSimulatorEngine::CWin32Renderer::renderFBOs()
+{
+   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+   glDisable(GL_DEPTH_TEST); // We don't care about depth information when rendering a single quad
+
+   // Main scene FBO
+   if (mDepthBufferMode) // Display the depth buffer instead on the main scene
+   {
+      //mMainFboQuad->getTexture()->setId(mMainFbo.mTexDepthBuffer);
+      //mMainFboQuad->setShadersAndBuffers(mDepthBufferShader);
+   }
+   //draw(mMainFboQuad.get());
+
+   // Small helper scene FBO
+   glViewport(static_cast<GLint>(0.7f*mWndWidth), 0, static_cast<GLsizei>(0.3f*mWndWidth), static_cast<GLsizei>(0.3f*mWndHeight));
+   //draw(mHelpFboQuad.get());
+
+   glEnable(GL_DEPTH_TEST);
 }
 
 void CWin32Renderer::drawScene()
@@ -262,10 +257,17 @@ void CWin32Renderer::drawScene()
          pRenderable->setRightVector(mCamera->getRightVector());
          pRenderable->setUpVector(mCamera->getUpVector());
          pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+         ///@todo: move this outside the draw()
+         // Calculate and set the final MVP matrix used in the shader
+         //glm::mat4 modelMatrix = pRenderable->getModelMatrix();
+         //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
+         //pRenderable->setMvpMatrix(MVP);
          draw(pRenderable);
       }*/
    }
 
+   ///@todo: introduce a special method for drawing transparent where no setEnvironment is called on every object
+   ///and also the renderables are sorted according to the camera distance
    // Then draw transparent objects (they switch the depth off)
    for (auto * pRenderable : mTransparentRenderables)
    {
@@ -275,6 +277,11 @@ void CWin32Renderer::drawScene()
          pRenderable->setRightVector(mCamera->getRightVector());
          pRenderable->setUpVector(mCamera->getUpVector());
          pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+         ///@todo: move this outside the draw()
+         // Calculate and set the final MVP matrix used in the shader
+         //glm::mat4 modelMatrix = pRenderable->getModelMatrix();
+         //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
+         //pRenderable->setMvpMatrix(MVP);
          draw(pRenderable);
       }*/
    }
@@ -459,14 +466,14 @@ void CWin32Renderer::setupEvents()
    bool status = false;
 
    // Debug mode on/off
-   status = CEventManager::getInstance().registerEvent(CGame::DEBUG_MODE_EVENT);
+   status = CEventManager::getInstance().registerEvent(eRendererEvents::DEBUG_MODE_EVENT);
    CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(CGame::DEBUG_MODE_EVENT, *this);
+   CEventManager::getInstance().attachEvent(eRendererEvents::DEBUG_MODE_EVENT, *this);
 
    // Depth buffer on/off
-   status = CEventManager::getInstance().registerEvent(CGame::DEPTHBUF_EVENT);
+   status = CEventManager::getInstance().registerEvent(DEPTHBUF_EVENT);
    CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(CGame::DEPTHBUF_EVENT, *this);
+   CEventManager::getInstance().attachEvent(eRendererEvents::DEPTHBUF_EVENT, *this);
 }
 
 void CWin32Renderer::handleEvent(CAppEvent * pEvent)
@@ -475,19 +482,18 @@ void CWin32Renderer::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
-      case CGame::DEBUG_MODE_EVENT:
+      case eRendererEvents::DEBUG_MODE_EVENT:
          mIsDebugMode = !mIsDebugMode;
          CLog::getInstance().log("* Debug mode on: ", mIsDebugMode);
          break;
 
-      case CGame::DEPTHBUF_EVENT:
+      case eRendererEvents::DEPTHBUF_EVENT:
          mDepthBufferMode = !mDepthBufferMode;
          CLog::getInstance().log("* Display depth buffer: ", mDepthBufferMode);
          break;
       }
    } // End if
 }
-//
 
 //void CWin32Renderer::updateCamera()
 //{

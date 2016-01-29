@@ -30,8 +30,7 @@ namespace AeroSimulatorEngine
       // CEventHandler part
       virtual void handleEvent(CAppEvent *pEvent) override;
 
-      // All events
-      enum {DEBUG_MODE_EVENT, DEPTHBUF_EVENT}; ///@todo: probably move renderer-specific messages to other place
+      ///@todo: Add game events here
 
       // All shaders
       enum {TEXTURE_SHADER, COLOR_SHADER, LAST_SHADER};
@@ -42,6 +41,8 @@ namespace AeroSimulatorEngine
       void addLand();
 
    private:
+      ///@todo: probably create a pool of game object
+      ///@todo: save a unique id of the object, use one global count, probably current size of the pool of objects
       std::unique_ptr<CLand> mLand;
       std::vector<std::shared_ptr<CShader> > mShaders; ///@todo: probably use unique_ptr
    };
