@@ -26,6 +26,7 @@ namespace AeroSimulatorEngine
       ///@todo: add logging to some default log file
       void log(const char* msg, std::ostream& file = std::cout);
       void log(const char* msg, unsigned int value, std::ostream& file = std::cout);
+      void log(const char* msg, int value0, float value1, std::ostream& file = std::cout);
       void log(const char* msg, const char* value, std::ostream& file = std::cout);
       void log(const char* msg1, const char* msg2, int value, std::ostream& file = std::cout);
 

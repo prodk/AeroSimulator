@@ -5,12 +5,13 @@
 #include "../CEventHandler.h"
 #include <memory>
 #include <vector>
+#include <map>
 
 namespace AeroSimulatorEngine
 {
    class CAppEvent;
-   class CLand;
    class CShader;
+   class CGameObject;
 
    ///@todo: probably later do not make it a handler, move all event responses to the components:
    /// movement component, collision component
@@ -32,19 +33,26 @@ namespace AeroSimulatorEngine
 
       ///@todo: Add game events here
 
-      // All shaders
-      enum {TEXTURE_SHADER, COLOR_SHADER, LAST_SHADER};
+   public:
+      // Shader ids
+      enum eShaders {TEXTURE_SHADER, COLOR_SHADER, LAST_SHADER};
+      enum eGameObjects {LAND};
+
+      typedef std::pair<int, std::shared_ptr<CGameObject> > tObjectPair;
+      typedef std::shared_ptr<CGameObject> tGoSharedPtr;
 
    private:
       void createShaders();
       void setupScene();
       void addLand();
+      ///@todo: addObjectsToRenderer(): if the GO can be rendered, add its renderable to the renderer
+      void addObjectsToRenderer();
+
+      bool canBeRendered(CGameObject& object) const;
 
    private:
-      ///@todo: probably create a pool of game object
-      ///@todo: save a unique id of the object, use one global count, probably current size of the pool of objects
-      std::unique_ptr<CLand> mLand;
-      std::vector<std::shared_ptr<CShader> > mShaders; ///@todo: probably use unique_ptr
+      std::vector<std::shared_ptr<CShader> > mShaders;
+      std::map<int, std::shared_ptr<CGameObject> > mGameObjects;
    };
 }
 

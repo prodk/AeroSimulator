@@ -2,10 +2,6 @@
 #include "CGeometry.h"
 #include "../src/shaders/CShader.h"
 #include "CTexture.h"
-//#include "CLog.h"
-//#include "CCommonMath.h"
-
-//#include "glm/gtc/matrix_transform.hpp"
 #include <cassert>
 
 using namespace AeroSimulatorEngine;
@@ -32,29 +28,9 @@ CRenderable::CRenderable()
    , mMatrix3Params()
    , mMatrix4Params()
 {
+   /// By default it is visible
+   setFlag(eShaderFlags::IS_VISIBLE, true);
 }
-
-//CRenderable::CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char * mainTextureFilePath)
-//   : mGeometry()
-//   , mShader(pShader)
-//   , mTextures(eTextures::LAST_TEXTURE)
-//   , mFlags()
-//   , m1DParams()
-//   , mVector2Params()
-//   , mVector3Params()
-//   , mVector4Params()
-//   , mMatrix3Params()
-//   , mMatrix4Params()
-//{
-//   setGeometry(pVertices, pIndices);
-//   createTexture(MAIN_TEXTURE);
-//   if ((0 != mainTextureFilePath) && loadTexture(MAIN_TEXTURE, mainTextureFilePath, DDS))
-//   {
-//      LOG(("* CRenderable: texture loaded, filePath: ", mainTextureFilePath));
-//   }
-//
-//   assert(mShader);
-//}
 
 CRenderable::~CRenderable()
 {
@@ -65,7 +41,6 @@ CRenderable::~CRenderable()
    {
       mTextures[id].reset();
    }
-   //mTexture.reset();
 }
 
 void CRenderable::resetEnvironment()
@@ -74,6 +49,95 @@ void CRenderable::resetEnvironment()
 
 void CRenderable::setEnvironment()
 {
+}
+
+void CRenderable::setGeometry(const SGeometryData& data)
+{
+   if (data.mVertices && data.mIndices && (data.mNumVertices > 0) && (data.mNumIndices > 0))
+   {
+      mGeometry.reset(new CGeometry());
+      assert(mGeometry);
+
+      mGeometry->setVertexBuffer((void*)data.mVertices);
+      mGeometry->setNumOfVertices(data.mNumVertices);
+
+      mGeometry->setIndexBuffer((void*)data.mIndices);
+      mGeometry->setNumOfIndices(data.mNumIndices);
+
+      mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
+      mGeometry->setVertexStride(data.mStride);
+
+      // Can be called only when the correct geometry has been setup
+      setupVbo();
+   }
+}
+
+void CRenderable::setShader(std::shared_ptr<CShader>& pShader)
+{
+   if (pShader)
+   {
+      mShader = pShader;
+      if (!mShader->isLinked())
+      {
+         mShader->link();
+      }
+   }
+   else
+   {
+      LOG("* CRenderable::setShader(): error invalid shader!");
+   }
+}
+
+bool CRenderable::loadTexture(const int id, const char * filePath, const int fmt)
+{
+   bool result = false;
+   if (id < static_cast<int>(mTextures.size()) && mTextures[id])
+   {
+      switch (fmt)
+      {
+      case eTextureFileFormat::BMP:
+         result = (0 != mTextures[id]->loadBmpTexture(filePath));
+         break;
+      default:
+         result = (0 != mTextures[id]->loadDDSTexture(filePath));
+         break;
+      }
+
+      if (result && (mTextures[id]->getWidth() != mTextures[id]->getHeight()))
+      {
+         glGenerateTextureMipmap(mTextures[id]->getId());
+         CHECKGL("* CRenderable: glGenerateTextureMipmap() failed with error ");
+         LOG("* CRenderable:: generating mipmaps for non-square texture, height: ", (unsigned int)mTextures[id]->getHeight());
+      }
+   }
+
+   return result;
+}
+
+void CRenderable::createTexture(const int id)
+{
+   if (id < static_cast<int>(mTextures.size()))
+   {
+      mTextures[id].reset(new CTexture());
+      assert(mTextures[id]);
+
+      set1DParam(TEXTURE_UNIT, GL_TEXTURE0);
+      LOG("* CRenderable: Texture created, its type is ", (unsigned int)id);
+   }
+}
+
+void CRenderable::createAndLoadTexture(const int id, const char * filePath, const int fmt)
+{
+   createTexture(id);
+   if ((0 != filePath) && loadTexture(id, filePath, fmt))
+   {
+      LOG(("* CRenderable: texture loaded, filePath: ", filePath));
+   }
+}
+
+CTexture * CRenderable::getTexture(const int id) const
+{
+   return mTextures[id].get();
 }
 
 void CRenderable::setFlag(const int id, const bool value)
@@ -127,10 +191,10 @@ bool CRenderable::getFlag(const int id) const
    {
       result = iter->second;
    }
-   else
+   /*else
    {
       LOG("* CRenderable: Failed to find a flag: ", id);
-   }
+   }*/
 
    return result;
 }
@@ -146,7 +210,7 @@ float CRenderable::get1DParam(const int id) const
    }
    else
    {
-      LOG("* CRenderable: Failed to find 1D param: ", id);
+      LOG("* CRenderable: Failed to find 1D param: ", (unsigned int)id);
    }
 
    return result;
@@ -235,108 +299,7 @@ glm::mat3 CRenderable::getMatrix3Param(const int id) const
 glm::mat4 CRenderable::getMatrix4Param(const int id) const
 {
    return findValueInMap<glm::mat4>(mMatrix4Params, id, " matrix 4x4, key ");
-
-   ///@todo: remove when tested
-   /*auto result = glm::mat4();
-
-   auto iter = mMatrix4Params.find(id);
-   if (mMatrix4Params.end() != iter)
-   {
-      result = iter->second;
-   }
-   else
-   {
-      LOG("* CRenderable: Failed to find matrix 4D: ", id);
-   }
-
-   return result;*/
 }
-
-bool CRenderable::loadTexture(const int id, const char * filePath, const int fmt)
-{
-   bool result = false;
-   if (id < static_cast<int>(mTextures.size()) && mTextures[id])
-   {
-      switch (fmt)
-      {
-      case eTextureFileFormat::BMP:
-         result = (0 != mTextures[id]->loadBmpTexture(filePath));
-         break;
-      default:
-         result = (0 != mTextures[id]->loadDDSTexture(filePath));
-         break;
-      }
-
-      if (result && (mTextures[id]->getWidth() != mTextures[id]->getHeight()))
-      {
-         glGenerateTextureMipmap(mTextures[id]->getId());
-         CHECKGL("* CRenderable: glGenerateTextureMipmap() failed with error ");
-         LOG("* CRenderable:: generating mipmaps for non-square texture, height: ", mTextures[id]->getHeight());
-      }
-   }
-
-   return result;
-}
-
-void CRenderable::setShader(std::shared_ptr<CShader>& pShader)
-{
-   if (pShader)
-   {
-      mShader = pShader;
-      if (!mShader->isLinked())
-      {
-         mShader->link();
-      }
-   }
-}
-void CRenderable::setGeometry(const SGeometryData& data)
-{
-   if (data.mVertices && data.mIndices && (data.mNumVertices > 0) && (data.mNumIndices > 0))
-   {
-      mGeometry.reset(new CGeometry());
-      assert(mGeometry);
-
-      mGeometry->setVertexBuffer(data.mVertices);
-      mGeometry->setNumOfVertices(data.mNumVertices);
-
-      mGeometry->setIndexBuffer(data.mIndices);
-      mGeometry->setNumOfIndices(data.mNumIndices);
-
-      mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
-      mGeometry->setVertexStride(data.mStride);
-
-      // Can be called only when the correct geometry has been setup
-      setupVbo();
-   }
-}
-
-//void CRenderable::setGeometry(GLfloat* vertices, GLuint* indices)
-//{
-//   if (vertices && indices)
-//   {
-//      const std::size_t numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-//      const std::size_t numOfIndices = sizeof(indices) / sizeof(indices[0]);
-//
-//      if ((numOfVertices >0) && (numOfIndices > 0))
-//      {
-//         mGeometry.reset(new CGeometry());
-//         assert(mGeometry);
-//
-//         mGeometry->setVertexBuffer(vertices);
-//         mGeometry->setNumOfVertices(numOfVertices);
-//
-//         mGeometry->setIndexBuffer(indices);
-//         mGeometry->setNumOfIndices(numOfIndices);
-//
-//         ///@todo: add these to the function args, probably through pOwner
-//         mGeometry->setNumOfElementsPerVertex(2);
-//         mGeometry->setVertexStride(4); // 2 coords + 2 tex coords
-//
-//         // Can be called only when the correct geometry has been setup
-//         setupVbo();
-//      }
-//   }
-//}
 
 void CRenderable::setupVbo()
 {
@@ -352,7 +315,7 @@ void CRenderable::setupVbo()
       glBindBuffer(GL_ARRAY_BUFFER, vboid);
       CHECKGL("* CRenderable: glBindBuffer(GL_ARRAY_BUFFER, vboid) failed ");
 
-      GLuint* data = static_cast<GLuint*>(mGeometry->getVertexBuffer());
+      GLfloat* data = static_cast<GLfloat*>(mGeometry->getVertexBuffer());
       glBufferData(GL_ARRAY_BUFFER, mGeometry->getNumOfVertices()* sizeof(GLuint), data, GL_STATIC_DRAW);
       CHECKGL("* CRenderable: glBufferData(GL_ARRAY_BUFFER) failed ");
 
@@ -373,28 +336,6 @@ void CRenderable::setupVbo()
       // Reset VBOs
       glBindBuffer(GL_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-   }
-}
-
-void CRenderable::createTexture(const int id)
-{
-   if (id < static_cast<int>(mTextures.size()))
-   {
-      mTextures[id].reset(new CTexture());
-      assert(mTextures[id]);
-
-      set1DParam(TEXTURE_UNIT, GL_TEXTURE0);
-      LOG("* CRenderable: Texture created, its type is ", id);
-      LOG("");
-   }
-}
-
-void CRenderable::createAndLoadTexture(const int id, const char * filePath, const int fmt)
-{
-   createTexture(id);
-   if ((0 != filePath) && loadTexture(id, filePath, fmt))
-   {
-      LOG(("* CRenderable: texture loaded, filePath: ", filePath));
    }
 }
 

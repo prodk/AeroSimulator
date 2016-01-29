@@ -21,10 +21,10 @@ void CRenderer::addRenderable(CRenderable * pRenderable)
 {
    if (pRenderable)
    {
-      /*if (pRenderable->isTransparent())
+      if (pRenderable->getFlag(eShaderFlags::IS_TRANSPARENT))
          mTransparentRenderables.push_back(pRenderable);
       else
-         mRenderables.push_back(pRenderable);*/
+         mRenderables.push_back(pRenderable);
    }
 }
 

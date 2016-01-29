@@ -3,18 +3,33 @@
 #include "../CLog.h"
 #include "../CTexture.h"
 
+#include "../CRenderableComponent.h"
+#include "../CTransformComponent.h"
+#include "../CRenderable.h"
+
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace AeroSimulatorEngine;
 
 namespace
 {
-   GLfloat vertices[] =
+   ///@todo: use these when the camera is fixed
+   // xz-plane
+  /* GLfloat vertices[] =
    {
      -0.5f, 0.0f, -0.5f, 0.0f, 1.0f,
       -0.5f, 0.0f, 0.5f, 0.0f, 0.0f,
       0.5f, 0.0f, -0.5f, 1.0f, 1.0f,
       0.5f, 0.0f, 0.5f, 1.0f, 0.0f
+   };*/
+
+   // xy - plane
+   GLfloat vertices[] =
+   {
+      -0.5f, -0.5f, 0.0f, 0.0f, 1.0f,
+      -0.5f,  0.5f, 0.0f,  0.0f, 0.0f,
+      0.5f,  -0.5f, 0.0f, 1.0f, 1.0f,
+      0.5f,   0.5f, 0.0f, 1.0f, 0.0f
    };
 
    GLuint indices[] =
@@ -23,87 +38,60 @@ namespace
    };
 }
 
-CLand::CLand()
-   //: mScaledTRMatrix()
-   //, mNumOfTiles(glm::vec2(1, 1))
+CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader, const char * textureFilePath, const glm::vec2 & numOfTiles)
+   : CGameObject(id, type)
+   , mNumOfTiles(numOfTiles)
 {
-   //setRepeatTexture(true);
-   //mTexture.reset(new CTexture());
-   //mGeometry.reset(new CGeometry());
+   LOG("* CLand setting up the renderable component");
+   addComponent<CRenderableComponent>();
+
+   const int numVert = sizeof(vertices) / sizeof(vertices[0]);
+   const int numInd = sizeof(indices) / sizeof(indices[0]);
+   const int elementsPerVertex = 3;
+   const int stride = 5; // 3 coords + 2 tex coords
+   scaleVertices(vertices, numVert);
+   SGeometryData geometryData(vertices, numVert, indices, numInd, elementsPerVertex, stride);
+
+   getRenderable().setGeometry(geometryData);
+
+   getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath, DDS);
+
+   getRenderable().setShader(pShader);
+
+   // Repeat the texture for land
+   getRenderable().setFlag(REPEAT_TEXTURE, true);
+
+   //LOG("* CLand setting up the transform component");
+
+   //LOG("* CLand setting up the movement component");
+
+   //LOG("* CLand setting up the collision component");
 }
 
 CLand::~CLand()
 {
 }
 
-//void CLand::setShadersAndBuffers(std::shared_ptr<CShader>& pShader)
-//{
-   //if (mGeometry)
-   //{
-   //   const int numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-   //   // Modify number of tiles
-   //   for (std::size_t count = 0; count < numOfVertices; ++count)
-   //   {
-   //      if ((count % 5) == 3)
-   //      {
-   //         vertices[count] *= mNumOfTiles.x;
-   //      }
-   //      if ((count % 5) == 4)
-   //      {
-   //         vertices[count] *= mNumOfTiles.y;
-   //      }
-   //   }
+CRenderable & CLand::getRenderable()
+{
+   CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*this);
+   assert(pRenderableComp);
 
-   //   mGeometry->setVertexBuffer(vertices);
-   //   mGeometry->setNumOfVertices(numOfVertices);
+   return pRenderableComp->getRenderable();
+}
 
-   //   mGeometry->setIndexBuffer(indices);
-   //   const int numOfIndices = sizeof(indices) / sizeof(indices[0]);
-   //   mGeometry->setNumOfIndices(numOfIndices);
-
-   //   mGeometry->setNumOfElementsPerVertex(3);
-   //   mGeometry->setVertexStride(5);
-
-   //   CLog::getInstance().log("* CLand::setupShadersAndBuffers(): Land's geometry has been setup **");
-   //}
-
-   //CGameObject::setShadersAndBuffers(pShader);
-//}
-
-//bool CLand::loadTexture(const char * fileName)
-//{
-//   return (0 != mTexture->loadDDSTexture(fileName));
-//}
-//
-//void CLand::buildModelMatrix(const glm::mat4x4 & parentTRMatrix)
-//{
-//   CParentGameObject::buildModelMatrix(parentTRMatrix);
-//
-//   // We need to calculate the model matrix for the node
-//   mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
-//   mModelMatrix = mParentTRMatrix * mScaledTRMatrix;
-//}
-//
-//void CLand::updateTRMatrix(const glm::mat4x4 & trMatrix, const float dt)
-//{
-//   CParentGameObject::updateTRMatrix(trMatrix, dt);
-//
-//   // Don't forget to change the cached scaled TR matrix
-//   if (trMatrix != mParentTRMatrix)
-//   {
-//      mScaledTRMatrix = glm::scale(mTRMatrix, mScale);
-//   }
-//}
-//
-//void CLand::updateModelMatrix(const glm::mat4x4 & rootModelMatrix)
-//{
-//   CParentGameObject::updateModelMatrix(rootModelMatrix);
-//
-//   mModelMatrix = rootModelMatrix * mParentTRMatrix * mScaledTRMatrix;
-//}
-
-//void CLand::setNumOfTiles(const GLint x, const GLint y)
-//{
-  /* mNumOfTiles.x = (x > 0) ? x : 1;
-   mNumOfTiles.y = (y > 0) ? y : 1;*/
-//}
+void CLand::scaleVertices(GLfloat * vertices, const int numOfVertices) const
+{
+   // Change vertex coordinates for x and z to repeat the texture
+   for (int count = 0; count < numOfVertices; ++count)
+   {
+      if ((count % 5) == 3)
+      {
+         vertices[count] *= mNumOfTiles.x;
+      }
+      if ((count % 5) == 4)
+      {
+         vertices[count] *= mNumOfTiles.y;
+      }
+   }
+}

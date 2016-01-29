@@ -58,19 +58,22 @@ namespace AeroSimulatorEngine
 
       /// General
       bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }
+      void setEnvironment();
+      void resetEnvironment();
 
+      /// Geometry
       CGeometry* getGeometry() const { return mGeometry.get(); }
-      CShader* getShader() const { return mShader.get(); }
-      CTexture* getTexture(const int id) const { return mTextures[id].get(); }
-
       void setGeometry(const SGeometryData& data);
+
+      /// Shader
       void setShader(std::shared_ptr<CShader>& pShader);
+      CShader* getShader() const { return mShader.get(); }
+
+      /// Textures
       bool loadTexture(const int id, const char* filePath, const int fmt);
       void createTexture(const int id);
       void createAndLoadTexture(const int id, const char* filePath, const int fmt);
-
-      void setEnvironment();
-      void resetEnvironment();
+      CTexture* getTexture(const int id) const;
 
       // Setters for shader params
       void setFlag(const int id, const bool value);
@@ -184,7 +187,6 @@ namespace AeroSimulatorEngine
 
       void setupVbo();
 
-   //protected:
    private:
       ///@todo: rearrange this params as well as in the initialization list
       std::unique_ptr<CGeometry> mGeometry;

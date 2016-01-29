@@ -17,3 +17,23 @@ CGeometry::CGeometry()
 CGeometry::~CGeometry()
 {
 }
+
+void * CGeometry::getVertexBuffer() const
+{
+   return mVertices;
+}
+
+void * CGeometry::getIndexBuffer() const
+{
+   return mIndices;
+}
+
+void CGeometry::setVertexBuffer(void * pVertices)
+{
+   mVertices = pVertices;
+}
+
+void CGeometry::setIndexBuffer(void * pIndices)
+{
+   mIndices = pIndices;
+}

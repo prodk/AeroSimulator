@@ -171,13 +171,15 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
          if (pGeometry && pShader)
          {
             pShader->setup(*pRenderable);
-            //if (mIsDebugMode && pRenderable->getDrawWithLines())
+            /*if (mIsDebugMode && pRenderable->getFlag(eShaderFlags::DRAW_LINES))
             {
-               //glLineWidth(pRenderable->getLineWidth());
-               //glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+               glLineWidth(pRenderable->get1DParam(eShader1DParams::LINE_WIDTH));
+               glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
             }
-            //else if (!pRenderable->getDrawWithLines())
-            glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+            else if (!pRenderable->getFlag(eShaderFlags::DRAW_LINES))*/
+            {
+               glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
+            }
          }
 
          // Return to the initial OpenGL state.
@@ -221,12 +223,8 @@ void CWin32Renderer::renderSceneToFBOs()
    //const glm::vec3 currentTranslate = mCamera->getTranslate();
    //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));
    //mCamera->updateModelMatrix();
-   //drawScene();
+   drawScene();
 
-   ///@todo: remove
-   glClearColor(0.95f, 0.95f, 0.0f, 1);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   ///@todo: end
    swapBuffers();
 
    // Restore the camera translation
@@ -260,48 +258,60 @@ void AeroSimulatorEngine::CWin32Renderer::renderFBOs()
 
 void CWin32Renderer::drawScene()
 {
-   //glClearColor(0.95f, 0.95f, 0.95f, 1);
-   glClearColor(0.0f, 0.95f, 0.0f, 1);
+   //glClearColor(0.95f, 0.95f, 0.95f, 1); ///@todo: uncomment
+   glClearColor(0.0f, 0.95f, 0.0f, 1); ///@todo: remove
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+   drawOpaqueRenderables();
+   drawTransparentRenderables();
+}
+
+void CWin32Renderer::drawOpaqueRenderables()
+{
    // At first draw opaque objects
-   /// @todo: put to a method with an array as an argument
    for (auto * pRenderable : mRenderables)
    {
-     /* if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
+      if (pRenderable && pRenderable->canBeRendered() && pRenderable->getFlag(eShaderFlags::IS_VISIBLE))
       {
          ///todo: think how to set the width/height of the billboard
-         pRenderable->setRightVector(mCamera->getRightVector());
-         pRenderable->setUpVector(mCamera->getUpVector());
-         pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+         //pRenderable->setRightVector(mCamera->getRightVector());
+         //pRenderable->setUpVector(mCamera->getUpVector());
+         //pRenderable->setEyePos(mCamera->getPositionWorldSpace());
          ///@todo: move this outside the draw()
          // Calculate and set the final MVP matrix used in the shader
          //glm::mat4 modelMatrix = pRenderable->getModelMatrix();
          //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
          //pRenderable->setMvpMatrix(MVP);
-         draw(pRenderable);
-      }*/
-   }
 
+         ///@todo: temporarily set MVP to the unity matrix
+         ///@todo: this should be set inside the renderable, think how to move this there
+         pRenderable->setMatrix4Param(eShaderMatrix4Params::MVP_MATRIX, glm::mat4());
+         draw(pRenderable);
+      }
+   }
+}
+
+void CWin32Renderer::drawTransparentRenderables()
+{
    ///@todo: introduce a special method for drawing transparent where no setEnvironment is called on every object
    ///and also the renderables are sorted according to the camera distance
    // Then draw transparent objects (they switch the depth off)
-   for (auto * pRenderable : mTransparentRenderables)
-   {
-      /*if (pRenderable && pRenderable->canBeRendered() && pRenderable->isVisible())
+   //for (auto * pRenderable : mTransparentRenderables)
+   //{
+      /*if (pRenderable && pRenderable->canBeRendered() && pRenderable->getFlag(eShaderFlags::IS_VISIBLE))
       {
-         ///todo: think how to set the width/height of the billboard
-         pRenderable->setRightVector(mCamera->getRightVector());
-         pRenderable->setUpVector(mCamera->getUpVector());
-         pRenderable->setEyePos(mCamera->getPositionWorldSpace());
-         ///@todo: move this outside the draw()
-         // Calculate and set the final MVP matrix used in the shader
-         //glm::mat4 modelMatrix = pRenderable->getModelMatrix();
-         //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
-         //pRenderable->setMvpMatrix(MVP);
-         draw(pRenderable);
+      ///todo: think how to set the width/height of the billboard
+      pRenderable->setRightVector(mCamera->getRightVector());
+      pRenderable->setUpVector(mCamera->getUpVector());
+      pRenderable->setEyePos(mCamera->getPositionWorldSpace());
+      ///@todo: move this outside the draw()
+      // Calculate and set the final MVP matrix used in the shader
+      //glm::mat4 modelMatrix = pRenderable->getModelMatrix();
+      //glm::mat4 MVP = mCamera->getProjectionMatrix() * mCamera->getViewMatrix() * modelMatrix;
+      //pRenderable->setMvpMatrix(MVP);
+      draw(pRenderable);
       }*/
-   }
+   //}
 }
 
 void CWin32Renderer::init(const CWin32Window & window)

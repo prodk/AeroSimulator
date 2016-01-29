@@ -1,26 +1,30 @@
 #ifndef AERO_SIMULATOR_CLAND_H
 #define AERO_SIMULATOR_CLAND_H
 
-//#include "../CParentGameObject.h"
 #include "../CGameObject.h"
+#include "../AeroSimulator/include/glew.h"
 #include "../AeroSimulator/include/glm/vec2.hpp"
 
 namespace AeroSimulatorEngine
 {
    class CShader;
+   class CRenderable;
 
    class CLand : public CGameObject
    {
    public:
-      CLand();
+      CLand(const int id,
+            const int type,
+            std::shared_ptr<CShader>& pShader,
+            const char * textureFilePath,
+            const glm::vec2& numOfTiles);
+
       virtual ~CLand();
 
-      ///@todo: probably move this to CRenderable
-      //virtual void setShadersAndBuffers(std::shared_ptr<CShader>& pShader); /// Requires a valid render context
+      CRenderable & CLand::getRenderable();
 
-      //bool loadTexture(const char * fileName);
-
-      //void setNumOfTiles(const GLint x, const GLint y);
+   private:
+      void scaleVertices(GLfloat* vertices, const int numOfVertices) const;
 
    private:
       glm::vec2 mNumOfTiles;

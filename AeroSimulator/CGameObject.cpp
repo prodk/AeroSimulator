@@ -6,6 +6,14 @@ using namespace AeroSimulatorEngine;
 CGameObject::CGameObject()
    : mComponents()
    , mId(-1)
+   , mType(-1)
+{
+}
+
+CGameObject::CGameObject(const int id, const int type)
+   : mComponents()
+   , mId(id)
+   , mType(type)
 {
 }
 

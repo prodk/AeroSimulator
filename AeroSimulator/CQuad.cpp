@@ -61,10 +61,7 @@ void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, 
          setTextureUnit(textureUnit);
       }
 
-      if (pShader)
-      {
-         getRenderable().setShader(pShader);
-      }
+      getRenderable().setShader(pShader);
    }
 }
 

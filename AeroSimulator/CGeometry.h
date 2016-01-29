@@ -18,10 +18,10 @@ namespace AeroSimulatorEngine
 
       const int getNumOfVertices() const { return mNumVertices; }
       const int getNumOfIndices() const { return mNumIndices; }
-      void* getVertexBuffer() const { return mVertices; }
-      void* getIndexBuffer() const { return mIndices; }
-      void setVertexBuffer(void* pVertices) { mVertices = pVertices; }
-      void setIndexBuffer(void* pIndices) { mIndices = pIndices; }
+      void* getVertexBuffer() const;
+      void* getIndexBuffer() const;
+      void setVertexBuffer(void* pVertices);
+      void setIndexBuffer(void* pIndices);
 
       void setNumOfElementsPerVertex(const int numOfEpv) { mNumOfElementsPerVertex = numOfEpv; }
       int getNumOfElementsPerVertex() const { return mNumOfElementsPerVertex; }

@@ -12,6 +12,11 @@ void CLog::log(const char * msg, unsigned int value, std::ostream & file)
    file << msg << value << std::endl;
 }
 
+void CLog::log(const char * msg, int value0, float value1, std::ostream & file)
+{
+   file << msg << value0 << " " << value1 << std::endl;
+}
+
 void CLog::log(const char * msg, const char * value, std::ostream & file)
 {
    file << msg << value << std::endl;

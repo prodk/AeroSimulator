@@ -56,11 +56,14 @@ void CColorShader::setup(CRenderable & renderable)
          0);
       glEnableVertexAttribArray(mPositionAttributeId);
 
+      ///@todo: get from renderable
       //const glm::vec4 color = renderable.getColor();
-      //glUniform4fv(mColorUniformId, 1, &color[0]);
+      const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
+      glUniform4fv(mColorUniformId, 1, &color[0]);
 
       //// Send the transformation to the currently bound shader in the "MVP" uniform
       //const glm::mat4 MVP = renderable.getMvpMatrix();
-      //glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
+      const glm::mat4 MVP = renderable.getMatrix4Param(eShaderMatrix4Params::MVP_MATRIX);
+      glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
    }
 }

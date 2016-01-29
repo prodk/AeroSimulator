@@ -94,6 +94,8 @@ namespace AeroSimulatorEngine
       void renderSceneToFBOs();
       void renderFBOs();
       void drawScene();
+      void drawOpaqueRenderables();
+      void drawTransparentRenderables();
       bool createRenderContext();
       void updateFPS(CTask* pTask);
 

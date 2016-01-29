@@ -10,14 +10,18 @@ namespace AeroSimulatorEngine
 
    ///@todo: any GO can be a parent or a child in any tree.
    ///@todo: foresee such a possibility in this class, including all the necessary transform stuff
-   class CGameObject
+   class CGameObject ///@todo: probably make it an event handler
    {
    public:
       CGameObject();
+      CGameObject(const int id, const int type);
       virtual ~CGameObject();
 
       /// Add a component to the object
       template <typename T> bool addComponent();
+
+      /// Returns true if the object has a component T
+      template <typename T> bool hasComponent();
 
    protected:
       // Get the component of type T from the specified (by reference) object
@@ -35,7 +39,10 @@ namespace AeroSimulatorEngine
       // We have to shared_ptr as unique_ptr refuses to work
       std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
 
-      int mId;
+      int mId; // Unique id of the object
+
+      ///@todo: probably remove this in the end, may be useful for searching the objects
+      int mType;  // Type of the object, e.g. land, camera etc.
 
       ///@todo: add a list of children here and probably some reference to the parent;
    };
@@ -65,6 +72,12 @@ namespace AeroSimulatorEngine
       }
 
       return added;
+   }
+
+   template<typename T>
+   inline bool CGameObject::hasComponent()
+   {
+      return (nullptr != this->getComponent<T>());
    }
 } // namespace
 

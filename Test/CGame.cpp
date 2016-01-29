@@ -1,11 +1,14 @@
 #include "CGame.h"
-#include "CLand.h"
-#include "../CLog.h"
 #include "../CRenderer.h"
 #include "../CApp.h"
+#include "../CLog.h"
 #include "../AeroSimulator/src/shaders/CShader.h"
 #include "../AeroSimulator/src/shaders/CTextureShader.h"
 #include "../AeroSimulator/src/shaders/CColorShader.h"
+#include "../CGameObject.h"
+#include "../CRenderableComponent.h"
+
+#include "CLand.h"
 
 #include <cassert>
 
@@ -20,8 +23,8 @@ namespace
 }
 
 CGame::CGame()
-   : mLand()
-   , mShaders()
+   : mShaders()
+   , mGameObjects()
 {
 }
 
@@ -31,14 +34,19 @@ CGame::~CGame()
    {
       mShaders[count].reset();
    }
+   mShaders.clear();
 
-   mLand.reset();
+   for (auto object : mGameObjects)
+   {
+      object.second.reset();
+   }
+   mGameObjects.clear();
 }
 
 CGame::CGame(ePriority prio)
    : CTask(prio)
-   , mLand()
    , mShaders(LAST_SHADER)
+   , mGameObjects()
 {
 }
 
@@ -50,7 +58,10 @@ bool CGame::start()
    if (renderer()->setRenderContext())
    {
       createShaders();
+
       setupScene();
+
+      addObjectsToRenderer();
 
       renderer()->resetRenderContext();
       result = true;
@@ -98,11 +109,31 @@ void CGame::setupScene()
 
 void CGame::addLand()
 {
-   mLand.reset(new CLand());
-   assert(mLand);
+   const char* filePath = "../AeroSimulator/res/land.dds";
+   const int id = mGameObjects.size();
 
-   if (mLand)
+   ///@todo: change num of tiles to 10x10 when the camera is fixed
+   tGoSharedPtr pObject(
+      new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(2, 1)) );
+   assert(pObject);
+
+   tObjectPair newObject(id, pObject);
+
+   if (mGameObjects.insert(newObject).second)
    {
+      LOG("* CGame::addLand() success");
+   }
+   else
+   {
+      LOG("* CGame::addLand() failed to create land");
+   }
+
+
+   //mLand.reset(new CLand());
+   //assert(mLand);
+
+   //if (mLand)
+   //{
       /*if (mLand->loadTexture("../AeroSimulator/res/land.dds"))
       {
          CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
@@ -117,5 +148,21 @@ void CGame::addLand()
       mLand->setShadersAndBuffers(mShaders[TEXTURE_SHADER]);
 
       renderer()->addGameObjectAndItsChildren(mLand.get());*/
+   //}
+}
+
+void CGame::addObjectsToRenderer()
+{
+   for (auto object : mGameObjects)
+   {
+      if (object.second && canBeRendered(*object.second))
+      {
+         renderer()->addRenderable(&componentCast<CRenderableComponent>(*object.second)->getRenderable());
+      }
    }
+}
+
+bool CGame::canBeRendered(CGameObject& object) const
+{
+   return object.hasComponent<CRenderableComponent>();
 }
