@@ -28,12 +28,12 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mIsFullScreen(false)
    //, mAngleZ(0.0f)
    //, mAngleX(0.0f)
-   , mCameraAngleX(14.f)
-   , mCameraAngleY(0.f)
+   //, mCameraAngleX(14.f)
+   //, mCameraAngleY(0.f)
    , mCamera(new CCamera())
    , mIsDebugMode(false)     // press '1' key
-   , mIsSetCameraMode(false) // press '3' key
-   , mCameraAttached(false)
+   //, mIsSetCameraMode(false) // press '3' key
+   //, mCameraAttached(false)
    , mWndHandle(0)
    //, mKeyPressed(false)
    //, mCameraKeyPressed(false)
@@ -111,26 +111,22 @@ void CWin32Renderer::init()
 
       // Enable OpenGL stuff needed by the app
       glEnable(GL_DEPTH_TEST);
-      CLog::getInstance().logGL("* Depth test enabled: ");
+      LOGGL("* Depth test enabled: ");
 
       glEnable(GL_TEXTURE_2D);
-      CLog::getInstance().logGL("* Textures enabled: ");
+      LOGGL("* Textures enabled: ");
 
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-      CLog::getInstance().logGL("* Blending enabled, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA): ");
-      CLog::getInstance().log("");
+      LOGGL("* Blending enabled, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA): ");
+      LOG("");
 
       if (mWndWidth > 0 && mWndHeight > 0)
       {
-         setupFbo(mMainFbo, mMainFboQuad, mFboShader, mWndWidth, mWndHeight);
-         setupFbo(mHelpFbo, mHelpFboQuad, mFboShader, mWndWidth, mWndHeight);
+         setupFbo(mMainFbo, mWndWidth, mWndHeight);
+         setupFbo(mHelpFbo, mWndWidth, mWndHeight);
 
-         //if (mHelpFboQuad)
-            //mHelpFboQuad->setTextureUnit(GL_TEXTURE1); // Set a different texture unit to use several textures simultaneously
-
-         //if (mDepthBufferShader)
-            //mDepthBufferShader->link();
+         setupFboQuads();
       }
 
       // Go back to the window rendering context
@@ -146,11 +142,11 @@ void CWin32Renderer::destroy()
    {
       if (wglDeleteContext(mRenderContext))
       {
-         CLog::getInstance().log("* render context was destroyed");
+         LOG("* render context was destroyed");
       }
       else
       {
-         CLog::getInstance().log("* ERROR: render context wasn't destroyed");
+         LOG("* ERROR: render context wasn't destroyed");
       }
       mRenderContext = NULL;
    }
@@ -199,13 +195,23 @@ void CWin32Renderer::swapBuffers()
    ::SwapBuffers(mDC);
 }
 
+void CWin32Renderer::setupFboQuads()
+{
+   if (mMainFboQuad)
+   {
+      mMainFboQuad->prepareRenderable(mFboShader, MAIN_TEXTURE, mMainFbo.mTexColorBuffer);
+   }
+
+   if (mHelpFboQuad)
+   {
+      mHelpFboQuad->prepareRenderable(mFboShader, MAIN_TEXTURE, mHelpFbo.mTexColorBuffer, GL_TEXTURE1);
+   }
+}
+
 void CWin32Renderer::renderSceneToFBOs()
 {
    glBindFramebuffer(GL_FRAMEBUFFER, mMainFbo.mFramebuffer);
    glViewport(0, 0, mWndWidth, mWndHeight);
-   ///@todo: probably set textures only for some conditions to avoid doing this every frame
-   //mMainFboQuad->getTexture()->setId(mMainFbo.mTexColorBuffer);
-   //mMainFboQuad->setShadersAndBuffers(mFboShader);
    drawScene();
 
    // Render the scene to the second, helper framebuffer - another view of the plane
@@ -215,7 +221,10 @@ void CWin32Renderer::renderSceneToFBOs()
    //const glm::vec3 currentTranslate = mCamera->getTranslate();
    //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));
    //mCamera->updateModelMatrix();
-   drawScene();
+   //drawScene();
+   ///@todo: remove
+   glClearColor(0.95f, 0.95f, 0.0f, 1);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    swapBuffers();
 
    // Restore the camera translation
@@ -230,21 +239,27 @@ void AeroSimulatorEngine::CWin32Renderer::renderFBOs()
    // Main scene FBO
    if (mDepthBufferMode) // Display the depth buffer instead on the main scene
    {
-      //mMainFboQuad->getTexture()->setId(mMainFbo.mTexDepthBuffer);
-      //mMainFboQuad->setShadersAndBuffers(mDepthBufferShader);
+      mMainFboQuad->setTextureId(MAIN_TEXTURE, mMainFbo.mTexDepthBuffer);
+      mMainFboQuad->setShader(mDepthBufferShader);
    }
-   //draw(mMainFboQuad.get());
+   else
+   {
+      mMainFboQuad->setTextureId(MAIN_TEXTURE, mMainFbo.mTexColorBuffer);
+      mMainFboQuad->setShader(mFboShader);
+   }
+   draw(&(mMainFboQuad->getRenderable()));
 
    // Small helper scene FBO
    glViewport(static_cast<GLint>(0.7f*mWndWidth), 0, static_cast<GLsizei>(0.3f*mWndWidth), static_cast<GLsizei>(0.3f*mWndHeight));
-   //draw(mHelpFboQuad.get());
+   draw(&(mHelpFboQuad->getRenderable()));
 
    glEnable(GL_DEPTH_TEST);
 }
 
 void CWin32Renderer::drawScene()
 {
-   glClearColor(0.95f, 0.95f, 0.95f, 1);
+   //glClearColor(0.95f, 0.95f, 0.95f, 1);
+   glClearColor(0.0f, 0.95f, 0.0f, 1);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
    // At first draw opaque objects
@@ -319,22 +334,22 @@ bool CWin32Renderer::createRenderContext()
    UINT uiPixelFormat = ::ChoosePixelFormat(mDC, &pfd);
    if (uiPixelFormat)
    {
-      CLog::getInstance().log("* pixel format was found: ", uiPixelFormat);
+      LOG("* pixel format was found: ", uiPixelFormat);
    }
    else
    {
-      CLog::getInstance().log("* Error: pixel format wasn't found");
+      LOG("* Error: pixel format wasn't found");
       return false;
    }
 
    // Set pixel format
    if (::SetPixelFormat(mDC, uiPixelFormat, &pfd))
    {
-      CLog::getInstance().log("* pixel format was set");
+      LOG("* pixel format was set");
    }
    else
    {
-      CLog::getInstance().log("* Error: pixel format wasn't set");
+      LOG("* Error: pixel format wasn't set");
       return false;
    }
 
@@ -406,8 +421,7 @@ void CWin32Renderer::updateFPS(CTask * pTask)
    }
 }
 
-void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader,
-   const GLint width, const GLint height)
+void CWin32Renderer::setupFbo(SFrameBuffer& fbo, const GLint width, const GLint height)
 {
    glGenFramebuffers(1, &fbo.mFramebuffer);
    glBindFramebuffer(GL_FRAMEBUFFER, fbo.mFramebuffer);
@@ -419,20 +433,15 @@ void CWin32Renderer::setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, s
    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbo.mTexColorBuffer, 0);
    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, fbo.mTexDepthBuffer, 0);
 
-   // Set the list of draw buffers.
+   // Set the list of draw buffers
    GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0 };
-   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers); // "2" is the size of DrawBuffers
+   glDrawBuffers(sizeof(drawBuffers) / sizeof(drawBuffers[0]), drawBuffers);
 
    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
-      CLog::getInstance().log("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
-   glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-   /*if (shader && quad)
    {
-   shader->link();
-   quad->setShadersAndBuffers(shader);
-   quad->getTexture()->setId(fbo.mTexColorBuffer);
-   }*/
+      LOG("ERROR::FRAMEBUFFER:: Framebuffer is not complete!");
+   }
+   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CWin32Renderer::generateAttachmentTexture(SFrameBuffer& fbo)

@@ -10,9 +10,11 @@
 
 using namespace AeroSimulatorEngine;
 
-SGeometryData::SGeometryData(GLfloat* vertices, GLuint* indices, int elementsPerVertex, int stride)
+SGeometryData::SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices, int numIndices, int elementsPerVertex, int stride)
    : mVertices(vertices)
+   , mNumVertices(numVertices)
    , mIndices(indices)
+   , mNumIndices(numIndices)
    , mElementsPerVertex(elementsPerVertex)
    , mStride(stride)
 {
@@ -281,32 +283,30 @@ void CRenderable::setShader(std::shared_ptr<CShader>& pShader)
    if (pShader)
    {
       mShader = pShader;
+      if (!mShader->isLinked())
+      {
+         mShader->link();
+      }
    }
 }
 void CRenderable::setGeometry(const SGeometryData& data)
 {
-   if (data.mVertices && data.mIndices)
+   if (data.mVertices && data.mIndices && (data.mNumVertices > 0) && (data.mNumIndices > 0))
    {
-      const std::size_t numOfVertices = sizeof(data.mVertices) / sizeof(data.mVertices[0]);
-      const std::size_t numOfIndices = sizeof(data.mIndices) / sizeof(data.mIndices[0]);
+      mGeometry.reset(new CGeometry());
+      assert(mGeometry);
 
-      if ((numOfVertices >0) && (numOfIndices > 0))
-      {
-         mGeometry.reset(new CGeometry());
-         assert(mGeometry);
+      mGeometry->setVertexBuffer(data.mVertices);
+      mGeometry->setNumOfVertices(data.mNumVertices);
 
-         mGeometry->setVertexBuffer(data.mVertices);
-         mGeometry->setNumOfVertices(numOfVertices);
+      mGeometry->setIndexBuffer(data.mIndices);
+      mGeometry->setNumOfIndices(data.mNumIndices);
 
-         mGeometry->setIndexBuffer(data.mIndices);
-         mGeometry->setNumOfIndices(numOfIndices);
+      mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
+      mGeometry->setVertexStride(data.mStride);
 
-         mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
-         mGeometry->setVertexStride(data.mStride);
-
-         // Can be called only when the correct geometry has been setup
-         setupVbo();
-      }
+      // Can be called only when the correct geometry has been setup
+      setupVbo();
    }
 }
 
@@ -382,6 +382,8 @@ void CRenderable::createTexture(const int id)
    {
       mTextures[id].reset(new CTexture());
       assert(mTextures[id]);
+
+      set1DParam(TEXTURE_UNIT, GL_TEXTURE0);
       LOG("* CRenderable: Texture created, its type is ", id);
    }
 }

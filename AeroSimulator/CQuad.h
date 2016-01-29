@@ -16,13 +16,15 @@ namespace AeroSimulatorEngine
       virtual ~CQuad();
 
       // Needed because we cannot call the GL stuff in the constructor without a valid GL context
-      void prepareRenderable(std::shared_ptr<CShader>& pShader);
+      void prepareRenderable(std::shared_ptr<CShader>& pShader,
+                             int textureId,
+                             GLuint openGlId = 0,
+                             GLenum textureUnit = GL_TEXTURE0);
       void setShader(std::shared_ptr<CShader>& pShader);
-      void setTextureId(const GLuint id);
+      void setTextureId(const int textureId, const GLuint id);
 
-      void setTextureUnit(const GLint unit);
+      void setTextureUnit(const GLenum unit);
 
-   private:
       CRenderable& getRenderable();
 
    private:

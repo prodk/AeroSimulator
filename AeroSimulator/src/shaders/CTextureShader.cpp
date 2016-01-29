@@ -55,7 +55,7 @@ void CTextureShader::setup(CRenderable & renderable)
 
    // Texture-specific part
    glActiveTexture(GL_TEXTURE0);
-   glBindTexture(GL_TEXTURE_2D, renderable.getTexture()->getId());
+   glBindTexture(GL_TEXTURE_2D, renderable.getTexture(MAIN_TEXTURE)->getId());
    glUniform1i(mSamplerUniformId, 0);
 
    /*if (renderable.isRepeatTexture())

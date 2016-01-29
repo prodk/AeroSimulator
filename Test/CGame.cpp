@@ -49,7 +49,7 @@ bool CGame::start()
    // Setting up the scene, requires a valid rendering context
    if (renderer()->setRenderContext())
    {
-      createShaders();
+      //createShaders();
       setupScene();
 
       renderer()->resetRenderContext();
@@ -57,16 +57,16 @@ bool CGame::start()
    }
    else
    {
-      CLog::getInstance().log("** CGame::start(): Render context is not setup **");
+      LOG("** CGame::start(): Render context is not setup **");
    }
 
-   CLog::getInstance().logGL("\n** CGame::start() ", result);
+   LOGGL("\n** CGame::start() ", result);
    return result;
 }
 
 void CGame::update(CTask * pTask)
 {
-   //CLog::getInstance().log("CGame::update()");
+   //LOG("CGame::update()");
 }
 
 void CGame::stop()
@@ -91,8 +91,8 @@ void CGame::createShaders()
 
 void CGame::setupScene()
 {
-   CLog::getInstance().log("");
-   CLog::getInstance().log("** CGame::setupScene() **");
+   LOG("");
+   LOG("** CGame::setupScene() **");
 
    addLand();
 }

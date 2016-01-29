@@ -38,10 +38,12 @@ namespace AeroSimulatorEngine
 
    struct SGeometryData
    {
-      SGeometryData(GLfloat* vertices, GLuint* indices, int elementsPerVertex, int stride);
+      SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices, int numIndices, int elementsPerVertex, int stride);
 
       GLfloat* mVertices;
+      int mNumVertices;
       GLuint* mIndices;
+      int mNumIndices;
       int mElementsPerVertex;
       int mStride;
    };
@@ -59,7 +61,7 @@ namespace AeroSimulatorEngine
 
       CGeometry* getGeometry() const { return mGeometry.get(); }
       CShader* getShader() const { return mShader.get(); }
-      CTexture* getTexture() const { return mTextures[MAIN_TEXTURE].get(); }
+      CTexture* getTexture(const int id) const { return mTextures[id].get(); }
 
       void setGeometry(const SGeometryData& data);
       void setShader(std::shared_ptr<CShader>& pShader);

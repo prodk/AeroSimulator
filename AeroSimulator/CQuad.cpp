@@ -36,17 +36,29 @@ CQuad::~CQuad()
 {
 }
 
-void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader)
+void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, GLuint openGlId, GLenum textureUnit)
 {
    if (mIsInitialized)
    {
+      const int numVert = sizeof(vertices) / sizeof(vertices[0]);
+      const int numInd = sizeof(indices) / sizeof(indices[0]);
       const int elementsPerVertex = 2;
       const int stride = 4; // 2 coords + 2 tex coords
-      SGeometryData geometryData(vertices, indices, elementsPerVertex, stride);
+      SGeometryData geometryData(vertices, numVert, indices, numInd, elementsPerVertex, stride);
 
       getRenderable().setGeometry(geometryData);
 
-      getRenderable().createTexture(MAIN_TEXTURE);
+      getRenderable().createTexture(textureId);
+
+      if (0 != openGlId)
+      {
+         setTextureId(textureId, openGlId);
+      }
+
+      if (GL_TEXTURE0 != textureUnit)
+      {
+         setTextureUnit(textureUnit);
+      }
 
       if (pShader)
       {
@@ -60,12 +72,12 @@ void CQuad::setShader(std::shared_ptr<CShader>& pShader)
    getRenderable().setShader(pShader);
 }
 
-void CQuad::setTextureId(const GLuint id)
+void CQuad::setTextureId(const int textureId, const GLuint id)
 {
-   getRenderable().getTexture()->setId(id);
+   getRenderable().getTexture(textureId)->setId(id);
 }
 
-void CQuad::setTextureUnit(const GLint unit)
+void CQuad::setTextureUnit(const GLenum unit)
 {
    getRenderable().set1DParam(TEXTURE_UNIT, (float)unit);
 }

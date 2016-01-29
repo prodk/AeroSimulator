@@ -49,6 +49,10 @@ namespace AeroSimulatorEngine
       virtual void update(CTask* pTask) override;
       virtual void stop() override;
 
+      // CRenderer part
+      virtual bool setRenderContext() override;
+      virtual void resetRenderContext() override;
+
       // CEventHandler part
       virtual void handleEvent(CAppEvent *pEvent) override;
 
@@ -57,9 +61,6 @@ namespace AeroSimulatorEngine
       bool isInitialized() const { return mIsInitialized; }
 
       void init(const CWin32Window& window);
-
-      virtual bool setRenderContext() override;
-      virtual void resetRenderContext() override;
 
       ///@todo: remove this method when all the game-related stuff is moved to CGame
       //bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam);
@@ -88,16 +89,15 @@ namespace AeroSimulatorEngine
       virtual void draw(CRenderable* pRenderable);
       virtual void swapBuffers();
 
+      void setupFboQuads();
+
       void renderSceneToFBOs();
       void renderFBOs();
-
       void drawScene();
-
       bool createRenderContext();
       void updateFPS(CTask* pTask);
 
-      void setupFbo(SFrameBuffer& fbo, std::unique_ptr<CQuad>& quad, std::shared_ptr<CShader>& shader,
-         const GLint width, const GLint height);
+      void setupFbo(SFrameBuffer& fbo, const GLint width, const GLint height);
 
       void generateAttachmentTexture(SFrameBuffer& fbo);
 
@@ -117,15 +117,15 @@ namespace AeroSimulatorEngine
       bool mIsFullScreen;
 
       ///@todo: move all the camera-related stugg to CGame
-      float mCameraAngleX; // up 'w', down 's'
-      float mCameraAngleY; // left 'a', right 'd'
+      //float mCameraAngleX; // up 'w', down 's'
+      //float mCameraAngleY; // left 'a', right 'd'
       ///@todo: probably create an array of cameras later
       //std::shared_ptr<CCamera> mCamera;
       std::unique_ptr<CCamera> mCamera;
 
       bool mIsDebugMode;
-      bool mIsSetCameraMode;
-      bool mCameraAttached;
+      //bool mIsSetCameraMode;
+      //bool mCameraAttached;
       HWND mWndHandle;
 
       float mFrameDt;
