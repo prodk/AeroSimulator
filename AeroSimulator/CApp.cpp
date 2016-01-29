@@ -80,7 +80,7 @@ CApp::~CApp()
    mSphere.reset();*/
    ///@todo: reset other ptrs here
 
-   CLog::getInstance().log("\n** CApp destroyed **\n");
+   LOG("\n** CApp destroyed **\n");
 }
 
 bool CApp::init(const char* name, unsigned int width, unsigned int height)
@@ -90,12 +90,7 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
    if (mAppWindowTask && mAppWindowTask->create(name, width, height))
    {
       result = true;
-
       mRendererTask->init(*mAppWindowTask);
-
-      ///@todo: move to CGame
-      // Setup the renderable and set it to the renderer
-      //setupScene();
    }
 
    return result;
@@ -116,7 +111,7 @@ int CApp::exit()
    mAppWindowTask = nullptr;
    mRendererTask = nullptr;
 
-   CLog::getInstance().log("\nPress any key . . . ");
+   LOG("\nPress any key . . . ");
    while (!_kbhit());
    return 0;
 }

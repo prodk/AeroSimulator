@@ -30,7 +30,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    //, mAngleX(0.0f)
    //, mCameraAngleX(14.f)
    //, mCameraAngleY(0.f)
-   , mCamera(new CCamera())
+   //, mCamera(new CCamera())
    , mIsDebugMode(false)     // press '1' key
    //, mIsSetCameraMode(false) // press '3' key
    //, mCameraAttached(false)
@@ -53,7 +53,7 @@ CWin32Renderer::CWin32Renderer(ePriority prio)
    , mWndHeight(0)
    , mDepthBufferMode(false)
 {
-   assert(mCamera);
+   //assert(mCamera);
    assert(mMainFboQuad);
    assert(mHelpFboQuad);
    assert(mFboShader);
@@ -222,9 +222,11 @@ void CWin32Renderer::renderSceneToFBOs()
    //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));
    //mCamera->updateModelMatrix();
    //drawScene();
+
    ///@todo: remove
    glClearColor(0.95f, 0.95f, 0.0f, 1);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   ///@todo: end
    swapBuffers();
 
    // Restore the camera translation

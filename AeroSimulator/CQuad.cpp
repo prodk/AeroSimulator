@@ -40,6 +40,7 @@ void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, 
 {
    if (mIsInitialized)
    {
+      LOG("* CQuad::prepareRenderable()");
       const int numVert = sizeof(vertices) / sizeof(vertices[0]);
       const int numInd = sizeof(indices) / sizeof(indices[0]);
       const int elementsPerVertex = 2;

@@ -49,7 +49,7 @@ bool CGame::start()
    // Setting up the scene, requires a valid rendering context
    if (renderer()->setRenderContext())
    {
-      //createShaders();
+      createShaders();
       setupScene();
 
       renderer()->resetRenderContext();
@@ -91,7 +91,6 @@ void CGame::createShaders()
 
 void CGame::setupScene()
 {
-   LOG("");
    LOG("** CGame::setupScene() **");
 
    addLand();

@@ -11,8 +11,6 @@ CColorShader::CColorShader()
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/color.glslv");
    mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/color.glslf");
-
-   CLog::getInstance().log("* CColorShader created");
 }
 
 CColorShader::~CColorShader()
@@ -23,18 +21,21 @@ void CColorShader::link()
 {
    if (!mIsLinked)
    {
+      LOG("* CColorShader::link() start");
       CShader::link();
 
       mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-      //CLog::getInstance().logGL("* CColorShader: glGetAttribLocation(mProgramId, aPosition): ");
+      CHECKGL("* CColorShader: glGetAttribLocation(mProgramId, aPosition) failed: ");
 
       mColorUniformId = glGetUniformLocation(mProgramId, "uColor");
-      //CLog::getInstance().logGL("* CColorShader: glGetAttribLocation(mProgramId, uColor): ");
+      CHECKGL("* CColorShader: glGetUniformLocation(mProgramId, uColor) failed: ");
 
       mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
-      //CLog::getInstance().logGL("* CColorShader: glGetUniformLocation(mProgramId, MVP): ");
+      CHECKGL("* CColorShader: glGetUniformLocation(mProgramId, MVP) failed: ");
 
       mIsLinked = true;
+      LOG("* CColorShader::link() end");
+      LOG("");
    }
 }
 

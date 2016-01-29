@@ -385,6 +385,7 @@ void CRenderable::createTexture(const int id)
 
       set1DParam(TEXTURE_UNIT, GL_TEXTURE0);
       LOG("* CRenderable: Texture created, its type is ", id);
+      LOG("");
    }
 }
 

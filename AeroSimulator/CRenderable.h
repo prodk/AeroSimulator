@@ -54,7 +54,7 @@ namespace AeroSimulatorEngine
    public:
       CRenderable();
       //CRenderable(GLfloat* pVertices, GLuint* pIndices, std::shared_ptr<CShader>& pShader, const char* mainTextureFilePath = 0);
-      virtual ~CRenderable();
+      ~CRenderable();
 
       /// General
       bool canBeRendered() const { return (0 != mGeometry) && (0 != mShader); }

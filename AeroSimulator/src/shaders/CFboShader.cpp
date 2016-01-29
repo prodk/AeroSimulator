@@ -23,18 +23,21 @@ void CFboShader::link()
 {
    if (!mIsLinked)
    {
+      LOG("* CFboShader::link() start");
       CShader::link();
 
       mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-      CLog::getInstance().logGL("* CFboShader: glGetAttribLocation(mProgramId, aPosition): ");
+      CHECKGL("!* CFboShader: glGetAttribLocation(mProgramId, aPosition): failed: ");
 
       mTexCoordAttributeId = glGetAttribLocation(mProgramId, "aTexCoord");
-      CLog::getInstance().logGL("* CFboShader: glGetAttribLocation(mProgramId, aTexCoord): ");
+      CHECKGL("!* CFboShader: glGetAttribLocation(mProgramId, aTexCoord): failed: ");
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
-      CLog::getInstance().logGL("* CFboShader: glGetUniformLocation(mProgramId, sTexture): ");
+      CHECKGL("!* CFboShader: glGetUniformLocation(mProgramId, sTexture): failed: ");
 
       mIsLinked = true;
+      LOG("* CFboShader::link() end");
+      LOG("");
    }
 }
 
@@ -47,7 +50,7 @@ void CFboShader::setup(CRenderable & renderable)
 
    // Texture-specific part
    glActiveTexture((GLenum)renderable.get1DParam(TEXTURE_UNIT));
-   CHECKGL("CFboShader: glActiveTexture() failed ");
+   CHECKGL("!* CFboShader: glActiveTexture() failed ");
 
    const GLint id = renderable.getTexture(MAIN_TEXTURE)->getId();
    glBindTexture(GL_TEXTURE_2D, id);

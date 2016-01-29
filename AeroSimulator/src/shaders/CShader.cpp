@@ -1,15 +1,6 @@
 #include "CShader.h"
 #include "../CRenderable.h"
 #include "../CLog.h"
-
-//#include <glew.h> //"../include/glew.h"
-//#include "../include/wglew.h"
-
-///@todo: change these paths when moved to Test project
-//#include <glew.h>
-//#include <wglew.h>
-//#include <gl/GL.h>
-//#include <glext.h>
 #include <iostream>
 #include <fstream>
 using namespace AeroSimulatorEngine;
@@ -22,7 +13,6 @@ CShader::CShader()
    , mFragmentShaderCode()
    , mIsLinked(false)
 {
-   //CLog::getInstance().log("CShader::CShader()");
 }
 
 CShader::~CShader()
@@ -38,15 +28,15 @@ void CShader::link()
       // Vertex shader
       mVertexShaderId = glCreateShader(GL_VERTEX_SHADER);
       GLint status = loadShader(mVertexShaderId, mVertexShaderCode);
-      CLog::getInstance().logGL("* Load vertex shader: ", status);
+      LOGGL("* Load vertex shader: ", status);
 
       // Fragment shader
       mFragmentShaderId = glCreateShader(GL_FRAGMENT_SHADER);
       status = loadShader(mFragmentShaderId, mFragmentShaderCode);
-      CLog::getInstance().logGL("* Load fragment shader: ", status);
+      LOGGL("* Load fragment shader: ", status);
 
       glLinkProgram(mProgramId);
-      CLog::getInstance().logGL("* glLinkProgram(): ");
+      LOGGL("* glLinkProgram(): ");
 
       mIsLinked = true;
    }
@@ -64,10 +54,10 @@ GLint CShader::loadShader(GLuint id, const std::string& shaderCode)
    glShaderSource(id, 1, &pSourceCode, NULL);
 
    glCompileShader(id);
-   CLog::getInstance().logGL("* glCompileShader(): ");
+   LOGGL("* glCompileShader(): ");
 
    glAttachShader(mProgramId, id);
-   CLog::getInstance().logGL("* glAttachShader(): ");
+   LOGGL("* glAttachShader(): ");
 
    GLint status;
    glGetShaderiv(id, GL_COMPILE_STATUS, &status);
@@ -96,7 +86,7 @@ std::string CShader::readShader(const char * filePath)
    }
    else
    {
-      CLog::getInstance().log("CShader: failed to read input file: ", filePath);
+      LOG("CShader: failed to read input file: ", filePath);
    }
 
    return result;

@@ -23,7 +23,7 @@ namespace AeroSimulatorEngine
       void setVertexBuffer(void* pVertices) { mVertices = pVertices; }
       void setIndexBuffer(void* pIndices) { mIndices = pIndices; }
 
-      void setNumOfElementsPerVertex(const int numOfEpv) { mNumOfElementsPerVertex = numOfEpv; } ///@todo: probably remove this method
+      void setNumOfElementsPerVertex(const int numOfEpv) { mNumOfElementsPerVertex = numOfEpv; }
       int getNumOfElementsPerVertex() const { return mNumOfElementsPerVertex; }
       void setVertexStride(const int stride) { mVertexStride = stride; }
       int getVertexStride() const { return mVertexStride; }

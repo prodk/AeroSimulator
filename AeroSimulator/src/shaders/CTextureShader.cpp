@@ -16,8 +16,6 @@ CTextureShader::CTextureShader()
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslv");
    mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslf");
-
-   CLog::getInstance().log("* CTextureShader created");
 }
 
 CTextureShader::~CTextureShader()
@@ -28,21 +26,24 @@ void CTextureShader::link()
 {
    if (!mIsLinked)
    {
+      LOG("* CTextureShader::link() start");
       CShader::link();
 
       mPositionAttributeId = glGetAttribLocation(mProgramId, "aPosition");
-      //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aPosition): ");
+      CHECKGL("* CTextureShader: glGetAttribLocation(mProgramId, aPosition) failed: ");
 
       mTexCoordAttributeId = glGetAttribLocation(mProgramId, "aTexCoord");
-      //CLog::getInstance().logGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord): ");
+      CHECKGL("* CTextureShader: glGetAttribLocation(mProgramId, aTexCoord) failed: ");
 
       mMvpUniformId = glGetUniformLocation(mProgramId, "MVP");
-      //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP): ");
+      CHECKGL("* CTextureShader: glGetUniformLocation(mProgramId, MVP) failed: ");
 
       mSamplerUniformId = glGetUniformLocation(mProgramId, "sTexture");
-      //CLog::getInstance().logGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture): ");
+      CHECKGL("* CTextureShader: glGetUniformLocation(mProgramId, sTexture) failed: ");
 
       mIsLinked = true;
+      LOG("* CTextureShader::link() end");
+      LOG("");
    }
 }
 
