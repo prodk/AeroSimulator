@@ -10,6 +10,14 @@
 
 using namespace AeroSimulatorEngine;
 
+SGeometryData::SGeometryData(GLfloat* vertices, GLuint* indices, int elementsPerVertex, int stride)
+   : mVertices(vertices)
+   , mIndices(indices)
+   , mElementsPerVertex(elementsPerVertex)
+   , mStride(stride)
+{
+}
+
 CRenderable::CRenderable()
    : mGeometry()
    , mShader()
@@ -275,34 +283,60 @@ void CRenderable::setShader(std::shared_ptr<CShader>& pShader)
       mShader = pShader;
    }
 }
-
-void CRenderable::setGeometry(GLfloat* vertices, GLuint* indices)
+void CRenderable::setGeometry(const SGeometryData& data)
 {
-   if (vertices && indices)
+   if (data.mVertices && data.mIndices)
    {
-      const std::size_t numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
-      const std::size_t numOfIndices = sizeof(indices) / sizeof(indices[0]);
+      const std::size_t numOfVertices = sizeof(data.mVertices) / sizeof(data.mVertices[0]);
+      const std::size_t numOfIndices = sizeof(data.mIndices) / sizeof(data.mIndices[0]);
 
       if ((numOfVertices >0) && (numOfIndices > 0))
       {
          mGeometry.reset(new CGeometry());
          assert(mGeometry);
 
-         mGeometry->setVertexBuffer(vertices);
+         mGeometry->setVertexBuffer(data.mVertices);
          mGeometry->setNumOfVertices(numOfVertices);
 
-         mGeometry->setIndexBuffer(indices);
+         mGeometry->setIndexBuffer(data.mIndices);
          mGeometry->setNumOfIndices(numOfIndices);
 
-         ///@todo: add these to the function args, probably through pOwner
-         mGeometry->setNumOfElementsPerVertex(2);
-         mGeometry->setVertexStride(4); // 2 coords + 2 tex coords
+         mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
+         mGeometry->setVertexStride(data.mStride);
 
          // Can be called only when the correct geometry has been setup
          setupVbo();
       }
    }
 }
+
+//void CRenderable::setGeometry(GLfloat* vertices, GLuint* indices)
+//{
+//   if (vertices && indices)
+//   {
+//      const std::size_t numOfVertices = sizeof(vertices) / sizeof(vertices[0]);
+//      const std::size_t numOfIndices = sizeof(indices) / sizeof(indices[0]);
+//
+//      if ((numOfVertices >0) && (numOfIndices > 0))
+//      {
+//         mGeometry.reset(new CGeometry());
+//         assert(mGeometry);
+//
+//         mGeometry->setVertexBuffer(vertices);
+//         mGeometry->setNumOfVertices(numOfVertices);
+//
+//         mGeometry->setIndexBuffer(indices);
+//         mGeometry->setNumOfIndices(numOfIndices);
+//
+//         ///@todo: add these to the function args, probably through pOwner
+//         mGeometry->setNumOfElementsPerVertex(2);
+//         mGeometry->setVertexStride(4); // 2 coords + 2 tex coords
+//
+//         // Can be called only when the correct geometry has been setup
+//         setupVbo();
+//      }
+//   }
+//}
 
 void CRenderable::setupVbo()
 {

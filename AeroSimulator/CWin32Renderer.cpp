@@ -393,8 +393,8 @@ void CWin32Renderer::updateFPS(CTask * pTask)
       mFrameDt = pTimer->getDtFrame();
       const double simDt = pTimer->getDtSim();
 
-      wchar_t buf[256];
-      swprintf(buf, L"FPS %d, frameDt %lf, simDt %lf", fps, mFrameDt, simDt);
+      wchar_t buf[128];
+      swprintf_s(buf, 128, L"FPS %d, frameDt %lf, simDt %lf", fps, mFrameDt, simDt);
       SetWindowText(mWndHandle, buf);
    }
 }

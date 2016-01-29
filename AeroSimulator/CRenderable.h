@@ -36,6 +36,16 @@ namespace AeroSimulatorEngine
    class CGeometry;
    class CTexture;
 
+   struct SGeometryData
+   {
+      SGeometryData(GLfloat* vertices, GLuint* indices, int elementsPerVertex, int stride);
+
+      GLfloat* mVertices;
+      GLuint* mIndices;
+      int mElementsPerVertex;
+      int mStride;
+   };
+
    // CRenderable groups the geometry and its appearance in one entity
    class CRenderable
    {
@@ -73,7 +83,8 @@ namespace AeroSimulatorEngine
       CTexture* getTexture() const { return mTextures[MAIN_TEXTURE].get(); }
 
       ///@todo: add numOfElements and stride to the function args, probably through pOwner
-      void setGeometry(GLfloat* vertices, GLuint* indices);
+      //void setGeometry(GLfloat* vertices, GLuint* indices);
+      void setGeometry(const SGeometryData& data);
       void setShader(std::shared_ptr<CShader>& pShader);
       bool loadTexture(const int id, const char* filePath, const int fmt);
       void createTexture(const int id);

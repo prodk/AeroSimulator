@@ -24,6 +24,9 @@ namespace AeroSimulatorEngine
 
    private:
       CRenderable& getRenderable();
+
+   private:
+      bool mIsInitialized;
    };
 } // namespace AeroSimulatorEngine
 

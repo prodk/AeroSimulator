@@ -46,7 +46,7 @@ void CFboShader::setup(CRenderable & renderable)
    CShader::setup(renderable);
 
    // Texture-specific part
-   glActiveTexture(renderable.get1DParam(TEXTURE_UNIT));
+   glActiveTexture((GLenum)renderable.get1DParam(TEXTURE_UNIT));
    CHECKGL("CFboShader: glActiveTexture() failed ");
 
    const GLint id = renderable.getTexture()->getId();

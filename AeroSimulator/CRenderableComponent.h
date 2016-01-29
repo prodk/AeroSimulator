@@ -6,10 +6,9 @@
 #include "../AeroSimulator/include/glew.h"
 #include "CRenderable.h"
 
-namespace AeroSimulatorEngine ///@todo: fix this namespace mess when the old CGameObject is removed
+namespace AeroSimulatorEngine
 {
    class CGameObject;
-   //class CRenderable;
    class CShader;
 
    ///@todo: probably make it also a CEventHandler
@@ -19,11 +18,6 @@ namespace AeroSimulatorEngine ///@todo: fix this namespace mess when the old CGa
       static unsigned int getId() { return mId; }
 
       explicit CRenderableComponent(CGameObject* pOwner);
-      /*CRenderableComponent(CGameObject* pOwner,
-                           GLfloat* pVertices,
-                           GLuint* pIndices,
-                           std::shared_ptr<CShader>& pShader,
-                           const char* mainTextureFilePath = 0);*/
       virtual ~CRenderableComponent();
 
       virtual void init() override;
@@ -33,7 +27,6 @@ namespace AeroSimulatorEngine ///@todo: fix this namespace mess when the old CGa
    private:
       static const unsigned int mId = CComponent::RENDERABLE;
 
-      //std::unique_ptr<CRenderable> mRenderable;
       CRenderable mRenderable;
    };
 }

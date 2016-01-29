@@ -32,7 +32,7 @@ namespace AeroSimulatorEngine
       CComponent* getComponent(const unsigned int id) const;
 
    protected:
-      //std::unordered_map<unsigned int, std::unique_ptr<CComponent> > mComponents;
+      // We have to shared_ptr as unique_ptr refuses to work
       std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
 
       ///@todo: add a list of children here and probably some reference to the parent;
