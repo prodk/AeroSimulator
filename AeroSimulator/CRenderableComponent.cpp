@@ -10,14 +10,15 @@ using namespace AeroSimulatorEngine;
 
 CRenderableComponent::CRenderableComponent(CGameObject * pOwner)
    : CComponent(pOwner)
+   , CEventHandler()
    , mRenderable()
 {
    const bool status = GEventManager.registerEvent(eGeneralEvents::UPDATE);
    if (status)
    {
       LOGGL("CRenderableComponent: UPDATE event registered: ", status);
-      GEventManager.attachEvent(eGeneralEvents::UPDATE, *this);
    }
+   GEventManager.attachEvent(eGeneralEvents::UPDATE, *this);
 }
 
 CRenderableComponent::~CRenderableComponent()

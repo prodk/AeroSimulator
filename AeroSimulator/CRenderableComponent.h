@@ -6,7 +6,6 @@
 #include "CRenderable.h"
 
 #include "../AeroSimulator/include/glew.h"
-#include <memory>
 
 namespace AeroSimulatorEngine
 {

@@ -142,44 +142,52 @@ CTexture * CRenderable::getTexture(const int id) const
 
 void CRenderable::setFlag(const int id, const bool value)
 {
-   const std::pair<int, bool> element(id, value);
-   mFlags.insert(element);
+   //const std::pair<int, bool> element(id, value);
+   //mFlags.insert(element);
+   mFlags[id] = value;
 }
 
 void CRenderable::set1DParam(const int id, const float value)
 {
-   const std::pair<int, float> element(id, value);
-   m1DParams.insert(element);
+   //const std::pair<int, float> element(id, value);
+   //m1DParams.insert(element);
+   m1DParams[id] = value;
 }
 
 void CRenderable::setVector2Param(const int id, const glm::vec2& value)
 {
-   const std::pair<int, glm::vec2> element(id, value);
-   mVector2Params.insert(element);
+   //const std::pair<int, glm::vec2> element(id, value);
+   //mVector2Params.insert(element);
+   mVector2Params[id] = value;
 }
 
 void CRenderable::setVector3Param(const int id, const glm::vec3& value)
 {
-   const std::pair<int, glm::vec3> element(id, value);
-   mVector3Params.insert(element);
+   //const std::pair<int, glm::vec3> element(id, value);
+   //mVector3Params.insert(element);
+   mVector3Params[id] = value;
 }
 
 void CRenderable::setVector4Param(const int id, const glm::vec4 & value)
 {
-   const std::pair<int, glm::vec4> element(id, value);
-   mVector4Params.insert(element);
+   //const std::pair<int, glm::vec4> element(id, value);
+   //mVector4Params.insert(element);
+   mVector4Params[id] = value;
 }
 
 void CRenderable::setMatrix3Param(const int id, const glm::mat3 & value)
 {
-   const std::pair<int, glm::mat3> element(id, value);
-   mMatrix3Params.insert(element);
+   //const std::pair<int, glm::mat3> element(id, value);
+   //mMatrix3Params.insert(element);
+
+   mMatrix3Params[id] = value;
 }
 
 void CRenderable::setMatrix4Param(const int id, const glm::mat4& value)
 {
-   const std::pair<int, glm::mat4> element(id, value);
-   mMatrix4Params.insert(element);
+   //const std::pair<int, glm::mat4> element(id, value);
+   mMatrix4Params[id] = value;
+   //mMatrix4Params.insert(element);
 }
 
 bool CRenderable::getFlag(const int id) const

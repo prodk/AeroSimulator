@@ -207,6 +207,9 @@
     <ClInclude Include="CTransform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CMovementComponent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -360,6 +363,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CTransform.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMovementComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

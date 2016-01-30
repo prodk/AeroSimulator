@@ -36,7 +36,7 @@ CQuad::~CQuad()
 {
 }
 
-void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, GLuint openGlId, GLenum textureUnit)
+void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, GLuint openGlId)
 {
    if (mIsInitialized)
    {
@@ -54,11 +54,6 @@ void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, 
       if (0 != openGlId)
       {
          setTextureId(textureId, openGlId);
-      }
-
-      if (GL_TEXTURE0 != textureUnit)
-      {
-         setTextureUnit(textureUnit);
       }
 
       getRenderable().setShader(pShader);

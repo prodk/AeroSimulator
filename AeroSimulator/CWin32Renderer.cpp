@@ -206,7 +206,7 @@ void CWin32Renderer::setupFboQuads()
 
    if (mHelpFboQuad)
    {
-      mHelpFboQuad->prepareRenderable(mFboShader, MAIN_TEXTURE, mHelpFbo.mTexColorBuffer, GL_TEXTURE1);
+      mHelpFboQuad->prepareRenderable(mFboShader, MAIN_TEXTURE, mHelpFbo.mTexColorBuffer);
    }
 }
 
@@ -285,7 +285,7 @@ void CWin32Renderer::drawOpaqueRenderables()
 
          ///@todo: temporarily set MVP to the unity matrix
          ///@todo: this should be set inside the renderable, think how to move this there
-         pRenderable->setMatrix4Param(eShaderMatrix4Params::MVP_MATRIX, glm::mat4());
+         //pRenderable->setMatrix4Param(eShaderMatrix4Params::MVP_MATRIX, glm::mat4());
          draw(pRenderable);
       }
    }
