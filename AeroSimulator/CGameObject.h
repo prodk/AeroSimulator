@@ -23,6 +23,10 @@ namespace AeroSimulatorEngine
       /// Returns true if the object has a component T
       template <typename T> bool hasComponent();
 
+      ///@todo: probably remove these
+      void setFrameDt(const float dt) { mFrameDt = dt; }
+      float getFrameDt() const { return mFrameDt; }
+
    protected:
       // Get the component of type T from the specified (by reference) object
       template <typename T>
@@ -43,6 +47,8 @@ namespace AeroSimulatorEngine
 
       ///@todo: probably remove this in the end, may be useful for searching the objects
       int mType;  // Type of the object, e.g. land, camera etc.
+
+      float mFrameDt; ///@todo: probably remove it from here and move to some singleton
 
       ///@todo: add a list of children here and probably some reference to the parent;
    };

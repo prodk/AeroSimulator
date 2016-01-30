@@ -47,6 +47,8 @@ namespace AeroSimulatorEngine
 
       void getTime(CTask* pTask);
 
+      void setObjectsTime();
+
    private:
       std::vector<std::shared_ptr<CShader> > mShaders;
       std::map<int, std::shared_ptr<CGameObject> > mGameObjects;

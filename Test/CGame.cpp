@@ -82,6 +82,9 @@ void CGame::update(CTask * pTask)
 {
    //LOG("CGame::update()");
    getTime(pTask);
+
+   setObjectsTime();
+
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
 }
 
@@ -174,5 +177,16 @@ void CGame::getTime(CTask * pTask)
    {
       CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
       mFrameDt = pTimer->getDtFrame();
+   }
+}
+
+void CGame::setObjectsTime()
+{
+   for (auto object : mGameObjects)
+   {
+      if (object.second)
+      {
+         object.second->setFrameDt(mFrameDt);
+      }
    }
 }

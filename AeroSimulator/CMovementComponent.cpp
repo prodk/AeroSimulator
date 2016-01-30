@@ -11,7 +11,7 @@ using namespace AeroSimulatorEngine;
 CMovementComponent::CMovementComponent(CGameObject* pOwner)
    : CComponent(pOwner)
    , CEventHandler()
-   , mRotationSpeed(1.0f, 0.0f, 0.0f)
+   , mRotationSpeed(5.0f, 0.0f, 0.0f)
 {
    const bool status = GEventManager.registerEvent(eGeneralEvents::UPDATE);
    if (status)
@@ -39,19 +39,21 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
       case eGeneralEvents::UPDATE:
       {
          //LOG("CMovementComponent: UPDATE");
-         CTransformComponent* pTransformComp = componentCast<CTransformComponent>(*getOwner());
+         CGameObject& owner = *getOwner();
+         const float deltaTime = owner.getFrameDt();
+         CTransformComponent* pTransformComp = componentCast<CTransformComponent>(owner);
          if (pTransformComp)
          {
             CTransform& transform = pTransformComp->getTransform();
             glm::vec3 rotation = transform.getRotate();
 
             ///@todo: get delta time here somehow
-            rotation.x += mRotationSpeed.x;
+            rotation.x += mRotationSpeed.x * deltaTime;
 
             transform.setRotate(rotation);
             transform.updateModelMatrix();
 
-            CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*getOwner());
+            CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(owner);
             if (pRenderableComp)
             {
                ///@todo: change to model matrix here
