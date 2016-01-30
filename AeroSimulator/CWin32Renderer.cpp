@@ -425,7 +425,7 @@ void CWin32Renderer::updateFPS(CTask * pTask)
 
       const int fps = pTimer->getFPS();
       mFrameDt = pTimer->getDtFrame();
-      const double simDt = pTimer->getDtSim();
+      const double simDt = pTimer->getDtSim(); ///@todo: probably remove simulation time
 
       wchar_t buf[128];
       swprintf_s(buf, 128, L"FPS %d, frameDt %lf, simDt %lf", fps, mFrameDt, simDt);
@@ -487,14 +487,14 @@ void CWin32Renderer::setupEvents()
    bool status = false;
 
    // Debug mode on/off
-   status = CEventManager::getInstance().registerEvent(eRendererEvents::DEBUG_MODE_EVENT);
-   CLog::getInstance().logGL("DEBUG_MODE_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(eRendererEvents::DEBUG_MODE_EVENT, *this);
+   status = GEventManager.registerEvent(eGeneralEvents::DEBUG_MODE_EVENT);
+   LOGGL("DEBUG_MODE_EVENT registered: ", status);
+   GEventManager.attachEvent(eGeneralEvents::DEBUG_MODE_EVENT, *this);
 
    // Depth buffer on/off
-   status = CEventManager::getInstance().registerEvent(DEPTHBUF_EVENT);
-   CLog::getInstance().logGL("DEPTHBUF_EVENT attached: ", status);
-   CEventManager::getInstance().attachEvent(eRendererEvents::DEPTHBUF_EVENT, *this);
+   status = GEventManager.registerEvent(eGeneralEvents::DEPTHBUF_EVENT);
+   LOGGL("DEPTHBUF_EVENT registered: ", status);
+   GEventManager.attachEvent(eGeneralEvents::DEPTHBUF_EVENT, *this);
 }
 
 void CWin32Renderer::handleEvent(CAppEvent * pEvent)
@@ -503,14 +503,14 @@ void CWin32Renderer::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
-      case eRendererEvents::DEBUG_MODE_EVENT:
+      case eGeneralEvents::DEBUG_MODE_EVENT:
          mIsDebugMode = !mIsDebugMode;
-         CLog::getInstance().log("* Debug mode on: ", mIsDebugMode);
+         LOG("* Debug mode on: ", mIsDebugMode);
          break;
 
-      case eRendererEvents::DEPTHBUF_EVENT:
+      case eGeneralEvents::DEPTHBUF_EVENT:
          mDepthBufferMode = !mDepthBufferMode;
-         CLog::getInstance().log("* Display depth buffer: ", mDepthBufferMode);
+         LOG("* Display depth buffer: ", mDepthBufferMode);
          break;
       }
    } // End if

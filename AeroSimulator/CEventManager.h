@@ -5,8 +5,12 @@
 #include <memory>
 #include "CAppEvent.h"
 
+#define GEventManager CEventManager::getInstance()
+
 namespace AeroSimulatorEngine
 {
+   enum eGeneralEvents { DEBUG_MODE_EVENT, DEPTHBUF_EVENT, UPDATE };
+
    // This is a singleton
    class CEventManager
    {

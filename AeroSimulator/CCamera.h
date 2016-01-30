@@ -1,18 +1,15 @@
 #ifndef AERO_SIMULATOR_CCAMERA_H
 #define AERO_SIMULATOR_CCAMERA_H
 
-//#include "CLeafGameObject.h"
 #include "CGameObject.h"
 
 #include "glm/mat4x4.hpp"
 #include "glm/vec3.hpp"
 
-
 namespace AeroSimulatorEngine
 {
    ///Important: all translations are specified as moving the scene relative to the camera in camera space.
    ///This allows us to use camera's model matrix as a view matrix without the need to make inversions.
-//   class CCamera : public CLeafGameObject
    class CCamera : public CGameObject
    {
    public:

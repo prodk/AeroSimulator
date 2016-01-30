@@ -36,7 +36,7 @@ namespace AeroSimulatorEngine
       GLuint mTexDepthBuffer;
    };
 
-   enum eRendererEvents { DEBUG_MODE_EVENT, DEPTHBUF_EVENT };
+   //enum eRendererEvents { DEBUG_MODE_EVENT, DEPTHBUF_EVENT };
 
    class CWin32Renderer : public CRenderer
    {

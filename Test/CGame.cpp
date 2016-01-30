@@ -7,6 +7,8 @@
 #include "../AeroSimulator/src/shaders/CColorShader.h"
 #include "../CGameObject.h"
 #include "../CRenderableComponent.h"
+#include "../CTimer.h"
+#include "../CEventManager.h"
 
 #include "CLand.h"
 
@@ -25,6 +27,7 @@ namespace
 CGame::CGame()
    : mShaders()
    , mGameObjects()
+   , mFrameDt(0.0f)
 {
 }
 
@@ -78,13 +81,11 @@ bool CGame::start()
 void CGame::update(CTask * pTask)
 {
    //LOG("CGame::update()");
+   getTime(pTask);
+   GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
 }
 
 void CGame::stop()
-{
-}
-
-void CGame::handleEvent(CAppEvent * pEvent)
 {
 }
 
@@ -165,4 +166,13 @@ void CGame::addObjectsToRenderer()
 bool CGame::canBeRendered(CGameObject& object) const
 {
    return object.hasComponent<CRenderableComponent>();
+}
+
+void CGame::getTime(CTask * pTask)
+{
+   if (pTask)
+   {
+      CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
+      mFrameDt = pTimer->getDtFrame();
+   }
 }

@@ -2,7 +2,7 @@
 #define AERO_SIMULATOR_CGAME_H
 
 #include "../CTask.h"
-#include "../CEventHandler.h"
+
 #include <memory>
 #include <vector>
 #include <map>
@@ -13,9 +13,9 @@ namespace AeroSimulatorEngine
    class CShader;
    class CGameObject;
 
-   ///@todo: probably later do not make it a handler, move all event responses to the components:
-   /// movement component, collision component
-   class CGame : public CTask, public CEventHandler
+   //enum eGameEvents { UPDATE };
+
+   class CGame : public CTask
    {
    public:
       CGame();
@@ -27,11 +27,6 @@ namespace AeroSimulatorEngine
       virtual bool start() override;
       virtual void update(CTask* pTask) override;
       virtual void stop() override;
-
-      // CEventHandler part
-      virtual void handleEvent(CAppEvent *pEvent) override;
-
-      ///@todo: Add game events here
 
    public:
       // Shader ids
@@ -45,14 +40,17 @@ namespace AeroSimulatorEngine
       void createShaders();
       void setupScene();
       void addLand();
-      ///@todo: addObjectsToRenderer(): if the GO can be rendered, add its renderable to the renderer
+
       void addObjectsToRenderer();
 
       bool canBeRendered(CGameObject& object) const;
 
+      void getTime(CTask* pTask);
+
    private:
       std::vector<std::shared_ptr<CShader> > mShaders;
       std::map<int, std::shared_ptr<CGameObject> > mGameObjects;
+      float mFrameDt; // Time elapsed from the previous frame
    };
 }
 

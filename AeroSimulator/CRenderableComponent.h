@@ -2,17 +2,19 @@
 #define AERO_SIMULATOR_CRENDERABLE_COMPONENT_H
 
 #include "CComponent.h"
-#include <memory>
-#include "../AeroSimulator/include/glew.h"
+#include "CEventHandler.h"
 #include "CRenderable.h"
+
+#include "../AeroSimulator/include/glew.h"
+#include <memory>
 
 namespace AeroSimulatorEngine
 {
    class CGameObject;
    class CShader;
+   class CAppEvent;
 
-   ///@todo: probably make it also a CEventHandler
-   class CRenderableComponent : public CComponent
+   class CRenderableComponent : public CComponent, public CEventHandler
    {
    public:
       static unsigned int getId() { return mId; }
@@ -20,7 +22,10 @@ namespace AeroSimulatorEngine
       explicit CRenderableComponent(CGameObject* pOwner);
       virtual ~CRenderableComponent();
 
-      virtual void init() override;
+      virtual void init() override; ///@todo: probably remove this useless method
+
+      // CEventHandler part
+      virtual void handleEvent(CAppEvent *pEvent) override;
 
       CRenderable & getRenderable();
 

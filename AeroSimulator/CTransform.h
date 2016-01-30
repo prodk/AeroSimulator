@@ -3,6 +3,7 @@
 
 #include "../AeroSimulator/include/glm/vec3.hpp"
 #include "../AeroSimulator/include/glm/mat4x4.hpp"
+#include "../AeroSimulator/include/glm/gtc/matrix_transform.hpp"
 
 namespace AeroSimulatorEngine
 {
@@ -21,16 +22,21 @@ namespace AeroSimulatorEngine
       void setTranlate(const glm::vec3& translate);
       glm::vec3 getTranslate() const { return mTranslate; }
 
-      // glm::mat4 getModelMatrix();
+      glm::mat4 getModelMatrix();
+
+      void updateModelMatrix();
       // glm::mat4 getInverseModelMatrix();
 
+   private:
+      void updateTranslateRotate(); // First rotate, then translate (read the name from right to left)
+      void updateRotateTranslate(); // First translate, then rotate (read the name from right to left)
 
    private:
       glm::vec3 mScale;       // Scale factors along the parent object axiss
       glm::vec3 mRotate;      // Rotation angles in degrees around the parent axis
       glm::vec3 mTranslate;   // Translate along the parent axis
 
-      //glm::mat4 mTRMatrix;  // A local translate+rotate matrix
+      glm::mat4 mTRMatrix;    // A local translate+rotate matrix without scale
       glm::mat4 mModelMatrix; // Model matrix - brings the model to the world space
    };
 }
