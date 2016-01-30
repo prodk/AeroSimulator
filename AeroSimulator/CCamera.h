@@ -16,7 +16,7 @@ namespace AeroSimulatorEngine
       CCamera();
       ~CCamera();
 
-      void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
+      /*void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
       void setViewMatrix(const glm::mat4& view) { mViewMatrix = view; }
       void update();
 
@@ -27,7 +27,7 @@ namespace AeroSimulatorEngine
       glm::vec3 getUpVector() const;
       glm::vec3 getPositionWorldSpace() const;
 
-      void setXzDirection(const glm::vec3& direction);
+      void setXzDirection(const glm::vec3& direction);*/
 
       //virtual void updateModelMatrix(const glm::mat4x4 & rootModelMatrix = glm::mat4x4(1.0f));
 
@@ -35,19 +35,19 @@ namespace AeroSimulatorEngine
       // i) take camera direction in the world space
       // ii) transform this direction to the camera space using the view matrix without translation
       // iii) move the scene along the direction in camera space;
-      glm::mat3x3 getRotationMatrix() const;
+      /*glm::mat3x3 getRotationMatrix() const;
 
       void translateLookAt(const glm::vec3& shift);
       glm::vec3 getLookAtPosition() const;
-      void resetLookAt() { mLookAtMatrix = glm::mat4x4(1.0f); }
+      void resetLookAt() { mLookAtMatrix = glm::mat4x4(1.0f); }*/
 
       //virtual void calculateTRMatrix();
 
    private:
-      glm::mat4 mViewMatrix;
-      glm::mat4 mProjectionMatrix;
-      glm::mat4 mNonScaledViewMatrix;
-      glm::mat4 mLookAtMatrix;  // Translates look at point relative to the parent
+      //glm::mat4 mViewMatrix;
+      //glm::mat4 mProjectionMatrix;
+      //glm::mat4 mNonScaledViewMatrix;
+      //glm::mat4 mLookAtMatrix;  // Translates look at point relative to the parent
    };
 } // namespace AeroSimulatorEngine
 

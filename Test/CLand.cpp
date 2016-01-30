@@ -1,12 +1,12 @@
 #include "CLand.h"
-#include "../CGeometry.h"
-#include "../CLog.h"
-#include "../CTexture.h"
+#include "../AeroSimulator/CGeometry.h"
+#include "../AeroSimulator/CLog.h"
+#include "../AeroSimulator/CTexture.h"
 
-#include "../CRenderableComponent.h"
-#include "../CTransformComponent.h"
-#include "../CRenderable.h"
-#include "../CMovementComponent.h"
+#include "../AeroSimulator/CRenderableComponent.h"
+#include "../AeroSimulator/CTransformComponent.h"
+#include "../AeroSimulator/CRenderable.h"
+#include "../AeroSimulator/CMovementComponent.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 

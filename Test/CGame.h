@@ -1,7 +1,7 @@
 #ifndef AERO_SIMULATOR_CGAME_H
 #define AERO_SIMULATOR_CGAME_H
 
-#include "../CTask.h"
+#include "../AeroSimulator/CTask.h"
 
 #include <memory>
 #include <vector>

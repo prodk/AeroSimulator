@@ -11,7 +11,7 @@ using namespace AeroSimulatorEngine;
 CMovementComponent::CMovementComponent(CGameObject* pOwner)
    : CComponent(pOwner)
    , CEventHandler()
-   , mRotationSpeed(5.0f, 0.0f, 0.0f)
+   , mRotationSpeed(10.0f, 0.0f, 0.0f)
 {
    const bool status = GEventManager.registerEvent(eGeneralEvents::UPDATE);
    if (status)
