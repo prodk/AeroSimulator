@@ -9,6 +9,7 @@
 #include "../AeroSimulator/CRenderableComponent.h"
 #include "../AeroSimulator/CTimer.h"
 #include "../AeroSimulator/CEventManager.h"
+#include "../CCameraManager.h"
 
 #include "CLand.h"
 
@@ -86,6 +87,9 @@ void CGame::update(CTask * pTask)
    setObjectsTime();
 
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
+
+   ///@todo: change this method, probably to updateCameras()
+   GCameraManager.updateCamera(0);
 }
 
 void CGame::stop()

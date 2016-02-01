@@ -8,6 +8,18 @@ CTransform::CTransform()
    , mTranslate(0.0f, 0.0f, 0.0f)
    , mTRMatrix()
    , mModelMatrix()
+   , mTrType(ROTATE_FIRST)
+{
+}
+
+///@todo: probably remove this constructor
+CTransform::CTransform(const CTransform & t)
+   : mScale(t.mScale)
+   , mRotate(t.mRotate)
+   , mTranslate(t.mTranslate)
+   , mTRMatrix(t.mTRMatrix)
+   , mModelMatrix(t.mModelMatrix)
+   , mTrType(t.mTrType)
 {
 }
 
@@ -33,7 +45,18 @@ void CTransform::setTranlate(const glm::vec3 & translate)
 ///@todo: make a possibility to choose between TR and RT matrices
 void CTransform::updateModelMatrix()
 {
-   updateTranslateRotate();
+   switch (mTrType)
+   {
+   case TRANSLATE_FIRST:
+      updateRotateTranslate();
+      break;
+
+   case ROTATE_FIRST:
+   default:
+      updateTranslateRotate();
+      break;
+   }
+
    mModelMatrix = glm::scale(mTRMatrix, mScale);
 }
 
@@ -96,4 +119,38 @@ void CTransform::updateRotateTranslate()
    }
 
    mTRMatrix = glm::translate(glm::mat4x4(), mTranslate);
+}
+
+glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate()
+{
+   ///@todo: probably optimize later taking into account that for rotatation transpose is inverse
+   return glm::inverse(mTRMatrix);
+}
+
+void CTransform::setTranslationFirst(bool first)
+{
+   if (first)
+   {
+      mTrType = TRANSLATE_FIRST;
+   }
+   else
+   {
+      mTrType = ROTATE_FIRST;
+   }
+}
+
+CTransform& CTransform::operator=(const CTransform& transform)
+{
+   ///@todo: avoid self assignment
+   //if (*this != transform)
+   {
+      mScale = transform.mScale;
+      mRotate = transform.mRotate;
+      mTranslate = transform.mTranslate;
+      mTRMatrix = transform.mTRMatrix;
+      mModelMatrix = transform.mModelMatrix;
+      mTrType = transform.mTrType;
+   }
+
+   return *this;
 }

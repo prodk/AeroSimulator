@@ -36,6 +36,7 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
+         ///@todo: rename to update movements
       case eGeneralEvents::UPDATE:
       {
          //LOG("CMovementComponent: UPDATE");
@@ -44,6 +45,7 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
          CTransformComponent* pTransformComp = componentCast<CTransformComponent>(owner);
          if (pTransformComp)
          {
+            ///@todo: add caching to the transform component such that we update the transform only if needed
             CTransform& transform = pTransformComp->getTransform();
             glm::vec3 rotation = transform.getRotate();
 

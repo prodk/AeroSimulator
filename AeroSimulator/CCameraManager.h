@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+#define GCameraManager CCameraManager::getInstance()
+
 namespace AeroSimulatorEngine
 {
    class CCamera;
@@ -32,10 +34,14 @@ namespace AeroSimulatorEngine
       int getCurrentCameraId() const { return mCurrentCameraId; }
       std::size_t getNumOfCameras() const { return mCameras.size(); }
 
+      void updateCamera(const int id);
+
    private:
       CCameraManager();
       CCameraManager(const CCameraManager&) = delete;
-      void operator=(const CCameraManager&) = delete;
+      CCameraManager& operator=(const CCameraManager&) = delete;
+
+      bool isValidId(const int id) const { return (id >= 0) && (static_cast<std::size_t>(id) < getNumOfCameras()); }
 
    private:
       std::vector<std::shared_ptr<CCamera> > mCameras;

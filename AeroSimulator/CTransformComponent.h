@@ -19,6 +19,7 @@ namespace AeroSimulatorEngine
       virtual void init() override;
 
       CTransform& getTransform() { return mTransform; }
+      void setTransform(const CTransform& transform) { mTransform = transform; }
 
    private:
       /// Id of the component

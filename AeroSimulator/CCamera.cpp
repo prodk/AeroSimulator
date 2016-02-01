@@ -1,11 +1,14 @@
 #include "CCamera.h"
 #include "CCommonMath.h"
+#include "CTransformComponent.h"
+#include "CTransform.h"
+#include "CLog.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
 using namespace AeroSimulatorEngine;
 
-CCamera::CCamera()
+CCamera::CCamera(const CTransform& transform)
    //: CLeafGameObject()
    : CGameObject()
    , mId(-1)
@@ -14,10 +17,35 @@ CCamera::CCamera()
    //, mNonScaledViewMatrix()
    //, mLookAtMatrix()
 {
+   ///@todo: it is better to add a movement component for camera updates
+   ///@todo: for now, just call update from the camera manager
+
+   // Set translate first to true
+   if (addComponent<CTransformComponent>())
+   {
+      LOG("* CCamera setting up the transform component");
+      CTransformComponent* transformComp = componentCast<CTransformComponent>(*this);
+
+      if (transformComp)
+      {
+         transformComp->setTransform(transform);
+         transformComp->getTransform().updateModelMatrix();
+      }
+   }
 }
 
 CCamera::~CCamera()
 {
+}
+
+void CCamera::update()
+{
+   CTransformComponent* transformComp = componentCast<CTransformComponent>(*this);
+
+   if (transformComp)
+   {
+      transformComp->getTransform().updateModelMatrix();
+   }
 }
 
 //void CCamera::update()

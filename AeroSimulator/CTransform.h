@@ -11,6 +11,7 @@ namespace AeroSimulatorEngine
    {
    public:
       CTransform();
+      CTransform(const CTransform& transform);
       ~CTransform();
 
       void setScale(const glm::vec3& scale);
@@ -27,6 +28,14 @@ namespace AeroSimulatorEngine
       void updateModelMatrix();
       // glm::mat4 getInverseModelMatrix();
 
+      glm::mat4x4 getInverseRotateTranslate();
+
+      void setTranslationFirst(bool first);
+
+      CTransform& operator=(const CTransform& transform);
+
+      enum {TRANSLATE_FIRST, ROTATE_FIRST};
+
    private:
       void updateTranslateRotate(); // First rotate, then translate (read the name from right to left)
       void updateRotateTranslate(); // First translate, then rotate (read the name from right to left)
@@ -38,6 +47,7 @@ namespace AeroSimulatorEngine
 
       glm::mat4 mTRMatrix;    // A local translate+rotate matrix without scale
       glm::mat4 mModelMatrix; // Model matrix - brings the model to the world space
+      int mTrType; // Defines in which sequence the TR matrices are multiplied, default: TRS
    };
 }
 

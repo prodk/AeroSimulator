@@ -8,16 +8,19 @@
 
 namespace AeroSimulatorEngine
 {
+   class CTransform;
    ///Important: all translations are specified as moving the scene relative to the camera in camera space.
    ///This allows us to use camera's model matrix as a view matrix without the need to make inversions.
    class CCamera : public CGameObject
    {
    public:
-      CCamera();
+      CCamera(const CTransform& transform);
       ~CCamera();
 
       void setId(const int id) { mId = id; }
       int getId() const { return mId; }
+
+      void update();
 
       /*void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
       void setViewMatrix(const glm::mat4& view) { mViewMatrix = view; }

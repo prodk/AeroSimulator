@@ -29,7 +29,7 @@ int CCameraManager::addCamera(std::shared_ptr<CCamera>& pCamera)
 bool CCameraManager::getCamera(const int id, std::shared_ptr<CCamera>& pCamera)
 {
    bool result = false;
-   if ((id >= 0) && (id < getNumOfCameras()))
+   if (isValidId(id))
    {
       pCamera = mCameras[id];
       result = true;
@@ -40,9 +40,17 @@ bool CCameraManager::getCamera(const int id, std::shared_ptr<CCamera>& pCamera)
 
 void CCameraManager::setCurrentCameraId(const int id)
 {
-   if ((id >= 0) && (id < getNumOfCameras()))
+   if (isValidId(id))
    {
       mCurrentCameraId = id;
+   }
+}
+
+void CCameraManager::updateCamera(const int id)
+{
+   if (isValidId(id))
+   {
+      mCameras[id]->update();
    }
 }
 
