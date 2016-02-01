@@ -210,6 +210,9 @@
     <ClInclude Include="CMovementComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CCameraManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -366,6 +369,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CMovementComponent.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CCameraManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

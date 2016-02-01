@@ -16,6 +16,9 @@ namespace AeroSimulatorEngine
       CCamera();
       ~CCamera();
 
+      void setId(const int id) { mId = id; }
+      int getId() const { return mId; }
+
       /*void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
       void setViewMatrix(const glm::mat4& view) { mViewMatrix = view; }
       void update();
@@ -48,6 +51,7 @@ namespace AeroSimulatorEngine
       //glm::mat4 mProjectionMatrix;
       //glm::mat4 mNonScaledViewMatrix;
       //glm::mat4 mLookAtMatrix;  // Translates look at point relative to the parent
+      int mId;
    };
 } // namespace AeroSimulatorEngine
 

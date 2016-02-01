@@ -8,6 +8,7 @@ using namespace AeroSimulatorEngine;
 CCamera::CCamera()
    //: CLeafGameObject()
    : CGameObject()
+   , mId(-1)
    //, mViewMatrix()
    //, mProjectionMatrix()
    //, mNonScaledViewMatrix()
