@@ -3,6 +3,8 @@
 #include "CEventManager.h"
 #include "CAppEvent.h"
 #include "src\shaders\CShader.h"
+#include "CCameraManager.h"
+#include "CCamera.h"
 
 #include <cassert>
 
@@ -41,6 +43,12 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
          //LOG("CRenderableComponent: UPDATE");
          ///@todo: add caching later
          // Update view/projection matrices if one of them has changed
+         std::shared_ptr<CCamera> pCamera;
+         GCameraManager.getCamera(GCameraManager.getCurrentCameraId(), pCamera);
+
+         ///@todo: use the correct matrix here, probably MVP
+         mRenderable.setMatrix4Param(eShaderMatrix4Params::MVP_MATRIX, pCamera->getViewMatrix());
+         //mRenderable.setMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX, pCamera->getViewMatrix());
 
          // Update model matrix
 

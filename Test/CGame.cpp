@@ -10,6 +10,8 @@
 #include "../AeroSimulator/CTimer.h"
 #include "../AeroSimulator/CEventManager.h"
 #include "../CCameraManager.h"
+#include "../CCamera.h"
+#include "../CTransform.h"
 
 #include "CLand.h"
 
@@ -34,9 +36,9 @@ CGame::CGame()
 
 CGame::~CGame()
 {
-   for (std::size_t count = 0; count < mShaders.size(); ++count)
+   for (auto shader : mShaders)
    {
-      mShaders[count].reset();
+      shader.reset();
    }
    mShaders.clear();
 
@@ -45,6 +47,8 @@ CGame::~CGame()
       object.second.reset();
    }
    mGameObjects.clear();
+
+   LOG("* CGame was destroyed");
 }
 
 CGame::CGame(ePriority prio)
@@ -64,6 +68,8 @@ bool CGame::start()
       createShaders();
 
       setupScene();
+
+      addCameras();
 
       addObjectsToRenderer();
 
@@ -157,6 +163,22 @@ void CGame::addLand()
 
       renderer()->addGameObjectAndItsChildren(mLand.get());*/
    //}
+}
+
+void CGame::addCameras()
+{
+   ///@todo: currently just 1 camera
+   const glm::vec3 translate(10.0f, 0.0f, 0.0f);
+   CTransform transform;
+   transform.setTranlate(translate);
+
+   std::shared_ptr<CCamera> camera( new CCamera(transform));
+   if (camera)
+   {
+      ///@todo: probably add the camera to the array of GO here
+      GCameraManager.addCamera(camera);
+      LOG("* CGame: a camera has been just added to the camera manager.");
+   }
 }
 
 void CGame::addObjectsToRenderer()

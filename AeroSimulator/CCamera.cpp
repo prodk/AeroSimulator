@@ -48,6 +48,23 @@ void CCamera::update()
    }
 }
 
+glm::mat4 CCamera::getViewMatrix()
+{
+   glm::mat4 result;
+
+   ///@todo: add a method for getting a transform component
+   CTransformComponent* transformComp = componentCast<CTransformComponent>(*this);
+
+   if (transformComp)
+   {
+      ///@todo: add some caching to the camera such that we invert the matrix only if 
+      // it has changed
+      transformComp->getTransform().getInverseRotateTranslate();
+   }
+
+   return result;
+}
+
 //void CCamera::update()
 //{
    //calculateModelMatrix();

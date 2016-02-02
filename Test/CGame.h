@@ -41,6 +41,8 @@ namespace AeroSimulatorEngine
       void setupScene();
       void addLand();
 
+      void addCameras();
+
       void addObjectsToRenderer();
 
       bool canBeRendered(CGameObject& object) const;
