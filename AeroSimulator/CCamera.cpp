@@ -59,7 +59,7 @@ glm::mat4 CCamera::getViewMatrix()
    {
       ///@todo: add some caching to the camera such that we invert the matrix only if 
       // it has changed
-      transformComp->getTransform().getInverseRotateTranslate();
+      result = transformComp->getTransform().getInverseRotateTranslate();
    }
 
    return result;

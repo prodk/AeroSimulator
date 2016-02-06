@@ -47,7 +47,8 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
          GCameraManager.getCamera(GCameraManager.getCurrentCameraId(), pCamera);
 
          ///@todo: use the correct matrix here, probably MVP
-         mRenderable.setMatrix4Param(eShaderMatrix4Params::MVP_MATRIX, pCamera->getViewMatrix());
+         const glm::mat4x4 view = pCamera->getViewMatrix();
+         mRenderable.setMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX, view);
          //mRenderable.setMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX, pCamera->getViewMatrix());
 
          // Update model matrix

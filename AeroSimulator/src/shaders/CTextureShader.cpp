@@ -94,6 +94,10 @@ void CTextureShader::setup(CRenderable & renderable)
    glEnableVertexAttribArray(mTexCoordAttributeId);
 
    // Send the transformation to the currently bound shader in the "MVP" uniform
-   const glm::mat4 MVP = renderable.getMatrix4Param(eShaderMatrix4Params::MVP_MATRIX);
+   //const glm::mat4 MVP = renderable.getMatrix4Param(eShaderMatrix4Params::MVP_MATRIX);
+
+   const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
+   const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
+   const glm::mat4 MVP = view * model;
    glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
 }

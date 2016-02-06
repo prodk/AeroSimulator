@@ -59,7 +59,7 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
             if (pRenderableComp)
             {
                ///@todo: change to model matrix here
-               pRenderableComp->getRenderable().setMatrix4Param(eShaderMatrix4Params::MVP_MATRIX, transform.getModelMatrix());
+               //pRenderableComp->getRenderable().setMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX, transform.getModelMatrix());
             }
          }
       }
