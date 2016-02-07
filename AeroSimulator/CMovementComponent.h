@@ -9,7 +9,7 @@ namespace AeroSimulatorEngine
 {
    class CGameObject;
 
-   class CMovementComponent : public CComponent, CEventHandler
+   class CMovementComponent : public CComponent, public CEventHandler
    {
    public:
       static unsigned int getId() { return mId; }

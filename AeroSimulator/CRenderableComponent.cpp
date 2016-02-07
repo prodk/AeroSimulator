@@ -15,12 +15,6 @@ CRenderableComponent::CRenderableComponent(CGameObject * pOwner)
    , CEventHandler()
    , mRenderable()
 {
-   const bool status = GEventManager.registerEvent(eGeneralEvents::UPDATE);
-   if (status)
-   {
-      LOGGL("CRenderableComponent: UPDATE event registered: ", status);
-   }
-   GEventManager.attachEvent(eGeneralEvents::UPDATE, *this);
 }
 
 CRenderableComponent::~CRenderableComponent()
@@ -38,7 +32,7 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
       switch (pEvent->getId())
       {
          ///@todo: probably rename to UPDATE_RENDERABLE
-      case eGeneralEvents::UPDATE:
+      case eGeneralEvents::UPDATE_RENDERABLE:
       {
          //LOG("CRenderableComponent: UPDATE");
          ///@todo: add caching later
@@ -49,13 +43,8 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
          ///@todo: use the correct matrix here, probably MVP
          const glm::mat4x4 view = pCamera->getViewMatrix();
          mRenderable.setMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX, view);
-         //mRenderable.setMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX, pCamera->getViewMatrix());
 
-         // Update model matrix
-
-         // Update view/projection
-
-         // Update other camera-related stuff
+         // Update other camera-related stuff (up/right vector etc.)
       }
       break;
       } // switch

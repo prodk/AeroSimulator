@@ -93,9 +93,7 @@ void CGame::update(CTask * pTask)
    setObjectsTime();
 
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
-
-   ///@todo: change this method, probably to updateCameras()
-   GCameraManager.updateCamera(0);
+   GEventManager.broadcastEvent(eGeneralEvents::UPDATE_RENDERABLE);
 }
 
 void CGame::stop()

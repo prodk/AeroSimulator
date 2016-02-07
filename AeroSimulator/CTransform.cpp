@@ -123,19 +123,15 @@ void CTransform::updateRotateTranslate()
 
 glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate()
 {
-   ///@todo: probably optimize later taking into account that for rotatation transpose is inverse
-   //return glm::inverse(mTRMatrix);
-
    // Get the rotation part of the TR matrix
    glm::mat3x3 noTranslate = glm::mat3(mTRMatrix);
 
    // Its transpose is its inverse
    noTranslate = glm::transpose(noTranslate);
 
-   //glm::vec4 inverseTranslate = -mTRMatrix[3];
-
+   // Important: do not invert all the 4 translation components- the 4th must stay 1
    glm::mat4x4 result(noTranslate);
-   result[3].x = -mTRMatrix[3].x; //mTRMatrix[3];
+   result[3].x = -mTRMatrix[3].x;
    result[3].y = -mTRMatrix[3].y;
    result[3].z = -mTRMatrix[3].z;
 

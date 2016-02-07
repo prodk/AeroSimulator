@@ -13,13 +13,6 @@ CMovementComponent::CMovementComponent(CGameObject* pOwner)
    , CEventHandler()
    , mRotationSpeed(10.0f, 0.0f, 0.0f)
 {
-   const bool status = GEventManager.registerEvent(eGeneralEvents::UPDATE);
-   if (status)
-   {
-      LOGGL("CMovementComponent: UPDATE event registered: ", status);
-   }
-
-   GEventManager.attachEvent(eGeneralEvents::UPDATE, *this);
 }
 
 CMovementComponent::~CMovementComponent()
@@ -49,8 +42,7 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
             CTransform& transform = pTransformComp->getTransform();
             glm::vec3 rotation = transform.getRotate();
 
-            ///@todo: get delta time here somehow
-            rotation.x += mRotationSpeed.x * deltaTime;
+            //rotation.x += mRotationSpeed.x * deltaTime;
 
             transform.setRotate(rotation);
             transform.updateModelMatrix();
@@ -59,7 +51,7 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
             if (pRenderableComp)
             {
                ///@todo: change to model matrix here
-               //pRenderableComp->getRenderable().setMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX, transform.getModelMatrix());
+               pRenderableComp->getRenderable().setMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX, transform.getModelMatrix());
             }
          }
       }

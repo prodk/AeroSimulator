@@ -38,16 +38,6 @@ CCamera::~CCamera()
 {
 }
 
-void CCamera::update()
-{
-   CTransformComponent* transformComp = componentCast<CTransformComponent>(*this);
-
-   if (transformComp)
-   {
-      transformComp->getTransform().updateModelMatrix();
-   }
-}
-
 glm::mat4 CCamera::getViewMatrix()
 {
    glm::mat4 result;

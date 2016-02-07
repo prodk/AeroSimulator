@@ -34,8 +34,6 @@ namespace AeroSimulatorEngine
       int getCurrentCameraId() const { return mCurrentCameraId; }
       std::size_t getNumOfCameras() const { return mCameras.size(); }
 
-      void updateCamera(const int id);
-
    private:
       CCameraManager();
       CCameraManager(const CCameraManager&) = delete;

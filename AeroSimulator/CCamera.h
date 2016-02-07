@@ -20,7 +20,7 @@ namespace AeroSimulatorEngine
       void setId(const int id) { mId = id; }
       int getId() const { return mId; }
 
-      void update();
+      //void update();
 
       glm::mat4 getViewMatrix(); ///@todo: probably make it const later
 

@@ -46,14 +46,6 @@ void CCameraManager::setCurrentCameraId(const int id)
    }
 }
 
-void CCameraManager::updateCamera(const int id)
-{
-   if (isValidId(id))
-   {
-      mCameras[id]->update();
-   }
-}
-
 CCameraManager::CCameraManager()
    : mCameras()
    , mCurrentCameraId(-1)

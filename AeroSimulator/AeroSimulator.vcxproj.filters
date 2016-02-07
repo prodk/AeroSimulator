@@ -49,6 +49,12 @@
     <Filter Include="Source Files\renderer\shaders">
       <UniqueIdentifier>{f7953c60-a167-4a25-a9d4-8a199e372edb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{bc390623-9b38-4e8c-b8e7-c2d000d680b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\components">
+      <UniqueIdentifier>{08cc8e5f-4677-40cd-b657-3dd408a5b0af}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -195,23 +201,26 @@
     <ClInclude Include="CWin32InputHandler.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
-    <ClInclude Include="CComponent.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CRenderableComponent.h">
-      <Filter>Header Files\renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="CTransformComponent.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CTransform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CMovementComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CCameraManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransformComponent.h">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="CMovementComponent.h">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="CRenderableComponent.h">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="CComponent.h">
+      <Filter>Header Files\components</Filter>
+    </ClInclude>
+    <ClInclude Include="CCameraComponent.h">
+      <Filter>Header Files\components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -356,23 +365,26 @@
     <ClCompile Include="CWin32InputHandler.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
-    <ClCompile Include="CRenderableComponent.cpp">
-      <Filter>Source Files\renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="CComponent.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CTransformComponent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CTransform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CMovementComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CCameraManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CMovementComponent.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransformComponent.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderableComponent.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CComponent.cpp">
+      <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CCameraComponent.cpp">
+      <Filter>Source Files\components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -31,3 +31,4 @@ CComponent * CGameObject::getComponent(const unsigned int id) const
       ? nullptr
       : result->second.get();
 }
+

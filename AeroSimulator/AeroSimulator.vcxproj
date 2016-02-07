@@ -156,6 +156,7 @@
     <ClInclude Include="CBillBoard.h" />
     <ClInclude Include="CBoundingBox.h" />
     <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CCameraComponent.h" />
     <ClInclude Include="CCameraManager.h" />
     <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CComponent.h" />
@@ -211,6 +212,7 @@
     <ClCompile Include="CBillBoard.cpp" />
     <ClCompile Include="CBoundingBox.cpp" />
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CCameraComponent.cpp" />
     <ClCompile Include="CCameraManager.cpp" />
     <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CComponent.cpp" />

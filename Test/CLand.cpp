@@ -7,6 +7,8 @@
 #include "../AeroSimulator/CTransformComponent.h"
 #include "../AeroSimulator/CRenderable.h"
 #include "../AeroSimulator/CMovementComponent.h"
+#include "../AeroSimulator/CEventManager.h"
+#include "../AeroSimulator/CEventHandler.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -48,6 +50,12 @@ CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader, co
       getRenderable().setShader(pShader);
       // Repeat the texture for land
       getRenderable().setFlag(REPEAT_TEXTURE, true);
+
+      if (GEventManager.registerEvent(eGeneralEvents::UPDATE_RENDERABLE))
+      {
+         LOG("CRenderableComponent: UPDATE event registered");
+      }
+      GEventManager.attachEvent(eGeneralEvents::UPDATE_RENDERABLE, *getComponent<CRenderableComponent>());
    }
 
    if (addComponent<CTransformComponent>())
@@ -58,6 +66,13 @@ CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader, co
    if (addComponent<CMovementComponent>())
    {
       LOG("* CLand setting up the movement component");
+
+      if (GEventManager.registerEvent(eGeneralEvents::UPDATE))
+      {
+         LOG("CMovementComponent: UPDATE event registered: ");
+      }
+
+      GEventManager.attachEvent(eGeneralEvents::UPDATE, *getComponent<CMovementComponent>());
    }
 
    //LOG("* CLand setting up the collision component");
