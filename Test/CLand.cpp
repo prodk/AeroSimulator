@@ -35,6 +35,7 @@ CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader, co
    : CGameObject(id, type)
    , mNumOfTiles(numOfTiles)
 {
+   ///@todo: probably move to a separate method
    if (addComponent<CRenderableComponent>())
    {
       LOG("* CLand setting up the renderable component");

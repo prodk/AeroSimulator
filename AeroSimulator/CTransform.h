@@ -28,7 +28,7 @@ namespace AeroSimulatorEngine
       void updateModelMatrix();
       // glm::mat4 getInverseModelMatrix();
 
-      glm::mat4x4 getInverseRotateTranslate();
+      glm::mat4x4 getInverseRotateTranslate() const;
 
       void setTranslationFirst(bool first);
 

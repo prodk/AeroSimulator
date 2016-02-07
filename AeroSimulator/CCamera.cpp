@@ -1,15 +1,16 @@
 #include "CCamera.h"
 #include "CCommonMath.h"
-#include "CTransformComponent.h"
+#include "CCameraComponent.h"
 #include "CTransform.h"
 #include "CLog.h"
+#include "CEventHandler.h"
 
 #include "glm/gtc/matrix_transform.hpp"
+#include <cassert>
 
 using namespace AeroSimulatorEngine;
 
 CCamera::CCamera(const CTransform& transform)
-   //: CLeafGameObject()
    : CGameObject()
    , mId(-1)
    //, mViewMatrix()
@@ -17,20 +18,11 @@ CCamera::CCamera(const CTransform& transform)
    //, mNonScaledViewMatrix()
    //, mLookAtMatrix()
 {
-   ///@todo: it is better to add a movement component for camera updates
-   ///@todo: for now, just call update from the camera manager
-
-   // Set translate first to true
-   if (addComponent<CTransformComponent>())
+   if (addComponent<CCameraComponent>())
    {
-      LOG("* CCamera setting up the transform component");
-      CTransformComponent* transformComp = componentCast<CTransformComponent>(*this);
-
-      if (transformComp)
-      {
-         transformComp->setTransform(transform);
-         transformComp->getTransform().updateModelMatrix();
-      }
+      LOG("* CCamera setting up the camera component");
+      getTransform() = transform;
+      getTransform().updateModelMatrix();
    }
 }
 
@@ -40,19 +32,15 @@ CCamera::~CCamera()
 
 glm::mat4 CCamera::getViewMatrix()
 {
-   glm::mat4 result;
+   return getTransform().getInverseRotateTranslate();
+}
 
-   ///@todo: add a method for getting a transform component
-   CTransformComponent* transformComp = componentCast<CTransformComponent>(*this);
+CTransform & CCamera::getTransform()
+{
+   CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
+   assert(cameraComp);
 
-   if (transformComp)
-   {
-      ///@todo: add some caching to the camera such that we invert the matrix only if 
-      // it has changed
-      result = transformComp->getTransform().getInverseRotateTranslate();
-   }
-
-   return result;
+   return cameraComp->getTransform();
 }
 
 //void CCamera::update()

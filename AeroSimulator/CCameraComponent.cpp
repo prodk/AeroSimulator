@@ -29,3 +29,8 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
       }
    }
 }
+
+//glm::mat4x4 CCameraComponent::getViewMatrix() const
+//{
+//   return mTransform.getInverseRotateTranslate();
+//}

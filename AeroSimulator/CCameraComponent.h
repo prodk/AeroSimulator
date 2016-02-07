@@ -25,6 +25,8 @@ namespace AeroSimulatorEngine
       CTransform& getTransform() { return mTransform; }
       void setTransform(const CTransform& transform) { mTransform = transform; }
 
+      //glm::mat4x4 getViewMatrix() const;
+
    private:
       static const unsigned int mId = CComponent::CAMERA;
 

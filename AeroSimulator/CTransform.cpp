@@ -121,7 +121,7 @@ void CTransform::updateRotateTranslate()
    mTRMatrix = glm::translate(glm::mat4x4(), mTranslate);
 }
 
-glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate()
+glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate() const
 {
    // Get the rotation part of the TR matrix
    glm::mat3x3 noTranslate = glm::mat3(mTRMatrix);
