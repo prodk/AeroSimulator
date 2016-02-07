@@ -24,21 +24,47 @@ bool CWin32InputHandler::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPA
          switch (wParam)
          {
             case (0x31) : // 1 debug mode
-            {
                LOG("Key 1 pressed");
                GEventManager.broadcastEvent(DEBUG_MODE_EVENT);
-            }
-            break;
+               break;
 
             case (0x38) : // 8 display the depth buffer
-            {
                LOG("Key 8 pressed");
                GEventManager.broadcastEvent(DEPTHBUF_EVENT);
-            }
-            break;
+               break;
+
+            // Camera
+            case (0x57) : // w, increase pitch
+               LOG("Key w pressed");
+               GEventManager.broadcastEvent(eCameraEvents::INCREASE_PITCH);
+               break;
+
+            case (0x53) : // s, decrease pitch
+               LOG("Key s pressed");
+               GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH);
+               break;
          }
       }
       return false; // WM_KEYDOWN has been processed, no need to call the default window proc
+
+      case WM_KEYUP:
+      {
+         switch (wParam)
+         {
+            // Camera
+         case (0x57) : // w, increase pitch
+            LOG("Key w pressed");
+            GEventManager.broadcastEvent(eCameraEvents::INCREASE_PITCH_STOP);
+            break;
+
+         case (0x53) : // s, decrease pitch
+            LOG("Key s pressed");
+            GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH_STOP);
+            break;
+         }
+         }
+         
+      return false;
    }
 
    return true; // Process other messages

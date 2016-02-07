@@ -31,7 +31,6 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
-         ///@todo: probably rename to UPDATE_RENDERABLE
       case eGeneralEvents::UPDATE_RENDERABLE:
       {
          ///@todo: add caching later

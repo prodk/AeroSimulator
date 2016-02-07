@@ -4,6 +4,7 @@
 #include "CTransform.h"
 #include "CLog.h"
 #include "CEventHandler.h"
+#include "CEventManager.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 #include <cassert>
@@ -22,7 +23,10 @@ CCamera::CCamera(const CTransform& transform)
    {
       LOG("* CCamera setting up the camera component");
       getTransform() = transform;
+      //getTransform().setTranslationFirst(true); // Camera is first translated from the look at point and then rotated around it
       getTransform().updateModelMatrix();
+
+      registerEvents();
    }
 }
 
@@ -41,6 +45,44 @@ CTransform & CCamera::getTransform()
    assert(cameraComp);
 
    return cameraComp->getTransform();
+}
+
+void CCamera::registerEvents()
+{
+   if (GEventManager.registerEvent(eCameraEvents::UPDATE_CAMERA))
+   {
+      LOG("CCamera: UPDATE_CAMERA event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::INCREASE_PITCH))
+   {
+      LOG("CCamera: INCREASE_PITCH event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::INCREASE_PITCH_STOP))
+   {
+      LOG("CCamera: INCREASE_PITCH_STOP event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::DECREASE_PITCH))
+   {
+      LOG("CCamera: DECREASE_PITCH event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::DECREASE_PITCH_STOP))
+   {
+      LOG("CCamera: DECREASE_PITCH_STOP event registered");
+   }
+
+   CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
+   if (cameraComp)
+   {
+      GEventManager.attachEvent(eCameraEvents::UPDATE_CAMERA, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::INCREASE_PITCH, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::INCREASE_PITCH_STOP, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH_STOP, *cameraComp);
+   }
 }
 
 //void CCamera::update()

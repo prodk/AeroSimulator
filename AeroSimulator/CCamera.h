@@ -26,6 +26,7 @@ namespace AeroSimulatorEngine
 
    private:
       CTransform& getTransform();
+      void registerEvents();
 
       /*void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
       void setViewMatrix(const glm::mat4& view) { mViewMatrix = view; }

@@ -94,6 +94,7 @@ void CGame::update(CTask * pTask)
 
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE_RENDERABLE);
+   GEventManager.broadcastEvent(eCameraEvents::UPDATE_CAMERA);
 }
 
 void CGame::stop()
@@ -166,7 +167,7 @@ void CGame::addLand()
 void CGame::addCameras()
 {
    ///@todo: currently just 1 camera
-   const glm::vec3 translate(0.50f, 0.0f, 0.0f);
+   const glm::vec3 translate(0.50f, 0.5f, 0.0f);
    const glm::vec3 rotate(90.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
@@ -178,6 +179,18 @@ void CGame::addCameras()
       ///@todo: probably add the camera to the array of GO here
       GCameraManager.addCamera(camera);
       LOG("* CGame: a camera has been just added to the camera manager.");
+
+      const int id = mGameObjects.size();
+      tObjectPair newObject(id, camera);
+
+      if (mGameObjects.insert(newObject).second)
+      {
+         LOG("* CGame::addCamera() success");
+      }
+      else
+      {
+         LOG("* CGame::addCamera() failed to add a camera");
+      }
    }
 }
 

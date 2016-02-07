@@ -219,6 +219,7 @@ void CWin32Renderer::renderSceneToFBOs()
    // Render the scene to the second, helper framebuffer - another view of the plane
    glBindFramebuffer(GL_FRAMEBUFFER, mHelpFbo.mFramebuffer);
    // Setup the camera such that we look backwards
+   ///@todo: send a special method for this, not rotate the camera manually, or just switch to another camera
    //mCamera->setRotate(glm::vec3(30.0f, 180.0f, 0.f));
    //const glm::vec3 currentTranslate = mCamera->getTranslate();
    //mCamera->setTranslate(glm::vec3(0.0f, 0.0f, -4.5f));

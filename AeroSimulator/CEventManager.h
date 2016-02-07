@@ -9,8 +9,10 @@
 
 namespace AeroSimulatorEngine
 {
-   enum eGeneralEvents { DEBUG_MODE_EVENT, DEPTHBUF_EVENT, UPDATE, UPDATE_RENDERABLE };
-   enum eCameraEvents { CHANGE_PITCH };
+   enum eGeneralEvents { DEBUG_MODE_EVENT, DEPTHBUF_EVENT, UPDATE, UPDATE_RENDERABLE, LAST_GENERAL_EVENT };
+   enum eCameraEvents { UPDATE_CAMERA = LAST_GENERAL_EVENT,
+                        INCREASE_PITCH, INCREASE_PITCH_STOP,
+                        DECREASE_PITCH, DECREASE_PITCH_STOP};
 
    // This is a singleton
    class CEventManager
