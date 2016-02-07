@@ -7,8 +7,7 @@ using namespace AeroSimulatorEngine;
 CCameraComponent::CCameraComponent(CGameObject* pOwner)
    : CComponent(pOwner)
    , mTransform()
-   , mIncreasePitch(false)
-   , mDecreasePitch(false)
+   , mStateChanges(0u)
 {
 }
 
@@ -31,13 +30,13 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
       {
       case eCameraEvents::UPDATE_CAMERA:
          ///@todo: place to a member updatePitch()
-         if (mIncreasePitch)
+         if (mStateChanges & eStateChanges::eIncreasePitch)
          {
             glm::vec3 rotation = mTransform.getRotate();
             rotation.x += pitchSpeed * deltaTime;
             mTransform.setRotate(rotation);
          }
-         if (mDecreasePitch)
+         if (mStateChanges & eStateChanges::eDecreasePitch)
          {
             glm::vec3 rotation = mTransform.getRotate();
             rotation.x -= pitchSpeed * deltaTime;
@@ -49,19 +48,19 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
          break;
 
       case INCREASE_PITCH: ///@todo: rename to change pitch
-         mIncreasePitch = true;
+         mStateChanges |= eStateChanges::eIncreasePitch;
          break;
 
       case INCREASE_PITCH_STOP:
-         mIncreasePitch = false;
+         mStateChanges &= ~eStateChanges::eIncreasePitch;
          break;
 
       case DECREASE_PITCH: ///@todo: rename to change pitch
-         mDecreasePitch = true;
+         mStateChanges |= eStateChanges::eDecreasePitch;
          break;
 
       case DECREASE_PITCH_STOP:
-         mDecreasePitch = false;
+         mStateChanges &= ~eStateChanges::eDecreasePitch;
          break;
       }
    }

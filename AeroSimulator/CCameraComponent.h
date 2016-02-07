@@ -28,9 +28,14 @@ namespace AeroSimulatorEngine
    private:
       static const unsigned int mId = CComponent::CAMERA;
 
+      enum eStateChanges
+      {
+         eIncreasePitch = 1,
+         eDecreasePitch //2
+      };
+
       CTransform mTransform;
-      bool mIncreasePitch;
-      bool mDecreasePitch;
+      unsigned int mStateChanges;
    };
 } //namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CCAMERA_COMPONENT_H
