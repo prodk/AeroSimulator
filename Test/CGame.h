@@ -7,13 +7,11 @@
 #include <vector>
 #include <map>
 
-namespace AeroSimulatorEngine
+namespace AeroSimulatorEngine ///@todo: probably use another namespace
 {
    class CAppEvent;
    class CShader;
    class CGameObject;
-
-   //enum eGameEvents { UPDATE };
 
    class CGame : public CTask
    {

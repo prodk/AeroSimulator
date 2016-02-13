@@ -118,7 +118,7 @@ void CTransform::updateRotateTranslate()
       mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
    }
 
-   mTRMatrix = glm::translate(glm::mat4x4(), mTranslate);
+   mTRMatrix = glm::translate(mTRMatrix, mTranslate);
 }
 
 glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate() const

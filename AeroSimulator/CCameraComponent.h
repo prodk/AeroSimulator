@@ -24,12 +24,18 @@ namespace AeroSimulatorEngine
       void setTransform(const CTransform& transform) { mTransform = transform; }
 
    private:
+      void updatePitch(const float deltaTime);
+      void rotateAroundAxisOfSymmetry(const float deltaTime);
+
+   private:
       static const unsigned int mId = CComponent::CAMERA;
 
       enum eStateChanges
       {
          eIncreasePitch = 1,
-         eDecreasePitch //2
+         eDecreasePitch, //2
+         eRotateCw, //3
+         eRotateCcw //4
       };
 
       CTransform mTransform;

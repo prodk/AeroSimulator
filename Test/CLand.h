@@ -26,6 +26,10 @@ namespace AeroSimulatorEngine
    private:
       void scaleVertices(GLfloat* vertices, const int numOfVertices) const;
 
+      void addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath);
+      void addTransformComponent();
+      void addMovementComponent();
+
    private:
       glm::vec2 mNumOfTiles;
    };

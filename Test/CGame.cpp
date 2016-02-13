@@ -167,11 +167,12 @@ void CGame::addLand()
 void CGame::addCameras()
 {
    ///@todo: currently just 1 camera
-   const glm::vec3 translate(0.50f, 0.5f, 0.0f);
-   const glm::vec3 rotate(90.0f, 0.0f, 0.0f);
+   const glm::vec3 translate(0.0f, 0.0f, 0.0f);
+   const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);
+   //transform.setTranslationFirst(true); // A camera is first translated and then rotated.
 
    std::shared_ptr<CCamera> camera( new CCamera(transform));
    if (camera)

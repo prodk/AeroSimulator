@@ -74,6 +74,16 @@ void CCamera::registerEvents()
       LOG("CCamera: DECREASE_PITCH_STOP event registered");
    }
 
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_CW))
+   {
+      LOG("CCamera: ROTATE_CW event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_CW_STOP))
+   {
+      LOG("CCamera: ROTATE_CW_STOP event registered");
+   }
+
    CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
    if (cameraComp)
    {
@@ -82,6 +92,8 @@ void CCamera::registerEvents()
       GEventManager.attachEvent(eCameraEvents::INCREASE_PITCH_STOP, *cameraComp);
       GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH, *cameraComp);
       GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH_STOP, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_CW, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_CW_STOP, *cameraComp);
    }
 }
 

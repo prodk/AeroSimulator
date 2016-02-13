@@ -43,6 +43,11 @@ bool CWin32InputHandler::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPA
                LOG("Key s pressed");
                GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH);
                break;
+
+            case (0x51) : // q, rotate camera display clock wise
+               LOG("Key q pressed");
+               GEventManager.broadcastEvent(eCameraEvents::ROTATE_CW);
+               break;
          }
       }
       return false; // WM_KEYDOWN has been processed, no need to call the default window proc
@@ -61,8 +66,13 @@ bool CWin32InputHandler::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPA
             LOG("Key s pressed");
             GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH_STOP);
             break;
+
+         case (0x51) : // q, rotate camera display clock wise
+            LOG("Key q pressed");
+            GEventManager.broadcastEvent(eCameraEvents::ROTATE_CW_STOP);
+            break;
          }
-         }
+      }
          
       return false;
    }
