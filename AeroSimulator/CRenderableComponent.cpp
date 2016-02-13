@@ -21,10 +21,6 @@ CRenderableComponent::~CRenderableComponent()
 {
 }
 
-void CRenderableComponent::init()
-{
-}
-
 void CRenderableComponent::handleEvent(CAppEvent * pEvent)
 {
    if (pEvent)

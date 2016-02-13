@@ -15,10 +15,6 @@ CCameraComponent::~CCameraComponent()
 {
 }
 
-void CCameraComponent::init()
-{
-}
-
 void CCameraComponent::handleEvent(CAppEvent * pEvent)
 {
    if (pEvent)

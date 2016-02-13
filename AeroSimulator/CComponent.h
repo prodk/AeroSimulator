@@ -9,9 +9,7 @@ namespace AeroSimulatorEngine
    {
    public:
       explicit CComponent(CGameObject* pOwner);
-      virtual ~CComponent();
-
-      virtual void init() = 0; ///@todo: probably remove this as it is not used, make the destructor pure virtual
+      virtual ~CComponent() = 0;
 
       CGameObject * getOwner() const { return mOwner; }
 

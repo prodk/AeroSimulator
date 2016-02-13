@@ -19,10 +19,6 @@ CMovementComponent::~CMovementComponent()
 {
 }
 
-void CMovementComponent::init()
-{
-}
-
 void CMovementComponent::handleEvent(CAppEvent * pEvent)
 {
    if (pEvent)

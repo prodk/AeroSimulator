@@ -11,7 +11,3 @@ CTransformComponent::CTransformComponent(CGameObject* pOwner)
 CTransformComponent::~CTransformComponent()
 {
 }
-
-void CTransformComponent::init()
-{
-}

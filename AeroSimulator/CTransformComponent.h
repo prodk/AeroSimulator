@@ -16,8 +16,6 @@ namespace AeroSimulatorEngine
       explicit CTransformComponent(CGameObject* pOwner);
       virtual ~CTransformComponent();
 
-      virtual void init() override;
-
       CTransform& getTransform() { return mTransform; }
       void setTransform(const CTransform& transform) { mTransform = transform; }
 

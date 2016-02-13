@@ -17,8 +17,6 @@ namespace AeroSimulatorEngine
       explicit CMovementComponent(CGameObject* pOwner);
       virtual ~CMovementComponent();
 
-      virtual void init() override; ///@todo: probably remove this useless method
-
       // CEventHandler part
       virtual void handleEvent(CAppEvent *pEvent) override;
 
