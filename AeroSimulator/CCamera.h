@@ -9,20 +9,29 @@
 namespace AeroSimulatorEngine
 {
    class CTransform;
-   ///Important: all translations are specified as moving the scene relative to the camera in camera space.
-   ///This allows us to use camera's model matrix as a view matrix without the need to make inversions.
+
+   struct SFrustum
+   {
+      SFrustum(const float fov, const float aspect, const float near, const float far);
+
+      float mFov;
+      float mAspect;
+      float mNear;
+      float mFar;
+   };
+   ///@note: camera transform is in the world space, not in the view (camera) space
    class CCamera : public CGameObject
    {
    public:
-      CCamera(const CTransform& transform);
+      CCamera(const CTransform& transform, const SFrustum& frustum);
       ~CCamera();
 
       void setId(const int id) { mId = id; }
       int getId() const { return mId; }
 
-      //void update();
-
+      ///@todo: move all the matrices to the Camera component
       glm::mat4 getViewMatrix(); ///@todo: probably make it const later
+      glm::mat4 getProjectionMatrix() const { return mProjectionMatrix; }
 
    private:
       CTransform& getTransform();
@@ -57,8 +66,7 @@ namespace AeroSimulatorEngine
 
    private:
       //glm::mat4 mViewMatrix;
-      //glm::mat4 mProjectionMatrix;
-      //glm::mat4 mNonScaledViewMatrix;
+      glm::mat4 mProjectionMatrix;
       //glm::mat4 mLookAtMatrix;  // Translates look at point relative to the parent
       int mId;
    };

@@ -26,11 +26,9 @@ namespace AeroSimulatorEngine
       void setTransform(const CTransform& transform) { mTransform = transform; }
 
    private:
-      void updatePitch(const float deltaTime);
-      void rotateAroundY(const float deltaTime);
-      void rotateAroundZ(const float deltaTime);
-
       void rotate(const unsigned int axisId, const float deltaTime);
+      ///@todo: add translate look at point
+      void zoom(const float deltaTime);
 
    private:
       static const unsigned int mId = CComponent::CAMERA;

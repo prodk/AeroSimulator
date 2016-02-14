@@ -26,19 +26,22 @@ namespace AeroSimulatorEngine
       glm::mat4 getModelMatrix() const { return mModelMatrix; }
 
       void updateModelMatrix();
-      // glm::mat4 getInverseModelMatrix();
 
       glm::mat4x4 getInverseRotateTranslate() const;
 
       void setTranslationFirst(bool first);
 
+      bool operator!=(const CTransform& transform);
       CTransform& operator=(const CTransform& transform);
 
       enum {TRANSLATE_FIRST, ROTATE_FIRST};
 
    private:
+      ///@todo: reconsider implementations of these methods as they seem to work vice versa
       void updateTranslateRotate(); // First rotate, then translate (read the name from right to left)
       void updateRotateTranslate(); // First translate, then rotate (read the name from right to left)
+
+      void rotateTrMatrix();
 
    private:
       glm::vec3 mScale;       // Scale factors along the parent object axiss

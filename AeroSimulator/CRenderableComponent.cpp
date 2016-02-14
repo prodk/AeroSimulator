@@ -37,6 +37,9 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
          const glm::mat4x4 view = pCamera->getViewMatrix();
          mRenderable.setMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX, view);
 
+         const glm::mat4x4 projection = pCamera->getProjectionMatrix();
+         mRenderable.setMatrix4Param(eShaderMatrix4Params::PROJECTION_MATRIX, projection);
+
          // Update other camera-related stuff (up/right vector etc.)
       }
       break;

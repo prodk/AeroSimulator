@@ -63,7 +63,7 @@ void CColorShader::setup(CRenderable & renderable)
 
       //// Send the transformation to the currently bound shader in the "MVP" uniform
       //const glm::mat4 MVP = renderable.getMvpMatrix();
-      const glm::mat4 MVP = renderable.getMatrix4Param(eShaderMatrix4Params::MVP_MATRIX);
+      const glm::mat4 MVP;// = renderable.getMatrix4Param(eShaderMatrix4Params::MVP_MATRIX);
       glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
    }
 }

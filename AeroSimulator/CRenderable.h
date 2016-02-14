@@ -23,7 +23,7 @@ namespace
    enum eShaderVector3Params { EYE_POSITION, RIGHT_VECTOR, UP_VECTOR };
    enum eShaderVector4Params { COLOR };
    enum eShaderMatrix3Params { NORMAL_MATRIX };
-   enum eShaderMatrix4Params { MODEL_MATRIX, MVP_MATRIX, VIEW_MATRIX };
+   enum eShaderMatrix4Params { MODEL_MATRIX, VIEW_MATRIX, PROJECTION_MATRIX};
    enum eEnvironment { DEPTH };
    enum eTextures { MAIN_TEXTURE, NORMAL_MAP_TEXTURE, ANIMATION_TEXTURE, LAST_TEXTURE };
    enum eTextureFileFormat { DDS, BMP };

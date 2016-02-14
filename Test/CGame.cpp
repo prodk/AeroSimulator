@@ -126,6 +126,7 @@ void CGame::addLand()
    const int id = mGameObjects.size();
 
    ///@todo: change num of tiles to 10x10 when the camera is fixed
+   ///@todo: add scale of land as an arg
    tGoSharedPtr pObject(
       new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(2, 1)) );
    assert(pObject);
@@ -167,17 +168,16 @@ void CGame::addLand()
 void CGame::addCameras()
 {
    ///@todo: currently just 1 camera
-   const glm::vec3 translate(0.0f, 0.0f, 0.0f);
+   const glm::vec3 translate(0.0f, 0.0f, 5.0f);
    const glm::vec3 rotate(90.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);
-   transform.setTranslationFirst(true); // A camera is first translated and then rotated.
 
-   std::shared_ptr<CCamera> camera( new CCamera(transform));
+   const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 500.0f);
+   std::shared_ptr<CCamera> camera( new CCamera(transform, frustum));
    if (camera)
    {
-      ///@todo: probably add the camera to the array of GO here
       GCameraManager.addCamera(camera);
       LOG("* CGame: a camera has been just added to the camera manager.");
 

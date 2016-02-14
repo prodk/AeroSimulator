@@ -98,6 +98,7 @@ void CTextureShader::setup(CRenderable & renderable)
 
    const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
    const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
-   const glm::mat4 MVP = view * model;
+   const glm::mat4 projection = renderable.getMatrix4Param(eShaderMatrix4Params::PROJECTION_MATRIX);
+   const glm::mat4 MVP = projection * view * model;
    glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
 }

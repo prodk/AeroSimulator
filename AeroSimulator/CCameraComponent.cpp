@@ -28,6 +28,7 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
          rotate(eChangePitch, deltaTime);
          rotate(eRotateY, deltaTime);
          rotate(eRotateZ, deltaTime);
+         zoom(deltaTime);
 
          if (mStateChanges.any())
          {
@@ -53,40 +54,48 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
          mStateSigns.set(eChangePitch, false);
          break;
 
-      case eCameraEvents::ROTATE_CW:
+      case eCameraEvents::ROTATE_Y_CW:
          mStateChanges.set(eRotateY);
          break;
 
-      case eCameraEvents::ROTATE_CW_STOP:
+      case eCameraEvents::ROTATE_Y_CW_STOP:
          mStateChanges.set(eRotateY, false);
          break;
 
-      case eCameraEvents::ROTATE_CCW:
+      case eCameraEvents::ROTATE_Y_CCW:
          mStateChanges.set(eRotateY);
          mStateSigns.set(eRotateY);
          break;
 
-      case eCameraEvents::ROTATE_CCW_STOP:
+      case eCameraEvents::ROTATE_Y_CCW_STOP:
          mStateChanges.set(eRotateY, false);
          mStateSigns.set(eRotateY, false);
          break;
 
-      case eCameraEvents::ROTATE_TO_RIGHT:
+      case eCameraEvents::ROTATE_Z_CW:
          mStateChanges.set(eRotateZ);
          break;
 
-      case eCameraEvents::ROTATE_TO_RIGHT_STOP:
+      case eCameraEvents::ROTATE_Z_CW_STOP:
          mStateChanges.set(eRotateZ, false);
          break;
 
-      case eCameraEvents::ROTATE_TO_LEFT:
+      case eCameraEvents::ROTATE_Z_CCW:
          mStateChanges.set(eRotateZ);
          mStateSigns.set(eRotateZ);
          break;
 
-      case eCameraEvents::ROTATE_TO_LEFT_STOP:
+      case eCameraEvents::ROTATE_Z_CCW_STOP:
          mStateChanges.set(eRotateZ, false);
          mStateSigns.set(eRotateZ, false);
+         break;
+
+      case eCameraEvents::ZOOM_IN:
+         mStateChanges.set(eZoom);
+         break;
+
+      case eCameraEvents::ZOOM_IN_STOP:
+         mStateChanges.set(eZoom, false);
          break;
       }
    }
@@ -96,10 +105,11 @@ void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 {
    if ((axisId < 3) && mStateChanges[axisId])
    {
-      const float rotateSpeed = 100.0f;  ///@todo: make a member for each axis and adjust this value
+      const float rotateSpeed = 50.0f;  ///@todo: make an array of values for each axis and adjust these values
 
       glm::vec3 rotation = mTransform.getRotate();
 
+      ///@todo: probably change the signs: if set use +, if not use -
       if (mStateSigns[axisId])
       {
          rotation[axisId] -= rotateSpeed * deltaTime;
@@ -112,6 +122,20 @@ void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
       }
 
       mTransform.setRotate(rotation);
+   }
+}
+
+void CCameraComponent::zoom(const float deltaTime)
+{
+   // Get the direction of the camera
+   
+   if (mStateSigns[eZoom])
+   {
+      // Zoom out, increase the distance
+   }
+   else
+   {
+      // Zoom in, decrease the distance
    }
 }
 
