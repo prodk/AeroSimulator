@@ -7,7 +7,8 @@ using namespace AeroSimulatorEngine;
 CCameraComponent::CCameraComponent(CGameObject* pOwner)
    : CComponent(pOwner)
    , mTransform()
-   , mStateChanges(0u)
+   , mStateChanges()
+   , mStateSigns()
 {
 }
 
@@ -24,65 +25,92 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
       switch (pEvent->getId())
       {
       case eCameraEvents::UPDATE_CAMERA:
-         updatePitch(deltaTime);
-         rotateAroundAxisOfSymmetry(deltaTime);
-         mTransform.updateModelMatrix();
+         rotate(eChangePitch, deltaTime);
+         rotate(eRotateY, deltaTime);
+         rotate(eRotateZ, deltaTime);
+
+         if (mStateChanges.any())
+         {
+            mTransform.updateModelMatrix();
+         }
          break;
 
       case eCameraEvents::INCREASE_PITCH:
-         mStateChanges |= eStateChanges::eIncreasePitch;
+         mStateChanges.set(eChangePitch);
          break;
 
       case eCameraEvents::INCREASE_PITCH_STOP:
-         mStateChanges &= ~eStateChanges::eIncreasePitch;
+         mStateChanges.set(eChangePitch, false);
          break;
 
       case eCameraEvents::DECREASE_PITCH:
-         mStateChanges |= eStateChanges::eDecreasePitch;
+         mStateChanges.set(eChangePitch);
+         mStateSigns.set(eChangePitch);
          break;
 
       case eCameraEvents::DECREASE_PITCH_STOP:
-         mStateChanges &= ~eStateChanges::eDecreasePitch;
+         mStateChanges.set(eChangePitch, false);
+         mStateSigns.set(eChangePitch, false);
          break;
 
       case eCameraEvents::ROTATE_CW:
-         mStateChanges |= eStateChanges::eRotateCw;
+         mStateChanges.set(eRotateY);
          break;
 
       case eCameraEvents::ROTATE_CW_STOP:
-         mStateChanges &= ~eStateChanges::eRotateCw;
+         mStateChanges.set(eRotateY, false);
+         break;
+
+      case eCameraEvents::ROTATE_CCW:
+         mStateChanges.set(eRotateY);
+         mStateSigns.set(eRotateY);
+         break;
+
+      case eCameraEvents::ROTATE_CCW_STOP:
+         mStateChanges.set(eRotateY, false);
+         mStateSigns.set(eRotateY, false);
+         break;
+
+      case eCameraEvents::ROTATE_TO_RIGHT:
+         mStateChanges.set(eRotateZ);
+         break;
+
+      case eCameraEvents::ROTATE_TO_RIGHT_STOP:
+         mStateChanges.set(eRotateZ, false);
+         break;
+
+      case eCameraEvents::ROTATE_TO_LEFT:
+         mStateChanges.set(eRotateZ);
+         mStateSigns.set(eRotateZ);
+         break;
+
+      case eCameraEvents::ROTATE_TO_LEFT_STOP:
+         mStateChanges.set(eRotateZ, false);
+         mStateSigns.set(eRotateZ, false);
          break;
       }
    }
 }
 
-void CCameraComponent::updatePitch(const float deltaTime)
+void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 {
-   const float pitchSpeed = 200.0f;  ///@todo: make a member and adjust this value
-
-   if (mStateChanges & eStateChanges::eIncreasePitch)
+   if ((axisId < 3) && mStateChanges[axisId])
    {
-      glm::vec3 rotation = mTransform.getRotate();
-      rotation.x += pitchSpeed * deltaTime;
-      mTransform.setRotate(rotation);
-   }
-   if (mStateChanges & eStateChanges::eDecreasePitch)
-   {
-      glm::vec3 rotation = mTransform.getRotate();
-      rotation.x -= pitchSpeed * deltaTime;
-      if (rotation.x < 0.f) rotation.x += 360.f;
-      mTransform.setRotate(rotation);
-   }
-}
+      const float rotateSpeed = 100.0f;  ///@todo: make a member for each axis and adjust this value
 
-void CCameraComponent::rotateAroundAxisOfSymmetry(const float deltaTime)
-{
-   const float rotateSpeed = 200.0f;  ///@todo: make a member and adjust this value
-
-   if (mStateChanges & eStateChanges::eRotateCw)
-   {
       glm::vec3 rotation = mTransform.getRotate();
-      rotation.y += rotateSpeed * deltaTime;
+
+      if (mStateSigns[axisId])
+      {
+         rotation[axisId] -= rotateSpeed * deltaTime;
+         if (rotation[axisId] < 0.f) rotation[axisId] += 360.f;
+      }
+      else
+      {
+         rotation[axisId] += rotateSpeed * deltaTime;
+         if (rotation[axisId] > 360.f) rotation[axisId] -= 360.f;
+      }
+
       mTransform.setRotate(rotation);
    }
 }

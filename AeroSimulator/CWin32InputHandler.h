@@ -14,6 +14,10 @@ namespace AeroSimulatorEngine
       ~CWin32InputHandler();
 
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) const;
+
+   private:
+      void cameraKeyDown(WPARAM wParam) const;
+      void cameraKeyUp(WPARAM wParam) const;
    };
 } // namespace AeroSimulatorEngine
 

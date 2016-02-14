@@ -13,7 +13,10 @@ namespace AeroSimulatorEngine
    enum eCameraEvents { UPDATE_CAMERA = LAST_GENERAL_EVENT,
                         INCREASE_PITCH, INCREASE_PITCH_STOP,
                         DECREASE_PITCH, DECREASE_PITCH_STOP,
-                        ROTATE_CW, ROTATE_CW_STOP};
+                        ROTATE_CW, ROTATE_CW_STOP,
+                        ROTATE_CCW, ROTATE_CCW_STOP,
+                        ROTATE_TO_RIGHT, ROTATE_TO_RIGHT_STOP,
+                        ROTATE_TO_LEFT, ROTATE_TO_LEFT_STOP};
 
    // This is a singleton
    class CEventManager

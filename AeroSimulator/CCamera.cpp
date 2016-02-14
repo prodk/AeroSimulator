@@ -84,6 +84,36 @@ void CCamera::registerEvents()
       LOG("CCamera: ROTATE_CW_STOP event registered");
    }
 
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_CCW))
+   {
+      LOG("CCamera: ROTATE_CCW event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_CCW_STOP))
+   {
+      LOG("CCamera: ROTATE_CCW_STOP event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_TO_RIGHT))
+   {
+      LOG("CCamera: ROTATE_TO_RIGHT event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_TO_RIGHT_STOP))
+   {
+      LOG("CCamera: ROTATE_TO_RIGHT_STOP event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_TO_LEFT))
+   {
+      LOG("CCamera: ROTATE_TO_LEFT event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ROTATE_TO_LEFT_STOP))
+   {
+      LOG("CCamera: ROTATE_TO_LEFT_STOP event registered");
+   }
+
    CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
    if (cameraComp)
    {
@@ -94,6 +124,12 @@ void CCamera::registerEvents()
       GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH_STOP, *cameraComp);
       GEventManager.attachEvent(eCameraEvents::ROTATE_CW, *cameraComp);
       GEventManager.attachEvent(eCameraEvents::ROTATE_CW_STOP, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_CCW, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_CCW_STOP, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_TO_RIGHT, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_TO_RIGHT_STOP, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_TO_LEFT, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ROTATE_TO_LEFT_STOP, *cameraComp);
    }
 }
 

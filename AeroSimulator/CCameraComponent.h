@@ -5,6 +5,8 @@
 #include "CEventHandler.h"
 #include "CTransform.h"
 
+#include <bitset>
+
 namespace AeroSimulatorEngine
 {
    class CGameObject;
@@ -25,21 +27,26 @@ namespace AeroSimulatorEngine
 
    private:
       void updatePitch(const float deltaTime);
-      void rotateAroundAxisOfSymmetry(const float deltaTime);
+      void rotateAroundY(const float deltaTime);
+      void rotateAroundZ(const float deltaTime);
+
+      void rotate(const unsigned int axisId, const float deltaTime);
 
    private:
       static const unsigned int mId = CComponent::CAMERA;
 
       enum eStateChanges
       {
-         eIncreasePitch = 1,
-         eDecreasePitch, //2
-         eRotateCw, //3
-         eRotateCcw //4
+         eChangePitch = 0,
+         eRotateY, // = 1,
+         eRotateZ, // = 2,
+         eZoom, 
+         eLastState
       };
 
       CTransform mTransform;
-      unsigned int mStateChanges;
+      std::bitset<eLastState> mStateChanges;
+      std::bitset<eLastState> mStateSigns;
    };
 } //namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CCAMERA_COMPONENT_H
