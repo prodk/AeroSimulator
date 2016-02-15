@@ -45,6 +45,13 @@ void CTransform::setTranlate(const glm::vec3 & translate)
 ///@todo: make a possibility to choose between TR and RT matrices
 void CTransform::updateModelMatrix()
 {
+   updateTrMatrix();
+
+   mModelMatrix = glm::scale(mTRMatrix, mScale);
+}
+
+void CTransform::updateTrMatrix()
+{
    switch (mTrType)
    {
    case TRANSLATE_FIRST:
@@ -56,8 +63,6 @@ void CTransform::updateModelMatrix()
       updateTranslateRotate();
       break;
    }
-
-   mModelMatrix = glm::scale(mTRMatrix, mScale);
 }
 
 void CTransform::updateTranslateRotate()

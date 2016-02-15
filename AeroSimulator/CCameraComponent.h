@@ -4,6 +4,7 @@
 #include "CComponent.h"
 #include "CEventHandler.h"
 #include "CTransform.h"
+#include "CCamera.h"
 
 #include <bitset>
 
@@ -25,7 +26,13 @@ namespace AeroSimulatorEngine
       CTransform& getTransform() { return mTransform; }
       void setTransform(const CTransform& transform) { mTransform = transform; }
 
+      glm::mat4 getViewMatrix() const;
+
+      glm::mat4 getProjectionMatrix() const { return mProjectionMatrix; }
+      void setProjectionMatrix(const SFrustum& frustum);
+
    private:
+      void update();
       void rotate(const unsigned int axisId, const float deltaTime);
       ///@todo: add translate look at point
       void zoom(const float deltaTime);
@@ -45,6 +52,7 @@ namespace AeroSimulatorEngine
       CTransform mTransform;
       std::bitset<eLastState> mStateChanges;
       std::bitset<eLastState> mStateSigns;
+      glm::mat4 mProjectionMatrix;
    };
 } //namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CCAMERA_COMPONENT_H

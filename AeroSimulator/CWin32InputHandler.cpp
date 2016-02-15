@@ -85,6 +85,11 @@ void CWin32InputHandler::cameraKeyDown(WPARAM wParam) const
       LOG("Key + pressed");
       GEventManager.broadcastEvent(eCameraEvents::ZOOM_IN);
       break;
+
+   case (VK_OEM_MINUS) : // -, zoom in
+      LOG("Key - pressed");
+      GEventManager.broadcastEvent(eCameraEvents::ZOOM_OUT);
+      break;
    }
 }
 
@@ -126,6 +131,11 @@ void CWin32InputHandler::cameraKeyUp(WPARAM wParam) const
     case (VK_OEM_PLUS) : // +, zoom in
        LOG("Key + depressed");
        GEventManager.broadcastEvent(eCameraEvents::ZOOM_IN_STOP);
+       break;
+
+    case (VK_OEM_MINUS) : // -, zoom in
+       LOG("Key - depressed");
+       GEventManager.broadcastEvent(eCameraEvents::ZOOM_OUT_STOP);
        break;
    }
 }

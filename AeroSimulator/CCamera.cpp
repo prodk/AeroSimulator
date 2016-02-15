@@ -22,8 +22,6 @@ SFrustum::SFrustum(const float fov, const float aspect, const float near, const 
 CCamera::CCamera(const CTransform& transform, const SFrustum& frustum)
    : CGameObject()
    , mId(-1)
-   //, mViewMatrix()
-   , mProjectionMatrix(glm::perspective(frustum.mFov, frustum.mAspect, frustum.mNear, frustum.mFar))
    //, mLookAtMatrix()
 {
    if (addComponent<CCameraComponent>())
@@ -32,7 +30,14 @@ CCamera::CCamera(const CTransform& transform, const SFrustum& frustum)
       getTransform() = transform;
       getTransform().updateModelMatrix();
 
+      CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
+      if (cameraComp)
+      {
+         cameraComp->setProjectionMatrix(frustum);
+      }
+
       registerEvents();
+      attachEvents();
    }
 }
 
@@ -42,7 +47,26 @@ CCamera::~CCamera()
 
 glm::mat4 CCamera::getViewMatrix()
 {
-   return getTransform().getInverseRotateTranslate();
+   glm::mat4 result;
+   CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
+   if (cameraComp)
+   {
+      result = cameraComp->getViewMatrix();
+   }
+
+   return result;
+}
+
+glm::mat4 CCamera::getProjectionMatrix()
+{
+   glm::mat4 result;
+   CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
+   if (cameraComp)
+   {
+      result = cameraComp->getProjectionMatrix();
+   }
+
+   return result;
 }
 
 CTransform & CCamera::getTransform()
@@ -53,7 +77,7 @@ CTransform & CCamera::getTransform()
    return cameraComp->getTransform();
 }
 
-void CCamera::registerEvents()
+void CCamera::registerEvents() const
 {
    if (GEventManager.registerEvent(eCameraEvents::UPDATE_CAMERA))
    {
@@ -130,6 +154,19 @@ void CCamera::registerEvents()
       LOG("CCamera: ZOOM_IN_STOP event registered");
    }
 
+   if (GEventManager.registerEvent(eCameraEvents::ZOOM_OUT))
+   {
+      LOG("CCamera: ZOOM_OUT event registered");
+   }
+
+   if (GEventManager.registerEvent(eCameraEvents::ZOOM_OUT_STOP))
+   {
+      LOG("CCamera: ZOOM_OUT_STOP event registered");
+   }
+}
+
+void CCamera::attachEvents()
+{
    CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
    if (cameraComp)
    {
@@ -148,6 +185,8 @@ void CCamera::registerEvents()
       GEventManager.attachEvent(eCameraEvents::ROTATE_Z_CCW_STOP, *cameraComp);
       GEventManager.attachEvent(eCameraEvents::ZOOM_IN, *cameraComp);
       GEventManager.attachEvent(eCameraEvents::ZOOM_IN_STOP, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ZOOM_OUT, *cameraComp);
+      GEventManager.attachEvent(eCameraEvents::ZOOM_OUT_STOP, *cameraComp);
    }
 }
 

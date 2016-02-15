@@ -31,11 +31,12 @@ namespace AeroSimulatorEngine
 
       ///@todo: move all the matrices to the Camera component
       glm::mat4 getViewMatrix(); ///@todo: probably make it const later
-      glm::mat4 getProjectionMatrix() const { return mProjectionMatrix; }
+      glm::mat4 getProjectionMatrix();// const { return mProjectionMatrix; }
 
    private:
       CTransform& getTransform();
-      void registerEvents();
+      void registerEvents() const;
+      void attachEvents();
 
       /*void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
       void setViewMatrix(const glm::mat4& view) { mViewMatrix = view; }
@@ -65,8 +66,6 @@ namespace AeroSimulatorEngine
       //virtual void calculateTRMatrix();
 
    private:
-      //glm::mat4 mViewMatrix;
-      glm::mat4 mProjectionMatrix;
       //glm::mat4 mLookAtMatrix;  // Translates look at point relative to the parent
       int mId;
    };

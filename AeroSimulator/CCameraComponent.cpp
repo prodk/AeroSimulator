@@ -2,6 +2,8 @@
 #include "CEventManager.h"
 #include "CGameObject.h"
 
+#include "glm/gtc/matrix_transform.hpp"
+
 using namespace AeroSimulatorEngine;
 
 CCameraComponent::CCameraComponent(CGameObject* pOwner)
@@ -9,6 +11,7 @@ CCameraComponent::CCameraComponent(CGameObject* pOwner)
    , mTransform()
    , mStateChanges()
    , mStateSigns()
+   , mProjectionMatrix()
 {
 }
 
@@ -20,20 +23,10 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
 {
    if (pEvent)
    {
-      const float deltaTime = (*getOwner()).getFrameDt();
-
       switch (pEvent->getId())
       {
       case eCameraEvents::UPDATE_CAMERA:
-         rotate(eChangePitch, deltaTime);
-         rotate(eRotateY, deltaTime);
-         rotate(eRotateZ, deltaTime);
-         zoom(deltaTime);
-
-         if (mStateChanges.any())
-         {
-            mTransform.updateModelMatrix();
-         }
+         update();
          break;
 
       case eCameraEvents::INCREASE_PITCH:
@@ -97,7 +90,44 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
       case eCameraEvents::ZOOM_IN_STOP:
          mStateChanges.set(eZoom, false);
          break;
+
+      case eCameraEvents::ZOOM_OUT:
+         mStateChanges.set(eZoom);
+         mStateSigns.set(eZoom);
+         break;
+
+      case eCameraEvents::ZOOM_OUT_STOP:
+         mStateChanges.set(eZoom, false);
+         mStateSigns.set(eZoom, false);
+         break;
       }
+   }
+}
+
+glm::mat4 CCameraComponent::getViewMatrix() const
+{
+   ///@todo: always return mViewMatrix when caching is implemented
+   return mTransform.getInverseRotateTranslate();
+}
+
+void CCameraComponent::setProjectionMatrix(const SFrustum & frustum)
+{
+   mProjectionMatrix = glm::perspective(frustum.mFov, frustum.mAspect, frustum.mNear, frustum.mFar);
+}
+
+void CCameraComponent::update()
+{
+   const float deltaTime = (*getOwner()).getFrameDt();
+
+   rotate(eChangePitch, deltaTime);
+   rotate(eRotateY, deltaTime);
+   rotate(eRotateZ, deltaTime);
+   zoom(deltaTime);
+
+   if (mStateChanges.any())
+   {
+      ///@todo: mark cache as dirty and update the mViewMatrix
+      mTransform.updateTrMatrix();
    }
 }
 
@@ -127,15 +157,25 @@ void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 
 void CCameraComponent::zoom(const float deltaTime)
 {
-   // Get the direction of the camera
-   
-   if (mStateSigns[eZoom])
+   if (mStateChanges[eZoom])
    {
-      // Zoom out, increase the distance
-   }
-   else
-   {
-      // Zoom in, decrease the distance
+      // Get the direction of the camera
+      const glm::mat4 view = getViewMatrix();
+      // 3rd row of the view matrix is a vector opposite to the camera direction in camera space
+      glm::vec3 viewDirection;
+      viewDirection.x = view[2].x;
+      viewDirection.y = view[2].y;
+      viewDirection.z = view[2].z;
+
+      // Transform the dir to the world space (model matrix is inverse for the view matrix)
+      viewDirection = glm::mat3(mTransform.getModelMatrix()) * viewDirection;
+      glm::normalize(viewDirection);
+
+      const float zoomStep = 0.05f; ///@todo: adjust and put it in the styles
+
+      glm::vec3 currentPos =  mTransform.getTranslate();
+      currentPos += mStateSigns[eZoom] ? viewDirection * zoomStep : -viewDirection * zoomStep;
+      mTransform.setTranlate(currentPos);
    }
 }
 
