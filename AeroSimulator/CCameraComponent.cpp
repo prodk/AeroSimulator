@@ -167,14 +167,19 @@ void CCameraComponent::zoom(const float deltaTime)
       viewDirection.y = view[2].y;
       viewDirection.z = view[2].z;
 
-      // Transform the dir to the world space (model matrix is inverse for the view matrix)
-      viewDirection = glm::mat3(mTransform.getModelMatrix()) * viewDirection;
+      ///@todo: may be redundant, probably remove as the view matrix should be normalized
       glm::normalize(viewDirection);
 
       const float zoomStep = 0.05f; ///@todo: adjust and put it in the styles
 
       glm::vec3 currentPos =  mTransform.getTranslate();
-      currentPos += mStateSigns[eZoom] ? viewDirection * zoomStep : -viewDirection * zoomStep;
+
+      // Translate the camera in the view space, this will provide the correct TRS sequence of matrix operations
+      glm::vec3 posViewSpace = glm::mat3(view) * currentPos;
+      posViewSpace += mStateSigns[eZoom] ? viewDirection * zoomStep : -viewDirection * zoomStep;
+
+      // Transform the new position back to the world space
+      currentPos = glm::inverse(glm::mat3(view)) * posViewSpace;
       mTransform.setTranlate(currentPos);
    }
 }
