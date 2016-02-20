@@ -123,12 +123,10 @@ void CGame::addLand()
 {
    const char* filePath = "../AeroSimulator/res/land.dds";
    const int id = mGameObjects.size();
+   const glm::vec3 landSize = glm::vec3(1000.f, 1.f, 1000.0f);
 
-   ///@todo: change num of tiles to 10x10 when the camera is fixed: mLand->setNumOfTiles(10, 10);
-   ///@todo: add scale of land as an arg
-   //const glm::vec3 landSize = glm::vec3(1000.f, 1.f, 1000.0f); mLand->setScale(landSize);
    tGoSharedPtr pObject(
-      new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(2, 1)) );
+      new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(10, 10), landSize) );
 
    addObject(id, pObject, "* CGame::addLand() ");
 }
@@ -138,12 +136,11 @@ void CGame::addSky()
    const char* filePath = "../AeroSimulator/res/land.dds";
    const int id = mGameObjects.size();
 
-   ///@todo: add scale of sky as an arg
-   const float radius = 1.0f;
-   const std::size_t numOfCircles = 4;
-   const std::size_t numOfSegments = 8;
-   const float maxInclination = 4.0f * std::atan(1.0f);
-   const float maxAzimuth = 2.0f * maxInclination;
+   const float radius = 100.0f;
+   const std::size_t numOfCircles = 16;
+   const std::size_t numOfSegments = 16;
+   const float maxInclination = 2.0f * std::atan(1.0f);
+   const float maxAzimuth = 4.0f * maxInclination;
    const SSphereParams params(radius, numOfCircles, numOfSegments, maxInclination, maxAzimuth);
 
    tGoSharedPtr pObject(
@@ -154,8 +151,8 @@ void CGame::addSky()
 
 void CGame::addCameras()
 {
-   ///@todo: currently just 1 camera
-   const glm::vec3 translate(0.0f, 0.0f, 5.0f);
+   // currently just 1 camera
+   const glm::vec3 translate(0.0f, 10.0f, 50.0f);
    const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);

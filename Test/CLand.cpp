@@ -31,14 +31,14 @@ namespace
    };
 }
 
-///@todo: add scale as an argument
-CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader, const char * textureFilePath, const glm::vec2 & numOfTiles)
+CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader,
+             const char * textureFilePath, const glm::vec2 & numOfTiles, const glm::vec3& size)
    : CGameObject(id, type)
    , mNumOfTiles(numOfTiles)
 {
    addRenderableComponent(pShader, textureFilePath);
 
-   addTransformComponent();
+   addTransformComponent(size);
 
    addMovementComponent();
 
@@ -80,6 +80,7 @@ void CLand::addRenderableComponent(std::shared_ptr<CShader>& pShader, const char
       LOG("* CLand setting up the renderable component");
       const int numVert = sizeof(vertices) / sizeof(vertices[0]);
       const int numInd = sizeof(indices) / sizeof(indices[0]);
+      ///@todo: put these params to the corresponding shader
       const int elementsPerVertex = 3;
       const int stride = 5; // 3 coords + 2 tex coords
       scaleVertices(vertices, numVert);
@@ -99,7 +100,7 @@ void CLand::addRenderableComponent(std::shared_ptr<CShader>& pShader, const char
    }
 }
 
-void CLand::addTransformComponent()
+void CLand::addTransformComponent(const glm::vec3& size)
 {
    if (addComponent<CTransformComponent>())
    {
@@ -109,8 +110,7 @@ void CLand::addTransformComponent()
       if (pTransformComp)
       {
          CTransform& transform = pTransformComp->getTransform();
-         const glm::vec3 scale(2.0f, 1.0f, 2.0f); ///@todo: make the scale an arg to the constructor
-         transform.setScale(scale);
+         transform.setScale(size);
          transform.updateModelMatrix();
       }
    }

@@ -4,6 +4,7 @@
 #include "../AeroSimulator/CGameObject.h"
 #include "../AeroSimulator/include/glew.h"
 #include "../AeroSimulator/include/glm/vec2.hpp"
+#include "../AeroSimulator/include/glm/vec3.hpp"
 
 namespace AeroSimulatorEngine
 {
@@ -13,12 +14,12 @@ namespace AeroSimulatorEngine
    class CLand : public CGameObject
    {
    public:
-      ///@todo: add scale as an argument
       CLand(const int id,
             const int type,
             std::shared_ptr<CShader>& pShader,
             const char * textureFilePath,
-            const glm::vec2& numOfTiles);
+            const glm::vec2& numOfTiles,
+            const glm::vec3& size);
 
       virtual ~CLand();
 
@@ -27,7 +28,7 @@ namespace AeroSimulatorEngine
 
       ///@todo: make addComponent virtual such that no need to declare them in every class
       void addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath);
-      void addTransformComponent();
+      void addTransformComponent(const glm::vec3& size);
       void addMovementComponent();
 
       CRenderable & getRenderable();
