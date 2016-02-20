@@ -17,7 +17,7 @@ bool CWin32InputHandler::windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPA
 {
    switch (uMessage)
    {
-      // We do not send a general KEDOWN_EVENT to make it easier for crossplatform development.
+      // We do not send a general KEYDOWN_EVENT to make it easier for crossplatform development.
       // E.g. for Android we will just handle different input events, but send the same app event
       case WM_KEYDOWN:
       {

@@ -138,8 +138,6 @@ void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
       const float rotateSpeed = 50.0f;  ///@todo: make an array of values for each axis and adjust these values
 
       glm::vec3 rotation = mTransform.getRotate();
-
-      ///@todo: probably change the signs: if set use +, if not use -
       if (mStateSigns[axisId])
       {
          rotation[axisId] -= rotateSpeed * deltaTime;
@@ -175,11 +173,12 @@ void CCameraComponent::zoom(const float deltaTime)
       glm::vec3 currentPos =  mTransform.getTranslate();
 
       // Translate the camera in the view space, this will provide the correct TRS sequence of matrix operations
-      glm::vec3 posViewSpace = glm::mat3(view) * currentPos;
+      const glm::mat3 viewScaleRotate = glm::mat3(view);
+      glm::vec3 posViewSpace = viewScaleRotate * currentPos;
       posViewSpace += mStateSigns[eZoom] ? viewDirection * zoomStep : -viewDirection * zoomStep;
 
       // Transform the new position back to the world space
-      currentPos = glm::inverse(glm::mat3(view)) * posViewSpace;
+      currentPos = glm::inverse(viewScaleRotate) * posViewSpace;
       mTransform.setTranlate(currentPos);
    }
 }

@@ -8,6 +8,8 @@ namespace AeroSimulatorEngine
 {
    class CGameObject;
 
+   ///@todo: add processing update event here so that 
+   ///@todo: if no Movement component exist the model matrix is still added to the renderabl
    class CTransformComponent : public CComponent
    {
    public:

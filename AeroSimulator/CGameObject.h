@@ -27,6 +27,10 @@ namespace AeroSimulatorEngine
       void setFrameDt(const float dt) { mFrameDt = dt; }
       float getFrameDt() const { return mFrameDt; }
 
+      ///@todo: probably remove these methods if they are not used in the end
+      int getId() const { return mId; }
+      int getType() const { return mType; }
+
    protected:
       // Get the component of type T from the specified (by reference) object
       template <typename T>

@@ -259,7 +259,7 @@ void CSphere::generateNonTexutredSphere()
    const int Band_Points = (int)std::powl(2, Band_Power); // 2^Band_Power
    const int Band_Mask = Band_Points - 2;
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
-   const int Total_Points = Sections_In_Band*Band_Points;
+   const int Total_Points = 2;// Sections_In_Band*Band_Points;
    // remember - for each section in a band, we have a band
    const float Section_Arc = 2.0f * (float)M_PI / Sections_In_Band;
    const float R = -1.f; // radius

@@ -22,8 +22,6 @@ namespace AeroSimulatorEngine
 
    private:
       static const unsigned int mId = CComponent::MOVEMENT;
-
-      glm::vec3 mRotationSpeed;
    };
 } // namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_MOVEMENT_COMPONENT_H

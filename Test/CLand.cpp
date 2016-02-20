@@ -93,7 +93,7 @@ void CLand::addRenderableComponent(std::shared_ptr<CShader>& pShader, const char
 
       if (GEventManager.registerEvent(eGeneralEvents::UPDATE_RENDERABLE))
       {
-         LOG("CRenderableComponent: UPDATE event registered");
+         LOG("CLand::CRenderableComponent: UPDATE event registered");
       }
       GEventManager.attachEvent(eGeneralEvents::UPDATE_RENDERABLE, *getComponent<CRenderableComponent>());
    }

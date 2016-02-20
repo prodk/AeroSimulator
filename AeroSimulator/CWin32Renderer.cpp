@@ -116,6 +116,10 @@ void CWin32Renderer::init()
       glEnable(GL_TEXTURE_2D);
       LOGGL("* Textures enabled: ");
 
+      //glEnable(GL_CULL_FACE);
+      //glFrontFace(GL_CCW);
+      //LOGGL("* Culling enabled: ");
+
       glEnable(GL_BLEND);
       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
       LOGGL("* Blending enabled, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA): ");
@@ -171,12 +175,12 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
          if (pGeometry && pShader)
          {
             pShader->setup(*pRenderable);
-            /*if (mIsDebugMode && pRenderable->getFlag(eShaderFlags::DRAW_LINES))
+            if (/*mIsDebugMode && */pRenderable->getFlag(eShaderFlags::DRAW_LINES))
             {
                glLineWidth(pRenderable->get1DParam(eShader1DParams::LINE_WIDTH));
                glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
             }
-            else if (!pRenderable->getFlag(eShaderFlags::DRAW_LINES))*/
+            else if (!pRenderable->getFlag(eShaderFlags::DRAW_LINES))
             {
                glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
             }

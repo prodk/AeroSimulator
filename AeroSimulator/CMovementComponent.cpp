@@ -11,7 +11,6 @@ using namespace AeroSimulatorEngine;
 CMovementComponent::CMovementComponent(CGameObject* pOwner)
    : CComponent(pOwner)
    , CEventHandler()
-   , mRotationSpeed(100.0f, 0.0f, 0.0f)
 {
 }
 
@@ -36,12 +35,6 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
          {
             ///@todo: add caching to the transform component such that we update the transform only if needed
             CTransform& transform = pTransformComp->getTransform();
-
-            ///@todo: uncomment to enable rotation of the object
-            /*glm::vec3 rotation = transform.getRotate();
-            rotation.x += mRotationSpeed.x * deltaTime;
-            transform.setRotate(rotation);
-            transform.updateModelMatrix();*/
 
             CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(owner);
             if (pRenderableComp)

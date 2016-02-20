@@ -29,7 +29,7 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
    public:
       // Shader ids
       enum eShaders {TEXTURE_SHADER, COLOR_SHADER, LAST_SHADER};
-      enum eGameObjects {LAND};
+      enum eGameObjects {LAND, SKY};
 
       typedef std::pair<int, std::shared_ptr<CGameObject> > tObjectPair;
       typedef std::shared_ptr<CGameObject> tGoSharedPtr;
@@ -38,6 +38,7 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
       void createShaders();
       void setupScene();
       void addLand();
+      void addSky();
 
       void addCameras();
 
@@ -48,6 +49,8 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
       void getTime(CTask* pTask);
 
       void setObjectsTime();
+
+      void addObject(const int id, tGoSharedPtr pObject, const char* msg);
 
    private:
       std::vector<std::shared_ptr<CShader> > mShaders;

@@ -13,6 +13,7 @@ namespace AeroSimulatorEngine
    class CLand : public CGameObject
    {
    public:
+      ///@todo: add scale as an argument
       CLand(const int id,
             const int type,
             std::shared_ptr<CShader>& pShader,
@@ -21,14 +22,15 @@ namespace AeroSimulatorEngine
 
       virtual ~CLand();
 
-      CRenderable & CLand::getRenderable();
-
    private:
       void scaleVertices(GLfloat* vertices, const int numOfVertices) const;
 
+      ///@todo: make addComponent virtual such that no need to declare them in every class
       void addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath);
       void addTransformComponent();
       void addMovementComponent();
+
+      CRenderable & getRenderable();
 
    private:
       glm::vec2 mNumOfTiles;

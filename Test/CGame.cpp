@@ -14,6 +14,7 @@
 #include "../CTransform.h"
 
 #include "CLand.h"
+#include "CSkyDom.h"
 
 #include <cassert>
 
@@ -66,11 +67,7 @@ bool CGame::start()
    if (renderer()->setRenderContext())
    {
       createShaders();
-
       setupScene();
-
-      addCameras();
-
       addObjectsToRenderer();
 
       renderer()->resetRenderContext();
@@ -118,6 +115,8 @@ void CGame::setupScene()
    LOG("** CGame::setupScene() **");
 
    addLand();
+   addSky();
+   addCameras();
 }
 
 void CGame::addLand()
@@ -125,51 +124,39 @@ void CGame::addLand()
    const char* filePath = "../AeroSimulator/res/land.dds";
    const int id = mGameObjects.size();
 
-   ///@todo: change num of tiles to 10x10 when the camera is fixed
+   ///@todo: change num of tiles to 10x10 when the camera is fixed: mLand->setNumOfTiles(10, 10);
    ///@todo: add scale of land as an arg
+   //const glm::vec3 landSize = glm::vec3(1000.f, 1.f, 1000.0f); mLand->setScale(landSize);
    tGoSharedPtr pObject(
       new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(2, 1)) );
-   assert(pObject);
 
-   tObjectPair newObject(id, pObject);
+   addObject(id, pObject, "* CGame::addLand() ");
+}
 
-   if (mGameObjects.insert(newObject).second)
-   {
-      LOG("* CGame::addLand() success");
-   }
-   else
-   {
-      LOG("* CGame::addLand() failed to create land");
-   }
+void CGame::addSky()
+{
+   const char* filePath = "../AeroSimulator/res/land.dds";
+   const int id = mGameObjects.size();
 
+   ///@todo: add scale of sky as an arg
+   const float radius = 1.0f;
+   const std::size_t numOfCircles = 4;
+   const std::size_t numOfSegments = 8;
+   const float maxInclination = 4.0f * std::atan(1.0f);
+   const float maxAzimuth = 2.0f * maxInclination;
+   const SSphereParams params(radius, numOfCircles, numOfSegments, maxInclination, maxAzimuth);
 
-   //mLand.reset(new CLand());
-   //assert(mLand);
+   tGoSharedPtr pObject(
+      new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::COLOR_SHADER], filePath, params));
 
-   //if (mLand)
-   //{
-      /*if (mLand->loadTexture("../AeroSimulator/res/land.dds"))
-      {
-         CLog::getInstance().log("* Land loaded ../AeroSimulator/res/land.dds");
-      }
-      const glm::vec3 landSize = glm::vec3(1000.f, 1.f, 1000.0f);
-
-      ///@todo: place the corresponding calls to the constructor and introduce additional parameters to the constructor
-      mLand->setNumOfTiles(10, 10);
-      mLand->setTranslate(glm::vec3(0.f, -14.f, 0.f));
-      mLand->setScale(landSize);
-      mLand->calculateModelMatrix(); ///@todo: place this somewhere such that no need to call it manually
-      mLand->setShadersAndBuffers(mShaders[TEXTURE_SHADER]);
-
-      renderer()->addGameObjectAndItsChildren(mLand.get());*/
-   //}
+   addObject(id, pObject, "* CGame::addSky() ");
 }
 
 void CGame::addCameras()
 {
    ///@todo: currently just 1 camera
    const glm::vec3 translate(0.0f, 0.0f, 5.0f);
-   const glm::vec3 rotate(90.0f, 0.0f, 0.0f);
+   const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);
@@ -181,17 +168,7 @@ void CGame::addCameras()
       GCameraManager.addCamera(camera);
       LOG("* CGame: a camera has been just added to the camera manager.");
 
-      const int id = mGameObjects.size();
-      tObjectPair newObject(id, camera);
-
-      if (mGameObjects.insert(newObject).second)
-      {
-         LOG("* CGame::addCamera() success");
-      }
-      else
-      {
-         LOG("* CGame::addCamera() failed to add a camera");
-      }
+      addObject(mGameObjects.size(), camera, "* CGame::addCamera() ");
    }
 }
 
@@ -228,5 +205,21 @@ void CGame::setObjectsTime()
       {
          object.second->setFrameDt(mFrameDt);
       }
+   }
+}
+
+void CGame::addObject(const int id, tGoSharedPtr pObject, const char * msg)
+{
+   assert(pObject);
+
+   tObjectPair newObject(id, pObject);
+
+   if (mGameObjects.insert(newObject).second)
+   {
+      LOG(msg, "success");
+   }
+   else
+   {
+      LOG(msg, "failed");
    }
 }
