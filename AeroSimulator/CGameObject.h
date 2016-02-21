@@ -23,7 +23,6 @@ namespace AeroSimulatorEngine
       /// Returns true if the object has a component T
       template <typename T> bool hasComponent();
 
-      ///@todo: probably remove these
       void setFrameDt(const float dt) { mFrameDt = dt; }
       float getFrameDt() const { return mFrameDt; }
 

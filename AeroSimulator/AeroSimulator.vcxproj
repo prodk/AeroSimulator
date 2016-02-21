@@ -158,7 +158,6 @@
     <ClInclude Include="CCamera.h" />
     <ClInclude Include="CCameraComponent.h" />
     <ClInclude Include="CCameraManager.h" />
-    <ClInclude Include="CCommonMath.h" />
     <ClInclude Include="CComponent.h" />
     <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CCube.h" />
@@ -185,6 +184,7 @@
     <ClInclude Include="CTimer.h" />
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CTransformComponent.h" />
+    <ClInclude Include="CUtils.h" />
     <ClInclude Include="CWin32InputHandler.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
@@ -214,7 +214,6 @@
     <ClCompile Include="CCamera.cpp" />
     <ClCompile Include="CCameraComponent.cpp" />
     <ClCompile Include="CCameraManager.cpp" />
-    <ClCompile Include="CCommonMath.cpp" />
     <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CCube.cpp" />
@@ -241,6 +240,7 @@
     <ClCompile Include="CTimer.cpp" />
     <ClCompile Include="CTransform.cpp" />
     <ClCompile Include="CTransformComponent.cpp" />
+    <ClCompile Include="CUtils.cpp" />
     <ClCompile Include="CWin32InputHandler.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />

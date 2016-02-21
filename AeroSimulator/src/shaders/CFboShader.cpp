@@ -13,6 +13,9 @@ CFboShader::CFboShader()
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/fbo.glslv");
    mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/fbo.glslf");
+
+   mElementsPerVertex = eElementsPerVertex::eFboElements;
+   mStride = eStride::eFboStride;
 }
 
 CFboShader::~CFboShader()
@@ -43,9 +46,6 @@ void CFboShader::link()
 
 void CFboShader::setup(CRenderable & renderable)
 {
-   const CGeometry* pGeometry = renderable.getGeometry();
-   assert(pGeometry);
-
    CShader::setup(renderable);
 
    // Texture-specific part
@@ -58,21 +58,21 @@ void CFboShader::setup(CRenderable & renderable)
 
    glVertexAttribPointer(
       mPositionAttributeId,
-      2,
+      mElementsPerVertex,
       GL_FLOAT,
       GL_FALSE,
-      sizeof(float) * pGeometry->getVertexStride(),
+      sizeof(float) * mStride,
       0);
 
    glEnableVertexAttribArray(mPositionAttributeId);
 
    glVertexAttribPointer(
       mTexCoordAttributeId,
-      2,
+      mElementsPerVertex,
       GL_FLOAT,
       GL_FALSE,
-      sizeof(float)*pGeometry->getVertexStride(),
-      (const void*)(2 * sizeof(float))); // Important!! Shift relative to the first array element
+      sizeof(float) * mStride,
+      (const void*)(mElementsPerVertex * sizeof(float))); // Important!! Shift relative to the first array element
 
    glEnableVertexAttribArray(mTexCoordAttributeId);
 }

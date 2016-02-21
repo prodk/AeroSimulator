@@ -168,7 +168,7 @@ void CCameraComponent::zoom(const float deltaTime)
       ///@todo: may be redundant, probably remove as the view matrix should be normalized
       glm::normalize(viewDirection);
 
-      const float zoomStep = 0.05f; ///@todo: adjust and put it in the styles
+      const float zoomStep = 0.5f; ///@todo: adjust and put it in the styles
 
       glm::vec3 currentPos =  mTransform.getTranslate();
 

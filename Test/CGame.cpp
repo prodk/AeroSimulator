@@ -12,6 +12,7 @@
 #include "../CCameraManager.h"
 #include "../CCamera.h"
 #include "../CTransform.h"
+#include "../AeroSimulator/CUtils.h"
 
 #include "CLand.h"
 #include "CSkyDom.h"
@@ -84,9 +85,7 @@ bool CGame::start()
 
 void CGame::update(CTask * pTask)
 {
-   //LOG("CGame::update()");
    getTime(pTask);
-
    setObjectsTime();
 
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
@@ -133,12 +132,12 @@ void CGame::addLand()
 
 void CGame::addSky()
 {
-   const char* filePath = "../AeroSimulator/res/land.dds";
+   const char* filePath = "../AeroSimulator/res/sky.dds";
    const int id = mGameObjects.size();
 
    const float radius = 100.0f;
    const std::size_t numOfCircles = 16;
-   const std::size_t numOfSegments = 16;
+   const std::size_t numOfSegments = 32;
    const float maxInclination = 2.0f * std::atan(1.0f);
    const float maxAzimuth = 4.0f * maxInclination;
    const SSphereParams params(radius, numOfCircles, numOfSegments, maxInclination, maxAzimuth);

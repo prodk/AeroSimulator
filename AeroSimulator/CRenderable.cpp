@@ -6,13 +6,11 @@
 
 using namespace AeroSimulatorEngine;
 
-SGeometryData::SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices, int numIndices, int elementsPerVertex, int stride)
+SGeometryData::SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices, int numIndices)
    : mVertices(vertices)
    , mNumVertices(numVertices)
    , mIndices(indices)
    , mNumIndices(numIndices)
-   , mElementsPerVertex(elementsPerVertex)
-   , mStride(stride)
 {
 }
 
@@ -64,8 +62,9 @@ void CRenderable::setGeometry(const SGeometryData& data)
       mGeometry->setIndexBuffer((void*)data.mIndices);
       mGeometry->setNumOfIndices(data.mNumIndices);
 
-      mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
-      mGeometry->setVertexStride(data.mStride);
+      ///@todo: remove this
+      /*mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
+      mGeometry->setVertexStride(data.mStride);*/
 
       // Can be called only when the correct geometry has been setup
       setupVbo();

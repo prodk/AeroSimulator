@@ -5,6 +5,7 @@
 #include "CRenderable.h"
 #include "CRenderableComponent.h"
 #include "../src/shaders/CShader.h"
+#include "CUtils.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -41,22 +42,17 @@ void CQuad::prepareRenderable(std::shared_ptr<CShader>& pShader, int textureId, 
    if (mIsInitialized)
    {
       LOG("* CQuad::prepareRenderable()");
-      const int numVert = sizeof(vertices) / sizeof(vertices[0]);
-      const int numInd = sizeof(indices) / sizeof(indices[0]);
-      const int elementsPerVertex = 2;
-      const int stride = 4; // 2 coords + 2 tex coords
-      SGeometryData geometryData(vertices, numVert, indices, numInd, elementsPerVertex, stride);
 
+      SGeometryData geometryData(vertices, ARRAYLEN(vertices), indices, ARRAYLEN(indices));
       getRenderable().setGeometry(geometryData);
 
       getRenderable().createTexture(textureId);
-
       if (0 != openGlId)
       {
          setTextureId(textureId, openGlId);
       }
 
-      getRenderable().setShader(pShader);
+      setShader(pShader);
    }
 }
 

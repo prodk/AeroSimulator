@@ -9,6 +9,7 @@
 #include "../AeroSimulator/CMovementComponent.h"
 #include "../AeroSimulator/CEventManager.h"
 #include "../AeroSimulator/CEventHandler.h"
+#include "../AeroSimulator/CUtils.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -37,9 +38,7 @@ CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader,
    , mNumOfTiles(numOfTiles)
 {
    addRenderableComponent(pShader, textureFilePath);
-
    addTransformComponent(size);
-
    addMovementComponent();
 
    //LOG("* CLand setting up the collision component");
@@ -78,17 +77,13 @@ void CLand::addRenderableComponent(std::shared_ptr<CShader>& pShader, const char
    if (addComponent<CRenderableComponent>())
    {
       LOG("* CLand setting up the renderable component");
-      const int numVert = sizeof(vertices) / sizeof(vertices[0]);
-      const int numInd = sizeof(indices) / sizeof(indices[0]);
-      ///@todo: put these params to the corresponding shader
-      const int elementsPerVertex = 3;
-      const int stride = 5; // 3 coords + 2 tex coords
-      scaleVertices(vertices, numVert);
-      SGeometryData geometryData(vertices, numVert, indices, numInd, elementsPerVertex, stride);
 
+      scaleVertices(vertices, ARRAYLEN(vertices));
+      SGeometryData geometryData(vertices, ARRAYLEN(vertices), indices, ARRAYLEN(indices));
       getRenderable().setGeometry(geometryData);
       getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath, DDS);
       getRenderable().setShader(pShader);
+
       // Repeat the texture for land
       getRenderable().setFlag(REPEAT_TEXTURE, true);
 

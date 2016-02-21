@@ -38,14 +38,12 @@ namespace AeroSimulatorEngine
 
    struct SGeometryData
    {
-      SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices, int numIndices, int elementsPerVertex, int stride);
+      SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices, int numIndices);
 
       GLfloat* mVertices;
       int mNumVertices;
       GLuint* mIndices;
       int mNumIndices;
-      int mElementsPerVertex;
-      int mStride;
    };
 
    // CRenderable groups the geometry and its appearance in one entity

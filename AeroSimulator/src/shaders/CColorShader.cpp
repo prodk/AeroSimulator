@@ -11,6 +11,9 @@ CColorShader::CColorShader()
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/color.glslv");
    mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/color.glslf");
+
+   mElementsPerVertex = eElementsPerVertex::eTextureElements;
+   mStride = eStride::eColorStride;
 }
 
 CColorShader::~CColorShader()
@@ -41,30 +44,26 @@ void CColorShader::link()
 
 void CColorShader::setup(CRenderable & renderable)
 {
-   CGeometry* pGeometry = renderable.getGeometry();
+   CShader::setup(renderable);
 
-   if (pGeometry)
-   {
-      CShader::setup(renderable);
+   glVertexAttribPointer(
+      mPositionAttributeId,
+      mElementsPerVertex,
+      GL_FLOAT,
+      GL_FALSE,
+      sizeof(float) * mStride,
+      0);
+   glEnableVertexAttribArray(mPositionAttributeId);
 
-      glVertexAttribPointer(
-         mPositionAttributeId,
-         pGeometry->getNumOfElementsPerVertex(),
-         GL_FLOAT,
-         GL_FALSE,
-         sizeof(float) * pGeometry->getVertexStride(),
-         0);
-      glEnableVertexAttribArray(mPositionAttributeId);
+   ///@todo: get from renderable
+   //const glm::vec4 color = renderable.getColor();
+   const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
+   glUniform4fv(mColorUniformId, 1, &color[0]);
 
-      ///@todo: get from renderable
-      //const glm::vec4 color = renderable.getColor();
-      const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
-      glUniform4fv(mColorUniformId, 1, &color[0]);
+   const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
+   const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
+   const glm::mat4 projection = renderable.getMatrix4Param(eShaderMatrix4Params::PROJECTION_MATRIX);
+   const glm::mat4 MVP = projection * view * model;
+   glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
 
-      const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
-      const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
-      const glm::mat4 projection = renderable.getMatrix4Param(eShaderMatrix4Params::PROJECTION_MATRIX);
-      const glm::mat4 MVP = projection * view * model;
-      glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
-   }
 }

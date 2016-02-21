@@ -1,5 +1,4 @@
 #include "CCamera.h"
-#include "CCommonMath.h"
 #include "CCameraComponent.h"
 #include "CTransform.h"
 #include "CLog.h"

@@ -1,5 +1,4 @@
 #include "CSphere.h"
-#include "CCommonMath.h"
 #include "CGeometry.h"
 #include "CLine.h"
 #include "../src/shaders/CShader.h"
@@ -261,7 +260,7 @@ void CSphere::generateNonTexutredSphere()
    const float Sections_In_Band = (Band_Points / 2.f) - 1.f;
    const int Total_Points = 2;// Sections_In_Band*Band_Points;
    // remember - for each section in a band, we have a band
-   const float Section_Arc = 2.0f * (float)M_PI / Sections_In_Band;
+   const float Section_Arc = 0.f;// 2.0f * (float)M_PI / Sections_In_Band;
    const float R = -1.f; // radius
 
    int i;
@@ -373,7 +372,7 @@ void CSphere::generateTangents()
 
       //if (v.x >= 0.0f)
       //{
-         float phi = std::atan(v.y / v.x) + (float)M_PI*0.5f;
+         float phi = std::atan(v.y / v.x) + (float)4.0f*std::atan(1.0f)*0.5f;
 
          // To get tangent, rotate phi by pi/2 and take into account that cos(theta+pi/2)==sin(theta)
          glm::vec3 tangent;

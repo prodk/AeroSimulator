@@ -12,6 +12,8 @@ CShader::CShader()
    , mVertexShaderCode()
    , mFragmentShaderCode()
    , mIsLinked(false)
+   , mElementsPerVertex(eElementsPerVertex::eTextureElements)
+   , mStride(eStride::eTextureStride)
 {
 }
 

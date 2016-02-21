@@ -23,6 +23,7 @@ namespace AeroSimulatorEngine
       void setVertexBuffer(void* pVertices);
       void setIndexBuffer(void* pIndices);
 
+      ///@todo: remove these 4 methods, stride and elements per vertex are in the shader
       void setNumOfElementsPerVertex(const int numOfEpv) { mNumOfElementsPerVertex = numOfEpv; }
       int getNumOfElementsPerVertex() const { return mNumOfElementsPerVertex; }
       void setVertexStride(const int stride) { mVertexStride = stride; }
@@ -34,8 +35,8 @@ namespace AeroSimulatorEngine
       void* mVertices;
       void* mIndices;
 
-      int mNumOfElementsPerVertex;
-      int mVertexStride;
+      int mNumOfElementsPerVertex; ///@todo: remove
+      int mVertexStride; ///@todo: remove
    };
 
 } // namespace AeroSimulatorEngine

@@ -3,15 +3,9 @@
 #ifndef AERO_SIMULATOR_CSHADER_H
 #define AERO_SIMULATOR_CSHADER_H
 
-#include "glew.h"//<glew.h> //"../include/glew.h"
-////#include "../include/wglew.h"
-//
-/////@todo: change these paths when moved to Test project
-////#include <glew.h>
-////#include <wglew.h>
-
+#include "glew.h"
 #include <gl/GL.h>
-#include <glext.h>//"../include/glext.h"
+#include <glext.h>
 
 #include <string>
 
@@ -29,6 +23,26 @@ namespace AeroSimulatorEngine
       virtual void setup(CRenderable& renderable);
       bool isLinked() const { return mIsLinked; }
 
+      int getElementsPerVertex() const { return mElementsPerVertex; }
+      int getStride() const { mStride; }
+
+      enum eElementsPerVertex 
+      {
+         eFboElements = 2,
+         eTextureElements = 3
+      };
+
+      enum eStride
+      {
+         eColorStride = 3,    // 3 coords
+         eFboStride = 4,      // 2 coords + 2 tex coords
+         eTextureStride = 5   // 3 coords + 2 tex coords
+      };
+
+   protected:
+      GLint loadShader(GLuint id, const std::string& shaderCode);
+      std::string readShader(const char* filePath);
+
    protected:
       GLuint mVertexShaderId;
       GLuint mFragmentShaderId;
@@ -36,9 +50,8 @@ namespace AeroSimulatorEngine
       std::string mVertexShaderCode;
       std::string mFragmentShaderCode;
       bool mIsLinked;
-
-      GLint loadShader(GLuint id, const std::string& shaderCode);
-      std::string readShader(const char* filePath);
+      int mElementsPerVertex;
+      int mStride;
    };
 
 } // namespace AeroSimulatorEngine

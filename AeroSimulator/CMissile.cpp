@@ -2,7 +2,6 @@
 #include "CGeometry.h"
 #include "CParticleSystem.h"
 #include "CWin32Renderer.h"
-#include "CCommonMath.h"
 
 using namespace AeroSimulatorEngine;
 

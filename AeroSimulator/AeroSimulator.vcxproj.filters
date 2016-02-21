@@ -120,9 +120,6 @@
     <ClInclude Include="CAxesFrame.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
-    <ClInclude Include="CCommonMath.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
     <ClInclude Include="CCube.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
@@ -222,6 +219,9 @@
     <ClInclude Include="CCameraComponent.h">
       <Filter>Header Files\components</Filter>
     </ClInclude>
+    <ClInclude Include="CUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -282,9 +282,6 @@
       <Filter>Source Files\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="CAxesFrame.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CCommonMath.cpp">
       <Filter>Source Files\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="CCube.cpp">
@@ -385,6 +382,9 @@
     </ClCompile>
     <ClCompile Include="CCameraComponent.cpp">
       <Filter>Source Files\components</Filter>
+    </ClCompile>
+    <ClCompile Include="CUtils.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

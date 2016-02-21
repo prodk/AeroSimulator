@@ -16,6 +16,9 @@ CTextureShader::CTextureShader()
 {
    mVertexShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslv");
    mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslf");
+
+   mElementsPerVertex = eElementsPerVertex::eTextureElements;
+   mStride = eStride::eTextureStride;
 }
 
 CTextureShader::~CTextureShader()
@@ -49,9 +52,7 @@ void CTextureShader::link()
 
 void CTextureShader::setup(CRenderable & renderable)
 {
-   const CGeometry* pGeometry = renderable.getGeometry();
-   assert(pGeometry);
-
+   ///@todo: remove stride and elements per vertex from CGeometry from all the shaders!
    CShader::setup(renderable);
 
    // Texture-specific part
@@ -72,13 +73,12 @@ void CTextureShader::setup(CRenderable & renderable)
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-   const int stride = pGeometry->getVertexStride();
    glVertexAttribPointer(
       mPositionAttributeId,
-      3,
+      mElementsPerVertex,
       GL_FLOAT,
       GL_FALSE,
-      sizeof(float) * stride,
+      sizeof(float) * mStride,
       0);
 
    glEnableVertexAttribArray(mPositionAttributeId);
@@ -88,13 +88,10 @@ void CTextureShader::setup(CRenderable & renderable)
       2,
       GL_FLOAT,
       GL_FALSE,
-      sizeof(float) * stride,
-      (const void*)(3 * sizeof(float))); // Important!! Shift relative to the first array element
+      sizeof(float) * mStride,
+      (const void*)(mElementsPerVertex * sizeof(float))); // Important!! Shift relative to the first array element
 
    glEnableVertexAttribArray(mTexCoordAttributeId);
-
-   // Send the transformation to the currently bound shader in the "MVP" uniform
-   //const glm::mat4 MVP = renderable.getMatrix4Param(eShaderMatrix4Params::MVP_MATRIX);
 
    const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
    const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
