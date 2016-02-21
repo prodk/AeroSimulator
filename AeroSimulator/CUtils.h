@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "../AeroSimulator/include/glew.h"
+#include "glm/gtc/constants.hpp"
 
 #define ARRAYLEN(a) sizeof((a)) / sizeof((a[0]))
 
@@ -26,10 +27,7 @@ namespace AeroSimulatorEngine
       ~CUtils();
 
       static
-      void generateSphere(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices, const SSphereParams& params);
-
-      static
-      void generateSphereAndTextureCoords(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices, const SSphereParams& params);
+      void generateTexturedSphere(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices, const SSphereParams& params);
    };
 }
 

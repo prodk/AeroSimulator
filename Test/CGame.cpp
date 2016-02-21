@@ -135,15 +135,15 @@ void CGame::addSky()
    const char* filePath = "../AeroSimulator/res/sky.dds";
    const int id = mGameObjects.size();
 
-   const float radius = 100.0f;
+   const float radius = 200.0f;
    const std::size_t numOfCircles = 16;
    const std::size_t numOfSegments = 32;
-   const float maxInclination = 2.0f * std::atan(1.0f);
-   const float maxAzimuth = 4.0f * maxInclination;
+   const float maxInclination = 0.5f * glm::pi<float>();
+   const float maxAzimuth = 2.0f * glm::pi<float>();;
    const SSphereParams params(radius, numOfCircles, numOfSegments, maxInclination, maxAzimuth);
 
    tGoSharedPtr pObject(
-      new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::COLOR_SHADER], filePath, params));
+      new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePath, params));
 
    addObject(id, pObject, "* CGame::addSky() ");
 }
@@ -157,7 +157,7 @@ void CGame::addCameras()
    transform.setTranlate(translate);
    transform.setRotate(rotate);
 
-   const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 500.0f);
+   const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 1100.0f);
    std::shared_ptr<CCamera> camera( new CCamera(transform, frustum));
    if (camera)
    {

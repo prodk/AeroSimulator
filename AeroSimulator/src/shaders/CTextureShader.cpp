@@ -8,14 +8,14 @@
 
 using namespace AeroSimulatorEngine;
 
-CTextureShader::CTextureShader()
+CTextureShader::CTextureShader(const char * vertexPath, const char * fragPath)
    : mPositionAttributeId(0)
    , mTexCoordAttributeId(0)
    , mMvpUniformId(0)
    , mSamplerUniformId(0)
 {
-   mVertexShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslv");
-   mFragmentShaderCode = readShader("../AeroSimulator/src/shaders/texture.glslf");
+   mVertexShaderCode = readShader(vertexPath);
+   mFragmentShaderCode = readShader(fragPath);
 
    mElementsPerVertex = eElementsPerVertex::eTextureElements;
    mStride = eStride::eTextureStride;

@@ -34,12 +34,14 @@ void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const ch
 
       std::vector<GLfloat> vertices;
       std::vector<GLuint> indices;
-      CUtils::generateSphere(vertices, indices, generateParams);
+      //CUtils::generateSphere(vertices, indices, generateParams); // for color shader
+
+      CUtils::generateTexturedSphere(vertices, indices, generateParams);
 
       SGeometryData geometryData(&vertices[0], vertices.size(), &indices[0], indices.size());
 
       getRenderable().setGeometry(geometryData);
-      //getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath, DDS);
+      getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath, DDS);
       getRenderable().setShader(pShader);
 
       ///@todo: add line rendering in the debug mode

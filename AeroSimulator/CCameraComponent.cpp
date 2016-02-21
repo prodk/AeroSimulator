@@ -131,6 +131,7 @@ void CCameraComponent::update()
    }
 }
 
+///@todo: make rotations in the view space!
 void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 {
    if ((axisId < 3) && mStateChanges[axisId])

@@ -3,9 +3,6 @@
 
 #include "CShader.h"
 
-//#include "../include/glew.h"
-//#include <gl/GL.h>
-
 #include <memory>
 
 namespace AeroSimulatorEngine
@@ -13,7 +10,8 @@ namespace AeroSimulatorEngine
    class CTextureShader : public CShader
    {
    public:
-      CTextureShader();
+      CTextureShader(const char * vertexPath = "../AeroSimulator/src/shaders/texture.glslv",
+                     const char * fragPath = "../AeroSimulator/src/shaders/texture.glslf");
       virtual ~CTextureShader();
 
       virtual void link();

@@ -26,6 +26,9 @@ namespace AeroSimulatorEngine
       int getElementsPerVertex() const { return mElementsPerVertex; }
       int getStride() const { mStride; }
 
+      void setElementsPerVertex(const int elem) { mElementsPerVertex = elem; }
+      void setStride(const int stride) { mStride = stride; }
+
       enum eElementsPerVertex 
       {
          eFboElements = 2,
