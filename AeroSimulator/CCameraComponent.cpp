@@ -131,26 +131,19 @@ void CCameraComponent::update()
    }
 }
 
-///@todo: make rotations in the view space!
 void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 {
    if ((axisId < 3) && mStateChanges[axisId])
    {
-      const float rotateSpeed = 50.0f;  ///@todo: make an array of values for each axis and adjust these values
+      const float rotateSpeed = 1.5f;  ///@todo: make an array of values for each axis and adjust these values
+      const float angle = mStateSigns[axisId] ? -rotateSpeed * deltaTime : rotateSpeed * deltaTime;
 
-      glm::vec3 rotation = mTransform.getRotate();
-      if (mStateSigns[axisId])
-      {
-         rotation[axisId] -= rotateSpeed * deltaTime;
-         if (rotation[axisId] < 0.f) rotation[axisId] += 360.f;
-      }
-      else
-      {
-         rotation[axisId] += rotateSpeed * deltaTime;
-         if (rotation[axisId] > 360.f) rotation[axisId] -= 360.f;
-      }
+      glm::vec3 axis;
+      axis[axisId] = 1.0f;
 
-      mTransform.setRotate(rotation);
+      const glm::mat4 rotationInView = glm::rotate(glm::mat4(), angle, axis);
+      const glm::mat4 rotationInWorld = glm::mat4(glm::inverse(glm::mat3(getViewMatrix()))) * rotationInView;
+      mTransform.setRotate(rotationInWorld);
    }
 }
 
@@ -160,7 +153,7 @@ void CCameraComponent::zoom(const float deltaTime)
    {
       // Get the direction of the camera
       const glm::mat4 view = getViewMatrix();
-      // 3rd row of the view matrix is a vector opposite to the camera direction in camera space
+      // 3rd row of the view matrix is a vector opposite to the camera direction
       glm::vec3 viewDirection;
       viewDirection.x = view[2].x;
       viewDirection.y = view[2].y;
@@ -171,7 +164,7 @@ void CCameraComponent::zoom(const float deltaTime)
 
       const float zoomStep = 0.5f; ///@todo: adjust and put it in the styles
 
-      glm::vec3 currentPos =  mTransform.getTranslate();
+      glm::vec3 currentPos = mTransform.getTranslate();
 
       // Translate the camera in the view space, this will provide the correct TRS sequence of matrix operations
       const glm::mat3 viewScaleRotate = glm::mat3(view);

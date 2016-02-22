@@ -45,8 +45,8 @@ void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const ch
       getRenderable().setShader(pShader);
 
       ///@todo: add line rendering in the debug mode
-      //getRenderable().setFlag(eShaderFlags::DRAW_LINES, true);
-      //getRenderable().set1DParam(eShader1DParams::LINE_WIDTH, 3.0f);
+      getRenderable().setFlag(eShaderFlags::DRAW_LINES, true);
+      getRenderable().set1DParam(eShader1DParams::LINE_WIDTH, 3.0f);
 
       if (GEventManager.registerEvent(eGeneralEvents::UPDATE_RENDERABLE))
       {

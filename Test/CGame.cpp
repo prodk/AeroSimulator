@@ -122,7 +122,7 @@ void CGame::addLand()
 {
    const char* filePath = "../AeroSimulator/res/land.dds";
    const int id = mGameObjects.size();
-   const glm::vec3 landSize = glm::vec3(1000.f, 1.f, 1000.0f);
+   const glm::vec3 landSize = glm::vec3(2000.f, 1.f, 2000.0f);
 
    tGoSharedPtr pObject(
       new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(10, 10), landSize) );
@@ -135,7 +135,7 @@ void CGame::addSky()
    const char* filePath = "../AeroSimulator/res/sky.dds";
    const int id = mGameObjects.size();
 
-   const float radius = 200.0f;
+   const float radius = 300.0f;
    const std::size_t numOfCircles = 16;
    const std::size_t numOfSegments = 32;
    const float maxInclination = 0.5f * glm::pi<float>();
@@ -151,8 +151,8 @@ void CGame::addSky()
 void CGame::addCameras()
 {
    // currently just 1 camera
-   const glm::vec3 translate(0.0f, 10.0f, 50.0f);
-   const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
+   const glm::vec3 translate(0.0f, 50.0f, 50.0f);
+   const glm::vec3 rotate(-10.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);

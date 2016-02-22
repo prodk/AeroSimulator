@@ -63,22 +63,22 @@ void CWin32InputHandler::cameraKeyDown(WPARAM wParam) const
 
    case (0x51) : // q, rotate camera around y-axis clock wise
       LOG("Key q pressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CW);
       break;
 
    case (0x45) : // e, rotate camera around y-axis counter clock wise
       LOG("Key e pressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CW);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CCW);
       break;
 
    case (0x44) : // d, rotate camera around z-axis to the right
       LOG("Key d pressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CCW);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CW);
       break;
 
    case (0x41) : // a, rotate camera around z-axis to the left
       LOG("Key a pressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CW);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW);
       break;
 
    case (VK_OEM_PLUS) : // +, zoom in
@@ -110,22 +110,22 @@ void CWin32InputHandler::cameraKeyUp(WPARAM wParam) const
 
    case (0x51) : // q, rotate camera display clock wise
       LOG("Key q depressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW_STOP);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CW_STOP);
       break;
 
    case (0x45) : // e, rotate camera display counter clock wise
       LOG("Key e depressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW_STOP);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CCW_STOP);
       break;
 
    case (0x44) : // d, rotate camera around z-axis to the right
       LOG("Key d depressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CCW_STOP);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW_STOP);
       break;
 
    case (0x41) : // a, rotate camera around z-axis to the left
       LOG("Key a depressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Z_CW_STOP);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW_STOP);
       break;
 
     case (VK_OEM_PLUS) : // +, zoom in

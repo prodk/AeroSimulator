@@ -48,18 +48,9 @@ void CUtils::generateTexturedSphere(std::vector<GLfloat>& vertices, std::vector<
             pos.y = std::sin(theta) * std::sin(phi);
             pos.z = std::cos(theta);
 
-            // For texture just set the usual coords
+            // Texture coordinates are just the arc lengths
             const float textureX = phi / params.mMaxAzimuth;
             const float textureY = theta / params.mMaxInclination;
-
-            // Texture coordinates
-           /* const float pi = glm::pi<float>();
-            const float textureY = std::acos(pos.z / r) / (pi);
-
-            const float posxAdjust = (pos.x < std::numeric_limits<float>::epsilon()) ?
-               std::numeric_limits<float>::epsilon() :
-               pos.x;
-            const float textureX = (std::atan(pos.y / posxAdjust) + pi) / (2.0f*pi);*/
 
             // Rotate around x to make it y-oriented
             pos = glm::mat3(rotateMatrix) * pos;
@@ -76,7 +67,7 @@ void CUtils::generateTexturedSphere(std::vector<GLfloat>& vertices, std::vector<
       }
 
       // Indices, the following pattern is generated (for 4 segments):
-      // stripe 0: 0415263704; stripe 1: 48596 10 7 11 4 8
+      // stripe 0: 0516273849; stripe 1: 5 10 6 11 7 12 8 13 9 14
       for (GLuint i = 1; i < params.mNumOfCircles + 1; ++i)
       {
          for (GLuint j = 0; j < params.mNumOfSegments + 1; ++j)
@@ -84,16 +75,7 @@ void CUtils::generateTexturedSphere(std::vector<GLfloat>& vertices, std::vector<
             std::size_t id = (i - 1) * (params.mNumOfSegments + 1) + j;
             indices.push_back(id);
             id = i * (params.mNumOfSegments + 1) + j;
-            //if (id < (params.mNumOfCircles + 1) * (params.mNumOfSegments + 1))
-            {
-               indices.push_back(id);
-            }
-
-            /*if (params.mNumOfSegments == j)
-            {
-               indices.push_back((i - 1) * (params.mNumOfSegments + 1));
-               indices.push_back(i * (params.mNumOfSegments + 1));
-            }*/
+            indices.push_back(id);
          }
       }
    }

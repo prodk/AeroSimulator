@@ -4,19 +4,18 @@ using namespace AeroSimulatorEngine;
 
 CTransform::CTransform()
    : mScale(1.0f, 1.0f, 1.0f)
-   , mRotate(0.0f, 0.0f, 0.0f)
    , mTranslate(0.0f, 0.0f, 0.0f)
+   , mRotationMatrix()
    , mTRMatrix()
    , mModelMatrix()
    , mTrType(ROTATE_FIRST)
 {
 }
 
-///@todo: probably remove this constructor
 CTransform::CTransform(const CTransform & t)
    : mScale(t.mScale)
-   , mRotate(t.mRotate)
    , mTranslate(t.mTranslate)
+   , mRotationMatrix(t.mRotationMatrix)
    , mTRMatrix(t.mTRMatrix)
    , mModelMatrix(t.mModelMatrix)
    , mTrType(t.mTrType)
@@ -34,7 +33,36 @@ void CTransform::setScale(const glm::vec3& scale)
 
 void CTransform::setRotate(const glm::vec3 & rotate)
 {
-   mRotate = rotate;
+   mRotationMatrix = glm::mat4();
+
+   // x
+   if (std::fabs(rotate.x) > std::numeric_limits<float>::epsilon())
+   {
+      const float angleX = glm::radians(rotate.x);
+      const glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
+      mRotationMatrix = glm::rotate(mRotationMatrix, angleX, xAxis);
+   }
+
+   // y
+   if (std::fabs(rotate.y) > std::numeric_limits<float>::epsilon())
+   {
+      const float angleY = glm::radians(rotate.y);
+      const glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
+      mRotationMatrix = glm::rotate(mRotationMatrix, angleY, yAxis);
+   }
+
+   // z
+   if (std::fabs(rotate.z) > std::numeric_limits<float>::epsilon())
+   {
+      const float angleZ = glm::radians(rotate.z);
+      const glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
+      mRotationMatrix = glm::rotate(mRotationMatrix, angleZ, zAxis);
+   }
+}
+
+void CTransform::setRotate(const glm::mat4 & rotationMatrix)
+{
+   mRotationMatrix = rotationMatrix;
 }
 
 void CTransform::setTranlate(const glm::vec3 & translate)
@@ -42,7 +70,16 @@ void CTransform::setTranlate(const glm::vec3 & translate)
    mTranslate = translate;
 }
 
-///@todo: make a possibility to choose between TR and RT matrices
+void CTransform::setModelMatrix(const glm::mat4 & m)
+{
+   mModelMatrix = m;
+}
+
+void CTransform::setTranslateRotateMatrix(const glm::mat4 & m)
+{
+   mTRMatrix = m;
+}
+
 void CTransform::updateModelMatrix()
 {
    updateTrMatrix();
@@ -67,43 +104,13 @@ void CTransform::updateTrMatrix()
 
 void CTransform::updateTranslateRotate()
 {
-   // The matrix will perform these operations in reverse order
    mTRMatrix = glm::translate(glm::mat4x4(), mTranslate);
-   rotateTrMatrix();
+   mTRMatrix *= mRotationMatrix;
 }
 
 void CTransform::updateRotateTranslate()
 {
-   mTRMatrix = glm::mat4x4();
-   rotateTrMatrix();
-   mTRMatrix = glm::translate(mTRMatrix, mTranslate);
-}
-
-void CTransform::rotateTrMatrix()
-{
-   // x
-   if (mRotate.x > std::numeric_limits<float>::epsilon())
-   {
-      const float angleX = glm::radians(mRotate.x);
-      const glm::vec3 xAxis = glm::vec3(1.0f, 0.0f, 0.0f);
-      mTRMatrix = glm::rotate(mTRMatrix, angleX, xAxis);
-   }
-
-   // y
-   if (mRotate.y > std::numeric_limits<float>::epsilon())
-   {
-      const float angleY = glm::radians(mRotate.y);
-      const glm::vec3 yAxis = glm::vec3(0.0f, 1.0f, 0.0f);
-      mTRMatrix = glm::rotate(mTRMatrix, angleY, yAxis);
-   }
-
-   // z
-   if (mRotate.z > std::numeric_limits<float>::epsilon())
-   {
-      const float angleZ = glm::radians(mRotate.z);
-      const glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
-      mTRMatrix = glm::rotate(mTRMatrix, angleZ, zAxis);
-   }
+   mTRMatrix = mRotationMatrix * glm::translate(glm::mat4x4(), mTranslate);
 }
 
 glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate() const
@@ -138,8 +145,8 @@ void CTransform::setTranslationFirst(bool first)
 bool CTransform::operator!=(const CTransform& transform)
 {
    return (mScale != transform.mScale)
-       || (mRotate != transform.mRotate)
        || (mTranslate != transform.mTranslate)
+       || (mRotationMatrix != transform.mRotationMatrix)
        || (mTRMatrix != transform.mTRMatrix)
        || (mModelMatrix != transform.mModelMatrix)
        || (mTrType != transform.mTrType);
@@ -150,8 +157,8 @@ CTransform& CTransform::operator=(const CTransform& transform)
    if (*this != transform)
    {
       mScale = transform.mScale;
-      mRotate = transform.mRotate;
       mTranslate = transform.mTranslate;
+      mRotationMatrix = transform.mRotationMatrix;
       mTRMatrix = transform.mTRMatrix;
       mModelMatrix = transform.mModelMatrix;
       mTrType = transform.mTrType;

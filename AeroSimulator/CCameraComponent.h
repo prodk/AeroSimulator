@@ -42,10 +42,10 @@ namespace AeroSimulatorEngine
 
       enum eStateChanges
       {
-         eChangePitch = 0,
-         eRotateY, // = 1,
-         eRotateZ, // = 2,
-         eZoom, 
+         eChangePitch = 0, // rotate around the right vector of the camera
+         eRotateY, // = 1, rotate around the up vector of the camera
+         eRotateZ, // = 2, rotate around the direction of the camera
+         eZoom,
          eLastState
       };
 

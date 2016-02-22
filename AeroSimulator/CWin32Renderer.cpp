@@ -175,12 +175,12 @@ void CWin32Renderer::draw(CRenderable* pRenderable)
          if (pGeometry && pShader)
          {
             pShader->setup(*pRenderable);
-            if (/*mIsDebugMode && */pRenderable->getFlag(eShaderFlags::DRAW_LINES))
+            if (mIsDebugMode && pRenderable->getFlag(eShaderFlags::DRAW_LINES))
             {
                glLineWidth(pRenderable->get1DParam(eShader1DParams::LINE_WIDTH));
                glDrawElements(GL_LINES, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
             }
-            else if (!pRenderable->getFlag(eShaderFlags::DRAW_LINES))
+            else
             {
                glDrawElements(GL_TRIANGLE_STRIP, pGeometry->getNumOfIndices(), GL_UNSIGNED_INT, 0);
             }
