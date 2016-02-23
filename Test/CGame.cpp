@@ -139,24 +139,36 @@ void CGame::addSky()
    const std::size_t numOfCircles = 16;
    const std::size_t numOfSegments = 32;
    const float maxInclination = 0.5f * glm::pi<float>();
-   const float maxAzimuth = 2.0f * glm::pi<float>();;
+   const float maxAzimuth = 2.0f * glm::pi<float>();
    const SSphereParams params(radius, numOfCircles, numOfSegments, maxInclination, maxAzimuth);
 
    tGoSharedPtr pObject(
       new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePath, params));
 
    addObject(id, pObject, "* CGame::addSky() ");
+
+   ///@todo: remove this debug, test sky
+   const int idTest = mGameObjects.size();
+   const char* filePathTest = "../AeroSimulator/res/smile.dds";
+   const SSphereParams paramsTest(10.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
+
+   tGoSharedPtr pObjectTest(
+      new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePathTest, paramsTest));
+
+   addObject(idTest, pObjectTest, "* CGame::addSky() test sphere");
+   ///@todo: end
 }
 
 void CGame::addCameras()
 {
    // currently just 1 camera
-   const glm::vec3 translate(0.0f, 50.0f, 50.0f);
-   const glm::vec3 rotate(-10.0f, 0.0f, 0.0f);
+   const glm::vec3 translate(0.0f, 50.0f, 0.0f);
+   const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);
 
+   //transform.setTranslationFirst(true);
    const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 1100.0f);
    std::shared_ptr<CCamera> camera( new CCamera(transform, frustum));
    if (camera)

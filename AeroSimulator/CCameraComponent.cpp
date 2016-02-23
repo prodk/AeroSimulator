@@ -153,14 +153,8 @@ void CCameraComponent::zoom(const float deltaTime)
    {
       // Get the direction of the camera
       const glm::mat4 view = getViewMatrix();
-      // 3rd row of the view matrix is a vector opposite to the camera direction
-      glm::vec3 viewDirection;
-      viewDirection.x = view[2].x;
-      viewDirection.y = view[2].y;
-      viewDirection.z = view[2].z;
-
-      ///@todo: may be redundant, probably remove as the view matrix should be normalized
-      glm::normalize(viewDirection);
+      // z-axiz in the view-space perpendicular along the camera direction
+      const glm::vec3 viewDirection = glm::vec3(0.0f, 0.0f, 1.0f);
 
       const float zoomStep = 0.5f; ///@todo: adjust and put it in the styles
 
