@@ -53,12 +53,12 @@ void CWin32InputHandler::cameraKeyDown(WPARAM wParam) const
       // Camera
    case (0x57) : // w, increase pitch
       LOG("Key w pressed");
-      GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH);
+      GEventManager.broadcastEvent(eCameraEvents::INCREASE_PITCH);
       break;
 
    case (0x53) : // s, decrease pitch
       LOG("Key s pressed");
-      GEventManager.broadcastEvent(eCameraEvents::INCREASE_PITCH);
+      GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH);
       break;
 
    case (0x51) : // q, rotate camera around y-axis clock wise
@@ -73,12 +73,12 @@ void CWin32InputHandler::cameraKeyDown(WPARAM wParam) const
 
    case (0x44) : // d, rotate camera around z-axis to the right
       LOG("Key d pressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CW);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW);
       break;
 
    case (0x41) : // a, rotate camera around z-axis to the left
       LOG("Key a pressed");
-      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CCW);
+      GEventManager.broadcastEvent(eCameraEvents::ROTATE_Y_CW);
       break;
 
    case (VK_OEM_PLUS) : // +, zoom in
@@ -100,12 +100,12 @@ void CWin32InputHandler::cameraKeyUp(WPARAM wParam) const
       // Camera
    case (0x57) : // w, increase pitch
       LOG("Key w depressed");
-      GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH_STOP);
+      GEventManager.broadcastEvent(eCameraEvents::INCREASE_PITCH_STOP);
       break;
 
    case (0x53) : // s, decrease pitch
       LOG("Key s depressed");
-      GEventManager.broadcastEvent(eCameraEvents::INCREASE_PITCH_STOP);
+      GEventManager.broadcastEvent(eCameraEvents::DECREASE_PITCH_STOP);
       break;
 
    case (0x51) : // q, rotate camera display clock wise
