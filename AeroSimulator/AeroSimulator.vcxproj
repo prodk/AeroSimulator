@@ -159,6 +159,7 @@
     <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CEventHandler.h" />
     <ClInclude Include="CEventManager.h" />
+    <ClInclude Include="CFigure.h" />
     <ClInclude Include="CGameObject.h" />
     <ClInclude Include="CGeometry.h" />
     <ClInclude Include="CLog.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CEventHandler.cpp" />
     <ClCompile Include="CEventManager.cpp" />
+    <ClCompile Include="CFigure.cpp" />
     <ClCompile Include="CGameObject.cpp" />
     <ClCompile Include="CGeometry.cpp" />
     <ClCompile Include="CLog.cpp" />

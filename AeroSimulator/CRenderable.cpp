@@ -14,6 +14,13 @@ SGeometryData::SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices
 {
 }
 
+SRenderableData::SRenderableData(std::shared_ptr<CShader>& pShader, const SSphereParams * sphereParams, const std::string& textureFilePath)
+   : mShader(pShader)
+   , mSphereParams(sphereParams)
+   , mTextureFilePath(textureFilePath)
+{
+}
+
 CRenderable::CRenderable()
    : mGeometry()
    , mShader()

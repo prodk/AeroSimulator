@@ -2,7 +2,6 @@
 #define AERO_SIMULATOR_CSKYDOM_H
 
 #include "../AeroSimulator/CGameObject.h"
-#include "../AeroSimulator/CUtils.h"
 
 #include <string>
 
@@ -10,20 +9,19 @@ namespace AeroSimulatorEngine
 {
    class CShader;
    class CRenderable;
+   struct SRenderableData;
 
    class CSkyDom : public CGameObject
    {
    public:
       CSkyDom(const int id,
               const int type,
-              std::shared_ptr<CShader>& pShader,
-              const std::string& textureFilePath,
-              const SSphereParams& generateParams);
+              SRenderableData& data);
 
       virtual ~CSkyDom();
 
    private:
-      void addRenderableComponent(std::shared_ptr<CShader>& pShader, const std::string& textureFilePath, const SSphereParams& generateParams);
+      void addRenderableComponent(SRenderableData& data);
    };
 } // namespace AeroSimulatorEngine
 

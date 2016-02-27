@@ -35,6 +35,7 @@ namespace AeroSimulatorEngine
    class CShader;
    class CGeometry;
    class CTexture;
+   struct SSphereParams;
 
    struct SGeometryData
    {
@@ -44,6 +45,17 @@ namespace AeroSimulatorEngine
       int mNumVertices;
       GLuint* mIndices;
       int mNumIndices;
+   };
+
+   struct SRenderableData
+   {
+      SRenderableData(std::shared_ptr<CShader>& pShader,
+                      const SSphereParams * mSphereParams = nullptr,
+                      const std::string& textureFilePath = "");
+
+      std::shared_ptr<CShader>& mShader;
+      const std::string& mTextureFilePath;
+      const SSphereParams * mSphereParams;
    };
 
    // CRenderable groups the geometry and its appearance in one entity

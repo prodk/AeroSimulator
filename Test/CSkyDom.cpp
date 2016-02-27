@@ -4,6 +4,7 @@
 #include "../AeroSimulator/CMovementComponent.h"
 #include "../AeroSimulator/CRenderable.h"
 #include "../AeroSimulator/CEventManager.h"
+#include "../AeroSimulator/CUtils.h"
 
 #include <vector>
 #include <math.h>
@@ -12,12 +13,10 @@ using namespace AeroSimulatorEngine;
 
 CSkyDom::CSkyDom(const int id,
                  const int type,
-                 std::shared_ptr<CShader>& pShader,
-                 const std::string& textureFilePath,
-                 const SSphereParams& generateParams)
+                 SRenderableData& data)
    : CGameObject(id, type)
 {
-   addRenderableComponent(pShader, textureFilePath, generateParams);
+   addRenderableComponent(data);
 
    // Transform component
    std::vector<int> transformEvents;
@@ -33,22 +32,29 @@ CSkyDom::~CSkyDom()
 {
 }
 
-void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const std::string& textureFilePath, const SSphereParams& generateParams)
+void CSkyDom::addRenderableComponent(SRenderableData& data)
 {
-   std::vector<int> renderableEvents;
-   renderableEvents.push_back(eGeneralEvents::UPDATE_RENDERABLE);
-
-   std::vector<GLfloat> vertices;
-   std::vector<GLuint> indices;
-
-   CUtils::generateTexturedSphere(vertices, indices, generateParams);
-
-   SGeometryData geometryData(&vertices[0], vertices.size(), &indices[0], indices.size());
-
-   if (CGameObject::addRenderableComponent(pShader, textureFilePath, geometryData, renderableEvents, "* CSkyDom: "))
+   if (data.mSphereParams)
    {
-      // Draw lines in debug mode
-      getRenderable().setFlag(eShaderFlags::DRAW_LINES, true);
-      getRenderable().set1DParam(eShader1DParams::LINE_WIDTH, 3.0f);
+      std::vector<int> renderableEvents;
+      renderableEvents.push_back(eGeneralEvents::UPDATE_RENDERABLE);
+
+      std::vector<GLfloat> vertices;
+      std::vector<GLuint> indices;
+
+      CUtils::generateTexturedSphere(vertices, indices, *data.mSphereParams);
+
+      SGeometryData geometryData(&vertices[0], vertices.size(), &indices[0], indices.size());
+
+      if (CGameObject::addRenderableComponent(data.mShader, data.mTextureFilePath, geometryData, renderableEvents, "* CSkyDom: "))
+      {
+         // Draw lines in debug mode
+         getRenderable().setFlag(eShaderFlags::DRAW_LINES, true);
+         getRenderable().set1DParam(eShader1DParams::LINE_WIDTH, 3.0f);
+      }
+   }
+   else
+   {
+      LOG("* CSkyDom() no sphere params were found");
    }
 }

@@ -195,6 +195,9 @@
     <ClInclude Include="CUtils.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
+    <ClInclude Include="CFigure.h">
+      <Filter>Header Files\gameObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\shaders\CColorLambertianShader.cpp">
@@ -331,6 +334,9 @@
     </ClCompile>
     <ClCompile Include="CUtils.cpp">
       <Filter>Source Files\app</Filter>
+    </ClCompile>
+    <ClCompile Include="CFigure.cpp">
+      <Filter>Source Files\gameObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

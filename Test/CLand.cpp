@@ -32,8 +32,7 @@ namespace
    };
 }
 
-CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader,
-             const std::string& textureFilePath, const glm::vec2 & numOfTiles, const glm::vec3& size)
+CLand::CLand(const int id, const int type, SRenderableData& data, const glm::vec2 & numOfTiles, const glm::vec3& size)
    : CGameObject(id, type)
    , mNumOfTiles(numOfTiles)
 {
@@ -44,7 +43,7 @@ CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader,
    scaleVertices(vertices, ARRAYLEN(vertices));
    SGeometryData geometryData(vertices, ARRAYLEN(vertices), indices, ARRAYLEN(indices));
 
-   if (CGameObject::addRenderableComponent(pShader, textureFilePath, geometryData, renderableEvents, "* CLand: "))
+   if (CGameObject::addRenderableComponent(data.mShader, data.mTextureFilePath, geometryData, renderableEvents, "* CLand: "))
    {
       getRenderable().setFlag(REPEAT_TEXTURE, true);
    }

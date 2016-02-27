@@ -121,21 +121,25 @@ void CGame::setupScene()
 
 void CGame::addLand()
 {
-   const char* filePath = "../AeroSimulator/res/land.dds";
    const int id = mGameObjects.size();
+
+   ///@todo: add later: read these params from a style file
+   const std::string filePath = "../AeroSimulator/res/land.dds";
    const glm::vec3 landSize = glm::vec3(2000.f, 1.f, 2000.0f);
 
+   SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], 0, filePath);
    tGoSharedPtr pObject(
-      new CLand(id, eGameObjects::LAND, mShaders[eShaders::TEXTURE_SHADER], filePath, glm::vec2(10, 10), landSize) );
+      new CLand(id, eGameObjects::LAND, data, glm::vec2(10, 10), landSize) );
 
    addObject(id, pObject, "* CGame::addLand() ");
 }
 
 void CGame::addSky()
 {
-   const std::string filePath = "../AeroSimulator/res/sky.dds";
    const int id = mGameObjects.size();
 
+   ///@todo: add later: read these params from a style file
+   const std::string filePath = "../AeroSimulator/res/sky.dds";
    const float radius = 300.0f;
    const std::size_t numOfCircles = 16;
    const std::size_t numOfSegments = 32;
@@ -143,8 +147,9 @@ void CGame::addSky()
    const float maxAzimuth = 2.0f * glm::pi<float>();
    const SSphereParams params(radius, numOfCircles, numOfSegments, maxInclination, maxAzimuth);
 
+   SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], &params, filePath);
    tGoSharedPtr pObject(
-      new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePath, params));
+      new CSkyDom(id, eGameObjects::SKY, data));
 
    addObject(id, pObject, "* CGame::addSky() ");
 }
@@ -159,8 +164,9 @@ void CGame::addEnemies()
    const std::string filePathTest = "../AeroSimulator/res/smile.dds";
    const SSphereParams paramsTest(10.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
 
+   SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], &paramsTest, filePathTest);
    tGoSharedPtr pObjectTest(
-      new CSkyDom(idTest, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePathTest, paramsTest));
+      new CSkyDom(idTest, eGameObjects::SKY, data));
 
    addObject(idTest, pObjectTest, "* CGame::addSky() test sphere");
    ///@todo: end

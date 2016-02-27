@@ -12,14 +12,14 @@ namespace AeroSimulatorEngine
 {
    class CShader;
    class CRenderable;
+   struct SRenderableData;
 
    class CLand : public CGameObject
    {
    public:
       CLand(const int id,
             const int type,
-            std::shared_ptr<CShader>& pShader,
-            const std::string& textureFilePath,
+            SRenderableData& data,
             const glm::vec2& numOfTiles,
             const glm::vec3& size);
 
