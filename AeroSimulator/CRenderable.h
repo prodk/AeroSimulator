@@ -50,12 +50,14 @@ namespace AeroSimulatorEngine
    struct SRenderableData
    {
       SRenderableData(std::shared_ptr<CShader>& pShader,
-                      const SSphereParams * mSphereParams = nullptr,
-                      const std::string& textureFilePath = "");
+         const SSphereParams * mSphereParams = nullptr,
+         const std::string& textureFilePath = "",
+         const glm::vec4& color = glm::vec4(0.0f, 1.0f, 0.0f, 1.0f));
 
       std::shared_ptr<CShader>& mShader;
       const std::string& mTextureFilePath;
       const SSphereParams * mSphereParams;
+      const glm::vec4 mColor;
    };
 
    // CRenderable groups the geometry and its appearance in one entity

@@ -8,19 +8,20 @@ namespace AeroSimulatorEngine
 {
    struct SRenderableData;
    struct SGeometryData;
+   class CTransform;
 
    // Allows creating simple geometrical objects: cubes, spheres, lines, etc.
    class CFigure : public CGameObject
    {
    public:
       ///@todo: probably use type as figureType
-      CFigure(const int id, const int type, const int figureType, SRenderableData& data);
+      CFigure(const int id, const int type, const int figureType, SRenderableData& data, const CTransform& transform);
       virtual ~CFigure();
 
       enum eFigure {CUBE, SPHERE};
 
    private:
-      SGeometryData getGeometryData(const SRenderableData& data) const;
+      void getGeometryData(std::vector<GLfloat>& vertices, std::vector<GLuint>& indices, const SSphereParams * sphereParams) const;
 
    private:
       int mFigureType;

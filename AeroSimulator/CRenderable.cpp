@@ -14,10 +14,14 @@ SGeometryData::SGeometryData(GLfloat* vertices, int numVertices, GLuint* indices
 {
 }
 
-SRenderableData::SRenderableData(std::shared_ptr<CShader>& pShader, const SSphereParams * sphereParams, const std::string& textureFilePath)
+SRenderableData::SRenderableData(std::shared_ptr<CShader>& pShader,
+                                 const SSphereParams * sphereParams,
+                                 const std::string& textureFilePath,
+                                 const glm::vec4& color)
    : mShader(pShader)
    , mSphereParams(sphereParams)
    , mTextureFilePath(textureFilePath)
+   , mColor(color)
 {
 }
 
@@ -90,6 +94,8 @@ void CRenderable::setShader(std::shared_ptr<CShader>& pShader)
    }
 }
 
+///@todo: handle a situation when we have a texture shader but texture file path is incorrect
+///@now there is an assert in this case
 bool CRenderable::loadTexture(const int id, const char * filePath, const int fmt)
 {
    bool result = false;

@@ -44,6 +44,7 @@ bool CGameObject::addRenderableComponent(tShaderPtr & pShader, const std::string
 {
    bool result = false;
 
+   ///@todo: handle a situation when we have a texture shader but texture file path is incorrect
    if (addComponent<CRenderableComponent>())
    {
       LOG(msg, " addRenderableComponent() success");

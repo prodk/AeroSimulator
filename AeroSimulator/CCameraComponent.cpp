@@ -156,7 +156,7 @@ void CCameraComponent::zoom(const float deltaTime)
       // z-axiz in the view-space perpendicular along the camera direction
       const glm::vec3 viewDirection = glm::vec3(0.0f, 0.0f, 1.0f);
 
-      const float zoomStep = 0.5f; ///@todo: adjust and put it in the styles
+      const float zoomStep = 0.1f; ///@todo: adjust and put it in the styles
 
       glm::vec3 currentPos = mTransform.getTranslate();
 

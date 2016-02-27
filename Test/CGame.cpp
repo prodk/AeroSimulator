@@ -13,6 +13,7 @@
 #include "../CCamera.h"
 #include "../CTransform.h"
 #include "../AeroSimulator/CUtils.h"
+#include "../AeroSimulator/CFigure.h"
 
 #include "CLand.h"
 #include "CSkyDom.h"
@@ -116,6 +117,7 @@ void CGame::setupScene()
    addLand();
    addSky();
    addEnemies();
+   addAirplane();
    addCameras();
 }
 
@@ -157,31 +159,49 @@ void CGame::addSky()
 void CGame::addEnemies()
 {
    ///@todo: remove this debug
+   const int id = mGameObjects.size();
+
+   ///@todo: add later: read these params from a style file
    const std::size_t numOfCircles = 16;
    const std::size_t numOfSegments = 32;
+   const std::string filePath = "../AeroSimulator/res/smile.dds";
+   const SSphereParams params(10.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
 
-   const int idTest = mGameObjects.size();
-   const std::string filePathTest = "../AeroSimulator/res/smile.dds";
-   const SSphereParams paramsTest(10.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
+   SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], &params, filePath, glm::vec4());
 
-   SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], &paramsTest, filePathTest);
-   tGoSharedPtr pObjectTest(
-      new CSkyDom(idTest, eGameObjects::SKY, data));
+   CTransform transform;
+   transform.setTranlate(glm::vec3(0.0f, 40.0f, -20.0f));
+   transform.setRotate(glm::vec3(0.0f, 90.0f, 0.0f));
+   tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::SPHERE, data, transform));
 
-   addObject(idTest, pObjectTest, "* CGame::addSky() test sphere");
+   addObject(id, pObject, "* CGame::addEnemy ");
    ///@todo: end
+}
+
+void CGame::addAirplane()
+{
+   const int id = mGameObjects.size();
+
+   ///@todo: add later: read these params from a style file
+   const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
+   CTransform transform;
+   transform.setTranlate(glm::vec3(0.0f, 30.0f, 0.0f));
+   transform.setScale(glm::vec3(10.0f, 10.0f, 10.0f));
+   SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", cabineColor);
+   tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::CUBE, data, transform));
+
+   addObject(id, pObject, "* CGame::addAirplane ");
 }
 
 void CGame::addCameras()
 {
    // currently just 1 camera
-   const glm::vec3 translate(0.0f, 30.0f, 50.0f);
+   const glm::vec3 translate(0.0f, 50.0f, 30.0f);
    const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);
 
-   //transform.setTranslationFirst(true);
    const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 1100.0f);
    std::shared_ptr<CCamera> camera( new CCamera(transform, frustum));
    if (camera)
