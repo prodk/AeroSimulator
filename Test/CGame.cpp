@@ -115,6 +115,7 @@ void CGame::setupScene()
 
    addLand();
    addSky();
+   addEnemies();
    addCameras();
 }
 
@@ -132,7 +133,7 @@ void CGame::addLand()
 
 void CGame::addSky()
 {
-   const char* filePath = "../AeroSimulator/res/sky.dds";
+   const std::string filePath = "../AeroSimulator/res/sky.dds";
    const int id = mGameObjects.size();
 
    const float radius = 300.0f;
@@ -146,14 +147,20 @@ void CGame::addSky()
       new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePath, params));
 
    addObject(id, pObject, "* CGame::addSky() ");
+}
 
-   ///@todo: remove this debug, test sky
+void CGame::addEnemies()
+{
+   ///@todo: remove this debug
+   const std::size_t numOfCircles = 16;
+   const std::size_t numOfSegments = 32;
+
    const int idTest = mGameObjects.size();
-   const char* filePathTest = "../AeroSimulator/res/smile.dds";
+   const std::string filePathTest = "../AeroSimulator/res/smile.dds";
    const SSphereParams paramsTest(10.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
 
    tGoSharedPtr pObjectTest(
-      new CSkyDom(id, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePathTest, paramsTest));
+      new CSkyDom(idTest, eGameObjects::SKY, mShaders[eShaders::TEXTURE_SHADER], filePathTest, paramsTest));
 
    addObject(idTest, pObjectTest, "* CGame::addSky() test sphere");
    ///@todo: end
@@ -162,7 +169,7 @@ void CGame::addSky()
 void CGame::addCameras()
 {
    // currently just 1 camera
-   const glm::vec3 translate(0.0f, 50.0f, 0.0f);
+   const glm::vec3 translate(0.0f, 30.0f, 50.0f);
    const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);

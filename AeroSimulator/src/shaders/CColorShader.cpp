@@ -55,15 +55,13 @@ void CColorShader::setup(CRenderable & renderable)
       0);
    glEnableVertexAttribArray(mPositionAttributeId);
 
-   ///@todo: get from renderable
-   //const glm::vec4 color = renderable.getColor();
-   const glm::vec4 color(1.0f, 0.0f, 0.0f, 1.0f);
+   const glm::vec4 color = renderable.getVector4Param(eShaderVector4Params::COLOR);
    glUniform4fv(mColorUniformId, 1, &color[0]);
 
+   ///@todo: perform matrix multiplication on the GPU side
    const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
    const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
    const glm::mat4 projection = renderable.getMatrix4Param(eShaderMatrix4Params::PROJECTION_MATRIX);
    const glm::mat4 MVP = projection * view * model;
    glUniformMatrix4fv(mMvpUniformId, 1, GL_FALSE, &MVP[0][0]);
-
 }

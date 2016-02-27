@@ -114,34 +114,7 @@
     <ClInclude Include="CCompositeGameObject.h">
       <Filter>Header Files\gameObject\composite</Filter>
     </ClInclude>
-    <ClInclude Include="C3DModel.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CAxesFrame.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CCube.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
     <ClInclude Include="CGameObject.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CGeometry.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CLine.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CPropeller.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CRenderable.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CSkyBox.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="CSphere.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
     <ClInclude Include="CBillBoard.h">
@@ -162,9 +135,6 @@
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
-    <ClInclude Include="CBoundingBox.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
     <ClInclude Include="CLeafGameObject.h">
       <Filter>Header Files\gameObject\composite</Filter>
     </ClInclude>
@@ -183,9 +153,6 @@
     <ClInclude Include="src\shaders\CDepthBufferShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
     </ClInclude>
-    <ClInclude Include="CMissile.h">
-      <Filter>Header Files\gameObject</Filter>
-    </ClInclude>
     <ClInclude Include="CAppEvent.h">
       <Filter>Header Files\app</Filter>
     </ClInclude>
@@ -197,12 +164,6 @@
     </ClInclude>
     <ClInclude Include="CWin32InputHandler.h">
       <Filter>Header Files\app</Filter>
-    </ClInclude>
-    <ClInclude Include="CTransform.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CCameraManager.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CTransformComponent.h">
       <Filter>Header Files\components</Filter>
@@ -219,8 +180,20 @@
     <ClInclude Include="CCameraComponent.h">
       <Filter>Header Files\components</Filter>
     </ClInclude>
+    <ClInclude Include="CGeometry.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="CCameraManager.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="CRenderable.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="CTransform.h">
+      <Filter>Header Files\renderer</Filter>
+    </ClInclude>
     <ClInclude Include="CUtils.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\app</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -278,34 +251,7 @@
     <ClCompile Include="CParentGameObject.cpp">
       <Filter>Source Files\gameObject\composite</Filter>
     </ClCompile>
-    <ClCompile Include="C3DModel.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CAxesFrame.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CCube.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
     <ClCompile Include="CGameObject.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CGeometry.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CLine.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CPropeller.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CRenderable.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CSkyBox.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
-    <ClCompile Include="CSphere.cpp">
       <Filter>Source Files\gameObject</Filter>
     </ClCompile>
     <ClCompile Include="CBillBoard.cpp">
@@ -326,9 +272,6 @@
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="CBoundingBox.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
     <ClCompile Include="CLeafGameObject.cpp">
       <Filter>Source Files\gameObject\composite</Filter>
     </ClCompile>
@@ -347,9 +290,6 @@
     <ClCompile Include="src\shaders\CDepthBufferShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="CMissile.cpp">
-      <Filter>Source Files\gameObject</Filter>
-    </ClCompile>
     <ClCompile Include="CAppEvent.cpp">
       <Filter>Source Files\app</Filter>
     </ClCompile>
@@ -361,12 +301,6 @@
     </ClCompile>
     <ClCompile Include="CWin32InputHandler.cpp">
       <Filter>Source Files\app</Filter>
-    </ClCompile>
-    <ClCompile Include="CTransform.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CCameraManager.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CMovementComponent.cpp">
       <Filter>Source Files\components</Filter>
@@ -383,8 +317,20 @@
     <ClCompile Include="CCameraComponent.cpp">
       <Filter>Source Files\components</Filter>
     </ClCompile>
+    <ClCompile Include="CGeometry.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="CRenderable.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="CCameraManager.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="CTransform.cpp">
+      <Filter>Source Files\renderer</Filter>
+    </ClCompile>
     <ClCompile Include="CUtils.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\app</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -93,6 +93,7 @@ void CTextureShader::setup(CRenderable & renderable)
 
    glEnableVertexAttribArray(mTexCoordAttributeId);
 
+   ///@todo: perform matrix multiplication on the GPU side
    const glm::mat4 model = renderable.getMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX);
    const glm::mat4 view = renderable.getMatrix4Param(eShaderMatrix4Params::VIEW_MATRIX);
    const glm::mat4 projection = renderable.getMatrix4Param(eShaderMatrix4Params::PROJECTION_MATRIX);

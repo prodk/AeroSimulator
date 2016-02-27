@@ -2,7 +2,7 @@
 #include "CGeometry.h"
 #include "CTexture.h"
 #include "CLog.h"
-#include "CBoundingBox.h"
+//#include "CBoundingBox.h"
 
 #include "glm/gtc/matrix_transform.hpp"
 
@@ -147,9 +147,9 @@ bool CBillBoard::loadTexture(const char * fileName)
 
 const CBoundingBox * CBillBoard::getBoundingBox() const
 {
-   if (mBoundingBox)
+  /* if (mBoundingBox)
       return mBoundingBox.get();
-   else
+   else*/
       return 0;
 }
 

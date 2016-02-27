@@ -13,7 +13,7 @@ using namespace AeroSimulatorEngine;
 CSkyDom::CSkyDom(const int id,
                  const int type,
                  std::shared_ptr<CShader>& pShader,
-                 const char * textureFilePath,
+                 const std::string& textureFilePath,
                  const SSphereParams& generateParams)
    : CGameObject(id, type)
 {
@@ -26,7 +26,7 @@ CSkyDom::~CSkyDom()
 {
 }
 
-void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath, const SSphereParams& generateParams)
+void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const std::string& textureFilePath, const SSphereParams& generateParams)
 {
    if (addComponent<CRenderableComponent>())
    {
@@ -34,17 +34,20 @@ void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const ch
 
       std::vector<GLfloat> vertices;
       std::vector<GLuint> indices;
-      //CUtils::generateSphere(vertices, indices, generateParams); // for color shader
 
       CUtils::generateTexturedSphere(vertices, indices, generateParams);
 
       SGeometryData geometryData(&vertices[0], vertices.size(), &indices[0], indices.size());
 
       getRenderable().setGeometry(geometryData);
-      getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath, DDS);
       getRenderable().setShader(pShader);
 
-      ///@todo: add line rendering in the debug mode
+      if (!textureFilePath.empty())
+      {
+         getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath.c_str(), DDS);
+      }
+
+      // Draw lines in debug mode
       getRenderable().setFlag(eShaderFlags::DRAW_LINES, true);
       getRenderable().set1DParam(eShader1DParams::LINE_WIDTH, 3.0f);
 

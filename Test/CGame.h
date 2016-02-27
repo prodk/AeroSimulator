@@ -39,6 +39,7 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
       void setupScene();
       void addLand();
       void addSky();
+      void addEnemies();
       void addCameras();
 
       void addObjectsToRenderer();

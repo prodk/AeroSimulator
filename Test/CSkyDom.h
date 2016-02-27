@@ -4,6 +4,8 @@
 #include "../AeroSimulator/CGameObject.h"
 #include "../AeroSimulator/CUtils.h"
 
+#include <string>
+
 namespace AeroSimulatorEngine
 {
    class CShader;
@@ -15,14 +17,14 @@ namespace AeroSimulatorEngine
       CSkyDom(const int id,
               const int type,
               std::shared_ptr<CShader>& pShader,
-              const char * textureFilePath,
+              const std::string& textureFilePath,
               const SSphereParams& generateParams);
 
       virtual ~CSkyDom();
 
    private:
       ///@todo: make addComponent virtual such that no need to declare them in every class
-      void addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath, const SSphereParams& generateParams);
+      void addRenderableComponent(std::shared_ptr<CShader>& pShader, const std::string& textureFilePath, const SSphereParams& generateParams);
       void addTransformComponent();
       void addMovementComponent();
 
