@@ -18,8 +18,15 @@ CSkyDom::CSkyDom(const int id,
    : CGameObject(id, type)
 {
    addRenderableComponent(pShader, textureFilePath, generateParams);
-   addTransformComponent();
-   addMovementComponent();
+
+   // Transform component
+   std::vector<int> transformEvents;
+   (void)CGameObject::addTransformComponent(transformEvents, "* CSkyDom: ");
+
+   // Movement component
+   std::vector<int> moveEvents;
+   moveEvents.push_back(eGeneralEvents::UPDATE);
+   (void)CGameObject::addMovementComponent(moveEvents, "* CSkyDom: ");
 }
 
 CSkyDom::~CSkyDom()
@@ -28,64 +35,20 @@ CSkyDom::~CSkyDom()
 
 void CSkyDom::addRenderableComponent(std::shared_ptr<CShader>& pShader, const std::string& textureFilePath, const SSphereParams& generateParams)
 {
-   if (addComponent<CRenderableComponent>())
+   std::vector<int> renderableEvents;
+   renderableEvents.push_back(eGeneralEvents::UPDATE_RENDERABLE);
+
+   std::vector<GLfloat> vertices;
+   std::vector<GLuint> indices;
+
+   CUtils::generateTexturedSphere(vertices, indices, generateParams);
+
+   SGeometryData geometryData(&vertices[0], vertices.size(), &indices[0], indices.size());
+
+   if (CGameObject::addRenderableComponent(pShader, textureFilePath, geometryData, renderableEvents, "* CSkyDom: "))
    {
-      LOG("* CSkyDom setting up the renderable component");
-
-      std::vector<GLfloat> vertices;
-      std::vector<GLuint> indices;
-
-      CUtils::generateTexturedSphere(vertices, indices, generateParams);
-
-      SGeometryData geometryData(&vertices[0], vertices.size(), &indices[0], indices.size());
-
-      getRenderable().setGeometry(geometryData);
-      getRenderable().setShader(pShader);
-
-      if (!textureFilePath.empty())
-      {
-         getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath.c_str(), DDS);
-      }
-
       // Draw lines in debug mode
       getRenderable().setFlag(eShaderFlags::DRAW_LINES, true);
       getRenderable().set1DParam(eShader1DParams::LINE_WIDTH, 3.0f);
-
-      if (GEventManager.registerEvent(eGeneralEvents::UPDATE_RENDERABLE))
-      {
-         LOG("CSkyDom::CRenderableComponent: UPDATE event registered");
-      }
-      GEventManager.attachEvent(eGeneralEvents::UPDATE_RENDERABLE, *getComponent<CRenderableComponent>());
    }
-}
-
-void CSkyDom::addTransformComponent()
-{
-   if (addComponent<CTransformComponent>())
-   {
-      LOG("* CSkyDom setting up the transform component");
-   }
-}
-
-void CSkyDom::addMovementComponent()
-{
-   if (addComponent<CMovementComponent>())
-   {
-      LOG("* CSkyDom setting up the movement component");
-
-      if (GEventManager.registerEvent(eGeneralEvents::UPDATE))
-      {
-         LOG("CSkyDom:CMovementComponent: UPDATE event registered: ");
-      }
-
-      GEventManager.attachEvent(eGeneralEvents::UPDATE, *getComponent<CMovementComponent>());
-   }
-}
-
-CRenderable & CSkyDom::getRenderable()
-{
-   CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*this);
-   assert(pRenderableComp);
-
-   return pRenderableComp->getRenderable();
 }

@@ -429,7 +429,7 @@ void CWin32Renderer::updateFPS(CTask * pTask)
       CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
 
       const int fps = pTimer->getFPS();
-      mFrameDt = pTimer->getDtFrame();
+      mFrameDt = static_cast<float>(pTimer->getDtFrame());
       const double simDt = pTimer->getDtSim(); ///@todo: probably remove simulation time
 
       wchar_t buf[128];

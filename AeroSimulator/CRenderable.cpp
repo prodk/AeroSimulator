@@ -62,10 +62,6 @@ void CRenderable::setGeometry(const SGeometryData& data)
       mGeometry->setIndexBuffer((void*)data.mIndices);
       mGeometry->setNumOfIndices(data.mNumIndices);
 
-      ///@todo: remove this
-      /*mGeometry->setNumOfElementsPerVertex(data.mElementsPerVertex);
-      mGeometry->setVertexStride(data.mStride);*/
-
       // Can be called only when the correct geometry has been setup
       setupVbo();
    }
@@ -211,81 +207,21 @@ float CRenderable::get1DParam(const int id) const
 glm::vec2 CRenderable::getVector2Param(const int id) const
 {
    return findValueInMap<glm::vec2>(mVector2Params, id, " vector 2D, key ");
-
-   ///@todo: remove commented code when tested
-   /*auto result = glm::vec2();
-
-   auto iter = mVector2Params.find(id);
-   if (mVector2Params.end() != iter)
-   {
-      result = iter->second;
-   }
-   else
-   {
-      LOG("* CRenderable: Failed to find vector 2D: ", id);
-   }
-
-   return result;*/
 }
 
 glm::vec3 CRenderable::getVector3Param(const int id) const
 {
    return findValueInMap<glm::vec3>(mVector3Params, id, " vector 3D, key ");
-
-   ///@todo: remove commented code when tested
-   /*auto result = glm::vec3();
-
-   auto iter = mVector3Params.find(id);
-   if (mVector3Params.end() != iter)
-   {
-      result = iter->second;
-   }
-   else
-   {
-      LOG("* CRenderable: Failed to find vector 3D: ", id);
-   }
-
-   return result;*/
 }
 
 glm::vec4 CRenderable::getVector4Param(const int id) const
 {
    return findValueInMap<glm::vec4>(mVector4Params, id, " vector 4D, key ");
-
-   ///@todo: remove when tested
-   /*auto result = glm::vec4();
-
-   auto iter = mVector4Params.find(id);
-   if (mVector4Params.end() != iter)
-   {
-      result = iter->second;
-   }
-   else
-   {
-      LOG("* CRenderable: Failed to find vector 4D: ", id);
-   }
-
-   return result;*/
 }
 
 glm::mat3 CRenderable::getMatrix3Param(const int id) const
 {
    return findValueInMap<glm::mat3>(mMatrix3Params, id, " matrix 3x3, key ");
-
-   ///@todo: remove when tested
-  /* auto result = glm::mat3();
-
-   auto iter = mMatrix3Params.find(id);
-   if (mMatrix3Params.end() != iter)
-   {
-      result = iter->second;
-   }
-   else
-   {
-      LOG("* CRenderable: Failed to find matrix 3D: ", id);
-   }
-
-   return result;*/
 }
 
 glm::mat4 CRenderable::getMatrix4Param(const int id) const
@@ -330,16 +266,6 @@ void CRenderable::setupVbo()
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
    }
 }
-
-//bool CRenderable::loadNormalMapTexture(const char * filePath)
-//{
-//   return false;
-//}
-//
-//bool CRenderable::loadAnimationTexture(const char * filePath)
-//{
-//   return false;
-//}
 
 //glm::mat3 CRenderable::getNormalMatrix() const
 //{

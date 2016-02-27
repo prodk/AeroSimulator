@@ -208,7 +208,7 @@ void CGame::getTime(CTask * pTask)
    if (pTask)
    {
       CTimer* pTimer = reinterpret_cast<CTimer*>(pTask);
-      mFrameDt = pTimer->getDtFrame();
+      mFrameDt = static_cast<float>(pTimer->getDtFrame());
    }
 }
 
@@ -231,10 +231,10 @@ void CGame::addObject(const int id, tGoSharedPtr pObject, const char * msg)
 
    if (mGameObjects.insert(newObject).second)
    {
-      LOG(msg, "success");
+      LOG(msg, "success\n");
    }
    else
    {
-      LOG(msg, "failed");
+      LOG(msg, "failed\n");
    }
 }

@@ -6,6 +6,8 @@
 #include "../AeroSimulator/include/glm/vec2.hpp"
 #include "../AeroSimulator/include/glm/vec3.hpp"
 
+#include <string>
+
 namespace AeroSimulatorEngine
 {
    class CShader;
@@ -17,7 +19,7 @@ namespace AeroSimulatorEngine
       CLand(const int id,
             const int type,
             std::shared_ptr<CShader>& pShader,
-            const char * textureFilePath,
+            const std::string& textureFilePath,
             const glm::vec2& numOfTiles,
             const glm::vec3& size);
 
@@ -25,13 +27,7 @@ namespace AeroSimulatorEngine
 
    private:
       void scaleVertices(GLfloat* vertices, const int numOfVertices) const;
-
-      ///@todo: make addComponent virtual such that no need to declare them in every class
-      void addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath);
       void addTransformComponent(const glm::vec3& size);
-      void addMovementComponent();
-
-      CRenderable & getRenderable();
 
    private:
       glm::vec2 mNumOfTiles;

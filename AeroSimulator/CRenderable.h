@@ -72,6 +72,7 @@ namespace AeroSimulatorEngine
       void createAndLoadTexture(const int id, const char* filePath, const int fmt);
       CTexture* getTexture(const int id) const;
 
+      ///@todo: probably make these inlined later
       // Setters for shader params
       void setFlag(const int id, const bool value);
       void set1DParam(const int id, const float value);
@@ -81,6 +82,7 @@ namespace AeroSimulatorEngine
       void setMatrix3Param(const int id, const glm::mat3& value);
       void setMatrix4Param(const int id, const glm::mat4& value);
 
+      ///@todo: probably make these inlined later
       // Getters for shader params
       bool getFlag(const int id) const;
       float get1DParam(const int id) const;
@@ -90,38 +92,7 @@ namespace AeroSimulatorEngine
       glm::mat3 getMatrix3Param(const int id) const;
       glm::mat4 getMatrix4Param(const int id) const;
 
-
-      //bool loadNormalMapTexture(const char* filePath);
-      //bool loadAnimationTexture(const char* filePath);
-      //CTexture* getTexture() const { return mTexture.get(); }
-      //CTexture* getNormalMapTexture() const { return mNormalMapTexture.get(); }
-      //CTexture* getAnimationTexture() const { return mAnimationTexture.get(); }
-
-      /// Geometry
-      //void setGeometry(std::shared_ptr<CGeometry>& pGeometry) { mGeometry = pGeometry; }
-      //CGeometry* getGeometry() const { return mGeometry.get(); }
-
-      /// Shaders
-      //void setShader(CShader* pShader) { mShader.reset(pShader); }
-      //CShader* getShader() const { return mShader.get(); }
-
-      //void setTexture(std::shared_ptr<CTexture>& pTexture) { mTexture = pTexture; }
-
-      //void setRepeatTexture(const bool repeat) { mRepeatTexture = repeat; }
-      //bool isRepeatTexture() const { return mRepeatTexture; }
-
-      //GLuint getVboId() const { return mVboId; }
-      //GLuint getIboId() const { return mIboId; }
-
-      /// Matrices
-      //void setModelMatrix(const glm::mat4& m) { mModelMatrix = m; }
-      //glm::mat4 getModelMatrix() const { return mModelMatrix; }
-
-      //void setMvpMatrix(const glm::mat4& m) { mMvpMatrix = m; }
-      //glm::mat4 getMvpMatrix() const { return mMvpMatrix; }
-
-      //void setViewMatrix(const glm::mat4& m) { mViewMatrix = m; }
-      //glm::mat4 getViewMatrix() const { return mViewMatrix; }
+      ///@todo: remove this commented code
 
       //glm::mat3 getNormalMatrix() const;
 
@@ -138,17 +109,6 @@ namespace AeroSimulatorEngine
       //float getBillboardWidth() const { return mBillboardWidth; }
       //void setBillboardHeight(const float height) { mBillboardHeight = height; }
       //float getBillboardHeight() const { return mBillboardHeight; }
-
-      //void setDrawWithLines(bool flag) { mDrawWithLines = flag; }
-      //bool getDrawWithLines() const { return mDrawWithLines; }
-
-      // Uniform color renderables-specific
-      //void setColor(const glm::vec4& color) { mColor = color; }
-      //glm::vec4 getColor() const { return mColor; }
-
-      // Line-specific
-      //void setLineWidth(const float width) { mLineWidth = width; }
-      //float getLineWidth() const { return mLineWidth; }
 
       //void setHealthValue(float shift) { mHealthValue = shift; }
       //float getHealthValue() const { return mHealthValue; }
@@ -168,15 +128,8 @@ namespace AeroSimulatorEngine
       }*/
       //glm::vec2 getFrameSize() const { return mFrameSize; }
 
-      //bool isVisible() const { return mIsVisible; }
-
       //void setTransparent(const bool flag) { mIsTransparent = flag; }
       //bool isTransparent() const { return mIsTransparent; }
-
-      //virtual void setVisible(const bool visible) { mIsVisible = visible; }
-
-      //void setTextureUnit(const GLint unit) { mTextureUnit = unit; }
-      //GLint getTextureUnit() const { return mTextureUnit; }
 
    private:
       template <typename T>
@@ -185,7 +138,6 @@ namespace AeroSimulatorEngine
       void setupVbo();
 
    private:
-      ///@todo: rearrange this params as well as in the initialization list
       std::unique_ptr<CGeometry> mGeometry;
       std::shared_ptr<CShader> mShader;
       std::vector<std::unique_ptr<CTexture> > mTextures;
@@ -199,24 +151,12 @@ namespace AeroSimulatorEngine
       std::map<int, glm::mat4> mMatrix4Params; // 4x4 matrices
 
       ///@todo: add an enum with texture IDs {USUAL, NORAML_MAP, ANIMATION}, then add textures to a vector or a map, see shaders in CGame
-      /*std::shared_ptr<CTexture> mTexture;
-      std::shared_ptr<CTexture> mNormalMapTexture;
-      std::shared_ptr<CTexture> mAnimationTexture;*/
-      //glm::mat4 mModelMatrix;
-      //glm::mat4 mMvpMatrix;
-      //GLuint mVboId;
-      //GLuint mIboId;
 
-      ///@todo: probably create a separate renderable for a billboard
       /// These are used only fro billboards
       //glm::vec3 mRightVector;
       //glm::vec3 mUpVector;
       //float mBillboardWidth;
       //float mBillboardHeight;
-
-      //bool mDrawWithLines;
-      //glm::vec4 mColor; // Only for color shader
-      //float mLineWidth; // Only for debug mode
 
       ///@todo: change the architecture such that it is not required to add all
       ///@todo these variables to CRenderer. They should be added to those objects where they are needed!
@@ -229,15 +169,6 @@ namespace AeroSimulatorEngine
       //glm::vec2 mCurrentFrame;
       //glm::vec2 mFrameSize;
       //glm::vec2 mNumOfFrames;
-
-      //bool mIsVisible;
-      //bool mRepeatTexture;
-      //bool mIsTransparent;
-      //GLint mTextureUnit;
-
-      // The maps contain flags and parameters used mainly in shaders as uniform values.
-      // A shader gives the name of the parameter and gets its value
-      // In this way we avoid hardcodig unnecessary values in every instance of this class.
    };
 
    template <typename T>

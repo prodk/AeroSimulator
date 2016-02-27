@@ -16,8 +16,8 @@ namespace AeroSimulatorEngine
 
       typedef __int64 TimeUnits;
 
-      float getDtFrame() const;
-      float getDtSim() const;
+      double getDtFrame() const;
+      double getDtSim() const;
       void setSimMultiplier(const float simMultiplier);
       double getCurrentTime(); ///@todo: probably make virtual such that it can be overriden on different platforms
 
@@ -34,8 +34,8 @@ namespace AeroSimulatorEngine
    private:
       double mTimeScale;
       double mTimeLastFrame;
-      float mFrameDt;
-      float mSimDt;
+      double mFrameDt;
+      double mSimDt;
       double mSimMultiplier;
       int mFPS;
    };

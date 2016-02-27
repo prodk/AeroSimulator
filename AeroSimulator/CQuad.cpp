@@ -73,8 +73,5 @@ void CQuad::setTextureUnit(const GLenum unit)
 
 CRenderable & CQuad::getRenderable()
 {
-   CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*this);
-   assert(pRenderableComp);
-
-   return pRenderableComp->getRenderable();
+   return CGameObject::getRenderable();
 }

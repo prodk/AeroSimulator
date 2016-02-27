@@ -1,12 +1,20 @@
 #ifndef AERO_SIMULATOR_CGAME_OBJECT_NEW_H
 #define AERO_SIMULATOR_CGAME_OBJECT_NEW_H
 
+#include "CEventManager.h"
+#include "CLog.h"
+
 #include <unordered_map>
 #include <memory>
+#include <string>
+#include <vector>
 
 namespace AeroSimulatorEngine
 {
    class CComponent;
+   class CShader;
+   struct SGeometryData;
+   class CRenderable;
 
    ///@todo: any GO can be a parent or a child in any tree.
    ///@todo: foresee such a possibility in this class, including all the necessary transform stuff
@@ -36,11 +44,33 @@ namespace AeroSimulatorEngine
       friend T* componentCast(CGameObject& object);
 
       // Returns a pointer to the component using the type of the component
-      template<typename T>
-      T* getComponent() { return static_cast<T*>(getComponent(T::getId())); }
+      template <typename T>
+      T* getComponent() const { return static_cast<T*>(getComponent(T::getId())); }
 
       // Returns a pointer to the component using its id
       CComponent* getComponent(const unsigned int id) const;
+
+      // Adding standard components
+      typedef std::shared_ptr<CShader> tShaderPtr;
+      virtual bool addRenderableComponent(tShaderPtr& pShader,
+                                          const std::string& textureFilePath,
+                                          const SGeometryData& geometryData,
+                                          const std::vector<int>& events,
+                                          const char * msg);
+
+      virtual bool addTransformComponent(const std::vector<int>& events, const char * msg);
+
+      virtual bool addMovementComponent(const std::vector<int>& events, const char * msg);
+
+      //@todo: implement when needed: virtual bool addCollisionComponent(const std::vector<int>& events, const char * msg);
+      //@todo: if several cameras needed,implement addCameraComponent();
+
+      void registerEvents(const std::vector<int>& events, const char * msg) const;
+
+      template <typename T>
+      void attachEvents(const std::vector<int>& events, const char * msg) const;
+
+      CRenderable & getRenderable(); ///@todo: think how to make this method const
 
    protected:
       // We have to shared_ptr as unique_ptr refuses to work
@@ -57,13 +87,13 @@ namespace AeroSimulatorEngine
    };
 
    // Template methods implementation
-   template<typename T>
+   template <typename T>
    T * componentCast(CGameObject & object)
    {
       return object.getComponent<T>();
    }
 
-   template<typename T>
+   template <typename T>
    inline bool CGameObject::addComponent()
    {
       bool added = false;
@@ -87,6 +117,20 @@ namespace AeroSimulatorEngine
    inline bool CGameObject::hasComponent()
    {
       return (nullptr != this->getComponent<T>());
+   }
+
+   template <typename T>
+   inline void CGameObject::attachEvents(const std::vector<int>& events, const char * msg) const
+   {
+      T * pComponent = getComponent<T>();
+      if (pComponent)
+      {
+         for (auto e : events)
+         {
+            GEventManager.attachEvent(e, *pComponent);
+            LOG(msg, " attachEvents(): ", e);
+         }
+      }
    }
 } // namespace
 

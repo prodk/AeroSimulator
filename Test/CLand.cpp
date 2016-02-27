@@ -33,27 +33,35 @@ namespace
 }
 
 CLand::CLand(const int id, const int type, std::shared_ptr<CShader>& pShader,
-             const char * textureFilePath, const glm::vec2 & numOfTiles, const glm::vec3& size)
+             const std::string& textureFilePath, const glm::vec2 & numOfTiles, const glm::vec3& size)
    : CGameObject(id, type)
    , mNumOfTiles(numOfTiles)
 {
-   addRenderableComponent(pShader, textureFilePath);
+   // Renderable component
+   std::vector<int> renderableEvents;
+   renderableEvents.push_back(eGeneralEvents::UPDATE_RENDERABLE);
+
+   scaleVertices(vertices, ARRAYLEN(vertices));
+   SGeometryData geometryData(vertices, ARRAYLEN(vertices), indices, ARRAYLEN(indices));
+
+   if (CGameObject::addRenderableComponent(pShader, textureFilePath, geometryData, renderableEvents, "* CLand: "))
+   {
+      getRenderable().setFlag(REPEAT_TEXTURE, true);
+   }
+
+   // Transform component
    addTransformComponent(size);
-   addMovementComponent();
+
+   // Movement component
+   std::vector<int> moveEvents;
+   moveEvents.push_back(eGeneralEvents::UPDATE);
+   (void)CGameObject::addMovementComponent(moveEvents, "* CLand: ");
 
    //LOG("* CLand setting up the collision component");
 }
 
 CLand::~CLand()
 {
-}
-
-CRenderable & CLand::getRenderable()
-{
-   CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*this);
-   assert(pRenderableComp);
-
-   return pRenderableComp->getRenderable();
 }
 
 void CLand::scaleVertices(GLfloat * vertices, const int numOfVertices) const
@@ -72,35 +80,12 @@ void CLand::scaleVertices(GLfloat * vertices, const int numOfVertices) const
    }
 }
 
-void CLand::addRenderableComponent(std::shared_ptr<CShader>& pShader, const char * textureFilePath)
-{
-   if (addComponent<CRenderableComponent>())
-   {
-      LOG("* CLand setting up the renderable component");
-
-      scaleVertices(vertices, ARRAYLEN(vertices));
-      SGeometryData geometryData(vertices, ARRAYLEN(vertices), indices, ARRAYLEN(indices));
-      getRenderable().setGeometry(geometryData);
-      getRenderable().createAndLoadTexture(MAIN_TEXTURE, textureFilePath, DDS);
-      getRenderable().setShader(pShader);
-
-      // Repeat the texture for land
-      getRenderable().setFlag(REPEAT_TEXTURE, true);
-
-      if (GEventManager.registerEvent(eGeneralEvents::UPDATE_RENDERABLE))
-      {
-         LOG("CLand::CRenderableComponent: UPDATE event registered");
-      }
-      GEventManager.attachEvent(eGeneralEvents::UPDATE_RENDERABLE, *getComponent<CRenderableComponent>());
-   }
-}
-
 void CLand::addTransformComponent(const glm::vec3& size)
 {
-   if (addComponent<CTransformComponent>())
+   ///@note: currently no events
+   std::vector<int> transformEvents;
+   if (CGameObject::addTransformComponent(transformEvents, "* CLand: "))
    {
-      LOG("* CLand setting up the transform component");
-
       CTransformComponent* pTransformComp = getComponent<CTransformComponent>();
       if (pTransformComp)
       {
@@ -108,20 +93,5 @@ void CLand::addTransformComponent(const glm::vec3& size)
          transform.setScale(size);
          transform.updateModelMatrix();
       }
-   }
-}
-
-void CLand::addMovementComponent()
-{
-   if (addComponent<CMovementComponent>())
-   {
-      LOG("* CLand setting up the movement component");
-
-      if (GEventManager.registerEvent(eGeneralEvents::UPDATE))
-      {
-         LOG("CMovementComponent: UPDATE event registered: ");
-      }
-
-      GEventManager.attachEvent(eGeneralEvents::UPDATE, *getComponent<CMovementComponent>());
    }
 }
