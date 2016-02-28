@@ -89,7 +89,7 @@ void CGame::update(CTask * pTask)
    getTime(pTask);
    setObjectsTime();
 
-   GEventManager.broadcastEvent(eGeneralEvents::UPDATE);
+   GEventManager.broadcastEvent(eGeneralEvents::UPDATE_TRANSFORM);
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE_RENDERABLE);
    GEventManager.broadcastEvent(eCameraEvents::UPDATE_CAMERA);
 }
@@ -158,7 +158,6 @@ void CGame::addSky()
 
 void CGame::addEnemies()
 {
-   ///@todo: remove this debug
    const int id = mGameObjects.size();
 
    ///@todo: add later: read these params from a style file
@@ -170,12 +169,11 @@ void CGame::addEnemies()
    SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], &params, filePath, glm::vec4());
 
    CTransform transform;
-   transform.setTranlate(glm::vec3(0.0f, 30.0f, -10.0f));
+   transform.setTranslate(glm::vec3(0.0f, 30.0f, -10.0f));
    transform.setRotate(glm::vec3(0.0f, 90.0f, 0.0f));
    tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::SPHERE, data, transform));
 
    addObject(id, pObject, "* CGame::addEnemy ");
-   ///@todo: end
 }
 
 void CGame::addAirplane()
@@ -183,27 +181,71 @@ void CGame::addAirplane()
    CTransform transform;
 
    ///@todo: add later: read these params from a style file
-
-   // Cabine
-   /*SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", cabineColor);
-   tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::CUBE, data, transform));
-
-   addObject(id, pObject, "* CGame::addAirplane() CFigure cube ");*/
+   /// Cabine
    const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
-   transform.setTranlate(glm::vec3(0.0f, 30.0f, 0.0f));
-   addColorCube(transform, cabineColor);
+   transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
+   transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+   addColorCube(transform, cabineColor, eGameObjects::AIRPLANE_CABINE);
 
+   /// Body
    const glm::vec4 bodyColor(0.0f, 1.0f, 1.0f, 1.0f);
-   transform.setTranlate(glm::vec3(0.0f, 29.0f, 0.0f));
-   addColorCube(transform, bodyColor);
+   transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+   /// Cube 0
+   transform.setTranslate(glm::vec3(0.0f, 29.0f, 0.0f));
+   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+
+   /// Cube 1
+   transform.setTranslate(glm::vec3(0.0f, 29.0f, 1.0f));
+   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+
+   /// Cube 2
+   transform.setTranslate(glm::vec3(0.0f, 29.0f, 2.0f));
+   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+
+   /// Cube 3
+   transform.setTranslate(glm::vec3(0.0f, 29.0f, 3.0f));
+   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+
+   /// Wing 1
+   const glm::vec4 wingColor(1.0f, 0.0f, 1.0f, 1.0f);
+   const float wingX = 1.8f;
+
+   // Left wing
+   transform.setTranslate(glm::vec3((-1.0f - 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
+   transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
+   addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
+
+   // Right wing
+   transform.setTranslate(glm::vec3((1.0f + 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
+   transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
+   addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
+
+   // Propeller
+   const glm::vec4 baseColor(1.0f, 0.5f, 0.0f, 1.0f);
+   const glm::vec4 paddleColor(1.0f, 1.0f, 0.0f, 1.0f);
+
+   // Base
+   transform.setTranslate(glm::vec3(0.0f, 29.0f, -0.75f));
+   transform.setScale(glm::vec3(0.2f, 0.25f, 0.5f));
+   addColorCube(transform, baseColor, eGameObjects::AIRPLANE);
+
+   // Paddle 1
+   transform.setTranslate(glm::vec3(0.0f, 29.75f, -1.0f));
+   transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
+   addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
+
+   // Paddle 2
+   transform.setTranslate(glm::vec3(0.0f, 28.25f, -1.0f));
+   transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
+   addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
 }
 
-void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color)
+void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
 {
    const int id = mGameObjects.size();
 
    SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", color);
-   tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::CUBE, data, transform));
+   tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
 
    addObject(id, pObject, "* CGame::addAirplane() CFigure cube ");
 }
@@ -211,10 +253,10 @@ void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color)
 void CGame::addCameras()
 {
    // currently just 1 camera
-   const glm::vec3 translate(10.0f, 30.0f, 0.0f);
+   const glm::vec3 translate(10.0f, 33.0f, 0.0f);
    const glm::vec3 rotate(0.0f, 90.0f, 0.0f);
    CTransform transform;
-   transform.setTranlate(translate);
+   transform.setTranslate(translate);
    transform.setRotate(rotate);
 
    const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 1100.0f);

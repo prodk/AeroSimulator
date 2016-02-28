@@ -52,9 +52,9 @@ CLand::CLand(const int id, const int type, SRenderableData& data, const glm::vec
    addTransformComponent(size);
 
    // Movement component
-   std::vector<int> moveEvents;
+   /*std::vector<int> moveEvents;
    moveEvents.push_back(eGeneralEvents::UPDATE);
-   (void)CGameObject::addMovementComponent(moveEvents, "* CLand: ");
+   (void)CGameObject::addMovementComponent(moveEvents, "* CLand: ");*/
 
    //LOG("* CLand setting up the collision component");
 }
@@ -81,8 +81,8 @@ void CLand::scaleVertices(GLfloat * vertices, const int numOfVertices) const
 
 void CLand::addTransformComponent(const glm::vec3& size)
 {
-   ///@note: currently no events
    std::vector<int> transformEvents;
+   transformEvents.push_back(eGeneralEvents::UPDATE_TRANSFORM);
    if (CGameObject::addTransformComponent(transformEvents, "* CLand: "))
    {
       CTransformComponent* pTransformComp = getComponent<CTransformComponent>();

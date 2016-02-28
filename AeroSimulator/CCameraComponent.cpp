@@ -168,6 +168,13 @@ void CCameraComponent::update()
       ///@todo: mark cache as dirty and update the mViewMatrix
       mTransform.updateTrMatrix();
    }
+
+   ///@todo: debug, test parent matrix concept
+   /*static glm::mat4 parentMatrix;
+   glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
+   parentMatrix = glm::rotate(parentMatrix, 0.1f*deltaTime, yAxis);
+
+   mTransform.setTranslateRotateMatrix(parentMatrix * mTransform.getTranslateRotateMatrix());*/
 }
 
 void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
@@ -219,7 +226,7 @@ void CCameraComponent::moveInViewSpace(const bool state, const bool sign, const 
 
       // Transform the new position back to the world space
       currentPos = glm::inverse(viewScaleRotate) * posViewSpace;
-      mTransform.setTranlate(currentPos);
+      mTransform.setTranslate(currentPos);
    }
 }
 

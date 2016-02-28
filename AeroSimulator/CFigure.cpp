@@ -76,6 +76,7 @@ CFigure::CFigure(const int id, const int type, const int figureType, SRenderable
 
    // Transform component
    std::vector<int> transformEvents;
+   transformEvents.push_back(eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CFigure: ");
    CTransformComponent* pTransformComp = getComponent<CTransformComponent>();
    if (pTransformComp)
@@ -86,9 +87,9 @@ CFigure::CFigure(const int id, const int type, const int figureType, SRenderable
    }
 
    // Movement component
-   std::vector<int> moveEvents;
+   /*std::vector<int> moveEvents;
    moveEvents.push_back(eGeneralEvents::UPDATE);
-   (void)CGameObject::addMovementComponent(moveEvents, "* CFigure: ");
+   (void)CGameObject::addMovementComponent(moveEvents, "* CFigure: ");*/
 }
 
 CFigure::~CFigure()

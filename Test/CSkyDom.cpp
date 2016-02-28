@@ -20,12 +20,9 @@ CSkyDom::CSkyDom(const int id,
 
    // Transform component
    std::vector<int> transformEvents;
+   ///@todo: think how to avoid using this message as it is not really necessary
+   transformEvents.push_back(eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CSkyDom: ");
-
-   // Movement component
-   std::vector<int> moveEvents;
-   moveEvents.push_back(eGeneralEvents::UPDATE);
-   (void)CGameObject::addMovementComponent(moveEvents, "* CSkyDom: ");
 }
 
 CSkyDom::~CSkyDom()

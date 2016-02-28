@@ -65,7 +65,7 @@ void CTransform::setRotate(const glm::mat4 & rotationMatrix)
    mRotationMatrix = rotationMatrix;
 }
 
-void CTransform::setTranlate(const glm::vec3 & translate)
+void CTransform::setTranslate(const glm::vec3 & translate)
 {
    mTranslate = translate;
 }

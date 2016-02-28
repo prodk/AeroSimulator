@@ -21,13 +21,14 @@ namespace AeroSimulatorEngine
       void setRotate(const glm::mat4& rotationMatrix);
       glm::mat4 getRotate() const { return mRotationMatrix; }
 
-      void setTranlate(const glm::vec3& translate);
+      void setTranslate(const glm::vec3& translate);
       glm::vec3 getTranslate() const { return mTranslate; }
 
       void setModelMatrix(const glm::mat4& m); ///@todo: probably remove
       glm::mat4 getModelMatrix() const { return mModelMatrix; }
 
       void setTranslateRotateMatrix(const glm::mat4& m);
+      glm::mat4 getTranslateRotateMatrix() const { return mTRMatrix; }
 
       void updateModelMatrix();
 

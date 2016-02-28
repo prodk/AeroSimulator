@@ -18,7 +18,7 @@ namespace AeroSimulatorEngine
 
    ///@todo: any GO can be a parent or a child in any tree.
    ///@todo: foresee such a possibility in this class, including all the necessary transform stuff
-   class CGameObject ///@todo: probably make it an event handler
+   class CGameObject
    {
    public:
       CGameObject();

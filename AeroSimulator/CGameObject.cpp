@@ -76,7 +76,10 @@ bool CGameObject::addTransformComponent(const std::vector<int>& events, const ch
    if (addComponent<CTransformComponent>())
    {
       LOG(msg, " addTransformComponent() success");
-      ///@note: currently no events for the transform component
+
+      registerEvents(events, msg);
+      attachEvents<CTransformComponent>(events, msg);
+
       result = true;
    }
    else

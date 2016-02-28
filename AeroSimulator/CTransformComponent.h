@@ -3,6 +3,7 @@
 
 #include "CComponent.h"
 #include "CTransform.h"
+#include "CEventHandler.h"
 
 namespace AeroSimulatorEngine
 {
@@ -10,7 +11,7 @@ namespace AeroSimulatorEngine
 
    ///@todo: add processing update event here so that 
    ///@todo: if no Movement component exist the model matrix is still added to the renderabl
-   class CTransformComponent : public CComponent
+   class CTransformComponent : public CComponent, public CEventHandler
    {
    public:
       static unsigned int getId() { return mId; }
@@ -20,6 +21,12 @@ namespace AeroSimulatorEngine
 
       CTransform& getTransform() { return mTransform; }
       void setTransform(const CTransform& transform) { mTransform = transform; }
+
+      // CEventHandler part
+      virtual void handleEvent(CAppEvent *pEvent) override;
+
+   private:
+      void update();
 
    private:
       /// Id of the component
