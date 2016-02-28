@@ -100,6 +100,42 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
          mStateChanges.set(eZoom, false);
          mStateSigns.set(eZoom, false);
          break;
+
+      case eCameraEvents::MOVE_LEFT:
+         mStateChanges.set(eMoveLeftRight);
+         break;
+
+      case eCameraEvents::MOVE_LEFT_STOP:
+         mStateChanges.set(eMoveLeftRight, false);
+         break;
+
+      case eCameraEvents::MOVE_RIGHT:
+         mStateChanges.set(eMoveLeftRight);
+         mStateSigns.set(eMoveLeftRight);
+         break;
+
+      case eCameraEvents::MOVE_RIGHT_STOP:
+         mStateChanges.set(eMoveLeftRight, false);
+         mStateSigns.set(eMoveLeftRight, false);
+         break;
+
+      case eCameraEvents::MOVE_UP:
+         mStateChanges.set(eMoveUpDown);
+         mStateSigns.set(eMoveUpDown);
+         break;
+
+      case eCameraEvents::MOVE_UP_STOP:
+         mStateChanges.set(eMoveUpDown, false);
+         mStateSigns.set(eMoveUpDown, false);
+         break;
+
+      case eCameraEvents::MOVE_DOWN:
+         mStateChanges.set(eMoveUpDown);
+         break;
+
+      case eCameraEvents::MOVE_DOWN_STOP:
+         mStateChanges.set(eMoveUpDown, false);
+         break;
       }
    }
 }
@@ -122,7 +158,10 @@ void CCameraComponent::update()
    rotate(eChangePitch, deltaTime);
    rotate(eRotateY, deltaTime);
    rotate(eRotateZ, deltaTime);
+
    zoom(deltaTime);
+   moveLeftRight(deltaTime);
+   moveUpDown(deltaTime);
 
    if (mStateChanges.any())
    {
@@ -149,12 +188,25 @@ void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 
 void CCameraComponent::zoom(const float deltaTime)
 {
-   if (mStateChanges[eZoom])
+   moveInViewSpace((bool)mStateChanges[eZoom], mStateSigns[eZoom], glm::vec3(0.0f, 0.0f, 1.0f), deltaTime);
+}
+
+void CCameraComponent::moveLeftRight(const float deltaTime)
+{
+   moveInViewSpace((bool)mStateChanges[eMoveLeftRight], mStateSigns[eMoveLeftRight], glm::vec3(1.0f, 0.0f, 0.0f), deltaTime);
+}
+
+void CCameraComponent::moveUpDown(const float deltaTime)
+{
+   moveInViewSpace((bool)mStateChanges[eMoveUpDown], mStateSigns[eMoveUpDown], glm::vec3(0.0f, 1.0f, 0.0f), deltaTime);
+}
+
+void CCameraComponent::moveInViewSpace(const bool state, const bool sign, const glm::vec3 & dir, const float deltaTime)
+{
+   if (state)
    {
       // Get the direction of the camera
       const glm::mat4 view = getViewMatrix();
-      // z-axiz in the view-space perpendicular along the camera direction
-      const glm::vec3 viewDirection = glm::vec3(0.0f, 0.0f, 1.0f);
 
       const float zoomStep = 0.1f; ///@todo: adjust and put it in the styles
 
@@ -163,7 +215,7 @@ void CCameraComponent::zoom(const float deltaTime)
       // Translate the camera in the view space, this will provide the correct TRS sequence of matrix operations
       const glm::mat3 viewScaleRotate = glm::mat3(view);
       glm::vec3 posViewSpace = viewScaleRotate * currentPos;
-      posViewSpace += mStateSigns[eZoom] ? viewDirection * zoomStep : -viewDirection * zoomStep;
+      posViewSpace += sign ? dir * zoomStep : -dir * zoomStep;
 
       // Transform the new position back to the world space
       currentPos = glm::inverse(viewScaleRotate) * posViewSpace;

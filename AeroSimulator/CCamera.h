@@ -6,6 +6,8 @@
 #include "glm/mat4x4.hpp"
 #include "glm/vec3.hpp"
 
+#include <vector>
+
 namespace AeroSimulatorEngine
 {
    class CTransform;
@@ -35,8 +37,10 @@ namespace AeroSimulatorEngine
 
    private:
       CTransform& getTransform();
-      void registerEvents() const;
-      void attachEvents();
+      void setEvents(std::vector<int>& events);
+
+      //void registerEvents() const;
+      //void attachEvents();
 
       /*void setProjectionMatrix(const glm::mat4& projection) { mProjectionMatrix = projection; }
       void setViewMatrix(const glm::mat4& view) { mViewMatrix = view; }

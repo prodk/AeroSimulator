@@ -35,8 +35,12 @@ CCamera::CCamera(const CTransform& transform, const SFrustum& frustum)
          cameraComp->setProjectionMatrix(frustum);
       }
 
-      registerEvents();
-      attachEvents();
+      std::vector<int> events;
+      setEvents(events);
+
+      const char* msg = "* CCamera";
+      registerEvents(events, msg);
+      attachEvents<CCameraComponent>(events, msg);
    }
 }
 
@@ -76,117 +80,33 @@ CTransform & CCamera::getTransform()
    return cameraComp->getTransform();
 }
 
-void CCamera::registerEvents() const
+void CCamera::setEvents(std::vector<int>& events)
 {
-   if (GEventManager.registerEvent(eCameraEvents::UPDATE_CAMERA))
-   {
-      LOG("CCamera: UPDATE_CAMERA event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::INCREASE_PITCH))
-   {
-      LOG("CCamera: INCREASE_PITCH event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::INCREASE_PITCH_STOP))
-   {
-      LOG("CCamera: INCREASE_PITCH_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::DECREASE_PITCH))
-   {
-      LOG("CCamera: DECREASE_PITCH event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::DECREASE_PITCH_STOP))
-   {
-      LOG("CCamera: DECREASE_PITCH_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Y_CW))
-   {
-      LOG("CCamera: ROTATE_Y_CW event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Y_CW_STOP))
-   {
-      LOG("CCamera: ROTATE_Y_CW_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Y_CCW))
-   {
-      LOG("CCamera: ROTATE_Y_CCW event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Y_CCW_STOP))
-   {
-      LOG("CCamera: ROTATE_Y_CCW_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Z_CW))
-   {
-      LOG("CCamera: ROTATE_Z_CW event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Z_CW_STOP))
-   {
-      LOG("CCamera: ROTATE_Z_CW_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Z_CCW))
-   {
-      LOG("CCamera: ROTATE_Z_CCW event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ROTATE_Z_CCW_STOP))
-   {
-      LOG("CCamera: ROTATE_Z_CCW_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ZOOM_IN))
-   {
-      LOG("CCamera: ZOOM_IN event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ZOOM_IN_STOP))
-   {
-      LOG("CCamera: ZOOM_IN_STOP event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ZOOM_OUT))
-   {
-      LOG("CCamera: ZOOM_OUT event registered");
-   }
-
-   if (GEventManager.registerEvent(eCameraEvents::ZOOM_OUT_STOP))
-   {
-      LOG("CCamera: ZOOM_OUT_STOP event registered");
-   }
-}
-
-void CCamera::attachEvents()
-{
-   CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
-   if (cameraComp)
-   {
-      GEventManager.attachEvent(eCameraEvents::UPDATE_CAMERA, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::INCREASE_PITCH, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::INCREASE_PITCH_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::DECREASE_PITCH_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Y_CW, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Y_CW_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Y_CCW, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Y_CCW_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Z_CW, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Z_CW_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Z_CCW, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ROTATE_Z_CCW_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ZOOM_IN, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ZOOM_IN_STOP, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ZOOM_OUT, *cameraComp);
-      GEventManager.attachEvent(eCameraEvents::ZOOM_OUT_STOP, *cameraComp);
-   }
+   events.push_back(eCameraEvents::UPDATE_CAMERA);
+   events.push_back(eCameraEvents::INCREASE_PITCH);
+   events.push_back(eCameraEvents::INCREASE_PITCH_STOP);
+   events.push_back(eCameraEvents::DECREASE_PITCH);
+   events.push_back(eCameraEvents::DECREASE_PITCH_STOP);
+   events.push_back(eCameraEvents::ROTATE_Y_CW);
+   events.push_back(eCameraEvents::ROTATE_Y_CW_STOP);
+   events.push_back(eCameraEvents::ROTATE_Y_CCW);
+   events.push_back(eCameraEvents::ROTATE_Y_CCW_STOP);
+   events.push_back(eCameraEvents::ROTATE_Z_CW);
+   events.push_back(eCameraEvents::ROTATE_Z_CW_STOP);
+   events.push_back(eCameraEvents::ROTATE_Z_CCW);
+   events.push_back(eCameraEvents::ROTATE_Z_CCW_STOP);
+   events.push_back(eCameraEvents::ZOOM_IN);
+   events.push_back(eCameraEvents::ZOOM_IN_STOP);
+   events.push_back(eCameraEvents::ZOOM_OUT);
+   events.push_back(eCameraEvents::ZOOM_OUT_STOP);
+   events.push_back(eCameraEvents::MOVE_LEFT);
+   events.push_back(eCameraEvents::MOVE_LEFT_STOP);
+   events.push_back(eCameraEvents::MOVE_RIGHT);
+   events.push_back(eCameraEvents::MOVE_RIGHT_STOP);
+   events.push_back(eCameraEvents::MOVE_UP);
+   events.push_back(eCameraEvents::MOVE_UP_STOP);
+   events.push_back(eCameraEvents::MOVE_DOWN);
+   events.push_back(eCameraEvents::MOVE_DOWN_STOP);
 }
 
 //void CCamera::update()

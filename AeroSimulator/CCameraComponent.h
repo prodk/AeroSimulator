@@ -36,6 +36,10 @@ namespace AeroSimulatorEngine
       void rotate(const unsigned int axisId, const float deltaTime);
       ///@todo: add translate look at point
       void zoom(const float deltaTime);
+      void moveLeftRight(const float deltaTime);
+      void moveUpDown(const float deltaTime);
+
+      void moveInViewSpace(const bool state, const bool sign, const glm::vec3& dir, const float deltaTime);
 
    private:
       static const unsigned int mId = CComponent::CAMERA;
@@ -46,6 +50,8 @@ namespace AeroSimulatorEngine
          eRotateY, // = 1, rotate around the up vector of the camera
          eRotateZ, // = 2, rotate around the direction of the camera
          eZoom,
+         eMoveLeftRight,
+         eMoveUpDown,
          eLastState
       };
 

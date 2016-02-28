@@ -2,6 +2,7 @@
 #define AERO_SIMULATOR_CGAME_H
 
 #include "../AeroSimulator/CTask.h"
+#include "../AeroSimulator/include/glm/vec4.hpp"
 
 #include <memory>
 #include <vector>
@@ -12,6 +13,7 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
    class CAppEvent;
    class CShader;
    class CGameObject;
+   class CTransform;
 
    class CGame : public CTask
    {
@@ -41,6 +43,8 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
       void addSky();
       void addEnemies();
       void addAirplane();
+      void addColorCube(const CTransform& transform, const glm::vec4& color);
+
       void addCameras();
 
       void addObjectsToRenderer();

@@ -90,6 +90,26 @@ void CWin32InputHandler::cameraKeyDown(WPARAM wParam) const
       LOG("Key - pressed");
       GEventManager.broadcastEvent(eCameraEvents::ZOOM_OUT);
       break;
+
+   case (0x5A) : // z, move left
+      LOG("Key z pressed");
+      GEventManager.broadcastEvent(eCameraEvents::MOVE_LEFT);
+      break;
+
+   case (0x58) : // x, move right
+      LOG("Key x pressed");
+      GEventManager.broadcastEvent(eCameraEvents::MOVE_RIGHT);
+      break;
+
+   case (0x46) : // f, move up
+      LOG("Key f pressed");
+      GEventManager.broadcastEvent(eCameraEvents::MOVE_UP);
+      break;
+
+   case (0x56) : // v, move down
+      LOG("Key v pressed");
+      GEventManager.broadcastEvent(eCameraEvents::MOVE_DOWN);
+      break;
    }
 }
 
@@ -136,6 +156,26 @@ void CWin32InputHandler::cameraKeyUp(WPARAM wParam) const
     case (VK_OEM_MINUS) : // -, zoom in
        LOG("Key - depressed");
        GEventManager.broadcastEvent(eCameraEvents::ZOOM_OUT_STOP);
+       break;
+
+    case (0x5A) : // z, move left
+       LOG("Key z depressed");
+       GEventManager.broadcastEvent(eCameraEvents::MOVE_LEFT_STOP);
+       break;
+
+    case (0x58) : // x, move right
+       LOG("Key x depressed");
+       GEventManager.broadcastEvent(eCameraEvents::MOVE_RIGHT_STOP);
+       break;
+
+    case (0x46) : // f, move up
+       LOG("Key f depressed");
+       GEventManager.broadcastEvent(eCameraEvents::MOVE_UP_STOP);
+       break;
+
+    case (0x56) : // v, move down
+       LOG("Key v depressed");
+       GEventManager.broadcastEvent(eCameraEvents::MOVE_DOWN_STOP);
        break;
    }
 }

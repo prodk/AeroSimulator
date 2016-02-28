@@ -17,7 +17,10 @@ namespace AeroSimulatorEngine
                         ROTATE_Y_CCW, ROTATE_Y_CCW_STOP,
                         ROTATE_Z_CW, ROTATE_Z_CW_STOP,
                         ROTATE_Z_CCW, ROTATE_Z_CCW_STOP,
-                        ZOOM_IN, ZOOM_IN_STOP, ZOOM_OUT, ZOOM_OUT_STOP, LAST_CAMERA_EVENT};
+                        ZOOM_IN, ZOOM_IN_STOP, ZOOM_OUT, ZOOM_OUT_STOP,
+                        MOVE_LEFT, MOVE_LEFT_STOP, MOVE_RIGHT, MOVE_RIGHT_STOP,
+                        MOVE_UP, MOVE_UP_STOP, MOVE_DOWN, MOVE_DOWN_STOP,
+                        LAST_CAMERA_EVENT};
 
    // This is a singleton
    class CEventManager

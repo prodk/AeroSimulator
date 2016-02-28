@@ -165,12 +165,12 @@ void CGame::addEnemies()
    const std::size_t numOfCircles = 16;
    const std::size_t numOfSegments = 32;
    const std::string filePath = "../AeroSimulator/res/smile.dds";
-   const SSphereParams params(10.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
+   const SSphereParams params(2.0f, numOfCircles, numOfSegments, glm::pi<float>(), 2.0f * glm::pi<float>());
 
    SRenderableData data(mShaders[eShaders::TEXTURE_SHADER], &params, filePath, glm::vec4());
 
    CTransform transform;
-   transform.setTranlate(glm::vec3(0.0f, 40.0f, -20.0f));
+   transform.setTranlate(glm::vec3(0.0f, 30.0f, -10.0f));
    transform.setRotate(glm::vec3(0.0f, 90.0f, 0.0f));
    tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::SPHERE, data, transform));
 
@@ -180,24 +180,39 @@ void CGame::addEnemies()
 
 void CGame::addAirplane()
 {
-   const int id = mGameObjects.size();
+   CTransform transform;
 
    ///@todo: add later: read these params from a style file
-   const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
-   CTransform transform;
-   transform.setTranlate(glm::vec3(0.0f, 30.0f, 0.0f));
-   transform.setScale(glm::vec3(10.0f, 10.0f, 10.0f));
-   SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", cabineColor);
+
+   // Cabine
+   /*SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", cabineColor);
    tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::CUBE, data, transform));
 
-   addObject(id, pObject, "* CGame::addAirplane ");
+   addObject(id, pObject, "* CGame::addAirplane() CFigure cube ");*/
+   const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
+   transform.setTranlate(glm::vec3(0.0f, 30.0f, 0.0f));
+   addColorCube(transform, cabineColor);
+
+   const glm::vec4 bodyColor(0.0f, 1.0f, 1.0f, 1.0f);
+   transform.setTranlate(glm::vec3(0.0f, 29.0f, 0.0f));
+   addColorCube(transform, bodyColor);
+}
+
+void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color)
+{
+   const int id = mGameObjects.size();
+
+   SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", color);
+   tGoSharedPtr pObject(new CFigure(id, eGameObjects::AIRPLANE, CFigure::eFigure::CUBE, data, transform));
+
+   addObject(id, pObject, "* CGame::addAirplane() CFigure cube ");
 }
 
 void CGame::addCameras()
 {
    // currently just 1 camera
-   const glm::vec3 translate(0.0f, 50.0f, 30.0f);
-   const glm::vec3 rotate(0.0f, 0.0f, 0.0f);
+   const glm::vec3 translate(10.0f, 30.0f, 0.0f);
+   const glm::vec3 rotate(0.0f, 90.0f, 0.0f);
    CTransform transform;
    transform.setTranlate(translate);
    transform.setRotate(rotate);
