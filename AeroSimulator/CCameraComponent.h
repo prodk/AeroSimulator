@@ -31,6 +31,9 @@ namespace AeroSimulatorEngine
       glm::mat4 getProjectionMatrix() const { return mProjectionMatrix; }
       void setProjectionMatrix(const SFrustum& frustum);
 
+      glm::mat4 getParentMatrix() const { return mParentMatrix; }
+      void setParentMatrix(const glm::mat4& parent) { mParentMatrix = parent; }
+
    private:
       void update();
       void rotate(const unsigned int axisId, const float deltaTime);
@@ -59,6 +62,8 @@ namespace AeroSimulatorEngine
       std::bitset<eLastState> mStateChanges;
       std::bitset<eLastState> mStateSigns;
       glm::mat4 mProjectionMatrix;
+
+      glm::mat4 mParentMatrix;
    };
 } //namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CCAMERA_COMPONENT_H

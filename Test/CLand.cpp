@@ -50,13 +50,6 @@ CLand::CLand(const int id, const int type, SRenderableData& data, const glm::vec
 
    // Transform component
    addTransformComponent(size);
-
-   // Movement component
-   /*std::vector<int> moveEvents;
-   moveEvents.push_back(eGeneralEvents::UPDATE);
-   (void)CGameObject::addMovementComponent(moveEvents, "* CLand: ");*/
-
-   //LOG("* CLand setting up the collision component");
 }
 
 CLand::~CLand()
@@ -90,7 +83,6 @@ void CLand::addTransformComponent(const glm::vec3& size)
       {
          CTransform& transform = pTransformComp->getTransform();
          transform.setScale(size);
-         transform.updateModelMatrix();
       }
    }
 }

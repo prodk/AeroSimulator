@@ -89,9 +89,10 @@ void CGame::update(CTask * pTask)
    getTime(pTask);
    setObjectsTime();
 
+   ///@todo: movement events go before update transform event
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE_TRANSFORM);
-   GEventManager.broadcastEvent(eGeneralEvents::UPDATE_RENDERABLE);
    GEventManager.broadcastEvent(eCameraEvents::UPDATE_CAMERA);
+   GEventManager.broadcastEvent(eGeneralEvents::UPDATE_RENDERABLE);
 }
 
 void CGame::stop()
@@ -119,6 +120,10 @@ void CGame::setupScene()
    addEnemies();
    addAirplane();
    addCameras();
+
+
+   ///@todo: debug childrens structure: attach the camera to the cabine
+   mGameObjects[3]->addChild(mGameObjects[13]);
 }
 
 void CGame::addLand()
@@ -206,7 +211,7 @@ void CGame::addAirplane()
    transform.setTranslate(glm::vec3(0.0f, 29.0f, 3.0f));
    addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
 
-   /// Wing 1
+   /// Wings
    const glm::vec4 wingColor(1.0f, 0.0f, 1.0f, 1.0f);
    const float wingX = 1.8f;
 
@@ -253,20 +258,22 @@ void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color, 
 void CGame::addCameras()
 {
    // currently just 1 camera
+   const int id = mGameObjects.size();
    const glm::vec3 translate(10.0f, 33.0f, 0.0f);
    const glm::vec3 rotate(0.0f, 90.0f, 0.0f);
    CTransform transform;
    transform.setTranslate(translate);
    transform.setRotate(rotate);
 
+   ///@todo: add the type and the id of the game object to the constructor of the CCamera
    const SFrustum frustum(45.0f, 16.0f / 9.0f, 0.1f, 1100.0f);
-   std::shared_ptr<CCamera> camera( new CCamera(transform, frustum));
+   std::shared_ptr<CCamera> camera( new CCamera(id, CAMERA, transform, frustum));
    if (camera)
    {
       GCameraManager.addCamera(camera);
       LOG("* CGame: a camera has been just added to the camera manager.");
 
-      addObject(mGameObjects.size(), camera, "* CGame::addCamera() ");
+      addObject(id, camera, "* CGame::addCamera() ");
    }
 }
 

@@ -18,8 +18,8 @@ SFrustum::SFrustum(const float fov, const float aspect, const float near, const 
 {
 }
 
-CCamera::CCamera(const CTransform& transform, const SFrustum& frustum)
-   : CGameObject()
+CCamera::CCamera(const int id, const int type, const CTransform& transform, const SFrustum& frustum)
+   : CGameObject(id, type)
    , mId(-1)
    //, mLookAtMatrix()
 {
@@ -27,7 +27,7 @@ CCamera::CCamera(const CTransform& transform, const SFrustum& frustum)
    {
       LOG("* CCamera setting up the camera component");
       getTransform() = transform;
-      getTransform().updateModelMatrix();
+      getTransform().updateTrMatrix();
 
       CCameraComponent* cameraComp = componentCast<CCameraComponent>(*this);
       if (cameraComp)

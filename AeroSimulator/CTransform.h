@@ -24,13 +24,10 @@ namespace AeroSimulatorEngine
       void setTranslate(const glm::vec3& translate);
       glm::vec3 getTranslate() const { return mTranslate; }
 
-      void setModelMatrix(const glm::mat4& m); ///@todo: probably remove
-      glm::mat4 getModelMatrix() const { return mModelMatrix; }
+      glm::mat4 getModelMatrix() const;
 
       void setTranslateRotateMatrix(const glm::mat4& m);
       glm::mat4 getTranslateRotateMatrix() const { return mTRMatrix; }
-
-      void updateModelMatrix();
 
       void updateTrMatrix();
 
@@ -53,8 +50,8 @@ namespace AeroSimulatorEngine
       glm::vec3 mTranslate;   // Translate along the parent axis
 
       glm::mat4 mRotationMatrix;
-      glm::mat4 mTRMatrix;    // A local translate+rotate matrix without scale
-      glm::mat4 mModelMatrix; // Model matrix - brings the model to the world space
+      glm::mat4 mTRMatrix;    // A local translate+rotate matrix without scale, modelMatrix == scale(mTRMatrix, mScale)
+
       int mTrType; // Defines in which sequence the TR matrices are multiplied, default: TRS
    };
 }

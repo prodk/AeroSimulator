@@ -15,6 +15,7 @@ CGameObject::CGameObject()
    , mId(-1)
    , mType(-1)
    , mFrameDt(0.0f)
+   , mChildren()
 {
 }
 
@@ -23,11 +24,33 @@ CGameObject::CGameObject(const int id, const int type)
    , mId(id)
    , mType(type)
    , mFrameDt(0.0f)
+   , mChildren()
 {
 }
 
 CGameObject::~CGameObject()
 {
+}
+
+void CGameObject::addChild(std::shared_ptr<CGameObject>& pChild)
+{
+   if (nullptr != pChild)
+   {
+      mChildren.push_back(pChild);
+   }
+}
+
+bool CGameObject::removeChild(std::shared_ptr<CGameObject>& pChild)
+{
+   bool result = false;
+   const auto child = std::find(mChildren.begin(), mChildren.end(), pChild);
+   if (mChildren.end() != child)
+   {
+      mChildren.erase(child);
+      result = true;
+   }
+
+   return result;
 }
 
 CComponent * CGameObject::getComponent(const unsigned int id) const

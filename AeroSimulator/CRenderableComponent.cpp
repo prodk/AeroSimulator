@@ -27,7 +27,7 @@ void CRenderableComponent::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
-      case eGeneralEvents::UPDATE_RENDERABLE:
+      case eGeneralEvents::UPDATE_RENDERABLE: ///@todo: rename this message to set camera matrices in renderables
       {
          ///@todo: add caching later
          // Update view/projection matrices if one of them has changed

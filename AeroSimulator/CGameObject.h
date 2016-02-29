@@ -4,6 +4,8 @@
 #include "CEventManager.h"
 #include "CLog.h"
 
+#include "../AeroSimulator/include/glm/mat4x4.hpp"
+
 #include <unordered_map>
 #include <memory>
 #include <string>
@@ -37,6 +39,13 @@ namespace AeroSimulatorEngine
       ///@todo: probably remove these methods if they are not used in the end
       int getId() const { return mId; }
       int getType() const { return mType; }
+
+      void addChild(std::shared_ptr<CGameObject>& pChild);
+
+      bool removeChild(std::shared_ptr<CGameObject>& pChild);
+
+      template <typename T>
+      void updateChildrensMatrix();
 
    protected:
       // Get the component of type T from the specified (by reference) object
@@ -72,6 +81,9 @@ namespace AeroSimulatorEngine
 
       CRenderable & getRenderable(); ///@todo: think how to make this method const
 
+      template <typename T>
+      void setParentMatrix(const glm::mat4& parentMatrix);
+
    protected:
       // We have to shared_ptr as unique_ptr refuses to work
       std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
@@ -84,6 +96,7 @@ namespace AeroSimulatorEngine
       float mFrameDt; ///@todo: probably remove it from here and move to some singleton
 
       ///@todo: add a list of children here and probably some reference to the parent;
+      std::vector<std::shared_ptr<CGameObject> > mChildren;
    };
 
    // Template methods implementation
@@ -129,6 +142,37 @@ namespace AeroSimulatorEngine
          {
             GEventManager.attachEvent(e, *pComponent);
             LOG(msg, " attachEvents(): ", e);
+         }
+      }
+   }
+
+   template <typename T>
+   inline void CGameObject::setParentMatrix(const glm::mat4& m)
+   {
+      T* pComponent = componentCast<T>(*this);
+      if (pComponent)
+      {
+         pComponent->setParentMatrix(m);
+      }
+   }
+
+   ///@note: important that this method is called before updating the final model matrix
+   template <typename T>
+   inline void CGameObject::updateChildrensMatrix()
+   {
+      T* pComponent = componentCast<T>(*this);
+      if (pComponent)
+      {
+         CTransform& transform = pComponent->getTransform();
+         const glm::mat4 translateRotateWithParent = pComponent->getParentMatrix() * transform.getTranslateRotateMatrix();
+         transform.setTranslateRotateMatrix(translateRotateWithParent);
+
+         for (auto child : mChildren)
+         {
+            if (child)
+            {
+               child->setParentMatrix<T>(translateRotateWithParent);
+            }
          }
       }
    }

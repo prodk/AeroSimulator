@@ -7,7 +7,6 @@ CTransform::CTransform()
    , mTranslate(0.0f, 0.0f, 0.0f)
    , mRotationMatrix()
    , mTRMatrix()
-   , mModelMatrix()
    , mTrType(ROTATE_FIRST)
 {
 }
@@ -17,7 +16,6 @@ CTransform::CTransform(const CTransform & t)
    , mTranslate(t.mTranslate)
    , mRotationMatrix(t.mRotationMatrix)
    , mTRMatrix(t.mTRMatrix)
-   , mModelMatrix(t.mModelMatrix)
    , mTrType(t.mTrType)
 {
 }
@@ -70,21 +68,14 @@ void CTransform::setTranslate(const glm::vec3 & translate)
    mTranslate = translate;
 }
 
-void CTransform::setModelMatrix(const glm::mat4 & m)
+glm::mat4 CTransform::getModelMatrix() const
 {
-   mModelMatrix = m;
+   return glm::scale(mTRMatrix, mScale);
 }
 
 void CTransform::setTranslateRotateMatrix(const glm::mat4 & m)
 {
    mTRMatrix = m;
-}
-
-void CTransform::updateModelMatrix()
-{
-   updateTrMatrix();
-
-   mModelMatrix = glm::scale(mTRMatrix, mScale);
 }
 
 void CTransform::updateTrMatrix()
@@ -138,7 +129,6 @@ bool CTransform::operator!=(const CTransform& transform)
        || (mTranslate != transform.mTranslate)
        || (mRotationMatrix != transform.mRotationMatrix)
        || (mTRMatrix != transform.mTRMatrix)
-       || (mModelMatrix != transform.mModelMatrix)
        || (mTrType != transform.mTrType);
 }
 
@@ -150,7 +140,6 @@ CTransform& CTransform::operator=(const CTransform& transform)
       mTranslate = transform.mTranslate;
       mRotationMatrix = transform.mRotationMatrix;
       mTRMatrix = transform.mTRMatrix;
-      mModelMatrix = transform.mModelMatrix;
       mTrType = transform.mTrType;
    }
 

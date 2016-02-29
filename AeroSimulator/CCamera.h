@@ -25,7 +25,7 @@ namespace AeroSimulatorEngine
    class CCamera : public CGameObject
    {
    public:
-      CCamera(const CTransform& transform, const SFrustum& frustum);
+      CCamera(const int id, const int type, const CTransform& transform, const SFrustum& frustum);
       ~CCamera();
 
       void setId(const int id) { mId = id; }

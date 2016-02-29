@@ -83,7 +83,7 @@ CFigure::CFigure(const int id, const int type, const int figureType, SRenderable
    {
       pTransformComp->setTransform(transform);
       CTransform& newTransform = pTransformComp->getTransform();
-      newTransform.updateModelMatrix();
+      newTransform.updateTrMatrix();
    }
 
    // Movement component
