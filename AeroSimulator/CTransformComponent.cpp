@@ -9,6 +9,7 @@ using namespace AeroSimulatorEngine;
 CTransformComponent::CTransformComponent(CGameObject* pOwner)
    : CComponent(pOwner)
    , mTransform()
+   , mParentMatrix()
 {
 }
 
@@ -35,10 +36,8 @@ void CTransformComponent::update()
    CGameObject& owner = *getOwner();
    const float deltaTime = owner.getFrameDt();
 
-   // Update translate/rotate matrices of all the children that have CCameraComponent
-   owner.updateChildrensMatrix<CCameraComponent>();
-
-   ///@todo: add for the CTransformComponent update children here
+   // Update translate/rotate matrices of all the children
+   owner.updateChildrensMatrix(mParentMatrix);
 
    CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(owner);
    if (pRenderableComp)

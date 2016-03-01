@@ -44,8 +44,7 @@ namespace AeroSimulatorEngine
 
       bool removeChild(std::shared_ptr<CGameObject>& pChild);
 
-      template <typename T>
-      void updateChildrensMatrix();
+      bool updateChildrensMatrix(const glm::mat4& m);
 
    protected:
       // Get the component of type T from the specified (by reference) object
@@ -81,8 +80,11 @@ namespace AeroSimulatorEngine
 
       CRenderable & getRenderable(); ///@todo: think how to make this method const
 
-      template <typename T>
+      ///@todo: remove this method
       void setParentMatrix(const glm::mat4& parentMatrix);
+
+      template <typename T>
+      void updateChildrensMatrix(const glm::mat4& m, T* pComponent);
 
    protected:
       // We have to shared_ptr as unique_ptr refuses to work
@@ -147,31 +149,21 @@ namespace AeroSimulatorEngine
    }
 
    template <typename T>
-   inline void CGameObject::setParentMatrix(const glm::mat4& m)
+   inline void CGameObject::updateChildrensMatrix(const glm::mat4& m, T* pComponent)
    {
-      T* pComponent = componentCast<T>(*this);
-      if (pComponent)
-      {
-         pComponent->setParentMatrix(m);
-      }
-   }
-
-   ///@note: important that this method is called before updating the final model matrix
-   template <typename T>
-   inline void CGameObject::updateChildrensMatrix()
-   {
-      T* pComponent = componentCast<T>(*this);
       if (pComponent)
       {
          CTransform& transform = pComponent->getTransform();
-         const glm::mat4 translateRotateWithParent = pComponent->getParentMatrix() * transform.getTranslateRotateMatrix();
-         transform.setTranslateRotateMatrix(translateRotateWithParent);
+         pComponent->setParentMatrix(m);
+         const glm::mat4 translateRotateWithParent = m * transform.getTranslateRotateMatrix();
+         //transform.setTranslateRotateMatrix(translateRotateWithParent);
 
          for (auto child : mChildren)
          {
             if (child)
             {
-               child->setParentMatrix<T>(translateRotateWithParent);
+               //child->setParentMatrix(translateRotateWithParent);
+               child->updateChildrensMatrix(translateRotateWithParent);
             }
          }
       }

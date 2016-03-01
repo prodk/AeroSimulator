@@ -25,14 +25,19 @@ namespace AeroSimulatorEngine
       // CEventHandler part
       virtual void handleEvent(CAppEvent *pEvent) override;
 
+      glm::mat4 getParentMatrix() const { return mParentMatrix; }
+      void setParentMatrix(const glm::mat4& parent) { mParentMatrix = parent; }
+
+   protected:
+      CTransform mTransform;
+      glm::mat4 mParentMatrix;
+
    private:
       void update();
 
    private:
       /// Id of the component
       static const unsigned int mId = CComponent::TRAHSFORM;
-
-      CTransform mTransform;
    };
 } // namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CTRANSFORM_COMPONENT_H

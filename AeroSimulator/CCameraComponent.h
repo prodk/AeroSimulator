@@ -1,7 +1,8 @@
 #ifndef AERO_SIMULATOR_CCAMERA_COMPONENT_H
 #define AERO_SIMULATOR_CCAMERA_COMPONENT_H
 
-#include "CComponent.h"
+//#include "CComponent.h"
+#include "CTransformComponent.h"
 #include "CEventHandler.h"
 #include "CTransform.h"
 #include "CCamera.h"
@@ -12,7 +13,7 @@ namespace AeroSimulatorEngine
 {
    class CGameObject;
 
-   class CCameraComponent : public CComponent, public CEventHandler
+   class CCameraComponent : public CTransformComponent //public CComponent, public CEventHandler
    {
    public:
       explicit CCameraComponent(CGameObject* pOwner);
@@ -23,16 +24,16 @@ namespace AeroSimulatorEngine
       // CEventHandler part
       virtual void handleEvent(CAppEvent *pEvent) override;
 
-      CTransform& getTransform() { return mTransform; }
-      void setTransform(const CTransform& transform) { mTransform = transform; }
+      //CTransform& getTransform() { return mTransform; }
+      //void setTransform(const CTransform& transform) { mTransform = transform; }
 
       glm::mat4 getViewMatrix() const;
 
       glm::mat4 getProjectionMatrix() const { return mProjectionMatrix; }
       void setProjectionMatrix(const SFrustum& frustum);
 
-      glm::mat4 getParentMatrix() const { return mParentMatrix; }
-      void setParentMatrix(const glm::mat4& parent) { mParentMatrix = parent; }
+      //glm::mat4 getParentMatrix() const { return mParentMatrix; }
+      //void setParentMatrix(const glm::mat4& parent) { mParentMatrix = parent; }
 
    private:
       void update();
@@ -58,12 +59,12 @@ namespace AeroSimulatorEngine
          eLastState
       };
 
-      CTransform mTransform;
+      //CTransform mTransform;
       std::bitset<eLastState> mStateChanges;
       std::bitset<eLastState> mStateSigns;
       glm::mat4 mProjectionMatrix;
 
-      glm::mat4 mParentMatrix;
+      //glm::mat4 mParentMatrix;
    };
 } //namespace AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CCAMERA_COMPONENT_H

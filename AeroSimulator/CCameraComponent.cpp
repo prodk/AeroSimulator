@@ -7,12 +7,12 @@
 using namespace AeroSimulatorEngine;
 
 CCameraComponent::CCameraComponent(CGameObject* pOwner)
-   : CComponent(pOwner)
-   , mTransform()
+   : CTransformComponent(pOwner)
+   //, mTransform()
    , mStateChanges()
    , mStateSigns()
    , mProjectionMatrix()
-   , mParentMatrix()
+   //, mParentMatrix()
 {
 }
 
@@ -164,10 +164,12 @@ void CCameraComponent::update()
    moveLeftRight(deltaTime);
    moveUpDown(deltaTime);
 
+   ///@todo: think how to not to update tr matrix all the time even when attached to a parent
    if (mStateChanges.any())
    {
       ///@todo: mark cache as dirty and update the mViewMatrix
       mTransform.updateTrMatrix();
+      mTransform.setTranslateRotateMatrix(mParentMatrix * mTransform.getTranslateRotateMatrix());
    }
 
    ///@todo: debug, test parent matrix concept
@@ -175,8 +177,6 @@ void CCameraComponent::update()
    //glm::vec3 yAxis(0.0f, 1.0f, 0.0f);
    //parentMatrix = glm::rotate(parentMatrix, 0.1f*deltaTime, yAxis);
    //parentMatrix = glm::translate(parentMatrix, glm::vec3(0.1*deltaTime, 0.0f, 0.0f));
-
-   mTransform.setTranslateRotateMatrix(mParentMatrix * mTransform.getTranslateRotateMatrix());
 }
 
 void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)

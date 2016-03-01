@@ -187,6 +187,8 @@ void CGame::addAirplane()
 
    ///@todo: add later: read these params from a style file
    /// Cabine
+
+   const std::size_t cabineId = mGameObjects.size();
    const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
    transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
    transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
@@ -197,7 +199,10 @@ void CGame::addAirplane()
    transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
    /// Cube 0
    transform.setTranslate(glm::vec3(0.0f, 29.0f, 0.0f));
+   //transform.setTranslate(glm::vec3(0.0f, -1.0f, 0.0f));
    addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+
+   //mGameObjects[cabineId]->addChild(mGameObjects[cabineId + 1]);
 
    /// Cube 1
    transform.setTranslate(glm::vec3(0.0f, 29.0f, 1.0f));
