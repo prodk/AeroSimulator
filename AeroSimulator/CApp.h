@@ -9,6 +9,8 @@
 #include <memory>
 #include <vector>
 
+#define APP CApp::getInstance()
+
 ///@todo: rename to NAeroSimulatorEngine
 namespace AeroSimulatorEngine
 {

@@ -3,6 +3,7 @@
 using namespace AeroSimulatorEngine;
 
 CEventManager::CEventManager()
+   : mEventMap()
 {
 }
 

@@ -8,6 +8,7 @@ CTransform::CTransform()
    , mRotationMatrix()
    , mTRMatrix()
    , mTrType(ROTATE_FIRST)
+   , mState()
 {
 }
 
@@ -17,6 +18,7 @@ CTransform::CTransform(const CTransform & t)
    , mRotationMatrix(t.mRotationMatrix)
    , mTRMatrix(t.mTRMatrix)
    , mTrType(t.mTrType)
+   , mState()
 {
 }
 
@@ -26,7 +28,11 @@ CTransform::~CTransform()
 
 void CTransform::setScale(const glm::vec3& scale)
 {
-   mScale = scale;
+   if (scale != mScale)
+   {
+      mScale = scale;
+      mState.set(eTransformState::eParentChanged);
+   }
 }
 
 void CTransform::setRotate(const glm::vec3 & rotate)
@@ -56,26 +62,41 @@ void CTransform::setRotate(const glm::vec3 & rotate)
       const glm::vec3 zAxis = glm::vec3(0.0f, 0.0f, 1.0f);
       mRotationMatrix = glm::rotate(mRotationMatrix, angleZ, zAxis);
    }
+
+   mState.set(eTransformState::eTrChanged);
 }
 
 void CTransform::setRotate(const glm::mat4 & rotationMatrix)
 {
-   mRotationMatrix = rotationMatrix;
+   if (rotationMatrix != mRotationMatrix)
+   {
+      mRotationMatrix = rotationMatrix;
+      mState.set(eTransformState::eTrChanged);
+   }
 }
 
 void CTransform::setTranslate(const glm::vec3 & translate)
 {
-   mTranslate = translate;
+   if (translate != mTranslate)
+   {
+      mTranslate = translate;
+      mState.set(eTransformState::eTrChanged);
+   }
 }
 
 glm::mat4 CTransform::getModelMatrix() const
 {
+   ///@todo: check for state here and update mModelMatrix if
    return glm::scale(mTRMatrix, mScale);
 }
 
 void CTransform::setTranslateRotateMatrix(const glm::mat4 & m)
 {
-   mTRMatrix = m;
+   if (m != mTRMatrix)
+   {
+      mTRMatrix = m;
+      mState.set(eTransformState::eParentChanged); ///@todo: reconsider this
+   }
 }
 
 void CTransform::updateTrMatrix()
@@ -107,6 +128,7 @@ void CTransform::updateRotateTranslate()
 glm::mat4x4 AeroSimulatorEngine::CTransform::getInverseRotateTranslate() const
 {
    ///@todo: perform calculations only whent mTRMatrix has changed, not all the time as it is now!
+   ///@todo: introduce mViewMatrix and return it (updating if the state requires)
    glm::mat4 directInverse = glm::inverse(mTRMatrix);
    return directInverse;
 }

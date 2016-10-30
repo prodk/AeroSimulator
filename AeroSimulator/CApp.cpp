@@ -8,7 +8,6 @@
 #include "CLog.h"
 //#include "C3DModel.h"
 //#include "../AeroSimulator/src/shaders/CTextureShader.h"
-//#include "CSkyBox.h"
 //#include "CBillBoard.h"
 //#include "../AeroSimulator/src/shaders/CBillboardShader.h"
 //#include "../AeroSimulator/src/shaders/CColorShader.h"
@@ -39,7 +38,6 @@ CApp::CApp()
    , mHealthbarShader(new CHealthbarShader())
    , mColorLambertianShader(new CColorLambertianShader())
    , mAnimationBbShader(new CAnimationBillboardShader())
-   , mSkyBox(new CSkyBox())
    , mSphere(new CSphere())
    , mBillBoards(40)
    , mStar(5)
@@ -54,7 +52,6 @@ CApp::CApp()
    assert(mTimerTask);
    /*assert(mAirPlane);
    assert(mTextureShader);
-   assert(mSkyBox);
    assert(mBillboardShader);
    assert(mColorShader);
    assert(mHealthbarShader);
@@ -70,16 +67,6 @@ CApp::CApp()
 
 CApp::~CApp()
 {
-   mRendererTask.reset();
-   mAppWindowTask.reset();
-   /*mAirPlane.reset();
-   mTextureShader.reset();
-   mSkyBox.reset();
-   mBillboardShader.reset();
-   mColorShader.reset();
-   mSphere.reset();*/
-   ///@todo: reset other ptrs here
-
    LOG("\n** CApp destroyed **\n");
 }
 
@@ -143,21 +130,6 @@ CRenderer* CApp::getRenderer() const
 //   //addStars();
 //
 //   mRendererTask->resetRenderContext();
-//}
-
-//void CApp::addSkyBox()
-//{
-//   if (mSkyBox->loadTexture("../AeroSimulator/res/sky.dds"))
-//   {
-//      CLog::getInstance().log("* Skybox loaded ../AeroSimulator/res/sky.dds");
-//   }
-//
-//   mSkyBox->scale(glm::vec3(400.f, 200.f, 400.0f));
-//
-//   mTextureShader->link();
-//   mSkyBox->setShadersAndBuffers(mTextureShader);
-//   mRendererTask->addRenderable(mSkyBox.get());
-//   mRendererTask->setSky(mSkyBox);
 //}
 
 //void CApp::addAirplane()

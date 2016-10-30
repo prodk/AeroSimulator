@@ -14,12 +14,12 @@ int main()
 
    ///@todo: add non-default CApp constructor which initializes the app from some state.
    ///@todo: add a constructor that reads the ini file, the state is also specified in the ini
-   if (CApp::getInstance().init("AeroSimulator", 1280, 720))
+   if (APP.init("AeroSimulator", 1280, 720))
    {
-      CApp::getInstance().addTask(&gameTask);
-      CApp::getInstance().run();
+      APP.addTask(&gameTask);
+      APP.run();
    }
 
-   return CApp::getInstance().exit();
+   return APP.exit();
 }
 

@@ -26,7 +26,7 @@ namespace
 {
    inline CRenderer * renderer()
    {
-      return CApp::getInstance().getRenderer();
+      return APP.getRenderer();
    }
 }
 
@@ -123,7 +123,7 @@ void CGame::setupScene()
 
 
    ///@todo: debug childrens structure: attach the camera to the cabine
-   mGameObjects[3]->addChild(mGameObjects[13]);
+   //mGameObjects[3]->addChild(mGameObjects[13]);
 }
 
 void CGame::addLand()

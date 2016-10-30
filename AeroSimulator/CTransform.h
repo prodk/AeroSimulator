@@ -5,6 +5,8 @@
 #include "../AeroSimulator/include/glm/mat4x4.hpp"
 #include "../AeroSimulator/include/glm/gtc/matrix_transform.hpp"
 
+#include <bitset>
+
 namespace AeroSimulatorEngine
 {
    class CTransform
@@ -50,9 +52,18 @@ namespace AeroSimulatorEngine
       glm::vec3 mTranslate;   // Translate along the parent axis
 
       glm::mat4 mRotationMatrix;
-      glm::mat4 mTRMatrix;    // A local translate+rotate matrix without scale, modelMatrix == scale(mTRMatrix, mScale)
+      glm::mat4 mTRMatrix;    // A local translate+rotate matrix without scale, it is always local (no relation to parents), no scale
 
       int mTrType; // Defines in which sequence the TR matrices are multiplied, default: TRS
+
+      enum eTransformState
+      {
+         eTrChanged = 0, // local translate/rotate matrix has changed, means that TR matrix needs to be updated
+         eParentChanged, // the parent matrix has changed, means that the model matrix needs to be updated
+         eLastState
+      };
+
+      std::bitset<eLastState> mState;
    };
 }
 

@@ -144,6 +144,7 @@ void CCameraComponent::handleEvent(CAppEvent * pEvent)
 glm::mat4 CCameraComponent::getViewMatrix() const
 {
    ///@todo: always return mViewMatrix when caching is implemented
+   ///@todo: call getViewMatrix
    return mTransform.getInverseRotateTranslate();
 }
 
@@ -154,19 +155,18 @@ void CCameraComponent::setProjectionMatrix(const SFrustum & frustum)
 
 void CCameraComponent::update()
 {
-   const float deltaTime = (*getOwner()).getFrameDt();
-
-   rotate(eChangePitch, deltaTime);
-   rotate(eRotateY, deltaTime);
-   rotate(eRotateZ, deltaTime);
-
-   zoom(deltaTime);
-   moveLeftRight(deltaTime);
-   moveUpDown(deltaTime);
-
-   ///@todo: think how to not to update tr matrix all the time even when attached to a parent
    if (mStateChanges.any())
    {
+      const float deltaTime = (*getOwner()).getFrameDt();
+
+      rotate(eChangePitch, deltaTime);
+      rotate(eRotateY, deltaTime);
+      rotate(eRotateZ, deltaTime);
+
+      zoom(deltaTime);
+      moveLeftRight(deltaTime);
+      moveUpDown(deltaTime);
+
       ///@todo: mark cache as dirty and update the mViewMatrix
       mTransform.updateTrMatrix();
       mTransform.setTranslateRotateMatrix(mParentMatrix * mTransform.getTranslateRotateMatrix());
@@ -181,7 +181,7 @@ void CCameraComponent::update()
 
 void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
 {
-   if ((axisId < 3) && mStateChanges[axisId])
+   if ((axisId < 3) && mStateChanges[axisId]) ///@todo: avoid magic numbers
    {
       const float rotateSpeed = 1.5f;  ///@todo: make an array of values for each axis and adjust these values
       const float angle = mStateSigns[axisId] ? -rotateSpeed * deltaTime : rotateSpeed * deltaTime;
@@ -195,6 +195,7 @@ void CCameraComponent::rotate(const unsigned int axisId, const float deltaTime)
    }
 }
 
+///@todo: check whether deltaTime is needed in the methods below
 void CCameraComponent::zoom(const float deltaTime)
 {
    moveInViewSpace((bool)mStateChanges[eZoom], mStateSigns[eZoom], glm::vec3(0.0f, 0.0f, 1.0f), deltaTime);

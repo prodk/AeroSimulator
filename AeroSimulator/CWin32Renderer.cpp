@@ -125,6 +125,9 @@ void CWin32Renderer::init()
       LOGGL("* Blending enabled, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA): ");
       LOG("");
 
+      glEnable(GL_MULTISAMPLE);
+      LOGGL("Multisampling enabled.");
+
       if (mWndWidth > 0 && mWndHeight > 0)
       {
          setupFbo(mMainFbo, mWndWidth, mWndHeight);
@@ -386,6 +389,8 @@ bool CWin32Renderer::createRenderContext()
       WGL_CONTEXT_MAJOR_VERSION_ARB, 3,
       WGL_CONTEXT_MINOR_VERSION_ARB, 1,
       WGL_CONTEXT_FLAGS_ARB, 0,
+      //WGL_SAMPLE_BUFFERS_ARB, 1, //Number of buffers
+      //WGL_SAMPLES_ARB, 4,        //Number of samples
       0
    };
 
