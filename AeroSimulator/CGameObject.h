@@ -36,6 +36,10 @@ namespace AeroSimulatorEngine
       void addChild(std::shared_ptr<CGameObject>& pChild);
       bool removeChild(std::shared_ptr<CGameObject>& pChild);
 
+      int type() const { return mType; }
+
+      virtual void move(); // move the object if needed
+
    protected:
       // Get the component of type T from the specified (by reference) object
       template <typename T>
@@ -76,7 +80,6 @@ namespace AeroSimulatorEngine
 
       int mId; // Unique id of the object
 
-      ///@todo: probably remove this in the end, may be useful for searching the objects
       int mType;  // Type of the object, e.g. land, camera etc.
 
       float mFrameDt; ///@todo: probably remove it from here and move to some singleton

@@ -90,6 +90,7 @@ void CGame::update(CTask * pTask)
    setObjectsTime();
 
    ///@todo: movement events go before update transform event
+   GEventManager.broadcastEvent(eGeneralEvents::MOVE);
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE_TRANSFORM);
    GEventManager.broadcastEvent(eCameraEvents::UPDATE_CAMERA);
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE_RENDERABLE);

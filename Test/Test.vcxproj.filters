@@ -33,6 +33,9 @@
     <ClInclude Include="CSkyDom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CCubicAeroPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CSkyDom.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CubicAeroPlane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

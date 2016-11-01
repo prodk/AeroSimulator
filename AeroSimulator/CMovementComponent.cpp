@@ -24,6 +24,13 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
+      case eGeneralEvents::MOVE:
+         CGameObject * owner = getOwner();
+         if (nullptr != owner) {
+            LOG("%d", owner->type()); ///@todo: remove
+            owner->move();
+         }
+         break;
          ///@todo: rename to update movements
       //case eGeneralEvents::UPDATE:
       //{
@@ -43,7 +50,7 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
       //      }
       //   }
       //}
-      break;
+      //break;
       }
    }
 }

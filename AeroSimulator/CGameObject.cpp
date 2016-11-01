@@ -57,6 +57,10 @@ bool CGameObject::removeChild(std::shared_ptr<CGameObject>& pChild)
    return result;
 }
 
+void CGameObject::move()
+{
+}
+
 CComponent * CGameObject::getComponent(const unsigned int id) const
 {
    const auto result = mComponents.find(id);
