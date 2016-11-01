@@ -125,8 +125,8 @@ void CWin32Renderer::init()
       LOGGL("* Blending enabled, glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA): ");
       LOG("");
 
-      glEnable(GL_MULTISAMPLE);
-      LOGGL("Multisampling enabled.");
+      /*glEnable(GL_MULTISAMPLE);
+      LOGGL("Multisampling enabled.");*/
 
       if (mWndWidth > 0 && mWndHeight > 0)
       {
@@ -277,7 +277,7 @@ void CWin32Renderer::drawScene()
 void CWin32Renderer::drawOpaqueRenderables()
 {
    // At first draw opaque objects
-   for (auto * pRenderable : mRenderables)
+   for (auto * pRenderable : mRenderables) // @todo: save the opaque and transparent renderables separately
    {
       if (pRenderable && pRenderable->canBeRendered() && pRenderable->getFlag(eShaderFlags::IS_VISIBLE))
       {

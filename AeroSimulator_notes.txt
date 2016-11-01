@@ -1,0 +1,12 @@
+__________________
+01.11.2016 Tu:
+-0. Current aim: make the Composite pattern work, i.e. an ability to add any object as a child to any other object.
+Steps:
+ -1) begin with the airplane:
+     -i) build it such that the cabine is the root and other parts are located relative to the root;
+	 -ii) make the propeller rotating;
+	 -iii) manipulate the orientation of the plane using the keyboard;
+ 
+-1. Fix the camera:
+ -1) the default look-at point is the plane's cabine;
+ -2) test how the camera is attached to the plane;
