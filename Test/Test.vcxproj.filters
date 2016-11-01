@@ -33,7 +33,7 @@
     <ClInclude Include="CSkyDom.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CCubicAeroPlane.h">
+    <ClInclude Include="CCubicAirPlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,7 +53,7 @@
     <ClCompile Include="CSkyDom.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="CubicAeroPlane.cpp">
+    <ClCompile Include="CCubicAirPlane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

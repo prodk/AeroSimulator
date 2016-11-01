@@ -17,6 +17,7 @@
 
 #include "CLand.h"
 #include "CSkyDom.h"
+#include "CCubicAirPlane.h"
 
 #include <cassert>
 
@@ -184,73 +185,77 @@ void CGame::addEnemies()
 
 void CGame::addAirplane()
 {
+   const int id = mGameObjects.size();
+   tGoSharedPtr pObject(
+      new CCubicAirPlane(mGameObjects.size(), eGameObjects::AIRPLANE, mShaders[eShaders::COLOR_SHADER]));
+   addObject(id, pObject, "* Game::addAirplane() ");
+
    CTransform transform;
 
    ///@todo: add later: read these params from a style file
    /// Cabine
-
-   const std::size_t cabineId = mGameObjects.size();
-   const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
+   //const std::size_t cabineId = mGameObjects.size();
+   //const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
    //transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
-   transform.setTranslate(glm::vec3(0.0f, 35.f, 0.0f));
-   transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-   addColorCube(transform, cabineColor, eGameObjects::AIRPLANE_CABINE);
+   //transform.setTranslate(glm::vec3(0.0f, 35.f, 0.0f));
+   //transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+   //addColorCube(transform, cabineColor, eGameObjects::AIRPLANE_CABINE); ///@todo: remove type cabine
 
    /// Body
-   const glm::vec4 bodyColor(0.0f, 1.0f, 1.0f, 1.0f);
-   transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
+   //const glm::vec4 bodyColor(0.0f, 1.0f, 1.0f, 1.0f);
+   //transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
    /// Cube 0
    //transform.setTranslate(glm::vec3(0.0f, 29.0f, 0.0f));
-   transform.setTranslate(glm::vec3(0.0f, -1.0f, 0.0f));
-   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+   //transform.setTranslate(glm::vec3(0.0f, -1.0f, 0.0f));
+   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
 
    ///@todo: debug
-   mGameObjects[cabineId]->addChild(mGameObjects[cabineId + 1]);
+   //mGameObjects[cabineId]->addChild(mGameObjects[cabineId + 1]);
 
-   /// Cube 1
-   transform.setTranslate(glm::vec3(0.0f, 29.0f, 1.0f));
-   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+   ///// Cube 1
+   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 1.0f));
+   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
 
-   /// Cube 2
-   transform.setTranslate(glm::vec3(0.0f, 29.0f, 2.0f));
-   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+   ///// Cube 2
+   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 2.0f));
+   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
 
-   /// Cube 3
-   transform.setTranslate(glm::vec3(0.0f, 29.0f, 3.0f));
-   addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
+   ///// Cube 3
+   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 3.0f));
+   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
 
-   /// Wings
-   const glm::vec4 wingColor(1.0f, 0.0f, 1.0f, 1.0f);
-   const float wingX = 1.8f;
+   ///// Wings
+   //const glm::vec4 wingColor(1.0f, 0.0f, 1.0f, 1.0f);
+   //const float wingX = 1.8f;
 
-   // Left wing
-   transform.setTranslate(glm::vec3((-1.0f - 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
-   transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
-   addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
+   //// Left wing
+   //transform.setTranslate(glm::vec3((-1.0f - 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
+   //transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
+   //addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
 
-   // Right wing
-   transform.setTranslate(glm::vec3((1.0f + 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
-   transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
-   addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
+   //// Right wing
+   //transform.setTranslate(glm::vec3((1.0f + 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
+   //transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
+   //addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
 
-   // Propeller
-   const glm::vec4 baseColor(1.0f, 0.5f, 0.0f, 1.0f);
-   const glm::vec4 paddleColor(1.0f, 1.0f, 0.0f, 1.0f);
+   //// Propeller
+   //const glm::vec4 baseColor(1.0f, 0.5f, 0.0f, 1.0f);
+   //const glm::vec4 paddleColor(1.0f, 1.0f, 0.0f, 1.0f);
 
-   // Base
-   transform.setTranslate(glm::vec3(0.0f, 29.0f, -0.75f));
-   transform.setScale(glm::vec3(0.2f, 0.25f, 0.5f));
-   addColorCube(transform, baseColor, eGameObjects::AIRPLANE);
+   //// Base
+   //transform.setTranslate(glm::vec3(0.0f, 29.0f, -0.75f));
+   //transform.setScale(glm::vec3(0.2f, 0.25f, 0.5f));
+   //addColorCube(transform, baseColor, eGameObjects::AIRPLANE);
 
-   // Paddle 1
-   transform.setTranslate(glm::vec3(0.0f, 29.75f, -1.0f));
-   transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
-   addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
+   //// Paddle 1
+   //transform.setTranslate(glm::vec3(0.0f, 29.75f, -1.0f));
+   //transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
+   //addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
 
-   // Paddle 2
-   transform.setTranslate(glm::vec3(0.0f, 28.25f, -1.0f));
-   transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
-   addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
+   //// Paddle 2
+   //transform.setTranslate(glm::vec3(0.0f, 28.25f, -1.0f));
+   //transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
+   //addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
 }
 
 void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
@@ -289,9 +294,17 @@ void CGame::addObjectsToRenderer()
 {
    for (auto object : mGameObjects)
    {
-      if (object.second && canBeRendered(*object.second))
+      if (object.second)
       {
-         renderer()->addRenderable(&componentCast<CRenderableComponent>(*object.second)->getRenderable());
+         if (canBeRendered(*object.second))
+            renderer()->addRenderable(&componentCast<CRenderableComponent>(*object.second)->getRenderable());
+
+         std::map<int, std::shared_ptr<CGameObject>> kids;
+         if (object.second->getChildren(kids) && !kids.empty()) {
+            for (auto c : kids)
+               if (c.second && canBeRendered(*c.second))
+                  renderer()->addRenderable(&componentCast<CRenderableComponent>(*c.second)->getRenderable());
+         }
       }
    }
 }

@@ -150,7 +150,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCubicAeroPlane.h" />
+    <ClInclude Include="CCubicAirPlane.h" />
     <ClInclude Include="CGame.h" />
     <ClInclude Include="CLand.h" />
     <ClInclude Include="CSkyDom.h" />
@@ -161,7 +161,7 @@
     <ClCompile Include="CGame.cpp" />
     <ClCompile Include="CLand.cpp" />
     <ClCompile Include="CSkyDom.cpp" />
-    <ClCompile Include="CubicAeroPlane.cpp" />
+    <ClCompile Include="CCubicAirPlane.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>

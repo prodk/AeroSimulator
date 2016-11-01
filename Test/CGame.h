@@ -59,7 +59,7 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
 
    private:
       std::vector<std::shared_ptr<CShader> > mShaders;
-      std::map<int, std::shared_ptr<CGameObject> > mGameObjects;
+      std::map<int, std::shared_ptr<CGameObject>> mGameObjects;
       float mFrameDt; // Time elapsed from the previous frame
    };
 }

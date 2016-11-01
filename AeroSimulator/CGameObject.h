@@ -9,6 +9,7 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
+#include <map>
 
 namespace AeroSimulatorEngine
 {
@@ -39,6 +40,8 @@ namespace AeroSimulatorEngine
       int type() const { return mType; }
 
       virtual void move(); // move the object if needed
+
+      virtual bool getChildren(std::map<int, std::shared_ptr<CGameObject>> & kids);
 
    protected:
       // Get the component of type T from the specified (by reference) object
@@ -77,13 +80,12 @@ namespace AeroSimulatorEngine
    protected:
       // We have to shared_ptr as unique_ptr refuses to work
       std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
-
       int mId; // Unique id of the object
-
       int mType;  // Type of the object, e.g. land, camera etc.
-
       float mFrameDt; ///@todo: probably remove it from here and move to some singleton
    };
+
+   typedef std::shared_ptr<CGameObject> tGoSharedPtr;
 
    // Template methods implementation
    template <typename T>

@@ -31,7 +31,6 @@ void CTransform::setScale(const glm::vec3& scale)
    if (scale != mScale)
    {
       mScale = scale;
-      //mState.set(eTransformState::eParentChanged); ///@todo: remove
    }
 }
 
@@ -84,19 +83,19 @@ void CTransform::setTranslate(const glm::vec3 & translate)
    }
 }
 
-glm::mat4 CTransform::getModelMatrix() const
+glm::mat4 CTransform::getModelMatrix()
 {
-   ///@todo: check for state here and update mModelMatrix if
+   if (mState[eTransformState::eTrChanged]) {
+      updateTrMatrix();
+      mState[eTransformState::eTrChanged].flip();
+   }
    return glm::scale(mTRMatrix, mScale);
 }
 
 void CTransform::setTranslateRotateMatrix(const glm::mat4 & m)
 {
    if (m != mTRMatrix)
-   {
       mTRMatrix = m;
-      //mState.set(eTransformState::eParentChanged);  ///@todo: remove
-   }
 }
 
 void CTransform::updateTrMatrix()

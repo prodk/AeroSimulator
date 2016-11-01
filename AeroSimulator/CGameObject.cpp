@@ -61,6 +61,11 @@ void CGameObject::move()
 {
 }
 
+bool CGameObject::getChildren(std::map<int, std::shared_ptr<CGameObject>> & kids)
+{
+   return false;
+}
+
 CComponent * CGameObject::getComponent(const unsigned int id) const
 {
    const auto result = mComponents.find(id);
