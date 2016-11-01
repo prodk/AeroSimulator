@@ -169,7 +169,7 @@ void CCameraComponent::update()
 
       ///@todo: mark cache as dirty and update the mViewMatrix
       mTransform.updateTrMatrix();
-      mTransform.setTranslateRotateMatrix(mParentMatrix * mTransform.getTranslateRotateMatrix());
+      mTransform.setTranslateRotateMatrix(mParentTrMatrix * mTransform.getTranslateRotateMatrix());
    }
 
    ///@todo: debug, test parent matrix concept

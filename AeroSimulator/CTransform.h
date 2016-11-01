@@ -43,7 +43,6 @@ namespace AeroSimulatorEngine
       enum {TRANSLATE_FIRST, ROTATE_FIRST};
 
    private:
-      ///@todo: reconsider implementations of these methods as they seem to work vice versa
       void updateTranslateRotate(); // First rotate, then translate (read the name from right to left)
       void updateRotateTranslate(); // First translate, then rotate (read the name from right to left)
 
@@ -56,6 +55,7 @@ namespace AeroSimulatorEngine
 
       int mTrType; // Defines in which sequence the TR matrices are multiplied, default: TRS
 
+      ///@todo: remove eParentChanged because the transform should not know anything about parents. It works only locally.
       enum eTransformState
       {
          eTrChanged = 0, // local translate/rotate matrix has changed, means that TR matrix needs to be updated

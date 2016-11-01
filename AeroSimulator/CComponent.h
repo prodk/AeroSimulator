@@ -14,7 +14,7 @@ namespace AeroSimulatorEngine
       CGameObject * getOwner() const { return mOwner; }
 
    public:
-      enum { TRAHSFORM, RENDERABLE, MOVEMENT, CAMERA };
+      enum { TRANSFORM, RENDERABLE, MOVEMENT, CAMERA };
 
    private:
       CGameObject * mOwner;

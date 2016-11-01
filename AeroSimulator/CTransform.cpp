@@ -31,7 +31,7 @@ void CTransform::setScale(const glm::vec3& scale)
    if (scale != mScale)
    {
       mScale = scale;
-      mState.set(eTransformState::eParentChanged);
+      //mState.set(eTransformState::eParentChanged); ///@todo: remove
    }
 }
 
@@ -95,7 +95,7 @@ void CTransform::setTranslateRotateMatrix(const glm::mat4 & m)
    if (m != mTRMatrix)
    {
       mTRMatrix = m;
-      mState.set(eTransformState::eParentChanged); ///@todo: reconsider this
+      //mState.set(eTransformState::eParentChanged);  ///@todo: remove
    }
 }
 

@@ -9,7 +9,6 @@
 #include <unordered_map>
 #include <memory>
 #include <string>
-#include <vector>
 
 namespace AeroSimulatorEngine
 {
@@ -18,8 +17,6 @@ namespace AeroSimulatorEngine
    struct SGeometryData;
    class CRenderable;
 
-   ///@todo: any GO can be a parent or a child in any tree.
-   ///@todo: foresee such a possibility in this class, including all the necessary transform stuff
    class CGameObject
    {
    public:
@@ -36,15 +33,8 @@ namespace AeroSimulatorEngine
       void setFrameDt(const float dt) { mFrameDt = dt; }
       float getFrameDt() const { return mFrameDt; }
 
-      ///@todo: probably remove these methods if they are not used in the end
-      int getId() const { return mId; }
-      int getType() const { return mType; }
-
       void addChild(std::shared_ptr<CGameObject>& pChild);
-
       bool removeChild(std::shared_ptr<CGameObject>& pChild);
-
-      bool updateChildrensMatrix(const glm::mat4& m);
 
    protected:
       // Get the component of type T from the specified (by reference) object
@@ -80,12 +70,6 @@ namespace AeroSimulatorEngine
 
       CRenderable & getRenderable(); ///@todo: think how to make this method const
 
-      ///@todo: remove this method
-      void setParentMatrix(const glm::mat4& parentMatrix);
-
-      template <typename T>
-      void updateChildrensMatrix(const glm::mat4& m, T* pComponent);
-
    protected:
       // We have to shared_ptr as unique_ptr refuses to work
       std::unordered_map<unsigned int, std::shared_ptr<CComponent> > mComponents;
@@ -96,9 +80,6 @@ namespace AeroSimulatorEngine
       int mType;  // Type of the object, e.g. land, camera etc.
 
       float mFrameDt; ///@todo: probably remove it from here and move to some singleton
-
-      ///@todo: add a list of children here and probably some reference to the parent;
-      std::vector<std::shared_ptr<CGameObject> > mChildren;
    };
 
    // Template methods implementation
@@ -144,27 +125,6 @@ namespace AeroSimulatorEngine
          {
             GEventManager.attachEvent(e, *pComponent);
             LOG(msg, " attachEvents(): ", e);
-         }
-      }
-   }
-
-   template <typename T>
-   inline void CGameObject::updateChildrensMatrix(const glm::mat4& m, T* pComponent)
-   {
-      if (pComponent)
-      {
-         CTransform& transform = pComponent->getTransform();
-         pComponent->setParentMatrix(m);
-         const glm::mat4 translateRotateWithParent = m * transform.getTranslateRotateMatrix();
-         //transform.setTranslateRotateMatrix(translateRotateWithParent);
-
-         for (auto child : mChildren)
-         {
-            if (child)
-            {
-               //child->setParentMatrix(translateRotateWithParent);
-               child->updateChildrensMatrix(translateRotateWithParent);
-            }
          }
       }
    }
