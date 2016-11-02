@@ -4,6 +4,8 @@
 #include "../AeroSimulator/CRenderable.h"
 #include "../AeroSimulator/CFigure.h"
 #include "CPropeller.h"
+#include "../AeroSimulator/CUtils.h"
+#include <algorithm>
 
 using namespace AeroSimulatorEngine;
 
@@ -11,16 +13,16 @@ using namespace AeroSimulatorEngine;
 CCubicAirPlane::CCubicAirPlane(const int id, const int type, std::shared_ptr<CShader> shader)
    : CGameObject(id, type)
    , mShader(shader)
-   //, mLeanLeft(false)
-   //, mLeanRight(false)
    , mRollAngle(0.0f)
+   , mPitch(0.0f)
    , mCurrentAction()
    , mCurrentState()
+   , mPropeller()
+   , mPropellerSpeed(mMinPropellerSpeed)
 {
    std::vector<int> transformEvents(1, eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CCubicAirPlane: ");
 
-   ///@todo: think whether airplane msgs should be added here
    std::vector<int> moveEvents;
    moveEvents.push_back(eGeneralEvents::MOVE);
    moveEvents.push_back(eAirplaneEvents::LEAN_LEFT_START);
@@ -34,7 +36,7 @@ CCubicAirPlane::CCubicAirPlane(const int id, const int type, std::shared_ptr<CSh
 
    (void)CGameObject::addMovementComponent(moveEvents, "* CCubicAirPlane: ");
 
-   addCubes();
+   createParts();
 }
 
 CCubicAirPlane::~CCubicAirPlane()
@@ -44,7 +46,6 @@ CCubicAirPlane::~CCubicAirPlane()
 void CCubicAirPlane::move()
 {
    //LOG("CCubicAirPlane::move()");
-   //CTransformComponent* pTc = componentCast<CTransformComponent>(*mChildren[0]);
    CTransformComponent* pTc = componentCast<CTransformComponent>(*this);
    if (pTc) {
       CTransform & rt = pTc->getTransform();
@@ -54,45 +55,139 @@ void CCubicAirPlane::move()
       rt.setTranslate(newTranslate);
 
       lean(rt);
+      changeHeight(rt);
+
+      rt.setRotate(glm::vec3(mPitch, 0.0f, mRollAngle));
    }
 }
 
 void CCubicAirPlane::specificMove(const int moveType)
 {
-   /*LEAN_LEFT_START = LAST_CAMERA_EVENT, LEAN_LEFT_STOP,
-      LEAN_RIGHT_START, LEAN_RIGHT_STOP,
-      GO_UP_START, GO_UP_STOP,
-      GO_DOWN_START, GO_DOWN_STOP*/
    switch (moveType) {
    case eAirplaneEvents::LEAN_LEFT_START:
-      if (!mCurrentState[eCurrentState::LEAN_RIGHT]) {
-         mCurrentState.set(eCurrentState::LEAN_LEFT);
-         mCurrentAction.set(eCurrentAction::ACT);
-      }
+      mCurrentState.reset(eCurrentState::LEAN_RIGHT);
+      mCurrentState.set(eCurrentState::LEAN_LEFT);
+      mCurrentAction.set(eCurrentAction::LEAN_ACT);
       break;
 
    case eAirplaneEvents::LEAN_LEFT_STOP:
-      if (mCurrentState[eCurrentState::LEAN_LEFT]) {
-         mCurrentAction.reset(eCurrentAction::ACT);
-      }
+      mCurrentAction.reset(eCurrentAction::LEAN_ACT);
       break;
 
    case eAirplaneEvents::LEAN_RIGHT_START:
-      if (!mCurrentState[eCurrentState::LEAN_LEFT]) {
-         mCurrentState.set(eCurrentState::LEAN_RIGHT);
-         mCurrentAction.set(eCurrentAction::ACT);
-      }
+      mCurrentState.reset(eCurrentState::LEAN_LEFT);
+      mCurrentState.set(eCurrentState::LEAN_RIGHT);
+      mCurrentAction.set(eCurrentAction::LEAN_ACT);
       break;
 
    case eAirplaneEvents::LEAN_RIGHT_STOP:
-      if (mCurrentState[eCurrentState::LEAN_RIGHT]) {
-         mCurrentAction.reset(eCurrentAction::ACT);
-      }
+      mCurrentAction.reset(eCurrentAction::LEAN_ACT);
+      break;
+
+   case eAirplaneEvents::GO_UP_START:
+      mCurrentState.reset(eCurrentState::GO_DOWN);
+      mCurrentState.set(eCurrentState::GO_UP);
+      mCurrentAction.set(eCurrentAction::GO_ACT);
+      break;
+
+   case eAirplaneEvents::GO_UP_STOP:
+      mCurrentAction.reset(eCurrentAction::GO_ACT);
+      break;
+
+   case eAirplaneEvents::GO_DOWN_START:
+      mCurrentState.reset(eCurrentState::GO_UP);
+      mCurrentState.set(eCurrentState::GO_DOWN);
+      mCurrentAction.set(eCurrentAction::GO_ACT);
+      break;
+
+   case eAirplaneEvents::GO_DOWN_STOP:
+      mCurrentAction.reset(eCurrentAction::GO_ACT);
       break;
    }
 }
 
-void CCubicAirPlane::addCubes()
+void CCubicAirPlane::lean(CTransform & rt)
+{
+   const float maxRoll = 25.0f;
+   const float leanSpeed = 0.5f;
+
+   if (mCurrentState[eCurrentState::LEAN_LEFT])
+   {
+      if (mCurrentAction[eCurrentAction::LEAN_ACT])
+      {
+         mRollAngle = std::min<>(mRollAngle + leanSpeed, maxRoll);
+      }
+      else if (!mCurrentAction[eCurrentAction::LEAN_ACT])
+      {
+         mRollAngle = std::max<>(mRollAngle - leanSpeed, leanSpeed);
+         if (std::fabs(mRollAngle) <= leanSpeed) {
+            mCurrentState.reset(eCurrentState::LEAN_LEFT);
+            mRollAngle = 0.0f;
+         }
+      }
+   }
+
+   if (mCurrentState[eCurrentState::LEAN_RIGHT])
+   {
+      if (mCurrentAction[eCurrentAction::LEAN_ACT])
+      {
+         mRollAngle = std::max<>(mRollAngle - leanSpeed, -maxRoll);
+      }
+      else if (!mCurrentAction[eCurrentAction::LEAN_ACT])
+      {
+         mRollAngle = std::min<>(mRollAngle + leanSpeed, leanSpeed);
+         if (std::fabs(mRollAngle) <= leanSpeed) {
+            mCurrentState.reset(eCurrentState::LEAN_RIGHT);
+            mRollAngle = 0.0f;
+         }
+      }
+   }
+}
+
+void CCubicAirPlane::changeHeight(CTransform & rt)
+{
+   const float maxPitch = 25.0f;
+   const float leanSpeed = 0.5f;
+
+   if (mCurrentState[eCurrentState::GO_UP])
+   {
+      const float propellerAccel = 1.0f;
+      if (mCurrentAction[eCurrentAction::GO_ACT])
+      {
+         mPitch = std::min<>(mPitch + leanSpeed, maxPitch);
+         mPropellerSpeed = std::min<>(mPropellerSpeed + propellerAccel, mMaxPropellerSpeed);
+      }
+      else if (!mCurrentAction[eCurrentAction::GO_ACT])
+      {
+         mPitch = std::max<>(mPitch - leanSpeed, leanSpeed);
+         if (std::fabs(mPitch) <= leanSpeed) {
+            mCurrentState.reset(eCurrentState::GO_UP);
+            mPitch = 0.0f;
+         }
+         mPropellerSpeed = std::max<>(mPropellerSpeed - propellerAccel, mMinPropellerSpeed);
+      }
+
+      mPropeller->setRotationSpeed(mPropellerSpeed);
+   }
+
+   if (mCurrentState[eCurrentState::GO_DOWN])
+   {
+      if (mCurrentAction[eCurrentAction::GO_ACT])
+      {
+         mPitch = std::max<>(mPitch - leanSpeed, -maxPitch);
+      }
+      else if (!mCurrentAction[eCurrentAction::GO_ACT])
+      {
+         mPitch = std::min<>(mPitch + leanSpeed, leanSpeed);
+         if (std::fabs(mPitch) <= leanSpeed) {
+            mCurrentState.reset(eCurrentState::GO_DOWN);
+            mPitch = 0.0f;
+         }
+      }
+   }
+}
+
+void CCubicAirPlane::createParts()
 {
    CTransformComponent* pTc = getComponent<CTransformComponent>();
    if (pTc) {
@@ -104,10 +199,9 @@ void CCubicAirPlane::addCubes()
       /// Cabine
       const std::size_t cabineId = mChildren.size();
       const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
-      //transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
       transform.setTranslate(glm::vec3(0.0f, 0.0f, 0.0f));
       transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-      addColorCube(transform, cabineColor, mType);
+      CUtils::addColorCube(transform, cabineColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       /// Attach the first child to the root
       this->addChild(mChildren[cabineId]);
@@ -118,19 +212,19 @@ void CCubicAirPlane::addCubes()
       transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
       /// Cube 0
       transform.setTranslate(glm::vec3(0.0f, cabHeight, 0.0f));
-      addColorCube(transform, bodyColor, mType);
+      CUtils::addColorCube(transform, bodyColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       /// Cube 1
       transform.setTranslate(glm::vec3(0.0f, cabHeight, 1.0f));
-      addColorCube(transform, bodyColor, mType);
+      CUtils::addColorCube(transform, bodyColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       /// Cube 2
       transform.setTranslate(glm::vec3(0.0f, cabHeight, 2.0f));
-      addColorCube(transform, bodyColor, mType);
+      CUtils::addColorCube(transform, bodyColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       /// Cube 3
       transform.setTranslate(glm::vec3(0.0f, cabHeight, 3.0f));
-      addColorCube(transform, bodyColor, mType);
+      CUtils::addColorCube(transform, bodyColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       /// Wings
       const glm::vec4 wingColor(1.0f, 0.0f, 1.0f, 1.0f);
@@ -139,79 +233,24 @@ void CCubicAirPlane::addCubes()
       // Left wing
       transform.setTranslate(glm::vec3((-1.0f - 0.5f*(wingX - 1.0f)), cabHeight, 1.25f));
       transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
-      addColorCube(transform, wingColor, mType);
+      CUtils::addColorCube(transform, wingColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       // Right wing
       transform.setTranslate(glm::vec3((1.0f + 0.5f*(wingX - 1.0f)), cabHeight, 1.25f));
       transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
-      addColorCube(transform, wingColor, mType);
+      CUtils::addColorCube(transform, wingColor, mType, mShader, mChildren, "* CCubicAirPlane ");
 
       for (std::size_t i = 1; i < mChildren.size(); ++i)
          mChildren[0]->addChild(mChildren[i]);
 
       // Propeller
-      tGoSharedPtr pObject(new CPropeller(mChildren.size(), mType, mShader));
-      if (nullptr != pObject) {
-         mChildren.insert(std::pair<int, std::shared_ptr<CGameObject>>(mChildren.size(), pObject));
+      mPropeller.reset(new CPropeller(mChildren.size(), mType, mShader, mPropellerSpeed));
+      if (nullptr != mPropeller) {
+         mChildren.insert(std::pair<int, std::shared_ptr<CGameObject>>(mChildren.size(), mPropeller));
       }
       else {
          LOG("* CCubicAirPlane::addColorCube() pObject is NULL");
       }
       mChildren[1]->addChild(mChildren[mChildren.size()-1]); // Add the propeller to the correct cube
    }
-}
-
-///@todo: move this method and the same from CPropeller to CUtils
-void CCubicAirPlane::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
-{
-   const int id = mChildren.size();
-
-   SRenderableData data(mShader, 0, "", color);
-   tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
-   if (nullptr != pObject) {
-      mChildren.insert(std::pair<int, std::shared_ptr<CGameObject>>(id, pObject));
-   }
-   else {
-      LOG("* CCubicAirPlane::addColorCube() pObject is NULL");
-   }
-}
-
-void CCubicAirPlane::lean(CTransform & rt)
-{
-   const float maxRoll = 25.0f;
-   const float leanSpeed = 0.5f;
-
-   if (mCurrentState[eCurrentState::LEAN_LEFT])
-   {
-      if (mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) < maxRoll)
-      {
-         mRollAngle += leanSpeed;
-      }
-      else if (!mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) > leanSpeed)
-      {
-         mRollAngle -= leanSpeed;
-      }
-
-      if (std::fabs(mRollAngle) <= leanSpeed) {
-         mCurrentState.reset(eCurrentState::LEAN_LEFT);
-      }
-   }
-
-   if (mCurrentState[eCurrentState::LEAN_RIGHT])
-   {
-      if (mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) < maxRoll)
-      {
-         mRollAngle -= leanSpeed;
-      }
-      else if (!mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) > leanSpeed)
-      {
-         mRollAngle += leanSpeed;
-         if (std::fabs(mRollAngle) <= leanSpeed) {
-            mCurrentState.reset(eCurrentState::LEAN_RIGHT);
-            mRollAngle = 0.0f;
-         }
-      }
-   }
-
-   rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
 }

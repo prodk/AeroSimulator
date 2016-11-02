@@ -8,6 +8,7 @@
 namespace AeroSimulatorEngine
 {
    class CTransform;
+   class CPropeller;
 
    class CCubicAirPlane : public CGameObject
    {
@@ -19,20 +20,24 @@ namespace AeroSimulatorEngine
       void specificMove(const int moveType) override;
 
    private:
-      void addCubes();
-      void addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType); ///@todo: move to CUtils
       void lean(CTransform & rt);
+      void changeHeight(CTransform & rt);
+      void createParts();
 
    private:
-      enum eCurrentAction { ACT, LAST_ACTION };
+      ///@todo: move the airplane manipulation code to a separate base class and inherit from it
+      enum eCurrentAction { LEAN_ACT, GO_ACT, LAST_ACTION };
       enum eCurrentState { LEAN_LEFT, LEAN_RIGHT, GO_UP, GO_DOWN, LAST_STATE };
 
       std::shared_ptr<CShader> mShader;
-      //bool mLeanLeft;
-      //bool mLeanRight;
       float mRollAngle;
+      float mPitch;
       std::bitset<eCurrentAction::LAST_ACTION> mCurrentAction;
       std::bitset<eCurrentState::LAST_STATE> mCurrentState;
+      std::shared_ptr<CPropeller> mPropeller;
+      const float mMinPropellerSpeed = 4.0f;
+      const float mMaxPropellerSpeed = 24.0f;
+      float mPropellerSpeed;
    };
 } // AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CUBIC_AERO_PLANE_H

@@ -204,8 +204,8 @@ void CGame::addCameras()
 {
    // currently just 1 camera
    const int id = mGameObjects.size();
-   const glm::vec3 translate(10.0f, 33.0f, 0.0f);
-   const glm::vec3 rotate(0.0f, 90.0f, 0.0f);
+   const glm::vec3 translate(0.0f, 29.0f, -3.0f);
+   const glm::vec3 rotate(0.0f, 180.0f, 0.0f);
    CTransform transform;
    transform.setTranslate(translate);
    transform.setRotate(rotate);

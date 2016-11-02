@@ -2,6 +2,10 @@
 #include "../AeroSimulator/include/glm/vec3.hpp"
 #include "../AeroSimulator/include/glm/mat4x4.hpp"
 #include "../AeroSimulator/include/glm/gtc/matrix_transform.hpp"
+#include "CGameObject.h"
+#include "CRenderable.h"
+#include "CFigure.h"
+#include "../AeroSimulator/src/shaders/CShader.h"
 
 using namespace AeroSimulatorEngine;
 
@@ -78,5 +82,24 @@ void CUtils::generateTexturedSphere(std::vector<GLfloat>& vertices, std::vector<
             indices.push_back(id);
          }
       }
+   }
+}
+
+void CUtils::addColorCube(const CTransform & transform,
+                          const glm::vec4 & color, const int objectType,
+                          std::shared_ptr<CShader>& shader,
+                          std::map<int, std::shared_ptr<CGameObject>>& children,
+                          const std::string& msg)
+{
+   const int id = children.size();
+
+   SRenderableData data(shader, 0, "", color);
+   tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
+   if (nullptr != pObject) {
+      children.insert(std::pair<int, std::shared_ptr<CGameObject>>(id, pObject));
+   }
+   else {
+      const std::string resMsg(msg + " addColorCube() pObject is NULL");
+      LOG(resMsg.c_str());
    }
 }

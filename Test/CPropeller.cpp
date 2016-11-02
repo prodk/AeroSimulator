@@ -3,12 +3,14 @@
 #include "../AeroSimulator/CFigure.h"
 #include "../CTransform.h"
 #include "../AeroSimulator/CTransformComponent.h"
+#include "../AeroSimulator/CUtils.h"
 
 using namespace AeroSimulatorEngine;
 
-CPropeller::CPropeller(const int id, const int type, std::shared_ptr<CShader> shader)
+CPropeller::CPropeller(const int id, const int type, std::shared_ptr<CShader> shader, float speed)
    : CGameObject(id, type)
    , mShader(shader)
+   , mRotSpeed(speed)
 {
    std::vector<int> transformEvents(1, eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CPropeller: ");
@@ -24,22 +26,22 @@ CPropeller::CPropeller(const int id, const int type, std::shared_ptr<CShader> sh
    // Base
    transform.setTranslate(glm::vec3(0.0f, 0.0f, -0.75f));
    transform.setScale(glm::vec3(0.2f, 0.25f, 0.5f));
-   addColorCube(transform, baseColor, mType);
+   CUtils::addColorCube(transform, baseColor, mType, mShader, mChildren, "* Propeller ");
 
    /// Attach the first child to the root
    this->addChild(mChildren[0]);
 
    // Paddle 1
-   const float length = 0.75f;
+   const float length = 0.9f;
    const float halfLength = 0.5f*length;
    transform.setTranslate(glm::vec3(0.0f, halfLength, -0.3f));
    transform.setScale(glm::vec3(0.1f, length, 0.1f));
-   addColorCube(transform, paddleColor, mType);
+   CUtils::addColorCube(transform, paddleColor, mType, mShader, mChildren, "* Propeller ");
 
    // Paddle 2
    transform.setTranslate(glm::vec3(0.0f, -halfLength, -0.3f));
    transform.setScale(glm::vec3(0.1f, length, 0.1f));
-   addColorCube(transform, paddleColor, mType);
+   CUtils::addColorCube(transform, paddleColor, mType, mShader, mChildren, "* Propeller ");
 
    for (std::size_t i = 1; i < mChildren.size(); ++i)
       mChildren[0]->addChild(mChildren[i]);
@@ -56,24 +58,8 @@ void CPropeller::move()
    CTransformComponent* pTc = componentCast<CTransformComponent>(*this);
    if (pTc) {
       CTransform & rt = pTc->getTransform();
-      const float v = 4.0f;
       rt.setRotate(glm::vec3(0.0f, 0.0f, angle));
-      angle += v;
+      angle += mRotSpeed;
       angle = angle > 360.0f ? angle - 360.0f : angle;
-   }
-}
-
-///@todo: remove this copypasted code CCubicAirPlane - move it to CUtils
-void CPropeller::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
-{
-   const int id = mChildren.size();
-
-   SRenderableData data(mShader, 0, "", color);
-   tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
-   if (nullptr != pObject) {
-      mChildren.insert(std::pair<int, std::shared_ptr<CGameObject>>(id, pObject));
-   }
-   else {
-      LOG("* CPropeller::addColorCube() pObject is NULL");
    }
 }

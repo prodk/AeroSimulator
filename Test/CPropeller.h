@@ -11,16 +11,15 @@ namespace AeroSimulatorEngine
    class CPropeller : public CGameObject
    {
    public:
-      CPropeller(const int id, const int type, std::shared_ptr<CShader> shader);
+      CPropeller(const int id, const int type, std::shared_ptr<CShader> shader, float speed);
       virtual ~CPropeller();
 
       void move() override;
-
-   private:
-      void addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType);///@todo: remove this copypasted code CCubicAirPlane
+      void setRotationSpeed(const float speed) { mRotSpeed = speed; }
 
    private:
       std::shared_ptr<CShader> mShader;
+      float mRotSpeed;
    };
 } // AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CPROPELLER_H

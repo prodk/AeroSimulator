@@ -112,22 +112,22 @@ void CWin32InputHandler::handleKeyDown(WPARAM wParam) const
       break;
 
    case (VK_LEFT): // left, lean the airplane to the left
-      LOG("Key arrow left pressed");
+      //LOG("Key arrow left pressed");
       GEventManager.broadcastEvent(eAirplaneEvents::LEAN_LEFT_START);
       break;
 
    case (VK_RIGHT): // right, lean the airplane to the right
-      LOG("Key arrow right pressed");
+      //LOG("Key arrow right pressed");
       GEventManager.broadcastEvent(eAirplaneEvents::LEAN_RIGHT_START);
       break;
 
    case (VK_UP): // up, increase the height
-      LOG("Key arrow up pressed");
+      //LOG("Key arrow up pressed");
       GEventManager.broadcastEvent(eAirplaneEvents::GO_UP_START);
       break;
 
    case (VK_DOWN): // down, decrease the height
-      LOG("Key arrow down pressed");
+      //LOG("Key arrow down pressed");
       GEventManager.broadcastEvent(eAirplaneEvents::GO_DOWN_START);
       break;
    }
@@ -199,22 +199,22 @@ void CWin32InputHandler::handleKeyUp(WPARAM wParam) const
       break;
 
    case (VK_LEFT): // left, lean the airplane to the left
-      LOG("Key arrow left depressed");
+      //LOG("Key arrow left depressed");
       GEventManager.broadcastEvent(eAirplaneEvents::LEAN_LEFT_STOP);
       break;
 
    case (VK_RIGHT): // right, lean the airplane to the right
-      LOG("Key arrow right depressed");
+      //LOG("Key arrow right depressed");
       GEventManager.broadcastEvent(eAirplaneEvents::LEAN_RIGHT_STOP);
       break;
 
    case (VK_UP): // up, increase the height
-      LOG("Key arrow up depressed");
+      //LOG("Key arrow up depressed");
       GEventManager.broadcastEvent(eAirplaneEvents::GO_UP_STOP);
       break;
 
    case (VK_DOWN): // down, decrease the height
-      LOG("Key arrow down depressed");
+      //LOG("Key arrow down depressed");
       GEventManager.broadcastEvent(eAirplaneEvents::GO_DOWN_STOP);
       break;
    }
