@@ -21,6 +21,10 @@ namespace AeroSimulatorEngine
                         MOVE_LEFT, MOVE_LEFT_STOP, MOVE_RIGHT, MOVE_RIGHT_STOP,
                         MOVE_UP, MOVE_UP_STOP, MOVE_DOWN, MOVE_DOWN_STOP,
                         LAST_CAMERA_EVENT};
+   enum eAirplaneEvents {LEAN_LEFT_START = LAST_CAMERA_EVENT, LEAN_LEFT_STOP,
+                         LEAN_RIGHT_START, LEAN_RIGHT_STOP,
+                         GO_UP_START, GO_UP_STOP,
+                         GO_DOWN_START, GO_DOWN_STOP};
 
    // This is a singleton
    class CEventManager

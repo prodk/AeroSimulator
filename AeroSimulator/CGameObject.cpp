@@ -65,6 +65,10 @@ void CGameObject::move()
 {
 }
 
+void CGameObject::specificMove(const int moveType)
+{
+}
+
 CComponent * CGameObject::getComponent(const unsigned int id) const
 {
    const auto result = mComponents.find(id);

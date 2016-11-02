@@ -52,17 +52,18 @@ CPropeller::~CPropeller()
 void CPropeller::move()
 {
    static float angle = 0.0f; ///@todo: make a member
-   LOG("CPropeller::move()");
+   //LOG("CPropeller::move()");
    CTransformComponent* pTc = componentCast<CTransformComponent>(*this);
    if (pTc) {
       CTransform & rt = pTc->getTransform();
       const float v = 4.0f;
       rt.setRotate(glm::vec3(0.0f, 0.0f, angle));
       angle += v;
+      angle = angle > 360.0f ? angle - 360.0f : angle;
    }
 }
 
-///@todo: remove this copypasted code CCubicAirPlane
+///@todo: remove this copypasted code CCubicAirPlane - move it to CUtils
 void CPropeller::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
 {
    const int id = mChildren.size();

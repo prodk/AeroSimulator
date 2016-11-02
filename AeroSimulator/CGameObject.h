@@ -41,6 +41,7 @@ namespace AeroSimulatorEngine
       int type() const { return mType; }
 
       virtual void move(); // move the object if needed
+      virtual void specificMove(const int moveType);
 
       virtual void addToRenderer(CRenderer * renderer);
 

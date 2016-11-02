@@ -11,11 +11,25 @@ using namespace AeroSimulatorEngine;
 CCubicAirPlane::CCubicAirPlane(const int id, const int type, std::shared_ptr<CShader> shader)
    : CGameObject(id, type)
    , mShader(shader)
+   , mLeanLeft(false)
+   , mLeanRight(false)
+   , mRollAngle(0.0f)
 {
    std::vector<int> transformEvents(1, eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CCubicAirPlane: ");
 
-   std::vector<int> moveEvents(1, eGeneralEvents::MOVE);
+   ///@todo: think whether airplane msgs should be added here
+   std::vector<int> moveEvents;
+   moveEvents.push_back(eGeneralEvents::MOVE);
+   moveEvents.push_back(eAirplaneEvents::LEAN_LEFT_START);
+   moveEvents.push_back(eAirplaneEvents::LEAN_LEFT_STOP);
+   moveEvents.push_back(eAirplaneEvents::LEAN_RIGHT_START);
+   moveEvents.push_back(eAirplaneEvents::LEAN_RIGHT_STOP);
+   moveEvents.push_back(eAirplaneEvents::GO_UP_START);
+   moveEvents.push_back(eAirplaneEvents::GO_UP_STOP);
+   moveEvents.push_back(eAirplaneEvents::GO_DOWN_START);
+   moveEvents.push_back(eAirplaneEvents::GO_DOWN_STOP);
+
    (void)CGameObject::addMovementComponent(moveEvents, "* CCubicAirPlane: ");
 
    addCubes();
@@ -28,13 +42,41 @@ CCubicAirPlane::~CCubicAirPlane()
 void CCubicAirPlane::move()
 {
    //LOG("CCubicAirPlane::move()");
+   //CTransformComponent* pTc = componentCast<CTransformComponent>(*mChildren[0]);
    CTransformComponent* pTc = componentCast<CTransformComponent>(*this);
    if (pTc) {
       CTransform & rt = pTc->getTransform();
       const glm::vec3 prevTranslate = rt.getTranslate();
-      const float v = 0.1f;
+      const float v = 0.0f;
       const glm::vec3 newTranslate = prevTranslate + glm::vec3(0.0f, v*getFrameDt(), 0.0f);
       rt.setTranslate(newTranslate);
+
+      lean(rt);
+   }
+}
+
+void CCubicAirPlane::specificMove(const int moveType)
+{
+   /*LEAN_LEFT_START = LAST_CAMERA_EVENT, LEAN_LEFT_STOP,
+      LEAN_RIGHT_START, LEAN_RIGHT_STOP,
+      GO_UP_START, GO_UP_STOP,
+      GO_DOWN_START, GO_DOWN_STOP*/
+   switch (moveType) {
+   case eAirplaneEvents::LEAN_LEFT_START:
+      mLeanLeft = true; ///@todo: make a bitset;
+      break;
+
+   case eAirplaneEvents::LEAN_LEFT_STOP:
+      mLeanLeft = false; ///@todo: make a bitset;
+      break;
+
+   case eAirplaneEvents::LEAN_RIGHT_START:
+      mLeanRight = true; ///@todo: make a bitset;
+      break;
+
+   case eAirplaneEvents::LEAN_RIGHT_STOP:
+      mLeanRight = false; ///@todo: make a bitset;
+      break;
    }
 }
 
@@ -42,12 +84,16 @@ void CCubicAirPlane::addCubes()
 {
    CTransformComponent* pTc = getComponent<CTransformComponent>();
    if (pTc) {
+      CTransform & rootTr = pTc->getTransform();
+      rootTr.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
+
       CTransform transform;
 
       /// Cabine
       const std::size_t cabineId = mChildren.size();
       const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
-      transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
+      //transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
+      transform.setTranslate(glm::vec3(0.0f, 0.0f, 0.0f));
       transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
       addColorCube(transform, cabineColor, mType);
 
@@ -103,6 +149,7 @@ void CCubicAirPlane::addCubes()
    }
 }
 
+///@todo: move this method and the same from CPropeller to CUtils
 void CCubicAirPlane::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
 {
    const int id = mChildren.size();
@@ -114,5 +161,29 @@ void CCubicAirPlane::addColorCube(const CTransform & transform, const glm::vec4 
    }
    else {
       LOG("* CCubicAirPlane::addColorCube() pObject is NULL");
+   }
+}
+
+void CCubicAirPlane::lean(CTransform & rt)
+{
+   const float maxRoll = 25.0f;
+   const float leanSpeed = 0.5f;
+
+   if (mLeanLeft && (std::fabs(mRollAngle) < maxRoll)) {
+      mRollAngle += leanSpeed;
+      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
+   }
+   else if (!mLeanLeft && !mLeanRight && (std::fabs(mRollAngle) > leanSpeed)) {
+      mRollAngle -= leanSpeed;
+      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
+   }
+
+   if (mLeanRight && (std::fabs(mRollAngle) < maxRoll)) {
+      mRollAngle -= leanSpeed;
+      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
+   }
+   else if (!mLeanRight && !mLeanLeft && (std::fabs(mRollAngle) > leanSpeed)) {
+      mRollAngle += leanSpeed;
+      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
    }
 }

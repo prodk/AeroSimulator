@@ -22,11 +22,15 @@ void CMovementComponent::handleEvent(CAppEvent * pEvent)
 {
    if (pEvent)
    {
+      CGameObject& owner = *getOwner();
       switch (pEvent->getId())
       {
       case eGeneralEvents::MOVE:
-         CGameObject& owner = *getOwner();
          owner.move();
+         break;
+
+      default:
+         owner.specificMove(pEvent->getId());
          break;
       }
    }

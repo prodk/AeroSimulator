@@ -15,13 +15,18 @@ namespace AeroSimulatorEngine
       virtual ~CCubicAirPlane();
 
       void move() override;
+      void specificMove(const int moveType) override;
 
    private:
       void addCubes();
-      void addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType);
+      void addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType); ///@todo: move to CUtils
+      void lean(CTransform & rt);
 
    private:
       std::shared_ptr<CShader> mShader;
+      bool mLeanLeft;
+      bool mLeanRight;
+      float mRollAngle;
    };
 } // AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CUBIC_AERO_PLANE_H

@@ -63,14 +63,12 @@ void CTransformComponent::update()
 
 void CTransformComponent::updateParentMatrix(const glm::mat4& parent)
 {
-   if (mParentTrMatrix != parent || mParentTrMatrix == glm::mat4()) {
-      mParentTrMatrix = parent;
-      for (auto c : mChildren) {
-         if (nullptr != c)
-         {
-            const glm::mat4& tr = mTransform.getTranslateRotateMatrix();
-            c->updateParentMatrix(mParentTrMatrix * tr);
-         }
+   mParentTrMatrix = parent;
+   for (auto c : mChildren) {
+      if (nullptr != c)
+      {
+         const glm::mat4& tr = mTransform.getTranslateRotateMatrix();
+         c->updateParentMatrix(mParentTrMatrix * tr);
       }
    }
 }

@@ -16,8 +16,8 @@ namespace AeroSimulatorEngine
       bool windowProc(HWND hWnd, UINT uMessage, WPARAM wParam, LPARAM lParam) const;
 
    private:
-      void cameraKeyDown(WPARAM wParam) const;
-      void cameraKeyUp(WPARAM wParam) const;
+      void handleKeyDown(WPARAM wParam) const;
+      void handleKeyUp(WPARAM wParam) const;
    };
 } // namespace AeroSimulatorEngine
 
