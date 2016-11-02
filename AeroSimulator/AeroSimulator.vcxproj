@@ -156,7 +156,6 @@
     <ClInclude Include="CCameraComponent.h" />
     <ClInclude Include="CCameraManager.h" />
     <ClInclude Include="CComponent.h" />
-    <ClInclude Include="CCompositeGameObject.h" />
     <ClInclude Include="CEventHandler.h" />
     <ClInclude Include="CEventManager.h" />
     <ClInclude Include="CFigure.h" />
@@ -165,7 +164,6 @@
     <ClInclude Include="CLog.h" />
     <ClInclude Include="CColorBillBoard.h" />
     <ClInclude Include="CMovementComponent.h" />
-    <ClInclude Include="CParentGameObject.h" />
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CRenderable.h" />
     <ClInclude Include="CRenderableComponent.h" />
@@ -180,7 +178,6 @@
     <ClInclude Include="CWin32InputHandler.h" />
     <ClInclude Include="CWin32Renderer.h" />
     <ClInclude Include="CWin32Window.h" />
-    <ClInclude Include="CLeafGameObject.h" />
     <ClInclude Include="CQuad.h" />
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h" />
     <ClInclude Include="src\shaders\CBillboardShader.h" />
@@ -204,7 +201,6 @@
     <ClCompile Include="CCameraComponent.cpp" />
     <ClCompile Include="CCameraManager.cpp" />
     <ClCompile Include="CComponent.cpp" />
-    <ClCompile Include="CCompositeGameObject.cpp" />
     <ClCompile Include="CEventHandler.cpp" />
     <ClCompile Include="CEventManager.cpp" />
     <ClCompile Include="CFigure.cpp" />
@@ -213,7 +209,6 @@
     <ClCompile Include="CLog.cpp" />
     <ClCompile Include="CColorBillBoard.cpp" />
     <ClCompile Include="CMovementComponent.cpp" />
-    <ClCompile Include="CParentGameObject.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CRenderable.cpp" />
     <ClCompile Include="CRenderableComponent.cpp" />
@@ -228,7 +223,6 @@
     <ClCompile Include="CWin32InputHandler.cpp" />
     <ClCompile Include="CWin32Renderer.cpp" />
     <ClCompile Include="CWin32Window.cpp" />
-    <ClCompile Include="CLeafGameObject.cpp" />
     <ClCompile Include="CQuad.cpp" />
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp" />
     <ClCompile Include="src\shaders\CBillboardShader.cpp" />

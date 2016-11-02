@@ -28,14 +28,8 @@
     <Filter Include="Header Files\gameObject">
       <UniqueIdentifier>{43f64935-6a31-4c7e-a73d-d2261fabe063}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\gameObject\composite">
-      <UniqueIdentifier>{be249ca0-9de8-4721-9192-d1dadcb83d54}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\gameObject">
       <UniqueIdentifier>{eb9b4213-ec15-4a55-b14e-fcf88bbbf42c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\gameObject\composite">
-      <UniqueIdentifier>{4133a52a-6d13-42ba-a2f2-dfc52c56bb46}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\gameObject\billboard">
       <UniqueIdentifier>{4ec0855c-55eb-4e73-9792-0057d3c66760}</UniqueIdentifier>
@@ -108,12 +102,6 @@
     <ClInclude Include="CTexture.h">
       <Filter>Header Files\renderer</Filter>
     </ClInclude>
-    <ClInclude Include="CParentGameObject.h">
-      <Filter>Header Files\gameObject\composite</Filter>
-    </ClInclude>
-    <ClInclude Include="CCompositeGameObject.h">
-      <Filter>Header Files\gameObject\composite</Filter>
-    </ClInclude>
     <ClInclude Include="CGameObject.h">
       <Filter>Header Files\gameObject</Filter>
     </ClInclude>
@@ -134,9 +122,6 @@
     </ClInclude>
     <ClInclude Include="src\shaders\CAnimationBillboardShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
-    </ClInclude>
-    <ClInclude Include="CLeafGameObject.h">
-      <Filter>Header Files\gameObject\composite</Filter>
     </ClInclude>
     <ClInclude Include="src\shaders\CNormalMapSphereShader.h">
       <Filter>Header Files\renderer\shaders</Filter>
@@ -248,12 +233,6 @@
     <ClCompile Include="src\shaders\CTextureShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
     </ClCompile>
-    <ClCompile Include="CCompositeGameObject.cpp">
-      <Filter>Source Files\gameObject\composite</Filter>
-    </ClCompile>
-    <ClCompile Include="CParentGameObject.cpp">
-      <Filter>Source Files\gameObject\composite</Filter>
-    </ClCompile>
     <ClCompile Include="CGameObject.cpp">
       <Filter>Source Files\gameObject</Filter>
     </ClCompile>
@@ -274,9 +253,6 @@
     </ClCompile>
     <ClCompile Include="src\shaders\CAnimationBillboardShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
-    </ClCompile>
-    <ClCompile Include="CLeafGameObject.cpp">
-      <Filter>Source Files\gameObject\composite</Filter>
     </ClCompile>
     <ClCompile Include="src\shaders\CNormalMapSphereShader.cpp">
       <Filter>Source Files\renderer\shaders</Filter>
