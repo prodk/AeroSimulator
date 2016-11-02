@@ -11,9 +11,11 @@ using namespace AeroSimulatorEngine;
 CCubicAirPlane::CCubicAirPlane(const int id, const int type, std::shared_ptr<CShader> shader)
    : CGameObject(id, type)
    , mShader(shader)
-   , mLeanLeft(false)
-   , mLeanRight(false)
+   //, mLeanLeft(false)
+   //, mLeanRight(false)
    , mRollAngle(0.0f)
+   , mCurrentAction()
+   , mCurrentState()
 {
    std::vector<int> transformEvents(1, eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CCubicAirPlane: ");
@@ -63,19 +65,29 @@ void CCubicAirPlane::specificMove(const int moveType)
       GO_DOWN_START, GO_DOWN_STOP*/
    switch (moveType) {
    case eAirplaneEvents::LEAN_LEFT_START:
-      mLeanLeft = true; ///@todo: make a bitset;
+      if (!mCurrentState[eCurrentState::LEAN_RIGHT]) {
+         mCurrentState.set(eCurrentState::LEAN_LEFT);
+         mCurrentAction.set(eCurrentAction::ACT);
+      }
       break;
 
    case eAirplaneEvents::LEAN_LEFT_STOP:
-      mLeanLeft = false; ///@todo: make a bitset;
+      if (mCurrentState[eCurrentState::LEAN_LEFT]) {
+         mCurrentAction.reset(eCurrentAction::ACT);
+      }
       break;
 
    case eAirplaneEvents::LEAN_RIGHT_START:
-      mLeanRight = true; ///@todo: make a bitset;
+      if (!mCurrentState[eCurrentState::LEAN_LEFT]) {
+         mCurrentState.set(eCurrentState::LEAN_RIGHT);
+         mCurrentAction.set(eCurrentAction::ACT);
+      }
       break;
 
    case eAirplaneEvents::LEAN_RIGHT_STOP:
-      mLeanRight = false; ///@todo: make a bitset;
+      if (mCurrentState[eCurrentState::LEAN_RIGHT]) {
+         mCurrentAction.reset(eCurrentAction::ACT);
+      }
       break;
    }
 }
@@ -169,21 +181,37 @@ void CCubicAirPlane::lean(CTransform & rt)
    const float maxRoll = 25.0f;
    const float leanSpeed = 0.5f;
 
-   if (mLeanLeft && (std::fabs(mRollAngle) < maxRoll)) {
-      mRollAngle += leanSpeed;
-      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
-   }
-   else if (!mLeanLeft && !mLeanRight && (std::fabs(mRollAngle) > leanSpeed)) {
-      mRollAngle -= leanSpeed;
-      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
+   if (mCurrentState[eCurrentState::LEAN_LEFT])
+   {
+      if (mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) < maxRoll)
+      {
+         mRollAngle += leanSpeed;
+      }
+      else if (!mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) > leanSpeed)
+      {
+         mRollAngle -= leanSpeed;
+      }
+
+      if (std::fabs(mRollAngle) <= leanSpeed) {
+         mCurrentState.reset(eCurrentState::LEAN_LEFT);
+      }
    }
 
-   if (mLeanRight && (std::fabs(mRollAngle) < maxRoll)) {
-      mRollAngle -= leanSpeed;
-      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
+   if (mCurrentState[eCurrentState::LEAN_RIGHT])
+   {
+      if (mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) < maxRoll)
+      {
+         mRollAngle -= leanSpeed;
+      }
+      else if (!mCurrentAction[eCurrentAction::ACT] && std::fabs(mRollAngle) > leanSpeed)
+      {
+         mRollAngle += leanSpeed;
+         if (std::fabs(mRollAngle) <= leanSpeed) {
+            mCurrentState.reset(eCurrentState::LEAN_RIGHT);
+            mRollAngle = 0.0f;
+         }
+      }
    }
-   else if (!mLeanRight && !mLeanLeft && (std::fabs(mRollAngle) > leanSpeed)) {
-      mRollAngle += leanSpeed;
-      rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
-   }
+
+   rt.setRotate(glm::vec3(0.0, 0.0f, mRollAngle));
 }

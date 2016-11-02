@@ -3,6 +3,7 @@
 
 #include "../AeroSimulator/CGameObject.h"
 #include <map>
+#include <bitset>
 
 namespace AeroSimulatorEngine
 {
@@ -23,10 +24,15 @@ namespace AeroSimulatorEngine
       void lean(CTransform & rt);
 
    private:
+      enum eCurrentAction { ACT, LAST_ACTION };
+      enum eCurrentState { LEAN_LEFT, LEAN_RIGHT, GO_UP, GO_DOWN, LAST_STATE };
+
       std::shared_ptr<CShader> mShader;
-      bool mLeanLeft;
-      bool mLeanRight;
+      //bool mLeanLeft;
+      //bool mLeanRight;
       float mRollAngle;
+      std::bitset<eCurrentAction::LAST_ACTION> mCurrentAction;
+      std::bitset<eCurrentState::LAST_STATE> mCurrentState;
    };
 } // AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CUBIC_AERO_PLANE_H
