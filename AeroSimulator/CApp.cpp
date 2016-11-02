@@ -2,18 +2,7 @@
 #include "CApp.h"
 #include "CWin32Window.h"
 #include "CWin32Renderer.h"
-//#include "CRenderable.h"
-//#include "CGeometry.h"
-//#include "CGameObject.h"
 #include "CLog.h"
-//#include "C3DModel.h"
-//#include "../AeroSimulator/src/shaders/CTextureShader.h"
-//#include "CBillBoard.h"
-//#include "../AeroSimulator/src/shaders/CBillboardShader.h"
-//#include "../AeroSimulator/src/shaders/CColorShader.h"
-//#include "../AeroSimulator/src/shaders/CHealthbarShader.h"
-//#include "CSphere.h"
-//#include "../AeroSimulator/src/shaders/CColorLambertianShader.h"
 #include "CTimer.h"
 //#include "CAnimationBillBoard.h"
 //#include "../src/shaders/CAnimationBillboardShader.h"
@@ -31,35 +20,10 @@ CApp::CApp()
    , mAppWindowTask(new CWin32Window(CTask::HIGHEST_PRIO_1))
    , mRendererTask(new CWin32Renderer(CTask::MEDIUM_PRIO))
    , mTimerTask(new CTimer(CTask::HIGHEST_PRIO_0))
-   /*, mAirPlane(new C3DModel())
-   , mTextureShader(new CTextureShader())
-   , mBillboardShader(new CBillboardShader())
-   , mColorShader(new CColorShader())
-   , mHealthbarShader(new CHealthbarShader())
-   , mColorLambertianShader(new CColorLambertianShader())
-   , mAnimationBbShader(new CAnimationBillboardShader())
-   , mSphere(new CSphere())
-   , mBillBoards(40)
-   , mStar(5)
-   , mNormalMapSphereShader(new CNormalMapSphereShader())
-   , mTurbineFire()
-   , mTurbineSmoke()
-   , mRightMissile()
-   , mExplosion()*/
 {
    assert(mAppWindowTask);
    assert(mRendererTask);
    assert(mTimerTask);
-   /*assert(mAirPlane);
-   assert(mTextureShader);
-   assert(mBillboardShader);
-   assert(mColorShader);
-   assert(mHealthbarShader);
-   assert(mColorLambertianShader);
-   assert(mAnimationBbShader);
-   assert(mSphere);
-   assert(mNormalMapSphereShader);*/
-   //assert(mTurbineFire);
 
    LOG("\n*******************");
    LOG("** CApp created! **\n");
@@ -115,55 +79,6 @@ CRenderer* CApp::getRenderer() const
 {
    return mRendererTask.get();
 }
-
-///@todo: move to CGameTask
-//void CApp::setupScene()
-//{
-//   /// We need a valid RC to setup VBOs and shaders
-//   mRendererTask->setRenderContext();
-//
-//   //addSkyBox();
-//   //addLand();
-//   //addAirplane();
-//   //addClouds();
-//   //addSphere();
-//   //addStars();
-//
-//   mRendererTask->resetRenderContext();
-//}
-
-//void CApp::addAirplane()
-//{
-//   mColorShader->link();
-//   mHealthbarShader->link();
-//   mAirPlane->setBillboardShader(mHealthbarShader);
-//   mAirPlane->buildModel(mColorShader);
-//
-//   std::vector<CCompositeGameObject*> tree;
-//   mAirPlane->getTree(tree);
-//
-//   const std::size_t numOfCubes = tree.size();
-//   for (std::size_t count = 0; count < numOfCubes; ++count)
-//   {
-//      if (tree[count])
-//      {
-//         mRendererTask->addRenderable(tree[count]);
-//      }
-//   }
-//
-//   // Set the root for the renderable composite
-//   mRendererTask->setAirplaneRoot(mAirPlane->getRoot());
-//   mRendererTask->setAirplane(mAirPlane);
-//
-//   ///@todo: do not traverse the tree in addFire, smoke, missile, just traverse the airplane tree after these method calls
-//   /// Jet fire
-//   addFire();
-//
-//   /// Jet smoke
-//   addSmoke();
-//
-//   addMissiles();
-//}
 
 //void CApp::addClouds()
 //{
@@ -365,86 +280,5 @@ CRenderer* CApp::getRenderer() const
 //
 //      // Add fire to the airplane
 //      mAirPlane->getRoot()->add(mTurbineSmoke.get());
-//   }
-//}
-
-//void CApp::addMissiles()
-//{
-//   mRightMissile.reset(new CMissile());
-//   if (mRightMissile)
-//   {
-//      const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
-//      mRightMissile->setTranslate(glm::vec3(2.0f, -1.0f, 1.0f));
-//      mRightMissile->setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-//
-//      const glm::vec4 color(0.0f, 1.0f, 0.0f, 1.0f);
-//      mRightMissile->setColor(color);
-//      mColorShader->link();
-//      mRightMissile->setShadersAndBuffers(mColorShader);
-//
-//      mRightMissile->addParticles(mAnimationBbShader, mColorShader, filePath, glm::vec2(4.0f, 4.0f), 0.5f, 0.5f);
-//
-//      //mRightMissile->buildModelMatrix(glm::mat4x4());
-//      std::vector<CCompositeGameObject*> tree;
-//      mRightMissile->traverse(tree);
-//      for (auto * pTree : tree)
-//      {
-//         if (pTree)
-//         {
-//            mRendererTask->addRenderable(pTree);
-//         }
-//      }
-//
-//      ///Add missile to the renderer
-//      mRendererTask->setRightMissile(mRightMissile);
-//      mRendererTask->addRenderable(mRightMissile.get());
-//
-//      // Add missilee to the airplane
-//      mAirPlane->getRoot()->add(mRightMissile.get());
-//   }
-//
-//   // Add explosion
-//   //mExplosion
-//   mAnimationBbShader->link();
-//   const float width = 1.0f;
-//   const float height = 1.0f;
-//   const char* filePath = "../AeroSimulator/res/fire_explosion.dds";
-//
-//   mExplosion.reset(new CAnimationBillBoard());
-//
-//   if (mExplosion)
-//   {
-//      if (mExplosion->loadTexture(filePath))
-//      {
-//         CLog::getInstance().log("* Explosion loaded: ", filePath);
-//      }
-//
-//      mExplosion->setTranslate(glm::vec3(0.0f, 1.0f, 0.0f));
-//      mExplosion->setBillboardHeight(width);
-//      mExplosion->setBillboardWidth(height);
-//      mExplosion->calculateModelMatrix();
-//      mExplosion->setFrameSize(glm::vec2(1.0f / 4.0f, 1.0f / 4.0f));
-//      //mExplosion->setFrameSize(glm::vec2(1.0f / 10.0f, 1.0f));
-//      mExplosion->setTransparent(true);
-//      mExplosion->setVisible(false); // Initially invisible
-//
-//      mExplosion->setShadersAndBuffers(mAnimationBbShader);
-//      mColorShader->link();
-//      const glm::vec4 bBoxColor = glm::vec4(0.f, 1.f, 0.5f, 1.0f);
-//      mExplosion->setBoundingBox(mColorShader, bBoxColor);
-//
-//      std::vector<CCompositeGameObject*> tree;
-//      mExplosion->traverse(tree);
-//
-//      for (auto * pTree : tree)
-//      {
-//         if (pTree)
-//         {
-//            mRendererTask->addRenderable(pTree);
-//         }
-//      }
-//
-//      mRendererTask->addRenderable(mExplosion.get());
-//      mRendererTask->setExplosion(mExplosion);
 //   }
 //}

@@ -43,18 +43,12 @@ namespace AeroSimulatorEngine ///@todo: probably use another namespace
       void addSky();
       void addEnemies();
       void addAirplane();
-      void addColorCube(const CTransform& transform, const glm::vec4& color, const int objectType);
+      //void addColorCube(const CTransform& transform, const glm::vec4& color, const int objectType);
 
       void addCameras();
-
       void addObjectsToRenderer();
-
-      bool canBeRendered(CGameObject& object) const;
-
       void getTime(CTask* pTask);
-
       void setObjectsTime();
-
       void addObject(const int id, tGoSharedPtr pObject, const char* msg);
 
    private:

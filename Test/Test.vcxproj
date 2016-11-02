@@ -153,6 +153,7 @@
     <ClInclude Include="CCubicAirPlane.h" />
     <ClInclude Include="CGame.h" />
     <ClInclude Include="CLand.h" />
+    <ClInclude Include="CPropeller.h" />
     <ClInclude Include="CSkyDom.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
@@ -160,6 +161,7 @@
   <ItemGroup>
     <ClCompile Include="CGame.cpp" />
     <ClCompile Include="CLand.cpp" />
+    <ClCompile Include="CPropeller.cpp" />
     <ClCompile Include="CSkyDom.cpp" />
     <ClCompile Include="CCubicAirPlane.cpp" />
     <ClCompile Include="stdafx.cpp" />

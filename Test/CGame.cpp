@@ -122,7 +122,6 @@ void CGame::setupScene()
    addAirplane();
    addCameras();
 
-
    ///@todo: debug childrens structure: attach the camera to the cabine
    //mGameObjects[3]->addChild(mGameObjects[13]);
 }
@@ -188,84 +187,18 @@ void CGame::addAirplane()
    tGoSharedPtr pObject(
       new CCubicAirPlane(mGameObjects.size(), eGameObjects::AIRPLANE, mShaders[eShaders::COLOR_SHADER]));
    addObject(id, pObject, "* Game::addAirplane() ");
-
-   CTransform transform;
-
-   ///@todo: add later: read these params from a style file
-   /// Cabine
-   //const std::size_t cabineId = mGameObjects.size();
-   //const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
-   //transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
-   //transform.setTranslate(glm::vec3(0.0f, 35.f, 0.0f));
-   //transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-   //addColorCube(transform, cabineColor, eGameObjects::AIRPLANE_CABINE); ///@todo: remove type cabine
-
-   /// Body
-   //const glm::vec4 bodyColor(0.0f, 1.0f, 1.0f, 1.0f);
-   //transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
-   /// Cube 0
-   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 0.0f));
-   //transform.setTranslate(glm::vec3(0.0f, -1.0f, 0.0f));
-   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
-
-   ///@todo: debug
-   //mGameObjects[cabineId]->addChild(mGameObjects[cabineId + 1]);
-
-   ///// Cube 1
-   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 1.0f));
-   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
-
-   ///// Cube 2
-   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 2.0f));
-   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
-
-   ///// Cube 3
-   //transform.setTranslate(glm::vec3(0.0f, 29.0f, 3.0f));
-   //addColorCube(transform, bodyColor, eGameObjects::AIRPLANE);
-
-   ///// Wings
-   //const glm::vec4 wingColor(1.0f, 0.0f, 1.0f, 1.0f);
-   //const float wingX = 1.8f;
-
-   //// Left wing
-   //transform.setTranslate(glm::vec3((-1.0f - 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
-   //transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
-   //addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
-
-   //// Right wing
-   //transform.setTranslate(glm::vec3((1.0f + 0.5f*(wingX - 1.0f)), 29.0f, 1.25f));
-   //transform.setScale(glm::vec3(wingX, 0.1f, 1.1f));
-   //addColorCube(transform, wingColor, eGameObjects::AIRPLANE);
-
-   //// Propeller
-   //const glm::vec4 baseColor(1.0f, 0.5f, 0.0f, 1.0f);
-   //const glm::vec4 paddleColor(1.0f, 1.0f, 0.0f, 1.0f);
-
-   //// Base
-   //transform.setTranslate(glm::vec3(0.0f, 29.0f, -0.75f));
-   //transform.setScale(glm::vec3(0.2f, 0.25f, 0.5f));
-   //addColorCube(transform, baseColor, eGameObjects::AIRPLANE);
-
-   //// Paddle 1
-   //transform.setTranslate(glm::vec3(0.0f, 29.75f, -1.0f));
-   //transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
-   //addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
-
-   //// Paddle 2
-   //transform.setTranslate(glm::vec3(0.0f, 28.25f, -1.0f));
-   //transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
-   //addColorCube(transform, paddleColor, eGameObjects::AIRPLANE);
 }
 
-void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
-{
-   const int id = mGameObjects.size();
-
-   SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", color);
-   tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
-
-   addObject(id, pObject, "* CGame::addAirplane() CFigure cube ");
-}
+///@todo: remove if not used
+//void CGame::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
+//{
+//   const int id = mGameObjects.size();
+//
+//   SRenderableData data(mShaders[eShaders::COLOR_SHADER], 0, "", color);
+//   tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
+//
+//   addObject(id, pObject, "* CGame::addAirplane() CFigure cube ");
+//}
 
 void CGame::addCameras()
 {
@@ -296,25 +229,8 @@ void CGame::addObjectsToRenderer()
       if (nullptr != object.second)
       {
          object.second->addToRenderer(renderer());
-         /*if (canBeRendered(*object.second))
-         renderer()->addRenderable(&componentCast<CRenderableComponent>(*object.second)->getRenderable());
-
-         ///@todo: replace this loop with the recursive call inside every object
-         std::map<int, std::shared_ptr<CGameObject>> kids;
-         if (object.second->getChildren(kids) && !kids.empty()) {
-            for (auto c : kids) {
-               if (c.second && canBeRendered(*c.second))
-                  renderer()->addRenderable(&componentCast<CRenderableComponent>(*c.second)->getRenderable());
-            }
-         }*/
       }
    }
-}
-
-///@todo: probably remove this method
-bool CGame::canBeRendered(CGameObject& object) const
-{
-   return object.hasComponent<CRenderableComponent>();
 }
 
 void CGame::getTime(CTask * pTask)
