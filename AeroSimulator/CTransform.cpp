@@ -98,6 +98,15 @@ void CTransform::setTranslateRotateMatrix(const glm::mat4 & m)
       mTRMatrix = m;
 }
 
+glm::mat4 CTransform::getTranslateRotateMatrix()
+{
+   if (mState[eTransformState::eTrChanged]) {
+      updateTrMatrix();
+      mState[eTransformState::eTrChanged].flip();
+   }
+   return mTRMatrix;
+}
+
 void CTransform::updateTrMatrix()
 {
    switch (mTrType)

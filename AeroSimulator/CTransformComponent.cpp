@@ -24,7 +24,7 @@ void CTransformComponent::handleEvent(CAppEvent * pEvent)
    {
       switch (pEvent->getId())
       {
-      case eGeneralEvents::UPDATE_TRANSFORM: ///@todo: rename this message to set model matrix to renderable
+      case eGeneralEvents::UPDATE_TRANSFORM:
          update();
          break;
       }
@@ -59,25 +59,18 @@ void CTransformComponent::update()
    if (pRenderableComp) {
       pRenderableComp->getRenderable().setMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX, mParentTrMatrix * mTransform.getModelMatrix());
    }
-
-   /*std::map<int, std::shared_ptr<CGameObject>> kids;
-   if (owner.getChildren(kids) && !kids.empty()) {
-      for (auto c : kids) {
-         CRenderableComponent* pRenderableComp = componentCast<CRenderableComponent>(*c.second);
-         if (pRenderableComp) {
-            pRenderableComp->getRenderable().setMatrix4Param(eShaderMatrix4Params::MODEL_MATRIX, mParentTrMatrix * mTransform.getModelMatrix());
-         }
-      }
-   }*/
 }
 
 void CTransformComponent::updateParentMatrix(const glm::mat4& parent)
 {
-   mParentTrMatrix = parent;
-   for (auto c : mChildren) {
-      if (nullptr != c)
-      {
-         c->updateParentMatrix(mParentTrMatrix * mTransform.getTranslateRotateMatrix());
+   if (mParentTrMatrix != parent || mParentTrMatrix == glm::mat4()) {
+      mParentTrMatrix = parent;
+      for (auto c : mChildren) {
+         if (nullptr != c)
+         {
+            const glm::mat4& tr = mTransform.getTranslateRotateMatrix();
+            c->updateParentMatrix(mParentTrMatrix * tr);
+         }
       }
    }
 }

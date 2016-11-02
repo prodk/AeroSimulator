@@ -15,7 +15,6 @@ namespace AeroSimulatorEngine
       virtual ~CCubicAirPlane();
 
       void move() override;
-      bool getChildren(std::map<int, std::shared_ptr<CGameObject>> & kids) override;
 
    private:
       void addCubes();
@@ -23,7 +22,6 @@ namespace AeroSimulatorEngine
 
    private:
       std::shared_ptr<CShader> mShader;
-      std::map<int, std::shared_ptr<CGameObject>> mCubes;
    };
 } // AeroSimulatorEngine
 #endif // AERO_SIMULATOR_CUBIC_AERO_PLANE_H

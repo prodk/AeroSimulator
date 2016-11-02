@@ -29,7 +29,8 @@ namespace AeroSimulatorEngine
       glm::mat4 getModelMatrix();
 
       void setTranslateRotateMatrix(const glm::mat4& m);
-      glm::mat4 getTranslateRotateMatrix() const { return mTRMatrix; }
+      //glm::mat4 getTranslateRotateMatrix() const { return mTRMatrix; }
+      glm::mat4 getTranslateRotateMatrix();
 
       void updateTrMatrix();
 

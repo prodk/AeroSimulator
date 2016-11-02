@@ -6,10 +6,10 @@
 
 using namespace AeroSimulatorEngine;
 
+///@todo: probably add initial position to the ctr
 CCubicAirPlane::CCubicAirPlane(const int id, const int type, std::shared_ptr<CShader> shader)
    : CGameObject(id, type)
    , mShader(shader)
-   , mCubes()
 {
    std::vector<int> transformEvents(1, eGeneralEvents::UPDATE_TRANSFORM);
    (void)CGameObject::addTransformComponent(transformEvents, "* CCubicAirPlane: ");
@@ -27,7 +27,7 @@ CCubicAirPlane::~CCubicAirPlane()
 void CCubicAirPlane::move()
 {
    //LOG("CCubicAirPlane::move()");
-   CTransformComponent* pTc = componentCast<CTransformComponent>(*mCubes[0]);
+   CTransformComponent* pTc = componentCast<CTransformComponent>(*this);
    if (pTc) {
       CTransform & rt = pTc->getTransform();
       const glm::vec3 prevTranslate = rt.getTranslate();
@@ -37,29 +37,22 @@ void CCubicAirPlane::move()
    }
 }
 
-bool CCubicAirPlane::getChildren(std::map<int, std::shared_ptr<CGameObject>> & kids)
-{
-   kids = mCubes;
-   return true;
-}
-
 void CCubicAirPlane::addCubes()
 {
    CTransformComponent* pTc = getComponent<CTransformComponent>();
    if (pTc) {
-      CTransform & rootTransform = pTc->getTransform();
+      CTransform transform;
 
-      ///Cabine
-      const std::size_t cabineId = mCubes.size();
+      /// Cabine
+      const std::size_t cabineId = mChildren.size();
       const glm::vec4 cabineColor(0.0f, 0.0f, 1.0f, 1.0f);
-      rootTransform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
-      rootTransform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
-      addColorCube(rootTransform, cabineColor, mType);
+      transform.setTranslate(glm::vec3(0.0f, 29.75f, 0.0f));
+      transform.setScale(glm::vec3(0.5f, 0.5f, 0.5f));
+      addColorCube(transform, cabineColor, mType);
 
-      //this->addChild(mCubes[cabineId]);
+      this->addChild(mChildren[cabineId]);
 
       /// Body
-      CTransform transform;
       const glm::vec4 bodyColor(0.0f, 1.0f, 1.0f, 1.0f);
       transform.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
       /// Cube 0
@@ -111,19 +104,19 @@ void CCubicAirPlane::addCubes()
       transform.setScale(glm::vec3(0.1f, 1.5f, 0.1f));
       addColorCube(transform, paddleColor, mType);
 
-      for (int i = 1; i < mCubes.size(); ++i)
-         mCubes[0]->addChild(mCubes[i]);
+      for (std::size_t i = 1; i < mChildren.size(); ++i)
+         mChildren[0]->addChild(mChildren[i]);
    }
 }
 
 void CCubicAirPlane::addColorCube(const CTransform & transform, const glm::vec4 & color, const int objectType)
 {
-   const int id = mCubes.size();
+   const int id = mChildren.size();
 
    SRenderableData data(mShader, 0, "", color);
    tGoSharedPtr pObject(new CFigure(id, objectType, CFigure::eFigure::CUBE, data, transform));
    if (nullptr != pObject) {
-      mCubes.insert(std::pair<int, std::shared_ptr<CGameObject>>(id, pObject));
+      mChildren.insert(std::pair<int, std::shared_ptr<CGameObject>>(id, pObject));
    }
    else {
       LOG("* CCubicAirPlane::addColorCube() pObject is NULL");

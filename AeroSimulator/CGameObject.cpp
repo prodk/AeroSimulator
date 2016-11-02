@@ -6,6 +6,7 @@
 #include "CTransformComponent.h"
 #include "CMovementComponent.h"
 #include "CCameraComponent.h"
+#include "CRenderer.h"
 
 #include <cassert>
 
@@ -16,6 +17,7 @@ CGameObject::CGameObject()
    , mId(-1)
    , mType(-1)
    , mFrameDt(0.0f)
+   , mChildren()
 {
 }
 
@@ -24,6 +26,7 @@ CGameObject::CGameObject(const int id, const int type)
    , mId(id)
    , mType(type)
    , mFrameDt(0.0f)
+   , mChildren()
 {
 }
 
@@ -52,6 +55,7 @@ bool CGameObject::removeChild(std::shared_ptr<CGameObject>& pChild)
    {
       CTransformComponent* pTcToRemove = componentCast<CTransformComponent>(*pChild);
       result = pTc->removeChild(pTcToRemove);
+      pTcToRemove->updateParentMatrix(glm::mat4()); // Reset the child's (and its subchilds') parent matrix
    }
 
    return result;
@@ -59,11 +63,6 @@ bool CGameObject::removeChild(std::shared_ptr<CGameObject>& pChild)
 
 void CGameObject::move()
 {
-}
-
-bool CGameObject::getChildren(std::map<int, std::shared_ptr<CGameObject>> & kids)
-{
-   return false;
 }
 
 CComponent * CGameObject::getComponent(const unsigned int id) const
@@ -160,4 +159,17 @@ CRenderable & CGameObject::getRenderable()
    assert(pRenderableComp);
 
    return pRenderableComp->getRenderable();
+}
+
+void CGameObject::addToRenderer(CRenderer * renderer)
+{
+   if (nullptr != renderer) {
+      if (this->hasComponent<CRenderableComponent>()) {
+         renderer->addRenderable(&componentCast<CRenderableComponent>(*this)->getRenderable());
+      }
+
+      for (auto child : mChildren)
+         if (nullptr != child.second)
+            child.second->addToRenderer(renderer);
+   }
 }

@@ -17,6 +17,7 @@ namespace AeroSimulatorEngine
    class CShader;
    struct SGeometryData;
    class CRenderable;
+   class CRenderer;
 
    class CGameObject
    {
@@ -41,10 +42,10 @@ namespace AeroSimulatorEngine
 
       virtual void move(); // move the object if needed
 
-      virtual bool getChildren(std::map<int, std::shared_ptr<CGameObject>> & kids);
+      virtual void addToRenderer(CRenderer * renderer);
 
    protected:
-      // Get the component of type T from the specified (by reference) object
+      // Get the component of type T from the specified object
       template <typename T>
       friend T* componentCast(CGameObject& object);
 
@@ -75,7 +76,7 @@ namespace AeroSimulatorEngine
       template <typename T>
       void attachEvents(const std::vector<int>& events, const char * msg) const;
 
-      CRenderable & getRenderable(); ///@todo: think how to make this method const
+      CRenderable & getRenderable();
 
    protected:
       // We have to shared_ptr as unique_ptr refuses to work
@@ -83,6 +84,7 @@ namespace AeroSimulatorEngine
       int mId; // Unique id of the object
       int mType;  // Type of the object, e.g. land, camera etc.
       float mFrameDt; ///@todo: probably remove it from here and move to some singleton
+      std::map<int, std::shared_ptr<CGameObject>> mChildren;
    };
 
    typedef std::shared_ptr<CGameObject> tGoSharedPtr;

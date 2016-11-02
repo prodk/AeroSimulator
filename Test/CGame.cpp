@@ -90,7 +90,6 @@ void CGame::update(CTask * pTask)
    getTime(pTask);
    setObjectsTime();
 
-   ///@todo: movement events go before update transform event
    GEventManager.broadcastEvent(eGeneralEvents::MOVE);
    GEventManager.broadcastEvent(eGeneralEvents::UPDATE_TRANSFORM);
    GEventManager.broadcastEvent(eCameraEvents::UPDATE_CAMERA);
@@ -294,21 +293,25 @@ void CGame::addObjectsToRenderer()
 {
    for (auto object : mGameObjects)
    {
-      if (object.second)
+      if (nullptr != object.second)
       {
-         if (canBeRendered(*object.second))
-            renderer()->addRenderable(&componentCast<CRenderableComponent>(*object.second)->getRenderable());
+         object.second->addToRenderer(renderer());
+         /*if (canBeRendered(*object.second))
+         renderer()->addRenderable(&componentCast<CRenderableComponent>(*object.second)->getRenderable());
 
+         ///@todo: replace this loop with the recursive call inside every object
          std::map<int, std::shared_ptr<CGameObject>> kids;
          if (object.second->getChildren(kids) && !kids.empty()) {
-            for (auto c : kids)
+            for (auto c : kids) {
                if (c.second && canBeRendered(*c.second))
                   renderer()->addRenderable(&componentCast<CRenderableComponent>(*c.second)->getRenderable());
-         }
+            }
+         }*/
       }
    }
 }
 
+///@todo: probably remove this method
 bool CGame::canBeRendered(CGameObject& object) const
 {
    return object.hasComponent<CRenderableComponent>();
