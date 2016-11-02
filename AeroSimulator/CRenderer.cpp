@@ -2,7 +2,7 @@
 #include "CRenderer.h"
 #include "CRenderable.h"
 #include "CLog.h"
-#include "CCompositeGameObject.h"
+//#include "CCompositeGameObject.h"
 
 #include <algorithm>
 
@@ -68,8 +68,8 @@ void CRenderer::addGameObjectAndItsChildren(CCompositeGameObject * pObject)
       ///@todo: if add route object if it is parent
       //addRenderable(pObject);
 
-      std::vector<CCompositeGameObject*> tree;
-      pObject->traverse(tree);
+      //std::vector<CCompositeGameObject*> tree;
+     // pObject->traverse(tree);
 
       /*for (auto * pNode : tree)
       {
