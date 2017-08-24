@@ -10,7 +10,7 @@ using namespace AeroSimulatorEngine;
 
 int main()
 {
-   CGame gameTask(CTask::HIGH_PRIO); // game is updated before the renderer
+   CGame gameTask(CTask::ePriority::HIGH_PRIO); // game is updated before the renderer
 
    ///@todo: add non-default CApp constructor which initializes the app from some state.
    ///@todo: add a constructor that reads the ini file, the state is also specified in the ini

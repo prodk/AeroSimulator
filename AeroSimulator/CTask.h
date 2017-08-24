@@ -8,7 +8,7 @@ namespace AeroSimulatorEngine
    class CTask
    {
    public:
-      enum ePriority { HIGHEST_PRIO_0, HIGHEST_PRIO_1, HIGH_PRIO, MEDIUM_PRIO };
+      enum class ePriority { HIGHEST_PRIO_0, HIGHEST_PRIO_1, HIGH_PRIO, MEDIUM_PRIO };
 
       CTask();
       explicit CTask(ePriority prio) : mCanKill(false), mPriority(prio) {}
@@ -25,7 +25,7 @@ namespace AeroSimulatorEngine
 
    protected:
       bool mCanKill;
-      enum ePriority mPriority;
+      ePriority mPriority;
    };
 
 } // namespace AeroSimulatorEngine
