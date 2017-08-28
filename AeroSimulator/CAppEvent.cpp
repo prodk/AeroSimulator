@@ -5,7 +5,7 @@ using namespace AeroSimulatorEngine;
 
 CAppEvent::CAppEvent()
    : mEventListeners()
-   , mId(0)
+   , mId(0u)
 {
 }
 
@@ -23,7 +23,7 @@ void CAppEvent::broadcast()
 {
    for (auto * pListener : mEventListeners)
    {
-      if (pListener)
+      if (nullptr != pListener)
       {
          pListener->handleEvent(this);
       }

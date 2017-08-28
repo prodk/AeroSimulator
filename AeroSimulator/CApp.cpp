@@ -16,9 +16,9 @@ CApp::CApp()
    , mRendererTask(new CWin32Renderer(CTask::ePriority::MEDIUM_PRIO))
    , mTimerTask(new CTimer(CTask::ePriority::HIGHEST_PRIO_0))
 {
-   assert(mAppWindowTask);
-   assert(mRendererTask);
-   assert(mTimerTask);
+   assert(nullptr != mAppWindowTask);
+   assert(nullptr != mRendererTask);
+   assert(nullptr != mTimerTask);
 
    LOG("\n*******************");
    LOG("** CApp created! **\n");
@@ -33,10 +33,10 @@ bool CApp::init(const char* name, unsigned int width, unsigned int height)
 {
    // Create and init the app window and window's renderer
    const auto result = (nullptr != mAppWindowTask)
-                     && mAppWindowTask->create(name, width, height)
-                     && (nullptr != mRendererTask);
+                     && mAppWindowTask->create(name, width, height);
    if (result)
    {
+      assert(nullptr != mRendererTask);
       mRendererTask->init(*mAppWindowTask);
    }
 

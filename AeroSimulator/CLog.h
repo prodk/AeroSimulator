@@ -34,11 +34,12 @@ namespace AeroSimulatorEngine
       void logGL(const char* msg, GLint status, std::ostream& file = std::cout);
       void checkGL(const char* msg, std::ostream& file = std::cout);
 
-   private:
-      CLog();
       // Disable the copy constructor and copy assignment operator
       CLog(const CLog&) = delete;
       void operator=(const CLog&) = delete;
+
+   private:
+      CLog();
    };
 
 } // namespace AeroSimulatorEngine

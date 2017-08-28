@@ -14,7 +14,7 @@ int main()
 
    ///@todo: add non-default CApp constructor which initializes the app from some state.
    ///@todo: add a constructor that reads the ini file, the state is also specified in the ini
-   if (APP.init("AeroSimulator", 1280, 720))
+   if (APP.init("AeroSimulator", 1280, 720)) ///@todo: get the resolution from the system
    {
       APP.addTask(&gameTask);
       APP.run();

@@ -7,7 +7,7 @@ namespace AeroSimulatorEngine
 {
    class CEventHandler;
 
-   typedef unsigned int EventID; ///@todo: probably use an enum class here
+   using EventID = unsigned int;
 
    class CAppEvent // CEvent is reserved on Windows
    {

@@ -29,6 +29,10 @@ namespace AeroSimulatorEngine
          return instance;
       }
 
+      // Disable the copy constructor and copy assignment operator
+      CApp(const CApp &) = delete;
+      void operator=(const CApp &) = delete;
+
       ~CApp();
 
       ///@todo: later add passing app parameters read from a config file here
@@ -43,9 +47,6 @@ namespace AeroSimulatorEngine
 
    private:
       CApp();
-      // Disable the copy constructor and copy assignment operator
-      CApp(const CApp &) = delete;
-      void operator=(const CApp &) = delete;
 
    private:
 
